@@ -30,13 +30,13 @@ namespace StbHopper {
         public override string AuthorName {
             get {
                 //Return a string identifying you or your company.
-                return "";
+                return "hiron_rgkr";
             }
         }
         public override string AuthorContact {
             get {
                 //Return a string representing your preferred contact details.
-                return "";
+                return "hiro.n.rgrk@gmail.com";
             }
         }
     }
