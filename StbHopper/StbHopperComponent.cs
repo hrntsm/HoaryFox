@@ -175,10 +175,10 @@ namespace StbHopper {
 
     public class StbHopperBrep : GH_Component {
 
-        private string path, Girder_shape, xGirder_kind, BeamType;
+        private string path, Beam_shape, xBeam_kind, BeamType;
         private int NodeID, Nodeindex_i, Nodeindex_j, Nodeindex_k, Nodeindex_l, Nodeindex_start, Nodeindex_end,
-                    xNode_start, xNode_end, xGirder_id_section, 
-                    StbSecIndex, Girder_id_section, BeamHight, BeamWidth;
+                    xNode_start, xNode_end, xBeam_id_section,
+                    StbSecIndex, Beam_id_section, BeamHight, BeamWidth;
         private double xPos, yPos, zPos, BeamAngle;
         private Point3d Node_start, Node_end;
         private List<Point3d> RhinoNodes = new List<Point3d>();
@@ -191,8 +191,8 @@ namespace StbHopper {
         private List<int> xStbSecSteel_B = new List<int>();
         private List<string> xStbSecSteel_type = new List<string>();
         private List<Brep> RhinoSlabs = new List<Brep>();
-        private List<Brep> Beam_S = new List<Brep>();
-        private Brep[] S_Girders, S_Beams;
+        private List<Brep> SteelBeamBrep = new List<Brep>();
+        private Brep[] S_Girders, S_Beams, SteelBeamBrepArray;
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -285,212 +285,19 @@ namespace StbHopper {
                 xSecSBeam_shape.Add((string)xSecSBeam.Element("StbSecSteelBeam").Attribute("shape"));
             }
 
-            // StbSecSteel の取得
-            var xStbSecRoll_Hs = xdoc.Root.Descendants("StbSecRoll-H");
-            foreach (var xStbSecRoll_H in xStbSecRoll_Hs) {
-                xStbSecSteel_name.Add((string)xStbSecRoll_H.Attribute("name"));
-                xStbSecSteel_A.Add((int)xStbSecRoll_H.Attribute("A"));
-                xStbSecSteel_B.Add((int)xStbSecRoll_H.Attribute("B"));
-                xStbSecSteel_type.Add("H");
-            }
-            var xStbSecBuild_Hs = xdoc.Root.Descendants("StbSecBuild-H");
-            foreach (var xStbSecBuild_H in xStbSecBuild_Hs) {
-                xStbSecSteel_name.Add((string)xStbSecBuild_H.Attribute("name"));
-                xStbSecSteel_A.Add((int)xStbSecBuild_H.Attribute("A"));
-                xStbSecSteel_B.Add((int)xStbSecBuild_H.Attribute("B"));
-                xStbSecSteel_type.Add("H");
-            }
-            var xStbSecRoll_BOXs = xdoc.Root.Descendants("StbSecRoll-BOX");
-            foreach (var xStbSecRoll_BOX in xStbSecRoll_BOXs) {
-                xStbSecSteel_name.Add((string)xStbSecRoll_BOX.Attribute("name"));
-                xStbSecSteel_A.Add((int)xStbSecRoll_BOX.Attribute("A"));
-                xStbSecSteel_B.Add((int)xStbSecRoll_BOX.Attribute("B"));
-                xStbSecSteel_type.Add("BOX");
-            }
-            var xStbSecBuild_BOXs = xdoc.Root.Descendants("StbSecBuild-BOX");
-            foreach (var xStbSecBuild_BOX in xStbSecBuild_BOXs) {
-                xStbSecSteel_name.Add((string)xStbSecBuild_BOX.Attribute("name"));
-                xStbSecSteel_A.Add((int)xStbSecBuild_BOX.Attribute("A"));
-                xStbSecSteel_B.Add((int)xStbSecBuild_BOX.Attribute("B"));
-                xStbSecSteel_type.Add("BOX");
-            }
-            var xStbSecPipes = xdoc.Root.Descendants("StbSecPipe");
-            foreach (var xStbSecPipe in xStbSecPipes) {
-                xStbSecSteel_name.Add((string)xStbSecPipe.Attribute("name"));
-                xStbSecSteel_A.Add((int)xStbSecPipe.Attribute("D"));
-                xStbSecSteel_B.Add((int)xStbSecPipe.Attribute("t"));
-                xStbSecSteel_type.Add("Pipe");
-            }
-            var xStbSecRoll_Ls = xdoc.Root.Descendants("StbSecRoll-L");
-            foreach (var xStbSecRoll_L in xStbSecRoll_Ls) {
-                xStbSecSteel_name.Add((string)xStbSecRoll_L.Attribute("name"));
-                xStbSecSteel_A.Add((int)xStbSecRoll_L.Attribute("A"));
-                xStbSecSteel_A.Add((int)xStbSecRoll_L.Attribute("B"));
-                xStbSecSteel_type.Add("L");
-            }
+            // S断面形状の取得
+            GetStbSteelSection(xdoc, "StbSecRoll-H", "H");
+            GetStbSteelSection(xdoc, "StbSecBuild-H", "H");
+            GetStbSteelSection(xdoc, "StbSecRoll-BOX", "BOX");
+            GetStbSteelSection(xdoc, "StbSecBuild-BOX", "BOX");
+            GetStbSteelSection(xdoc, "StbSecPipe", "Pipe");
+            GetStbSteelSection(xdoc, "StbSecRoll-L", "L");
 
             // S大梁の断面の生成
-            var xGirders = xdoc.Root.Descendants("StbGirder");
-            foreach (var xGirder in xGirders) {
-                xNode_start = (int)xGirder.Attribute("idNode_start");
-                xNode_end = (int)xGirder.Attribute("idNode_end");
-                xGirder_id_section = (int)xGirder.Attribute("id_section");
-                xGirder_kind = (string)xGirder.Attribute("kind_structure");
-
-                if (xGirder_kind == "S") {
-                    // 始点と終点の座標取得
-                    Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
-                    Nodeindex_end = RhinoNodeIDs.IndexOf(xNode_end);
-                    Node_start = RhinoNodes[Nodeindex_start];
-                    Node_end = RhinoNodes[Nodeindex_end];
-
-                    // 断面形状名（shape）の取得
-                    Girder_id_section = xSecSBeam_id.IndexOf(xGirder_id_section);
-                    Girder_shape = xSecSBeam_shape[Girder_id_section];
-
-                    // 断面形状（HxB）の取得
-                    StbSecIndex = xStbSecSteel_name.IndexOf(Girder_shape);
-                    BeamHight = xStbSecSteel_A[StbSecIndex];
-                    BeamWidth = xStbSecSteel_B[StbSecIndex];
-                    BeamType = xStbSecSteel_type[StbSecIndex];
-
-                    // 梁断面サーフェスの作成
-
-                    // 梁断面サーフェスの作成
-                    BeamAngle = Math.Atan((Node_end.Y - Node_start.Y) / (Node_end.X - Node_start.X));
-                    if (BeamType == "H") {
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                        Beam_S.Add(Brep.CreateFromCornerPoints(Node_start,
-                                                               new Point3d(Node_start.X, Node_start.Y, Node_start.Z - BeamHight),
-                                                               new Point3d(Node_end.X, Node_end.Y, Node_end.Z - BeamHight),
-                                                               Node_end,
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                    }
-                    else if (BeamType == "BOX") {
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                    }
-                    else {
-                        // L とか Pipe とかもあるけど 今後実装用
-                    }
-                }
-            }
-            S_Girders = Brep.JoinBreps(Beam_S, GH_Component.DocumentTolerance());
-            Beam_S.Clear();
+            S_Girders = MakeSteelBeamBrep(xdoc, "StbGirder");
 
             // S小梁の断面の生成
-            var xBeams = xdoc.Root.Descendants("StbBeam");
-            foreach (var xBeam in xBeams) {
-                xNode_start = (int)xBeam.Attribute("idNode_start");
-                xNode_end = (int)xBeam.Attribute("idNode_end");
-                xGirder_id_section = (int)xBeam.Attribute("id_section");
-                xGirder_kind = (string)xBeam.Attribute("kind_structure");
-
-                if (xGirder_kind == "S") {
-                    // 始点と終点の座標取得
-                    Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
-                    Nodeindex_end = RhinoNodeIDs.IndexOf(xNode_end);
-                    Node_start = RhinoNodes[Nodeindex_start];
-                    Node_end = RhinoNodes[Nodeindex_end];
-
-                    // 断面形状名（shape）の取得
-                    Girder_id_section = xSecSBeam_id.IndexOf(xGirder_id_section);
-                    Girder_shape = xSecSBeam_shape[Girder_id_section];
-
-                    // 断面形状（HxB）の取得
-                    StbSecIndex = xStbSecSteel_name.IndexOf(Girder_shape);
-                    BeamHight = xStbSecSteel_A[StbSecIndex];
-                    BeamWidth = xStbSecSteel_B[StbSecIndex];
-                    BeamType = xStbSecSteel_type[StbSecIndex];
-
-                    // 梁断面サーフェスの作成
-                    BeamAngle = Math.Atan((Node_end.Y - Node_start.Y) / (Node_end.X - Node_start.X));
-                    if (BeamType == "H") {
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                        Beam_S.Add(Brep.CreateFromCornerPoints(Node_start,
-                                                               new Point3d(Node_start.X, Node_start.Y, Node_start.Z - BeamHight),
-                                                               new Point3d(Node_end.X, Node_end.Y, Node_end.Z - BeamHight),
-                                                               Node_end,
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                    }
-                    else if (BeamType == "BOX") {
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                        Beam_S.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
-                                                               new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
-                                                               new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
-                                                               GH_Component.DocumentTolerance()
-                                                               ));
-                    }
-                    else {
-                        // L とか Pipe とかもあるけど 今後実装用
-                    }
-                }
-            }
-            S_Beams = Brep.JoinBreps(Beam_S, GH_Component.DocumentTolerance());
+            S_Beams = MakeSteelBeamBrep(xdoc, "StbBeam");
 
             DA.SetDataList(0, RhinoSlabs);
             DA.SetDataList(1, S_Girders);
@@ -516,6 +323,130 @@ namespace StbHopper {
         /// </summary>
         public override Guid ComponentGuid {
             get { return new Guid("7d2f0c4e-4888-4607-8548-592104f6f06f"); }
+        }
+
+        /// <summary>
+        /// Get ST-Bridge Steel Section
+        /// </summary>
+        /// <param name="xdoc"></param>
+        /// <param name="xDateTag"></param>
+        /// <param name="SectionType"></param>
+        public void GetStbSteelSection(XDocument xdoc, string xDateTag, string SectionType) {
+            if(SectionType == "Pipe") {
+                var xSteelSections = xdoc.Root.Descendants(xDateTag);
+                foreach (var xSteelSection in xSteelSections) {
+                    xStbSecSteel_name.Add((string)xSteelSection.Attribute("name"));
+                    xStbSecSteel_A.Add((int)xSteelSection.Attribute("D"));
+                    xStbSecSteel_B.Add((int)xSteelSection.Attribute("t"));
+                    xStbSecSteel_type.Add(SectionType);
+                }
+            }
+            else {
+                var xSteelSections = xdoc.Root.Descendants(xDateTag);
+                foreach (var xSteelSection in xSteelSections) {
+                    xStbSecSteel_name.Add((string)xSteelSection.Attribute("name"));
+                    xStbSecSteel_A.Add((int)xSteelSection.Attribute("A"));
+                    xStbSecSteel_B.Add((int)xSteelSection.Attribute("B"));
+                    xStbSecSteel_type.Add(SectionType);
+                }
+            }
+        }
+
+        /// <summary> 
+        /// Make Steel Beam Brep
+        /// </summary>
+        /// <param name="xdoc"></param>
+        /// <param name="xDateTag"></param>
+        /// <returns></returns>
+        public Brep[] MakeSteelBeamBrep( XDocument xdoc, string xDateTag) {
+            SteelBeamBrep.Clear();
+
+            var xBeams = xdoc.Root.Descendants(xDateTag);
+            foreach (var xBeam in xBeams) {
+                xNode_start = (int)xBeam.Attribute("idNode_start");
+                xNode_end = (int)xBeam.Attribute("idNode_end");
+                xBeam_id_section = (int)xBeam.Attribute("id_section");
+                xBeam_kind = (string)xBeam.Attribute("kind_structure");
+
+                if (xBeam_kind == "S") {
+                    // 始点と終点の座標取得
+                    Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
+                    Nodeindex_end = RhinoNodeIDs.IndexOf(xNode_end);
+                    Node_start = RhinoNodes[Nodeindex_start];
+                    Node_end = RhinoNodes[Nodeindex_end];
+
+                    // 断面形状名（shape）の取得
+                    Beam_id_section = xSecSBeam_id.IndexOf(xBeam_id_section);
+                    Beam_shape = xSecSBeam_shape[Beam_id_section];
+
+                    // 断面形状（HxB）の取得
+                    StbSecIndex = xStbSecSteel_name.IndexOf(Beam_shape);
+                    BeamHight = xStbSecSteel_A[StbSecIndex];
+                    BeamWidth = xStbSecSteel_B[StbSecIndex];
+                    BeamType = xStbSecSteel_type[StbSecIndex];
+
+                    // 梁断面サーフェスの作成
+                    BeamAngle = Math.Atan((Node_end.Y - Node_start.Y) / (Node_end.X - Node_start.X));
+                    if (BeamType == "H") {
+                        // make upper flange
+                        SteelBeamBrep.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
+                                                                      new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
+                                                                      new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
+                                                                      new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
+                                                                      GH_Component.DocumentTolerance()
+                                                                      ));
+                        // make bottom flange
+                        SteelBeamBrep.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
+                                                                      new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
+                                                                      new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
+                                                                      new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
+                                                                      GH_Component.DocumentTolerance()
+                                                                      ));
+                        // make web 
+                        SteelBeamBrep.Add(Brep.CreateFromCornerPoints(Node_start,
+                                                                      new Point3d(Node_start.X, Node_start.Y, Node_start.Z - BeamHight),
+                                                                      new Point3d(Node_end.X, Node_end.Y, Node_end.Z - BeamHight),
+                                                                      Node_end,
+                                                                      GH_Component.DocumentTolerance()
+                                                                      ));
+                    }
+                    else if (BeamType == "BOX") {
+                        // make upper flange
+                        SteelBeamBrep.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
+                                                                      new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
+                                                                      new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
+                                                                      new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
+                                                                      GH_Component.DocumentTolerance()
+                                                                      ));
+                        // make bottom flange
+                        SteelBeamBrep.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
+                                                                      new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
+                                                                      new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
+                                                                      new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
+                                                                      GH_Component.DocumentTolerance()
+                                                                      ));
+                        // make web 1
+                        SteelBeamBrep.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
+                                                                      new Point3d(Node_start.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
+                                                                      new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
+                                                                      new Point3d(Node_end.X - (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y - (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
+                                                                      GH_Component.DocumentTolerance()
+                                                                      ));
+                        // make web 2
+                        SteelBeamBrep.Add(Brep.CreateFromCornerPoints(new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z),
+                                                                      new Point3d(Node_start.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_start.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_start.Z - BeamHight),
+                                                                      new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z - BeamHight),
+                                                                      new Point3d(Node_end.X + (BeamWidth / 2.0) * Math.Sin(BeamAngle), Node_end.Y + (BeamWidth / 2.0) * Math.Cos(BeamAngle), Node_end.Z),
+                                                                      GH_Component.DocumentTolerance()
+                                                                      ));
+                    }
+                    else {
+                        // L とか Pipe とかもあるけど 今後実装用
+                    }
+                }
+            }
+            SteelBeamBrepArray = Brep.JoinBreps(SteelBeamBrep, GH_Component.DocumentTolerance());
+            return SteelBeamBrepArray;
         }
     }
 }
