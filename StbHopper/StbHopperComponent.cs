@@ -39,6 +39,13 @@ namespace StbHopper {
 
         public override void ClearData() {
             base.ClearData();
+            RhinoNodes.Clear();
+            RhinoNodeIDs.Clear();
+            RhinoColumns.Clear();
+            RhinoGirders.Clear();
+            RhinoPosts.Clear();
+            RhinoBeams.Clear();
+            RhinoBraces.Clear();
         }
 
         /// <summary>
@@ -207,6 +214,9 @@ namespace StbHopper {
 
         public override void ClearData() {
             base.ClearData();
+            RhinoNodes.Clear();
+            RhinoNodeIDs.Clear();
+            RhinoSlabs.Clear();
         }
 
         /// <summary>
