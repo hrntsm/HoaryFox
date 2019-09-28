@@ -11,11 +11,21 @@ Grasshopper Component which read ST-Bridge file(.stb) and display its model.
 
 ## How to use
 
-Input file path you want to modeling and output some STB tag data(StbClumn, StbGirder, StbPost, StbBeam, StbBrace).
+Input file path you want to modeling and output some STB tag data(StbClumn, StbGirder, StbPost, StbBeam, StbBrace, StbSlab).
 
+It supports version 1.x, but version 2.x is non-compliant.  
 If you need more infomation, refer to below youtube movie or send direct messege to my twitter account.
   
 [![](https://img.youtube.com/vi/zxkE5YmaUKk/0.jpg)](https://www.youtube.com/watch?v=zxkE5YmaUKk)
+
+## What is ST-Bridge
+
+Quote from [building SMART Japan Structural Design Subcommittee](https://en.building-smart.or.jp/meeting/buildall/structural-design/) doing making specifications of ST-Bridge.
+
+> ST Bridge is the standardized format for data sharing in Japan’s structural engineering industry.
+> + Simpler to use than IFC due to the clearly defined the range of use
+> + Integrate Japanese original methods of drawing methodology (Grids, part placement and section annotations, reinforcement information)
+> + Aim for coordination between domestic structural applications, building skeleton surveying applications, 3D Object CAD
 
 ## Contact information
 
