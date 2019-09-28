@@ -11,8 +11,9 @@ Grasshopper Component which read ST-Bridge file(.stb) and display its model.
 
 ## How to use
 
-Input file path you want to modeling and output some STB tag data(StbClumn, StbGirder, StbPost, StbBeam, StbBrace).
+Input file path you want to modeling and output some STB tag data(StbClumn, StbGirder, StbPost, StbBeam, StbBrace, StbSlab).
 
+It supports version 1.x, but version 2.x is non-compliant.  
 If you need more infomation, refer to below youtube movie or send direct messege to my twitter account.
   
 [![](https://img.youtube.com/vi/zxkE5YmaUKk/0.jpg)](https://www.youtube.com/watch?v=zxkE5YmaUKk)
