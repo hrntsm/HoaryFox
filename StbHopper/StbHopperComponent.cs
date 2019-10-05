@@ -185,8 +185,8 @@ namespace StbHopper {
         private string path, ElementShape, xElementKind, ElementShapeType;
         private int NodeID, NodeIndex_i, NodeIndex_j, NodeIndex_k, NodeIndex_l, NodeIndexStart, NodeIndexEnd,
                     xNodeStart, xNodeEnd, xElementIdSection,
-                    StbSecIndex,  ElementIdSection, ElementHight, ElementWidth;
-        private double xPos, yPos, zPos, ElementAngleY, ElementAngleZ;
+                    StbSecIndex,  ElementIdSection;
+        private double xPos, yPos, zPos, ElementAngleY, ElementAngleZ, ElementHight, ElementWidth;
         private Point3d NodeStart, NodeEnd, 
                         VertexS1, VertexS2, VertexS3, VertexS4, VertexS5, VertexS6,
                         VertexE1, VertexE2, VertexE3, VertexE4, VertexE5, VertexE6;
@@ -206,8 +206,8 @@ namespace StbHopper {
         private List<int> xSecSBraceId = new List<int>();
         private List<string> xSecSBraceShape = new List<string>();
         private List<string> xStbSecSteelName = new List<string>();
-        private List<int> xStbSecSteelParamA = new List<int>();
-        private List<int> xStbSecSteelParamB = new List<int>();
+        private List<double> xStbSecSteelParamA = new List<double>();
+        private List<double> xStbSecSteelParamB = new List<double>();
         private List<string> xStbSecSteelType = new List<string>();
         private List<Brep> RhinoSlabs = new List<Brep>();
         private List<Brep> ElementShapeBrep = new List<Brep>();
@@ -364,6 +364,7 @@ namespace StbHopper {
             GetStbSteelSection(xdoc, "StbSecRoll-BOX", "BOX");
             GetStbSteelSection(xdoc, "StbSecBuild-BOX", "BOX");
             GetStbSteelSection(xdoc, "StbSecPipe", "Pipe");
+            GetStbSteelSection(xdoc, "StbSecRoll-Bar", "Bar");
             GetStbSteelSection(xdoc, "StbSecRoll-L", "L");
 
 
@@ -418,8 +419,17 @@ namespace StbHopper {
                 var xSteelSections = xdoc.Root.Descendants(xDateTag);
                 foreach (var xSteelSection in xSteelSections) {
                     xStbSecSteelName.Add((string)xSteelSection.Attribute("name"));
-                    xStbSecSteelParamA.Add((int)xSteelSection.Attribute("D"));
-                    xStbSecSteelParamB.Add((int)xSteelSection.Attribute("t"));
+                    xStbSecSteelParamA.Add((double)xSteelSection.Attribute("D"));
+                    xStbSecSteelParamB.Add((double)xSteelSection.Attribute("t"));
+                    xStbSecSteelType.Add(SectionType);
+                }
+            }
+            else if (SectionType == "Bar") {
+                var xSteelSections = xdoc.Root.Descendants(xDateTag);
+                foreach (var xSteelSection in xSteelSections) {
+                    xStbSecSteelName.Add((string)xSteelSection.Attribute("name"));
+                    xStbSecSteelParamA.Add((double)xSteelSection.Attribute("R"));
+                    xStbSecSteelParamB.Add(0.0);
                     xStbSecSteelType.Add(SectionType);
                 }
             }
@@ -427,8 +437,8 @@ namespace StbHopper {
                 var xSteelSections = xdoc.Root.Descendants(xDateTag);
                 foreach (var xSteelSection in xSteelSections) {
                     xStbSecSteelName.Add((string)xSteelSection.Attribute("name"));
-                    xStbSecSteelParamA.Add((int)xSteelSection.Attribute("A"));
-                    xStbSecSteelParamB.Add((int)xSteelSection.Attribute("B"));
+                    xStbSecSteelParamA.Add((double)xSteelSection.Attribute("A"));
+                    xStbSecSteelParamB.Add((double)xSteelSection.Attribute("B"));
                     xStbSecSteelType.Add(SectionType);
                 }
             }
@@ -521,7 +531,7 @@ namespace StbHopper {
         /// <param name="ElementShapeType"></param>
         /// <param name="ElementStructureType"></param>
         /// <returns></returns>
-        public List<Brep> MakeElementsBrepFromVertex(Point3d NodeStart, Point3d NodeEnd, int ElementHight, int ElementWidth, string ElementShapeType, string ElementStructureType) {
+        public List<Brep> MakeElementsBrepFromVertex(Point3d NodeStart, Point3d NodeEnd, double ElementHight, double ElementWidth, string ElementShapeType, string ElementStructureType) {
 
             // 部材のアングルの確認
             ElementAngleY = -1.0 * Math.Atan((NodeEnd.Y - NodeStart.Y) / (NodeEnd.X - NodeStart.X));
