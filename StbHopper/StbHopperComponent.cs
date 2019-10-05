@@ -16,7 +16,7 @@ namespace StbHopper {
     public class StbHopperLine : GH_Component {
 
         private string path;
-        private int NodeID, xNode_start, xNode_end, Nodeindex_start, Nodeindex_end;
+        private int NodeID, xNodeStart, xNodeEnd, NodeIndexStart, NodeIndexEnd;
         private double xPos, yPos, zPos;
         private List<Point3d> RhinoNodes = new List<Point3d>();
         private List<int>  RhinoNodeIDs = new List<int>();
@@ -93,61 +93,61 @@ namespace StbHopper {
             // StbColumns の取得
             var xColumns = xdoc.Root.Descendants("StbColumn");
             foreach (var xColumn in xColumns) {
-                xNode_start = (int)xColumn.Attribute("idNode_bottom");
-                xNode_end = (int)xColumn.Attribute("idNode_top");
+                xNodeStart = (int)xColumn.Attribute("idNode_bottom");
+                xNodeEnd = (int)xColumn.Attribute("idNode_top");
 
-                Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
-                Nodeindex_end = RhinoNodeIDs.IndexOf(xNode_end);
+                NodeIndexStart = RhinoNodeIDs.IndexOf(xNodeStart);
+                NodeIndexEnd = RhinoNodeIDs.IndexOf(xNodeEnd);
 
-                RhinoColumns.Add(new Line(RhinoNodes[Nodeindex_start], RhinoNodes[Nodeindex_end]));
+                RhinoColumns.Add(new Line(RhinoNodes[NodeIndexStart], RhinoNodes[NodeIndexEnd]));
             }
 
             // StbGirder の取得
             var xGirders = xdoc.Root.Descendants("StbGirder");
             foreach (var xGirder in xGirders) {
-                xNode_start = (int)xGirder.Attribute("idNode_start");
-                xNode_end = (int)xGirder.Attribute("idNode_end");
+                xNodeStart = (int)xGirder.Attribute("idNode_start");
+                xNodeEnd = (int)xGirder.Attribute("idNode_end");
 
-                Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
-                Nodeindex_end = RhinoNodeIDs.IndexOf(xNode_end);
+                NodeIndexStart = RhinoNodeIDs.IndexOf(xNodeStart);
+                NodeIndexEnd = RhinoNodeIDs.IndexOf(xNodeEnd);
 
-                RhinoGirders.Add(new Line(RhinoNodes[Nodeindex_start], RhinoNodes[Nodeindex_end]));
+                RhinoGirders.Add(new Line(RhinoNodes[NodeIndexStart], RhinoNodes[NodeIndexEnd]));
             }
 
             // StbPosts の取得
             var xPosts = xdoc.Root.Descendants("StbPost");
             foreach (var xPost in xPosts) {
-                xNode_start = (int)xPost.Attribute("idNode_bottom");
-                xNode_end = (int)xPost.Attribute("idNode_top");
+                xNodeStart = (int)xPost.Attribute("idNode_bottom");
+                xNodeEnd = (int)xPost.Attribute("idNode_top");
 
-                Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
-                Nodeindex_end = RhinoNodeIDs.IndexOf(xNode_end);
+                NodeIndexStart = RhinoNodeIDs.IndexOf(xNodeStart);
+                NodeIndexEnd = RhinoNodeIDs.IndexOf(xNodeEnd);
 
-                RhinoPosts.Add(new Line(RhinoNodes[Nodeindex_start], RhinoNodes[Nodeindex_end]));
+                RhinoPosts.Add(new Line(RhinoNodes[NodeIndexStart], RhinoNodes[NodeIndexEnd]));
             }
 
             // StbBeam の取得
             var xBeams = xdoc.Root.Descendants("StbBeam");
             foreach (var xBeam in xBeams) {
-                xNode_start = (int)xBeam.Attribute("idNode_start");
-                xNode_end = (int)xBeam.Attribute("idNode_end");
+                xNodeStart = (int)xBeam.Attribute("idNode_start");
+                xNodeEnd = (int)xBeam.Attribute("idNode_end");
 
-                Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
-                Nodeindex_end = RhinoNodeIDs.IndexOf(xNode_end);
+                NodeIndexStart = RhinoNodeIDs.IndexOf(xNodeStart);
+                NodeIndexEnd = RhinoNodeIDs.IndexOf(xNodeEnd);
 
-                RhinoBeams.Add(new Line(RhinoNodes[Nodeindex_start], RhinoNodes[Nodeindex_end]));
+                RhinoBeams.Add(new Line(RhinoNodes[NodeIndexStart], RhinoNodes[NodeIndexEnd]));
             }
 
             // StbBrace の取得
             var xBraces = xdoc.Root.Descendants("StbBrace");
             foreach (var xBrace in xBraces) {
-                xNode_start = (int)xBrace.Attribute("idNode_start");
-                xNode_end = (int)xBrace.Attribute("idNode_end");
+                xNodeStart = (int)xBrace.Attribute("idNode_start");
+                xNodeEnd = (int)xBrace.Attribute("idNode_end");
 
-                Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
-                Nodeindex_end = RhinoNodeIDs.IndexOf(xNode_end);
+                NodeIndexStart = RhinoNodeIDs.IndexOf(xNodeStart);
+                NodeIndexEnd = RhinoNodeIDs.IndexOf(xNodeEnd);
 
-                RhinoBraces.Add(new Line(RhinoNodes[Nodeindex_start], RhinoNodes[Nodeindex_end]));
+                RhinoBraces.Add(new Line(RhinoNodes[NodeIndexStart], RhinoNodes[NodeIndexEnd]));
             }
 
             DA.SetDataList(0, RhinoNodes);
@@ -182,10 +182,10 @@ namespace StbHopper {
 
     public class StbHopperBrep : GH_Component {
 
-        private string path, Element_shape, xElement_kind, ElementShapeType;
-        private int NodeID, Nodeindex_i, Nodeindex_j, Nodeindex_k, Nodeindex_l, Nodeindex_start, Nodeindex_end,
-                    xNode_start, xNode_end, xElement_id_section,
-                    StbSecIndex,  Element_id_section, ElementHight, ElementWidth;
+        private string path, ElementShape, xElementKind, ElementShapeType;
+        private int NodeID, NodeIndex_i, NodeIndex_j, NodeIndex_k, NodeIndex_l, NodeIndexStart, NodeIndexEnd,
+                    xNodeStart, xNodeEnd, xElementIdSection,
+                    StbSecIndex,  ElementIdSection, ElementHight, ElementWidth;
         private double xPos, yPos, zPos, ElementAngleY, ElementAngleZ;
         private Point3d NodeStart, NodeEnd, 
                         VertexS1, VertexS2, VertexS3, VertexS4, VertexS5, VertexS6,
@@ -193,25 +193,25 @@ namespace StbHopper {
         private List<Point3d> RhinoNodes = new List<Point3d>();
         private List<int> RhinoNodeIDs = new List<int>();
         private List<int> xSlabNodeIDs = new List<int>();
-        private List<int> xSecRcColumn_id = new List<int>();
-        private List<int> xSecRcColumn_Depth = new List<int>();
-        private List<int> xSecRcColumn_Width = new List<int>();
-        private List<int> xSecSColumn_id = new List<int>();
-        private List<string> xSecSColumn_shape = new List<string>();
-        private List<int> xSecRcBeam_id = new List<int>();
-        private List<int> xSecRcBeam_Depth = new List<int>();
-        private List<int> xSecRcBeam_Width = new List<int>();
-        private List<int> xSecSBeam_id = new List<int>();
-        private List<string> xSecSBeam_shape = new List<string>();
-        private List<int> xSecSBrace_id = new List<int>();
-        private List<string> xSecSBrace_shape = new List<string>();
-        private List<string> xStbSecSteel_name = new List<string>();
-        private List<int> xStbSecSteel_A = new List<int>();
-        private List<int> xStbSecSteel_B = new List<int>();
-        private List<string> xStbSecSteel_type = new List<string>();
+        private List<int> xSecRcColumnId = new List<int>();
+        private List<int> xSecRcColumnDepth = new List<int>();
+        private List<int> xSecRcColumnWidth = new List<int>();
+        private List<int> xSecSColumnId = new List<int>();
+        private List<string> xSecSColumnShape = new List<string>();
+        private List<int> xSecRcBeamId = new List<int>();
+        private List<int> xSecRcBeamDepth = new List<int>();
+        private List<int> xSecRcBeamWidth = new List<int>();
+        private List<int> xSecSBeamId = new List<int>();
+        private List<string> xSecSBeamShape = new List<string>();
+        private List<int> xSecSBraceId = new List<int>();
+        private List<string> xSecSBraceShape = new List<string>();
+        private List<string> xStbSecSteelName = new List<string>();
+        private List<int> xStbSecSteelParamA = new List<int>();
+        private List<int> xStbSecSteelParamB = new List<int>();
+        private List<string> xStbSecSteelType = new List<string>();
         private List<Brep> RhinoSlabs = new List<Brep>();
         private List<Brep> ElementShapeBrep = new List<Brep>();
-        private Brep[] RhinoColumns, RhinoGirders, RhinoPosts, RhinoBeams, S_Braces, ELementShapeBrepArray;
+        private Brep[] RhinoColumns, RhinoGirders, RhinoPosts, RhinoBeams, SteelBraces, ElementShapeBrepArray;
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -286,17 +286,17 @@ namespace StbHopper {
                 }
 
                 Brep SlabBrep = new Brep();
-                Nodeindex_i = RhinoNodeIDs.IndexOf(xSlabNodeIDs[0]);
-                Nodeindex_j = RhinoNodeIDs.IndexOf(xSlabNodeIDs[1]);
-                Nodeindex_k = RhinoNodeIDs.IndexOf(xSlabNodeIDs[2]);
+                NodeIndex_i = RhinoNodeIDs.IndexOf(xSlabNodeIDs[0]);
+                NodeIndex_j = RhinoNodeIDs.IndexOf(xSlabNodeIDs[1]);
+                NodeIndex_k = RhinoNodeIDs.IndexOf(xSlabNodeIDs[2]);
 
                 // StbSlabの定義上4節点以外許容されているのか不明だが場合分けしてる
                 if (CountNode == 4) {
-                    Nodeindex_l = RhinoNodeIDs.IndexOf(xSlabNodeIDs[3]);
-                    SlabBrep = Brep.CreateFromCornerPoints(RhinoNodes[Nodeindex_i], RhinoNodes[Nodeindex_j], RhinoNodes[Nodeindex_k], RhinoNodes[Nodeindex_l], GH_Component.DocumentTolerance());
+                    NodeIndex_l = RhinoNodeIDs.IndexOf(xSlabNodeIDs[3]);
+                    SlabBrep = Brep.CreateFromCornerPoints(RhinoNodes[NodeIndex_i], RhinoNodes[NodeIndex_j], RhinoNodes[NodeIndex_k], RhinoNodes[NodeIndex_l], GH_Component.DocumentTolerance());
                 }
                 else {
-                    SlabBrep = Brep.CreateFromCornerPoints(RhinoNodes[Nodeindex_i], RhinoNodes[Nodeindex_j], RhinoNodes[Nodeindex_k], GH_Component.DocumentTolerance());
+                    SlabBrep = Brep.CreateFromCornerPoints(RhinoNodes[NodeIndex_i], RhinoNodes[NodeIndex_j], RhinoNodes[NodeIndex_k], GH_Component.DocumentTolerance());
                 }
 
                 xSlabNodeIDs.Clear(); // foreachごとでListにAddし続けてるのでここで値をClear
@@ -306,56 +306,56 @@ namespace StbHopper {
             // StbSecColumn_RC の取得
             var xSecRcColumns = xdoc.Root.Descendants("StbSecColumn_RC");
             foreach (var xSecRcColumn in xSecRcColumns) {
-                xSecRcColumn_id.Add((int)xSecRcColumn.Attribute("id"));
+                xSecRcColumnId.Add((int)xSecRcColumn.Attribute("id"));
                 var xSecFigure = xSecRcColumn.Element("StbSecFigure");
 
                 // 子要素が StbSecRect か StbSecCircle を判定
                 if (xSecFigure.Element("StbSecRect") != null) {
-                    xSecRcColumn_Depth.Add((int)xSecFigure.Element("StbSecRect").Attribute("DY"));
-                    xSecRcColumn_Width.Add((int)xSecFigure.Element("StbSecRect").Attribute("DX"));
+                    xSecRcColumnDepth.Add((int)xSecFigure.Element("StbSecRect").Attribute("DY"));
+                    xSecRcColumnWidth.Add((int)xSecFigure.Element("StbSecRect").Attribute("DX"));
                 }
                 else {
-                    xSecRcColumn_Depth.Add((int)xSecFigure.Element("StbSecCircle").Attribute("D"));
-                    xSecRcColumn_Width.Add( 0 ); // Circle と判定用に width は 0
+                    xSecRcColumnDepth.Add((int)xSecFigure.Element("StbSecCircle").Attribute("D"));
+                    xSecRcColumnWidth.Add( 0 ); // Circle と判定用に width は 0
                 }
             }
 
             // StbSecColumn_S の取得
             var xSecSColumns = xdoc.Root.Descendants("StbSecColumn_S");
             foreach (var xSecSColumn in xSecSColumns) {
-                xSecSColumn_id.Add((int)xSecSColumn.Attribute("id"));
-                xSecSColumn_shape.Add((string)xSecSColumn.Element("StbSecSteelColumn").Attribute("shape"));
+                xSecSColumnId.Add((int)xSecSColumn.Attribute("id"));
+                xSecSColumnShape.Add((string)xSecSColumn.Element("StbSecSteelColumn").Attribute("shape"));
             }
 
             // StbSecBeam_RC の取得
             var xSecRcBeams = xdoc.Root.Descendants("StbSecBeam_RC");
             foreach (var xSecRcBeam in xSecRcBeams) {
-                xSecRcBeam_id.Add((int)xSecRcBeam.Attribute("id"));
+                xSecRcBeamId.Add((int)xSecRcBeam.Attribute("id"));
                 var xSecFigure = xSecRcBeam.Element("StbSecFigure");
                 
                 // 子要素が StbSecHaunch か StbSecStraight を判定
                 if (xSecFigure.Element("StbSecHaunch") != null) {
-                    xSecRcBeam_Depth.Add((int)xSecFigure.Element("StbSecHaunch").Attribute("depth_center"));
-                    xSecRcBeam_Width.Add((int)xSecFigure.Element("StbSecHaunch").Attribute("width_center"));
+                    xSecRcBeamDepth.Add((int)xSecFigure.Element("StbSecHaunch").Attribute("depth_center"));
+                    xSecRcBeamWidth.Add((int)xSecFigure.Element("StbSecHaunch").Attribute("width_center"));
                 } 
                 else {
-                    xSecRcBeam_Depth.Add((int)xSecFigure.Element("StbSecStraight").Attribute("depth"));
-                    xSecRcBeam_Width.Add((int)xSecFigure.Element("StbSecStraight").Attribute("width"));
+                    xSecRcBeamDepth.Add((int)xSecFigure.Element("StbSecStraight").Attribute("depth"));
+                    xSecRcBeamWidth.Add((int)xSecFigure.Element("StbSecStraight").Attribute("width"));
                 }
             }
 
             // StbSecBeam_S の取得
             var xSecSBeams = xdoc.Root.Descendants("StbSecBeam_S");
             foreach (var xSecSBeam in xSecSBeams) {
-                xSecSBeam_id.Add((int)xSecSBeam.Attribute("id"));
-                xSecSBeam_shape.Add((string)xSecSBeam.Element("StbSecSteelBeam").Attribute("shape"));
+                xSecSBeamId.Add((int)xSecSBeam.Attribute("id"));
+                xSecSBeamShape.Add((string)xSecSBeam.Element("StbSecSteelBeam").Attribute("shape"));
             }
 
             // StbSecBrace_S の取得
             var xSecSBraces = xdoc.Root.Descendants("StbSecBrace_S");
             foreach (var xSecSBrace in xSecSBraces) {
-                xSecSBrace_id.Add((int)xSecSBrace.Attribute("id"));
-                xSecSBrace_shape.Add((string)xSecSBrace.Element("StbSecSteelBrace").Attribute("shape"));
+                xSecSBraceId.Add((int)xSecSBrace.Attribute("id"));
+                xSecSBraceShape.Add((string)xSecSBrace.Element("StbSecSteelBrace").Attribute("shape"));
             }
 
             // S断面形状の取得
@@ -376,14 +376,14 @@ namespace StbHopper {
             // 小梁の断面の生成
             RhinoBeams = MakeElementBrep(xdoc, "StbBeam", "Beam");
             // Sブレ―スの断面の生成
-            S_Braces = MakeElementBrep(xdoc, "StbBrace", "Brace");
+            SteelBraces = MakeElementBrep(xdoc, "StbBrace", "Brace");
 
             DA.SetDataList(0, RhinoColumns);
             DA.SetDataList(1, RhinoGirders);
             DA.SetDataList(2, RhinoPosts);
             DA.SetDataList(3, RhinoBeams);
             DA.SetDataList(4, RhinoSlabs);
-            DA.SetDataList(5, S_Braces);
+            DA.SetDataList(5, SteelBraces);
         }
 
         /// <summary>
@@ -417,19 +417,19 @@ namespace StbHopper {
             if(SectionType == "Pipe") {
                 var xSteelSections = xdoc.Root.Descendants(xDateTag);
                 foreach (var xSteelSection in xSteelSections) {
-                    xStbSecSteel_name.Add((string)xSteelSection.Attribute("name"));
-                    xStbSecSteel_A.Add((int)xSteelSection.Attribute("D"));
-                    xStbSecSteel_B.Add((int)xSteelSection.Attribute("t"));
-                    xStbSecSteel_type.Add(SectionType);
+                    xStbSecSteelName.Add((string)xSteelSection.Attribute("name"));
+                    xStbSecSteelParamA.Add((int)xSteelSection.Attribute("D"));
+                    xStbSecSteelParamB.Add((int)xSteelSection.Attribute("t"));
+                    xStbSecSteelType.Add(SectionType);
                 }
             }
             else {
                 var xSteelSections = xdoc.Root.Descendants(xDateTag);
                 foreach (var xSteelSection in xSteelSections) {
-                    xStbSecSteel_name.Add((string)xSteelSection.Attribute("name"));
-                    xStbSecSteel_A.Add((int)xSteelSection.Attribute("A"));
-                    xStbSecSteel_B.Add((int)xSteelSection.Attribute("B"));
-                    xStbSecSteel_type.Add(SectionType);
+                    xStbSecSteelName.Add((string)xSteelSection.Attribute("name"));
+                    xStbSecSteelParamA.Add((int)xSteelSection.Attribute("A"));
+                    xStbSecSteelParamB.Add((int)xSteelSection.Attribute("B"));
+                    xStbSecSteelType.Add(SectionType);
                 }
             }
         }
@@ -447,33 +447,33 @@ namespace StbHopper {
             var xElements = xdoc.Root.Descendants(xDateTag);
             foreach (var xElement in xElements) {
                 if (ElementStructureType == "Beam" || ElementStructureType == "Brace") {
-                    xNode_start = (int)xElement.Attribute("idNode_start");
-                    xNode_end = (int)xElement.Attribute("idNode_end");
+                    xNodeStart = (int)xElement.Attribute("idNode_start");
+                    xNodeEnd = (int)xElement.Attribute("idNode_end");
                 }
                 else {
-                    xNode_start = (int)xElement.Attribute("idNode_bottom");
-                    xNode_end = (int)xElement.Attribute("idNode_top");
+                    xNodeStart = (int)xElement.Attribute("idNode_bottom");
+                    xNodeEnd = (int)xElement.Attribute("idNode_top");
                 }
-                xElement_id_section = (int)xElement.Attribute("id_section");
-                xElement_kind = (string)xElement.Attribute("kind_structure");
+                xElementIdSection = (int)xElement.Attribute("id_section");
+                xElementKind = (string)xElement.Attribute("kind_structure");
 
                 // 始点と終点の座標取得
-                Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
-                Nodeindex_end = RhinoNodeIDs.IndexOf(xNode_end);
-                NodeStart = RhinoNodes[Nodeindex_start];
-                NodeEnd = RhinoNodes[Nodeindex_end];
+                NodeIndexStart = RhinoNodeIDs.IndexOf(xNodeStart);
+                NodeIndexEnd = RhinoNodeIDs.IndexOf(xNodeEnd);
+                NodeStart = RhinoNodes[NodeIndexStart];
+                NodeEnd = RhinoNodes[NodeIndexEnd];
 
-                if (xElement_kind == "RC") {
+                if (xElementKind == "RC") {
                     // 断面形状名（shape) と 断面形状（HxB）の取得の取得
                     if (ElementStructureType == "Beam") {
-                        StbSecIndex = xSecRcBeam_id.IndexOf(xElement_id_section);
-                        ElementHight = xSecRcBeam_Depth[StbSecIndex];
-                        ElementWidth = xSecRcBeam_Width[StbSecIndex];
+                        StbSecIndex = xSecRcBeamId.IndexOf(xElementIdSection);
+                        ElementHight = xSecRcBeamDepth[StbSecIndex];
+                        ElementWidth = xSecRcBeamWidth[StbSecIndex];
                     }
                     else if (ElementStructureType == "Column") {
-                        StbSecIndex = xSecRcColumn_id.IndexOf(xElement_id_section);
-                        ElementHight = xSecRcColumn_Depth[StbSecIndex];
-                        ElementWidth = xSecRcColumn_Width[StbSecIndex];
+                        StbSecIndex = xSecRcColumnId.IndexOf(xElementIdSection);
+                        ElementHight = xSecRcColumnDepth[StbSecIndex];
+                        ElementWidth = xSecRcColumnWidth[StbSecIndex];
                     }
 
                     if (ElementWidth == 0) {
@@ -483,32 +483,32 @@ namespace StbHopper {
                         ElementShapeType = "BOX";
                     }
                 }
-                else if (xElement_kind == "S") {
-                    // 断面形状名（shapeの取得の取得
+                else if (xElementKind == "S") {
+                    // 断面形状名（shape）の取得の取得
                     if (ElementStructureType == "Beam") {
-                        Element_id_section = xSecSBeam_id.IndexOf(xElement_id_section);
-                        Element_shape = xSecSBeam_shape[Element_id_section];
+                        ElementIdSection = xSecSBeamId.IndexOf(xElementIdSection);
+                        ElementShape = xSecSBeamShape[ElementIdSection];
                     }
                     else if (ElementStructureType == "Column") {
-                        Element_id_section = xSecSColumn_id.IndexOf(xElement_id_section);
-                        Element_shape = xSecSColumn_shape[Element_id_section];
+                        ElementIdSection = xSecSColumnId.IndexOf(xElementIdSection);
+                        ElementShape = xSecSColumnShape[ElementIdSection];
                     }
                     else if (ElementStructureType == "Brace") {
-                        Element_id_section = xSecSBrace_id.IndexOf(xElement_id_section);
-                        Element_shape = xSecSBrace_shape[Element_id_section];
+                        ElementIdSection = xSecSBraceId.IndexOf(xElementIdSection);
+                        ElementShape = xSecSBraceShape[ElementIdSection];
                     }
                     // 断面形状（HxB）の取得の取得
-                    StbSecIndex = xStbSecSteel_name.IndexOf(Element_shape);
-                    ElementHight = xStbSecSteel_A[StbSecIndex];
-                    ElementWidth = xStbSecSteel_B[StbSecIndex];
-                    ElementShapeType = xStbSecSteel_type[StbSecIndex];
+                    StbSecIndex = xStbSecSteelName.IndexOf(ElementShape);
+                    ElementHight = xStbSecSteelParamA[StbSecIndex];
+                    ElementWidth = xStbSecSteelParamB[StbSecIndex];
+                    ElementShapeType = xStbSecSteelType[StbSecIndex];
                 }
 
                 // 始点と終点から梁断面サーフェスの作成
                 ElementShapeBrep = MakeElementsBrepFromVertex(NodeStart, NodeEnd, ElementHight, ElementWidth, ElementShapeType, ElementStructureType);
             }
-            ELementShapeBrepArray = Brep.JoinBreps(ElementShapeBrep, GH_Component.DocumentTolerance());
-            return ELementShapeBrepArray;
+            ElementShapeBrepArray = Brep.JoinBreps(ElementShapeBrep, GH_Component.DocumentTolerance());
+            return ElementShapeBrepArray;
         }
 
         /// <summary>
