@@ -182,10 +182,10 @@ namespace StbHopper {
 
     public class StbHopperBrep : GH_Component {
 
-        private string path, Beam_shape, xBeam_kind, ElementShapeType;
+        private string path, Element_shape, xElement_kind, ElementShapeType;
         private int NodeID, Nodeindex_i, Nodeindex_j, Nodeindex_k, Nodeindex_l, Nodeindex_start, Nodeindex_end,
-                    xNode_start, xNode_end, xBeam_id_section,
-                    StbSecIndex, Beam_id_section, ElementHight, ElementWidth;
+                    xNode_start, xNode_end, xElement_id_section,
+                    StbSecIndex,  Element_id_section, ElementHight, ElementWidth;
         private double xPos, yPos, zPos, ElementAngleY, ElementAngleZ;
         private Point3d NodeStart, NodeEnd, 
                         VertexS1, VertexS2, VertexS3, VertexS4, VertexS5, VertexS6,
@@ -319,12 +319,14 @@ namespace StbHopper {
                     xSecRcColumn_Width.Add( 0 ); // Circle と判定用に width は 0
                 }
             }
+
             // StbSecColumn_S の取得
             var xSecSColumns = xdoc.Root.Descendants("StbSecColumn_S");
             foreach (var xSecSColumn in xSecSColumns) {
                 xSecSColumn_id.Add((int)xSecSColumn.Attribute("id"));
                 xSecSColumn_shape.Add((string)xSecSColumn.Element("StbSecSteelColumn").Attribute("shape"));
             }
+
             // StbSecBeam_RC の取得
             var xSecRcBeams = xdoc.Root.Descendants("StbSecBeam_RC");
             foreach (var xSecRcBeam in xSecRcBeams) {
@@ -341,12 +343,14 @@ namespace StbHopper {
                     xSecRcBeam_Width.Add((int)xSecFigure.Element("StbSecStraight").Attribute("width"));
                 }
             }
+
             // StbSecBeam_S の取得
             var xSecSBeams = xdoc.Root.Descendants("StbSecBeam_S");
             foreach (var xSecSBeam in xSecSBeams) {
                 xSecSBeam_id.Add((int)xSecSBeam.Attribute("id"));
                 xSecSBeam_shape.Add((string)xSecSBeam.Element("StbSecSteelBeam").Attribute("shape"));
             }
+
             // StbSecBrace_S の取得
             var xSecSBraces = xdoc.Root.Descendants("StbSecBrace_S");
             foreach (var xSecSBrace in xSecSBraces) {
@@ -364,15 +368,15 @@ namespace StbHopper {
 
 
             // 柱の断面の生成
-            RhinoColumns = MakeColumnBrep(xdoc, "StbColumn");
+            RhinoColumns = MakeElementBrep(xdoc, "StbColumn", "Column");
             // 大梁の断面の生成
-            RhinoGirders = MakeBeamBrep(xdoc, "StbGirder");
+            RhinoGirders = MakeElementBrep(xdoc, "StbGirder", "Beam");
             // 間柱の断面の生成
-            RhinoPosts = MakeColumnBrep(xdoc, "StbPost");
+            RhinoPosts = MakeElementBrep(xdoc, "StbPost", "Column");
             // 小梁の断面の生成
-            RhinoBeams = MakeBeamBrep(xdoc, "StbBeam");
+            RhinoBeams = MakeElementBrep(xdoc, "StbBeam", "Beam");
             // Sブレ―スの断面の生成
-            S_Braces = MakeSteelBraceBrep(xdoc, "StbBrace");
+            S_Braces = MakeElementBrep(xdoc, "StbBrace", "Brace");
 
             DA.SetDataList(0, RhinoColumns);
             DA.SetDataList(1, RhinoGirders);
@@ -406,9 +410,9 @@ namespace StbHopper {
         /// <summary>
         /// Get ST-Bridge Steel Section
         /// </summary>
-        /// <param name="xdoc"></param>
-        /// <param name="xDateTag"></param>
-        /// <param name="SectionType"></param>
+        /// <param name="xdoc">XML data</param>
+        /// <param name="xDateTag">XML data tag you want to read</param>
+        /// <param name="SectionType">Section type, H or BOX or Pipe or L</param>
         public void GetStbSteelSection(XDocument xdoc, string xDateTag, string SectionType) {
             if(SectionType == "Pipe") {
                 var xSteelSections = xdoc.Root.Descendants(xDateTag);
@@ -430,69 +434,28 @@ namespace StbHopper {
             }
         }
 
-        /// <summary> 
-        /// Make Beam Brep
-        /// </summary>
-        /// <param name="xdoc"></param>
-        /// <param name="xDateTag"></param>
-        /// <returns></returns>
-        public Brep[] MakeBeamBrep( XDocument xdoc, string xDateTag ) {
-            ElementShapeBrep.Clear();
-
-            var xBeams = xdoc.Root.Descendants(xDateTag);
-            foreach (var xBeam in xBeams) {
-                xNode_start = (int)xBeam.Attribute("idNode_start");
-                xNode_end = (int)xBeam.Attribute("idNode_end");
-                xBeam_id_section = (int)xBeam.Attribute("id_section");
-                xBeam_kind = (string)xBeam.Attribute("kind_structure");
-
-                // 始点と終点の座標取得
-                Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
-                Nodeindex_end = RhinoNodeIDs.IndexOf(xNode_end);
-                NodeStart = RhinoNodes[Nodeindex_start];
-                NodeEnd = RhinoNodes[Nodeindex_end];
-
-                if (xBeam_kind == "RC") {
-                    // 断面形状名（shape）の取得
-                    StbSecIndex = xSecRcBeam_id.IndexOf(xBeam_id_section);
-                    ElementHight = xSecRcBeam_Depth[StbSecIndex];
-                    ElementWidth = xSecRcBeam_Width[StbSecIndex];
-                    ElementShapeType = "BOX";
-                }
-                else if (xBeam_kind == "S") {
-                    // 断面形状名（shape）の取得
-                    Beam_id_section = xSecSBeam_id.IndexOf(xBeam_id_section);
-                    Beam_shape = xSecSBeam_shape[Beam_id_section];
-
-                    // 断面形状（HxB）の取得
-                    StbSecIndex = xStbSecSteel_name.IndexOf(Beam_shape);
-                    ElementHight = xStbSecSteel_A[StbSecIndex];
-                    ElementWidth = xStbSecSteel_B[StbSecIndex];
-                    ElementShapeType = xStbSecSteel_type[StbSecIndex];
-                }
-
-                // 始点と終点から梁断面サーフェスの作成
-                ElementShapeBrep = MakeElementsBrepFromVertex(NodeStart, NodeEnd, ElementHight, ElementWidth, ElementShapeType, "Beam");
-            }
-            ELementShapeBrepArray = Brep.JoinBreps(ElementShapeBrep, GH_Component.DocumentTolerance());
-            return ELementShapeBrepArray;
-        }
-
         /// <summary>
-        /// Make Column Brep
+        /// Make Element to Brep
         /// </summary>
-        /// <param name="xdoc"></param>
-        /// <param name="xDateTag"></param>
+        /// <param name="xdoc">XML data</param>
+        /// <param name="xDateTag">XML data tag you want to read</param>
+        /// <param name="ElementStructureType">Element structure type, Column or Beam or Brace</param>
         /// <returns></returns>
-        public Brep[] MakeColumnBrep(XDocument xdoc, string xDateTag) {
+        public Brep[] MakeElementBrep(XDocument xdoc, string xDateTag, string ElementStructureType) {
             ElementShapeBrep.Clear();
 
-            var xBeams = xdoc.Root.Descendants(xDateTag);
-            foreach (var xBeam in xBeams) {
-                xNode_start = (int)xBeam.Attribute("idNode_bottom");
-                xNode_end = (int)xBeam.Attribute("idNode_top");
-                xBeam_id_section = (int)xBeam.Attribute("id_section");
-                xBeam_kind = (string)xBeam.Attribute("kind_structure");
+            var xElements = xdoc.Root.Descendants(xDateTag);
+            foreach (var xElement in xElements) {
+                if (ElementStructureType == "Beam" || ElementStructureType == "Brace") {
+                    xNode_start = (int)xElement.Attribute("idNode_start");
+                    xNode_end = (int)xElement.Attribute("idNode_end");
+                }
+                else {
+                    xNode_start = (int)xElement.Attribute("idNode_bottom");
+                    xNode_end = (int)xElement.Attribute("idNode_top");
+                }
+                xElement_id_section = (int)xElement.Attribute("id_section");
+                xElement_kind = (string)xElement.Attribute("kind_structure");
 
                 // 始点と終点の座標取得
                 Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
@@ -500,11 +463,19 @@ namespace StbHopper {
                 NodeStart = RhinoNodes[Nodeindex_start];
                 NodeEnd = RhinoNodes[Nodeindex_end];
 
-                if (xBeam_kind == "RC") {
-                    // 断面形状名（shape）の取得
-                    StbSecIndex = xSecRcColumn_id.IndexOf(xBeam_id_section);
-                    ElementHight = xSecRcColumn_Depth[StbSecIndex];
-                    ElementWidth = xSecRcColumn_Width[StbSecIndex];
+                if (xElement_kind == "RC") {
+                    // 断面形状名（shape) と 断面形状（HxB）の取得の取得
+                    if (ElementStructureType == "Beam") {
+                        StbSecIndex = xSecRcBeam_id.IndexOf(xElement_id_section);
+                        ElementHight = xSecRcBeam_Depth[StbSecIndex];
+                        ElementWidth = xSecRcBeam_Width[StbSecIndex];
+                    }
+                    else if (ElementStructureType == "Column") {
+                        StbSecIndex = xSecRcColumn_id.IndexOf(xElement_id_section);
+                        ElementHight = xSecRcColumn_Depth[StbSecIndex];
+                        ElementWidth = xSecRcColumn_Width[StbSecIndex];
+                    }
+
                     if (ElementWidth == 0) {
                         ElementShapeType = "Pipe";
                     }
@@ -512,66 +483,44 @@ namespace StbHopper {
                         ElementShapeType = "BOX";
                     }
                 }
-                else if (xBeam_kind == "S") {
-                    // 断面形状名（shape）の取得
-                    Beam_id_section = xSecSColumn_id.IndexOf(xBeam_id_section);
-                    Beam_shape = xSecSColumn_shape[Beam_id_section];
-
-                    // 断面形状（HxB）の取得
-                    StbSecIndex = xStbSecSteel_name.IndexOf(Beam_shape);
+                else if (xElement_kind == "S") {
+                    // 断面形状名（shapeの取得の取得
+                    if (ElementStructureType == "Beam") {
+                        Element_id_section = xSecSBeam_id.IndexOf(xElement_id_section);
+                        Element_shape = xSecSBeam_shape[Element_id_section];
+                    }
+                    else if (ElementStructureType == "Column") {
+                        Element_id_section = xSecSColumn_id.IndexOf(xElement_id_section);
+                        Element_shape = xSecSColumn_shape[Element_id_section];
+                    }
+                    else if (ElementStructureType == "Brace") {
+                        Element_id_section = xSecSBrace_id.IndexOf(xElement_id_section);
+                        Element_shape = xSecSBrace_shape[Element_id_section];
+                    }
+                    // 断面形状（HxB）の取得の取得
+                    StbSecIndex = xStbSecSteel_name.IndexOf(Element_shape);
                     ElementHight = xStbSecSteel_A[StbSecIndex];
                     ElementWidth = xStbSecSteel_B[StbSecIndex];
                     ElementShapeType = xStbSecSteel_type[StbSecIndex];
                 }
 
-                // 始点と終点から柱断面サーフェスの作成S
-                ElementShapeBrep = MakeElementsBrepFromVertex(NodeStart, NodeEnd, ElementHight, ElementWidth, ElementShapeType, "Column");
+                // 始点と終点から梁断面サーフェスの作成
+                ElementShapeBrep = MakeElementsBrepFromVertex(NodeStart, NodeEnd, ElementHight, ElementWidth, ElementShapeType, ElementStructureType);
             }
             ELementShapeBrepArray = Brep.JoinBreps(ElementShapeBrep, GH_Component.DocumentTolerance());
             return ELementShapeBrepArray;
         }
 
         /// <summary>
-        /// Make Brace Brep
+        /// 
         /// </summary>
-        /// <param name="xdoc"></param>
-        /// <param name="xDateTag"></param>
+        /// <param name="NodeStart"></param>
+        /// <param name="NodeEnd"></param>
+        /// <param name="ElementHight"></param>
+        /// <param name="ElementWidth"></param>
+        /// <param name="ElementShapeType"></param>
+        /// <param name="ElementStructureType"></param>
         /// <returns></returns>
-        public Brep[] MakeSteelBraceBrep(XDocument xdoc, string xDateTag) {
-            ElementShapeBrep.Clear();
-
-            var xBeams = xdoc.Root.Descendants(xDateTag);
-            foreach (var xBeam in xBeams) {
-                xNode_start = (int)xBeam.Attribute("idNode_start");
-                xNode_end = (int)xBeam.Attribute("idNode_end");
-                xBeam_id_section = (int)xBeam.Attribute("id_section");
-                xBeam_kind = (string)xBeam.Attribute("kind_structure");
-
-                if (xBeam_kind == "S") {
-                    // 始点と終点の座標取得
-                    Nodeindex_start = RhinoNodeIDs.IndexOf(xNode_start);
-                    Nodeindex_end = RhinoNodeIDs.IndexOf(xNode_end);
-                    NodeStart = RhinoNodes[Nodeindex_start];
-                    NodeEnd = RhinoNodes[Nodeindex_end];
-
-                    // 断面形状名（shape）の取得
-                    Beam_id_section = xSecSBrace_id.IndexOf(xBeam_id_section);
-                    Beam_shape = xSecSBrace_shape[Beam_id_section];
-
-                    // 断面形状（HxB）の取得
-                    StbSecIndex = xStbSecSteel_name.IndexOf(Beam_shape);
-                    ElementHight = xStbSecSteel_A[StbSecIndex];
-                    ElementWidth = xStbSecSteel_B[StbSecIndex];
-                    ElementShapeType = xStbSecSteel_type[StbSecIndex];
-
-                    // ブレース断面サーフェスの作成
-                    ElementShapeBrep = MakeElementsBrepFromVertex(NodeStart, NodeEnd, ElementHight, ElementWidth, ElementShapeType, "Brace");
-                }
-            }
-            ELementShapeBrepArray = Brep.JoinBreps(ElementShapeBrep, GH_Component.DocumentTolerance());
-            return ELementShapeBrepArray;
-        }
-
         public List<Brep> MakeElementsBrepFromVertex(Point3d NodeStart, Point3d NodeEnd, int ElementHight, int ElementWidth, string ElementShapeType, string ElementStructureType) {
 
             // 部材のアングルの確認
