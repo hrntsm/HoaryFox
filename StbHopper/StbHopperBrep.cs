@@ -6,16 +6,16 @@ using Grasshopper.Kernel;
 using Rhino.Geometry;
 
 namespace StbHopper {
-    public class Stb2Brep : GH_Component {
+    public class Stb2Brep:GH_Component {
 
         private string _path, _elementShape, _xElementKind, _elementShapeType;
-        private int NodeIndex_i, NodeIndex_j, NodeIndex_k, NodeIndex_l, NodeIndexStart, NodeIndexEnd,
-                    xNodeStart, xNodeEnd, xElementIdSection,
-                    StbSecIndex,  ElementIdSection;
-        private double ElementAngleY, ElementAngleZ, ElementHight, ElementWidth;
-        private Point3d NodeStart, NodeEnd, 
-                        VertexS1, VertexS2, VertexS3, VertexS4, VertexS5, VertexS6,
-                        VertexE1, VertexE2, VertexE3, VertexE4, VertexE5, VertexE6;
+        private int _nodeIndexStart, _nodeIndexEnd,
+                    _xNodeStart, _xNodeEnd, _xElementIdSection,
+                    _stbSecIndex, _elementIdSection;
+        private double _elementAngleY, _elementAngleZ, _elementHight, _elementWidth;
+        private Point3d _nodeStart, _nodeEnd,
+                        _vertexS1, _vertexS2, _vertexS3, _vertexS4, _vertexS5, _vertexS6,
+                        _vertexE1, _vertexE2, _vertexE3, _vertexE4, _vertexE5, _vertexE6;
         private List<Point3d> _nodes = new List<Point3d>();
         private List<int> _nodeIDs = new List<int>();
         private List<int> _xSlabNodeIDs = new List<int>();
@@ -37,7 +37,7 @@ namespace StbHopper {
         private List<string> _xStbSecSteelType = new List<string>();
         private List<Brep> _slabs = new List<Brep>();
         private List<Brep> _elementShapeBrep = new List<Brep>();
-        private Brep[] _columns, _girders, _posts, _beams, _steelBraces, _elementShapeBrepArray;
+        private Brep[] _columns, _girders, _posts, _beams, _braces, _elementShapeBrepArray;
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -68,12 +68,12 @@ namespace StbHopper {
         /// Registers all the output parameters for this component.
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager) {
-            pManager.AddBrepParameter("Columns", "Cl", "output StbColumns to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Girders", "Gd", "output StbGirders to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Posts", "Ps", "output StbPosts to Brep", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Columns", "Col", "output StbColumns to Brep", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Girders", "Grdr", "output StbGirders to Brep", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Posts", "Pst", "output StbPosts to Brep", GH_ParamAccess.list);
             pManager.AddBrepParameter("Beams", "Bm", "output StbBeams to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Slabs", "Sl", "output StbSlabs to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Braces", "Br", "output StbBraces to Brep", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Braces", "Brc", "output StbBraces to Brep", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Slabs", "Slb", "output StbSlabs to Brep", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -84,11 +84,10 @@ namespace StbHopper {
         protected override void SolveInstance(IGH_DataAccess DA) {
             // 対象の stb の pathを取得
             if (!DA.GetData("path", ref _path)) { return; }
-
-            var xdoc = XDocument.Load(_path);
+            var xDoc = XDocument.Load(_path);
 
             // StbNode の取得
-            var xNodes = xdoc.Root.Descendants("StbNode");
+            var xNodes = xDoc.Root.Descendants("StbNode");
             foreach (var xNode in xNodes) {
                 var position = new Point3d();
                 position.X = (double)xNode.Attribute("x");
@@ -101,37 +100,33 @@ namespace StbHopper {
             }
 
             // StbSlabs の取得
-            var xSlabs = xdoc.Root.Descendants("StbSlab");
+            var nodeIndex = new int[4];
+            var xSlabs = xDoc.Root.Descendants("StbSlab");
             foreach (var xSlab in xSlabs) {
-                var xNodeids = xSlab.Element("StbNodeid_List")
-                                    .Elements("StbNodeid");
-                int CountNode = 0;
+                var xNodeids = xSlab.Element("StbNodeid_List").Elements("StbNodeid");
+                int countNode = 0;
                 foreach (var xNodeid in xNodeids) {
                     _xSlabNodeIDs.Add((int)xNodeid.Attribute("id"));
-
-                    CountNode = CountNode + 1;
+                    countNode++;
                 }
 
                 Brep SlabBrep = new Brep();
-                NodeIndex_i = _nodeIDs.IndexOf(_xSlabNodeIDs[0]);
-                NodeIndex_j = _nodeIDs.IndexOf(_xSlabNodeIDs[1]);
-                NodeIndex_k = _nodeIDs.IndexOf(_xSlabNodeIDs[2]);
-
-                // StbSlabの定義上4節点以外許容されているのか不明だが場合分けしてる
-                if (CountNode == 4) {
-                    NodeIndex_l = _nodeIDs.IndexOf(_xSlabNodeIDs[3]);
-                    SlabBrep = Brep.CreateFromCornerPoints(_nodes[NodeIndex_i], _nodes[NodeIndex_j], _nodes[NodeIndex_k], _nodes[NodeIndex_l], GH_Component.DocumentTolerance());
+                for (int i = 0; i < 3; i++) {
+                    nodeIndex[i] = _nodeIDs.IndexOf(_xSlabNodeIDs[i]);
+                }
+                if (countNode == 4) {
+                    nodeIndex[3] = _nodeIDs.IndexOf(_xSlabNodeIDs[3]);
+                    SlabBrep = Brep.CreateFromCornerPoints(_nodes[nodeIndex[0]], _nodes[nodeIndex[1]], _nodes[nodeIndex[2]], _nodes[nodeIndex[3]], GH_Component.DocumentTolerance());
                 }
                 else {
-                    SlabBrep = Brep.CreateFromCornerPoints(_nodes[NodeIndex_i], _nodes[NodeIndex_j], _nodes[NodeIndex_k], GH_Component.DocumentTolerance());
+                    SlabBrep = Brep.CreateFromCornerPoints(_nodes[nodeIndex[0]], _nodes[nodeIndex[1]], _nodes[nodeIndex[2]], GH_Component.DocumentTolerance());
                 }
-
-                _xSlabNodeIDs.Clear(); // foreachごとでListにAddし続けてるのでここで値をClear
                 _slabs.Add(SlabBrep);
+                _xSlabNodeIDs.Clear(); // foreachごとでListにAddし続けてるのでここで値をClear
             }
 
             // StbSecColumn_RC の取得
-            var xSecRcColumns = xdoc.Root.Descendants("StbSecColumn_RC");
+            var xSecRcColumns = xDoc.Root.Descendants("StbSecColumn_RC");
             foreach (var xSecRcColumn in xSecRcColumns) {
                 _xSecRcColumnId.Add((int)xSecRcColumn.Attribute("id"));
                 var xSecFigure = xSecRcColumn.Element("StbSecFigure");
@@ -143,28 +138,28 @@ namespace StbHopper {
                 }
                 else {
                     _xSecRcColumnDepth.Add((int)xSecFigure.Element("StbSecCircle").Attribute("D"));
-                    _xSecRcColumnWidth.Add( 0 ); // Circle と判定用に width は 0
+                    _xSecRcColumnWidth.Add(0); // Circle と判定用に width は 0
                 }
             }
 
             // StbSecColumn_S の取得
-            var xSecSColumns = xdoc.Root.Descendants("StbSecColumn_S");
+            var xSecSColumns = xDoc.Root.Descendants("StbSecColumn_S");
             foreach (var xSecSColumn in xSecSColumns) {
                 _xSecSColumnId.Add((int)xSecSColumn.Attribute("id"));
                 _xSecSColumnShape.Add((string)xSecSColumn.Element("StbSecSteelColumn").Attribute("shape"));
             }
 
             // StbSecBeam_RC の取得
-            var xSecRcBeams = xdoc.Root.Descendants("StbSecBeam_RC");
+            var xSecRcBeams = xDoc.Root.Descendants("StbSecBeam_RC");
             foreach (var xSecRcBeam in xSecRcBeams) {
                 _xSecRcBeamId.Add((int)xSecRcBeam.Attribute("id"));
                 var xSecFigure = xSecRcBeam.Element("StbSecFigure");
-                
+
                 // 子要素が StbSecHaunch か StbSecStraight を判定
                 if (xSecFigure.Element("StbSecHaunch") != null) {
                     _xSecRcBeamDepth.Add((int)xSecFigure.Element("StbSecHaunch").Attribute("depth_center"));
                     _xSecRcBeamWidth.Add((int)xSecFigure.Element("StbSecHaunch").Attribute("width_center"));
-                } 
+                }
                 else {
                     _xSecRcBeamDepth.Add((int)xSecFigure.Element("StbSecStraight").Attribute("depth"));
                     _xSecRcBeamWidth.Add((int)xSecFigure.Element("StbSecStraight").Attribute("width"));
@@ -172,45 +167,36 @@ namespace StbHopper {
             }
 
             // StbSecBeam_S の取得
-            var xSecSBeams = xdoc.Root.Descendants("StbSecBeam_S");
+            var xSecSBeams = xDoc.Root.Descendants("StbSecBeam_S");
             foreach (var xSecSBeam in xSecSBeams) {
                 _xSecSBeamId.Add((int)xSecSBeam.Attribute("id"));
                 _xSecSBeamShape.Add((string)xSecSBeam.Element("StbSecSteelBeam").Attribute("shape"));
             }
 
             // StbSecBrace_S の取得
-            var xSecSBraces = xdoc.Root.Descendants("StbSecBrace_S");
+            var xSecSBraces = xDoc.Root.Descendants("StbSecBrace_S");
             foreach (var xSecSBrace in xSecSBraces) {
                 _xSecSBraceId.Add((int)xSecSBrace.Attribute("id"));
                 _xSecSBraceShape.Add((string)xSecSBrace.Element("StbSecSteelBrace").Attribute("shape"));
             }
 
             // S断面形状の取得
-            GetStbSteelSection(xdoc, "StbSecRoll-H", "H");
-            GetStbSteelSection(xdoc, "StbSecBuild-H", "H");
-            GetStbSteelSection(xdoc, "StbSecRoll-BOX", "BOX");
-            GetStbSteelSection(xdoc, "StbSecBuild-BOX", "BOX");
-            GetStbSteelSection(xdoc, "StbSecPipe", "Pipe");
-            GetStbSteelSection(xdoc, "StbSecRoll-L", "L");
-            GetStbSteelSection(xdoc, "StbSecRoll-Bar", "Bar");
-
-            // 柱の断面の生成
-            _columns = MakeElementBrep(xdoc, "StbColumn", "Column");
-            // 大梁の断面の生成
-            _girders = MakeElementBrep(xdoc, "StbGirder", "Beam");
-            // 間柱の断面の生成
-            _posts = MakeElementBrep(xdoc, "StbPost", "Column");
-            // 小梁の断面の生成
-            _beams = MakeElementBrep(xdoc, "StbBeam", "Beam");
-            // Sブレ―スの断面の生成
-            _steelBraces = MakeElementBrep(xdoc, "StbBrace", "Brace");
+            string[,] steelSecName = GetSteelSecNameArray();
+            for (int i = 0; i < steelSecName.GetLength(0); i++)
+                GetStbSteelSection(xDoc, steelSecName[i, 0], steelSecName[i, 1]);
+            // 断面の生成
+            _columns = MakeElementBrep(xDoc, "StbColumn", "Column");
+            _girders = MakeElementBrep(xDoc, "StbGirder", "Beam");
+            _posts = MakeElementBrep(xDoc, "StbPost", "Column");
+            _beams = MakeElementBrep(xDoc, "StbBeam", "Beam");
+            _braces = MakeElementBrep(xDoc, "StbBrace", "Brace");
 
             DA.SetDataList(0, _columns);
             DA.SetDataList(1, _girders);
             DA.SetDataList(2, _posts);
             DA.SetDataList(3, _beams);
-            DA.SetDataList(4, _slabs);
-            DA.SetDataList(5, _steelBraces);
+            DA.SetDataList(4, _braces);
+            DA.SetDataList(5, _slabs);
         }
 
         /// <summary>
@@ -241,7 +227,7 @@ namespace StbHopper {
         /// <param name="xDateTag">XML data tag you want to read</param>
         /// <param name="SectionType">Section type, H or BOX or Pipe or L</param>
         public void GetStbSteelSection(XDocument xdoc, string xDateTag, string SectionType) {
-            if(SectionType == "Pipe") {
+            if (SectionType == "Pipe") {
                 var xSteelSections = xdoc.Root.Descendants(xDateTag);
                 foreach (var xSteelSection in xSteelSections) {
                     _xStbSecSteelName.Add((string)xSteelSection.Attribute("name"));
@@ -286,36 +272,36 @@ namespace StbHopper {
             var xElements = xdoc.Root.Descendants(xDateTag);
             foreach (var xElement in xElements) {
                 if (ElementStructureType == "Beam" || ElementStructureType == "Brace") {
-                    xNodeStart = (int)xElement.Attribute("idNode_start");
-                    xNodeEnd = (int)xElement.Attribute("idNode_end");
+                    _xNodeStart = (int)xElement.Attribute("idNode_start");
+                    _xNodeEnd = (int)xElement.Attribute("idNode_end");
                 }
                 else {
-                    xNodeStart = (int)xElement.Attribute("idNode_bottom");
-                    xNodeEnd = (int)xElement.Attribute("idNode_top");
+                    _xNodeStart = (int)xElement.Attribute("idNode_bottom");
+                    _xNodeEnd = (int)xElement.Attribute("idNode_top");
                 }
-                xElementIdSection = (int)xElement.Attribute("id_section");
+                _xElementIdSection = (int)xElement.Attribute("id_section");
                 _xElementKind = (string)xElement.Attribute("kind_structure");
 
                 // 始点と終点の座標取得
-                NodeIndexStart = _nodeIDs.IndexOf(xNodeStart);
-                NodeIndexEnd = _nodeIDs.IndexOf(xNodeEnd);
-                NodeStart = _nodes[NodeIndexStart];
-                NodeEnd = _nodes[NodeIndexEnd];
+                _nodeIndexStart = _nodeIDs.IndexOf(_xNodeStart);
+                _nodeIndexEnd = _nodeIDs.IndexOf(_xNodeEnd);
+                _nodeStart = _nodes[_nodeIndexStart];
+                _nodeEnd = _nodes[_nodeIndexEnd];
 
                 if (_xElementKind == "RC") {
                     // 断面形状名（shape) と 断面形状（HxB）の取得の取得
                     if (ElementStructureType == "Beam") {
-                        StbSecIndex = _xSecRcBeamId.IndexOf(xElementIdSection);
-                        ElementHight = _xSecRcBeamDepth[StbSecIndex];
-                        ElementWidth = _xSecRcBeamWidth[StbSecIndex];
+                        _stbSecIndex = _xSecRcBeamId.IndexOf(_xElementIdSection);
+                        _elementHight = _xSecRcBeamDepth[_stbSecIndex];
+                        _elementWidth = _xSecRcBeamWidth[_stbSecIndex];
                     }
                     else if (ElementStructureType == "Column") {
-                        StbSecIndex = _xSecRcColumnId.IndexOf(xElementIdSection);
-                        ElementHight = _xSecRcColumnDepth[StbSecIndex];
-                        ElementWidth = _xSecRcColumnWidth[StbSecIndex];
+                        _stbSecIndex = _xSecRcColumnId.IndexOf(_xElementIdSection);
+                        _elementHight = _xSecRcColumnDepth[_stbSecIndex];
+                        _elementWidth = _xSecRcColumnWidth[_stbSecIndex];
                     }
 
-                    if (ElementWidth == 0) {
+                    if (_elementWidth == 0) {
                         _elementShapeType = "Pipe";
                     }
                     else {
@@ -325,26 +311,26 @@ namespace StbHopper {
                 else if (_xElementKind == "S") {
                     // 断面形状名（shape）の取得の取得
                     if (ElementStructureType == "Beam") {
-                        ElementIdSection = _xSecSBeamId.IndexOf(xElementIdSection);
-                        _elementShape = _xSecSBeamShape[ElementIdSection];
+                        _elementIdSection = _xSecSBeamId.IndexOf(_xElementIdSection);
+                        _elementShape = _xSecSBeamShape[_elementIdSection];
                     }
                     else if (ElementStructureType == "Column") {
-                        ElementIdSection = _xSecSColumnId.IndexOf(xElementIdSection);
-                        _elementShape = _xSecSColumnShape[ElementIdSection];
+                        _elementIdSection = _xSecSColumnId.IndexOf(_xElementIdSection);
+                        _elementShape = _xSecSColumnShape[_elementIdSection];
                     }
                     else if (ElementStructureType == "Brace") {
-                        ElementIdSection = _xSecSBraceId.IndexOf(xElementIdSection);
-                        _elementShape = _xSecSBraceShape[ElementIdSection];
+                        _elementIdSection = _xSecSBraceId.IndexOf(_xElementIdSection);
+                        _elementShape = _xSecSBraceShape[_elementIdSection];
                     }
                     // 断面形状（HxB）の取得の取得
-                    StbSecIndex = _xStbSecSteelName.IndexOf(_elementShape);
-                    ElementHight = _xStbSecSteelParamA[StbSecIndex];
-                    ElementWidth = _xStbSecSteelParamB[StbSecIndex];
-                    _elementShapeType = _xStbSecSteelType[StbSecIndex];
+                    _stbSecIndex = _xStbSecSteelName.IndexOf(_elementShape);
+                    _elementHight = _xStbSecSteelParamA[_stbSecIndex];
+                    _elementWidth = _xStbSecSteelParamB[_stbSecIndex];
+                    _elementShapeType = _xStbSecSteelType[_stbSecIndex];
                 }
 
                 // 始点と終点から梁断面サーフェスの作成
-                _elementShapeBrep = MakeElementsBrepFromVertex(NodeStart, NodeEnd, ElementHight, ElementWidth, _elementShapeType, ElementStructureType);
+                _elementShapeBrep = MakeElementsBrepFromVertex(_nodeStart, _nodeEnd, _elementHight, _elementWidth, _elementShapeType, ElementStructureType);
             }
             _elementShapeBrepArray = Brep.JoinBreps(_elementShapeBrep, GH_Component.DocumentTolerance());
             return _elementShapeBrepArray;
@@ -363,8 +349,8 @@ namespace StbHopper {
         public List<Brep> MakeElementsBrepFromVertex(Point3d NodeStart, Point3d NodeEnd, double ElementHight, double ElementWidth, string ElementShapeType, string ElementStructureType) {
 
             // 部材のアングルの確認
-            ElementAngleY = -1.0 * Math.Atan((NodeEnd.Y - NodeStart.Y) / (NodeEnd.X - NodeStart.X));
-            ElementAngleZ = -1.0 * Math.Atan((NodeEnd.Z - NodeStart.Z) / (NodeEnd.X - NodeStart.X));
+            _elementAngleY = -1.0 * Math.Atan((NodeEnd.Y - NodeStart.Y) / (NodeEnd.X - NodeStart.X));
+            _elementAngleZ = -1.0 * Math.Atan((NodeEnd.Z - NodeStart.Z) / (NodeEnd.X - NodeStart.X));
 
             // 描画用点の作成
             // 梁は部材天端の中心が起点に対して、柱・ブレースは部材芯が起点なので場合分け
@@ -373,77 +359,77 @@ namespace StbHopper {
             //  ^        |    |    |  
             //  o >  X   S1 - S2 - S3
             if (ElementStructureType == "Beam") {
-                VertexS1 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeStart.Y + (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexS1 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeStart.Y + (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeStart.Z - ElementHight
                                        );
-                VertexS2 = new Point3d(NodeStart.X,
+                _vertexS2 = new Point3d(NodeStart.X,
                                        NodeStart.Y,
                                        NodeStart.Z - ElementHight
                                        );
-                VertexS3 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeStart.Y - (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexS3 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeStart.Y - (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeStart.Z - ElementHight
                                        );
-                VertexS4 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeStart.Y + (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexS4 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeStart.Y + (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeStart.Z
                                        );
-                VertexS5 = NodeStart;
-                VertexS6 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeStart.Y - (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexS5 = NodeStart;
+                _vertexS6 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeStart.Y - (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeStart.Z
                                        );
             }
             else if (ElementStructureType == "Column") {
-                VertexS1 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleZ),
+                _vertexS1 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleZ),
                                        NodeStart.Y - (ElementHight / 2.0),
-                                       NodeStart.Z - (ElementWidth / 2.0) * Math.Cos(ElementAngleZ)
+                                       NodeStart.Z - (ElementWidth / 2.0) * Math.Cos(_elementAngleZ)
                                        );
-                VertexS2 = new Point3d(NodeStart.X,
+                _vertexS2 = new Point3d(NodeStart.X,
                                        NodeStart.Y + (ElementHight / 2.0),
                                        NodeStart.Z
                                        );
-                VertexS3 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleZ),
+                _vertexS3 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleZ),
                                        NodeStart.Y - (ElementHight / 2.0),
-                                       NodeStart.Z + (ElementWidth / 2.0) * Math.Cos(ElementAngleZ)
+                                       NodeStart.Z + (ElementWidth / 2.0) * Math.Cos(_elementAngleZ)
                                        );
-                VertexS4 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleZ),
+                _vertexS4 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleZ),
                                        NodeStart.Y + (ElementHight / 2.0),
-                                       NodeStart.Z - (ElementWidth / 2.0) * Math.Cos(ElementAngleZ)
+                                       NodeStart.Z - (ElementWidth / 2.0) * Math.Cos(_elementAngleZ)
                                        );
-                VertexS5 = new Point3d(NodeStart.X,
+                _vertexS5 = new Point3d(NodeStart.X,
                                        NodeStart.Y - (ElementHight / 2.0),
                                        NodeStart.Z
                                        );
-                VertexS6 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleZ),
+                _vertexS6 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleZ),
                                        NodeStart.Y + (ElementHight / 2.0),
-                                       NodeStart.Z + (ElementWidth / 2.0) * Math.Cos(ElementAngleZ)
+                                       NodeStart.Z + (ElementWidth / 2.0) * Math.Cos(_elementAngleZ)
                                        );
             }
             else if (ElementStructureType == "Brace") {
-                VertexS1 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeStart.Y + (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexS1 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeStart.Y + (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeStart.Z - (ElementWidth / 2.0)
                                        );
-                VertexS2 = new Point3d(NodeStart.X,
+                _vertexS2 = new Point3d(NodeStart.X,
                                        NodeStart.Y,
                                        NodeStart.Z - (ElementWidth / 2.0)
                                        );
-                VertexS3 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeStart.Y - (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexS3 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeStart.Y - (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeStart.Z - (ElementWidth / 2.0)
                                        );
-                VertexS4 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeStart.Y + (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexS4 = new Point3d(NodeStart.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeStart.Y + (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeStart.Z + (ElementWidth / 2.0)
                                        );
-                VertexS5 = new Point3d(NodeStart.X,
+                _vertexS5 = new Point3d(NodeStart.X,
                                        NodeStart.Y,
                                        NodeStart.Z + (ElementWidth / 2.0)
                                        );
-                VertexS6 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeStart.Y - (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexS6 = new Point3d(NodeStart.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeStart.Y - (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeStart.Z + (ElementWidth / 2.0)
                                        );
             }
@@ -452,98 +438,98 @@ namespace StbHopper {
             //  ^        |    |    |
             //  o >  X   E1 - E2 - E3
             if (ElementStructureType == "Beam") {
-                VertexE1 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeEnd.Y + (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexE1 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeEnd.Y + (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeEnd.Z - ElementHight
                                        );
-                VertexE2 = new Point3d(NodeEnd.X,
+                _vertexE2 = new Point3d(NodeEnd.X,
                                        NodeEnd.Y,
                                        NodeEnd.Z - ElementHight
                                        );
-                VertexE3 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeEnd.Y - (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexE3 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeEnd.Y - (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeEnd.Z - ElementHight
                                        );
-                VertexE4 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeEnd.Y + (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexE4 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeEnd.Y + (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeEnd.Z
                                        );
-                VertexE5 = NodeEnd;
-                VertexE6 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeEnd.Y - (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexE5 = NodeEnd;
+                _vertexE6 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeEnd.Y - (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeEnd.Z
                                        );
             }
             else if (ElementStructureType == "Column") {
-                VertexE1 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleZ),
+                _vertexE1 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleZ),
                                        NodeEnd.Y - (ElementHight / 2.0),
-                                       NodeEnd.Z - (ElementWidth / 2.0) * Math.Cos(ElementAngleZ)
+                                       NodeEnd.Z - (ElementWidth / 2.0) * Math.Cos(_elementAngleZ)
                                        );
-                VertexE2 = new Point3d(NodeEnd.X,
+                _vertexE2 = new Point3d(NodeEnd.X,
                                        NodeEnd.Y + (ElementHight / 2.0),
                                        NodeEnd.Z
                                        );
-                VertexE3 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleZ),
+                _vertexE3 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleZ),
                                        NodeEnd.Y - (ElementHight / 2.0),
-                                       NodeEnd.Z + (ElementWidth / 2.0) * Math.Cos(ElementAngleZ)
+                                       NodeEnd.Z + (ElementWidth / 2.0) * Math.Cos(_elementAngleZ)
                                        );
-                VertexE4 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleZ),
+                _vertexE4 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleZ),
                                        NodeEnd.Y + (ElementHight / 2.0),
-                                       NodeEnd.Z - (ElementWidth / 2.0) * Math.Cos(ElementAngleZ)
+                                       NodeEnd.Z - (ElementWidth / 2.0) * Math.Cos(_elementAngleZ)
                                        );
-                VertexE5 = new Point3d(NodeEnd.X,
+                _vertexE5 = new Point3d(NodeEnd.X,
                                        NodeEnd.Y - (ElementHight / 2.0),
                                        NodeEnd.Z
                                        );
-                VertexE6 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleZ),
+                _vertexE6 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleZ),
                                        NodeEnd.Y + (ElementHight / 2.0),
-                                       NodeEnd.Z + (ElementWidth / 2.0) * Math.Cos(ElementAngleZ)
+                                       NodeEnd.Z + (ElementWidth / 2.0) * Math.Cos(_elementAngleZ)
                                        );
             }
             else if (ElementStructureType == "Brace") {
-                VertexE1 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeEnd.Y + (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexE1 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeEnd.Y + (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeEnd.Z - (ElementWidth / 2.0)
                                        );
-                VertexE2 = new Point3d(NodeEnd.X,
+                _vertexE2 = new Point3d(NodeEnd.X,
                                        NodeEnd.Y,
                                        NodeEnd.Z - (ElementWidth / 2.0)
                                        );
-                VertexE3 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeEnd.Y - (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexE3 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeEnd.Y - (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeEnd.Z - (ElementWidth / 2.0)
                                        );
-                VertexE4 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeEnd.Y + (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexE4 = new Point3d(NodeEnd.X + (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeEnd.Y + (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeEnd.Z + (ElementWidth / 2.0)
                                        );
-                VertexE5 = new Point3d(NodeEnd.X,
+                _vertexE5 = new Point3d(NodeEnd.X,
                                        NodeEnd.Y,
                                        NodeEnd.Z + (ElementWidth / 2.0)
                                        );
-                VertexE6 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(ElementAngleY),
-                                       NodeEnd.Y - (ElementWidth / 2.0) * Math.Cos(ElementAngleY),
+                _vertexE6 = new Point3d(NodeEnd.X - (ElementWidth / 2.0) * Math.Sin(_elementAngleY),
+                                       NodeEnd.Y - (ElementWidth / 2.0) * Math.Cos(_elementAngleY),
                                        NodeEnd.Z + (ElementWidth / 2.0)
                                        );
             }
 
             if (this._elementShapeType == "H") {
                 // make upper flange
-                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(VertexS4, VertexS6, VertexE6, VertexE4, GH_Component.DocumentTolerance()));
+                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(_vertexS4, _vertexS6, _vertexE6, _vertexE4, GH_Component.DocumentTolerance()));
                 // make bottom flange
-                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(VertexS1, VertexS3, VertexE3, VertexE1, GH_Component.DocumentTolerance()));
+                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(_vertexS1, _vertexS3, _vertexE3, _vertexE1, GH_Component.DocumentTolerance()));
                 // make web 
-                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(VertexS5, VertexS2, VertexE2, VertexE5, GH_Component.DocumentTolerance()));
+                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(_vertexS5, _vertexS2, _vertexE2, _vertexE5, GH_Component.DocumentTolerance()));
             }
             else if (this._elementShapeType == "BOX") {
                 // make upper flange
-                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(VertexS4, VertexS6, VertexE6, VertexE4, GH_Component.DocumentTolerance()));
+                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(_vertexS4, _vertexS6, _vertexE6, _vertexE4, GH_Component.DocumentTolerance()));
                 // make bottom flange
-                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(VertexS1, VertexS3, VertexE3, VertexE1, GH_Component.DocumentTolerance()));
+                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(_vertexS1, _vertexS3, _vertexE3, _vertexE1, GH_Component.DocumentTolerance()));
                 // make web 1
-                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(VertexS4, VertexS1, VertexE1, VertexE4, GH_Component.DocumentTolerance()));
+                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(_vertexS4, _vertexS1, _vertexE1, _vertexE4, GH_Component.DocumentTolerance()));
                 // make web 2
-                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(VertexS6, VertexS3, VertexE3, VertexE6, GH_Component.DocumentTolerance()));
+                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(_vertexS6, _vertexS3, _vertexE3, _vertexE6, GH_Component.DocumentTolerance()));
             }
             else if (this._elementShapeType == "Pipe") {
                 LineCurve PipeCurve = new LineCurve(NodeStart, NodeEnd);
@@ -551,13 +537,37 @@ namespace StbHopper {
             }
             else if (this._elementShapeType == "L") {
                 // make bottom flange
-                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(VertexS1, VertexS3, VertexE3, VertexE1, GH_Component.DocumentTolerance()));
+                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(_vertexS1, _vertexS3, _vertexE3, _vertexE1, GH_Component.DocumentTolerance()));
                 // make web
-                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(VertexS6, VertexS3, VertexE3, VertexE6, GH_Component.DocumentTolerance()));
+                _elementShapeBrep.Add(Brep.CreateFromCornerPoints(_vertexS6, _vertexS3, _vertexE3, _vertexE6, GH_Component.DocumentTolerance()));
             }
             else {
             }
             return _elementShapeBrep;
+        }
+
+        string[,] GetSteelSecNameArray() {
+            string[,] steelSecNameArray = new string[7, 2] {
+                {"StbSecRoll-H", "H"},
+                {"StbSecBuild-H", "H"},
+                {"StbSecRoll-BOX", "BOX"},
+                {"StbSecBuild-BOX", "BOX"},
+                {"StbSecPipe", "Pipe"},
+                {"StbSecRoll-L", "L"},
+                {"StbSecRoll-Bar", "Bar"}
+            };
+            return (steelSecNameArray);
+        }
+
+        string[,] GetMemberNameArray() {
+            string[,] memberNameArray = new string[5, 2] {
+                {"StbColumn", "Column"},
+                {"StbGirder", "Girder"},
+                {"StbPost", "Post"},
+                {"StbBeam", "Beam"},
+                {"StbBrace", "Brace"}
+            };
+            return (memberNameArray);
         }
     }
 }
