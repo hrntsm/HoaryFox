@@ -33,8 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="StbHopperLine.cs" />
-    <Compile Include="StbHopperBrep.cs" />
+    <Compile Include="Component\StbHopperLine.cs" />
+    <Compile Include="Component\StbHopperBrep.cs" />
+    <Compile Include="STB\Stb.cs" />
+    <Compile Include="STB\StbMember.cs" />
+    <Compile Include="STB\StbModel.cs" />
+    <Compile Include="STB\StbSections.cs" />
     <Compile Include="StbHopperInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -60,8 +64,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
