@@ -35,6 +35,7 @@
   <ItemGroup>
     <Compile Include="Component\StbHopperLine.cs" />
     <Compile Include="Component\StbHopperBrep.cs" />
+    <Compile Include="Util\CreateBrep.cs" />
     <Compile Include="STB\Stb.cs" />
     <Compile Include="STB\StbMember.cs" />
     <Compile Include="STB\StbModel.cs" />
