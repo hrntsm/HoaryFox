@@ -40,13 +40,9 @@ namespace StbHopper.STB
 
                 // 必須ではないコード
                 if (stbNode.Attribute("id_member") != null)
-                {
                     IdMember.Add((int)stbNode.Attribute("id_member"));
-                }
                 else
-                {
                     IdMember.Add(-1);
-                }
                 switch ((string)stbNode.Attribute("kind"))
                 {
                     case "ON_BEAM":

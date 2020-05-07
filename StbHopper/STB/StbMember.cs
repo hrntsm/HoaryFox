@@ -283,7 +283,7 @@ public class StbSlabs:StbMembers
             }
             if (stbElem.Attribute("level") != null)
             {
-                Level.Add((double)stbElem.Attribute("level") / 1000d);
+                Level.Add((double)stbElem.Attribute("level"));
             }
             else
             {

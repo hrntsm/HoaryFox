@@ -29,9 +29,9 @@ namespace StbHopper.Component
         public static StbSecBraceS StbSecBraceS;
         public static StbSecSteel StbSecSteel;
 
-        private List<Brep> _slabs;
-        private List<Brep> _walls;
-        private List<List<Brep>> _frames;
+        private List<Brep> _slabs = new List<Brep>();
+        private List<Brep> _walls = new List<Brep>();
+        private List<List<Brep>> _frames = new List<List<Brep>>();
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -48,7 +48,6 @@ namespace StbHopper.Component
         public override void ClearData()
         {
             base.ClearData();
-            _slabs.Clear();
         }
 
         /// <summary>
@@ -90,11 +89,8 @@ namespace StbHopper.Component
             // meshの生成
             MakeMesh();
 
-            DA.SetDataList(0, _frames[0]);
-            DA.SetDataList(1, _frames[1]);
-            DA.SetDataList(2, _frames[2]);
-            DA.SetDataList(3, _frames[3]);
-            DA.SetDataList(4, _frames[4]);
+            for (int i = 0; i < 5; i++)
+                DA.SetDataList(i, _frames[i]);
             DA.SetDataList(5, _slabs);
             DA.SetDataList(6, _walls);
         }
@@ -103,25 +99,14 @@ namespace StbHopper.Component
         /// Provides an Icon for every component that will be visible in the User Interface.
         /// Icons need to be 24x24 pixels.
         /// </summary>
-        protected override System.Drawing.Bitmap Icon
-        {
-            get
-            {
-                // You can add image files to your project resources and access them like this:
-                //return Resources.IconForThisComponent;
-                return null;
-            }
-        }
+        protected override System.Drawing.Bitmap Icon => null;
 
         /// <summary>
         /// Each component must have a unique Guid to identify it. 
         /// It is vital this Guid doesn't change otherwise old ghx files 
         /// that use the old ID will partially fail during loading.
         /// </summary>
-        public override Guid ComponentGuid
-        {
-            get { return new Guid("7d2f0c4e-4888-4607-8548-592104f6f06f"); }
-        }
+        public override Guid ComponentGuid => new Guid("7d2f0c4e-4888-4607-8548-592104f6f06f");
 
         private static void Init()
         {
@@ -131,6 +116,8 @@ namespace StbHopper.Component
             StbGirders = new StbGirders();
             StbBeams = new StbBeams();
             StbBraces = new StbBraces();
+            StbSlabs = new StbSlabs();
+            StbWalls = new StbWalls();
         }
 
         private static void Load(XDocument xDocument)
@@ -139,6 +126,9 @@ namespace StbHopper.Component
             {
                 StbNodes, StbColumns, StbPosts, StbGirders, StbBeams, StbBraces
             };
+
+            StbSlabs.Load(xDocument);
+            StbWalls.Load(xDocument);
 
             foreach (var member in members)
             {
@@ -157,9 +147,8 @@ namespace StbHopper.Component
             _slabs = breps.Slab(StbSlabs);
             _walls = breps.Wall(StbWalls);
 
-            int count = 0;
             foreach (var frame in stbFrames)
-                _frames[count++] = breps.Frame(frame);
+                _frames.Add(breps.Frame(frame));
         }
     }
 }
