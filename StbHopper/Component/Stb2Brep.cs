@@ -13,25 +13,28 @@ namespace StbHopper.Component
     public class Stb2Brep:GH_Component
     {
         private string _path;
+        public static readonly double LengthTolerance = GH_Component.DocumentTolerance();
+        public static readonly double AngleTolerance = GH_Component.DocumentAngleTolerance();
 
-        public static StbNodes StbNodes;
-        public static StbColumns StbColumns;
-        public static StbPosts StbPosts;
-        public static StbGirders StbGirders;
-        public static StbBeams StbBeams;
-        public static StbBraces StbBraces;
-        public static StbSlabs StbSlabs;
-        public static StbWalls StbWalls;
-        public static StbSecColRC StbSecColRc;
-        public static StbSecBeamRC StbSecBeamRc;
-        public static StbSecColumnS StbSecColumnS;
-        public static StbSecBeamS StbSecBeamS;
-        public static StbSecBraceS StbSecBraceS;
+        private static StbNodes _nodes;
+        private static StbColumns _columns;
+        private static StbPosts _posts;
+        private static StbGirders _girders;
+        private static StbBeams _beams;
+        private static StbBraces _braces;
+        private static StbSlabs _slabs;
+        private static StbWalls _walls;
+        
+        public static StbSecColRC SecColumnRc;
+        public static StbSecBeamRC SecBeamRc;
+        public static StbSecColumnS SecColumnS;
+        public static StbSecBeamS SecBeamS;
+        public static StbSecBraceS SecBraceS;
         public static StbSecSteel StbSecSteel;
 
-        private List<Brep> _slabs = new List<Brep>();
-        private List<Brep> _walls = new List<Brep>();
-        private List<List<Brep>> _frames = new List<List<Brep>>();
+        private List<Brep> _slabBreps = new List<Brep>();
+        private List<Brep> _wallBreps = new List<Brep>();
+        private readonly List<List<Brep>> _frameBreps = new List<List<Brep>>();
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -48,12 +51,15 @@ namespace StbHopper.Component
         public override void ClearData()
         {
             base.ClearData();
+            _slabBreps.Clear();
+            _wallBreps.Clear();
+            _frameBreps.Clear();
         }
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+        protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("path", "path", "input ST-Bridge file path", GH_ParamAccess.item);
         }
@@ -61,10 +67,10 @@ namespace StbHopper.Component
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+        protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddBrepParameter("Columns", "Col", "output StbColumns to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Girders", "Grdr", "output StbGirders to Brep", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Girders", "Gird", "output StbGirders to Brep", GH_ParamAccess.list);
             pManager.AddBrepParameter("Posts", "Pst", "output StbPosts to Brep", GH_ParamAccess.list);
             pManager.AddBrepParameter("Beams", "Bm", "output StbBeams to Brep", GH_ParamAccess.list);
             pManager.AddBrepParameter("Braces", "Brc", "output StbBraces to Brep", GH_ParamAccess.list);
@@ -89,10 +95,12 @@ namespace StbHopper.Component
             // meshの生成
             MakeMesh();
 
-            for (int i = 0; i < 5; i++)
-                DA.SetDataList(i, _frames[i]);
-            DA.SetDataList(5, _slabs);
-            DA.SetDataList(6, _walls);
+            for (var i = 0; i < 5; i++)
+            {
+                DA.SetDataList(i, _frameBreps[i]);
+            }
+            DA.SetDataList(5, _slabBreps);
+            DA.SetDataList(6, _wallBreps);
         }
 
         /// <summary>
@@ -110,45 +118,50 @@ namespace StbHopper.Component
 
         private static void Init()
         {
-            StbNodes = new StbNodes();
-            StbColumns = new StbColumns();
-            StbPosts = new StbPosts();
-            StbGirders = new StbGirders();
-            StbBeams = new StbBeams();
-            StbBraces = new StbBraces();
-            StbSlabs = new StbSlabs();
-            StbWalls = new StbWalls();
+            _nodes = new StbNodes();
+            _columns = new StbColumns();
+            _posts = new StbPosts();
+            _girders = new StbGirders();
+            _beams = new StbBeams();
+            _braces = new StbBraces();
+            _slabs = new StbSlabs();
+            _walls = new StbWalls();
+            SecColumnRc = new StbSecColRC();
+            SecBeamRc = new StbSecBeamRC();
+            SecColumnS = new StbSecColumnS();
+            SecBeamS = new StbSecBeamS();
+            SecBraceS = new StbSecBraceS();
+            StbSecSteel = new StbSecSteel();
         }
 
-        private static void Load(XDocument xDocument)
+        private static void Load(XDocument xDoc)
         {
             var members = new List<StbData>()
             {
-                StbNodes, StbColumns, StbPosts, StbGirders, StbBeams, StbBraces
+                _nodes, _slabs, _walls,
+                _columns, _posts, _girders, _beams, _braces,
+                SecColumnRc, SecColumnS, SecBeamRc, SecBeamS, SecBraceS, StbSecSteel
             };
-
-            StbSlabs.Load(xDocument);
-            StbWalls.Load(xDocument);
 
             foreach (var member in members)
             {
-                member.Load(xDocument);
+                member.Load(xDoc);
             }
         }
 
-        void MakeMesh()
+        private void MakeMesh()
         {
-            List<StbFrame> stbFrames = new List<StbFrame>() {
-                StbColumns, StbPosts, StbGirders, StbBeams, StbBraces
+            var stbFrames = new List<StbFrame>() {
+                _columns, _girders, _posts, _beams, _braces
             };
             
-            var breps = new CreateBrep(StbNodes);
+            var breps = new CreateBrep(_nodes);
 
-            _slabs = breps.Slab(StbSlabs);
-            _walls = breps.Wall(StbWalls);
+            _slabBreps = breps.Slab(_slabs);
+            _wallBreps = breps.Wall(_walls);
 
             foreach (var frame in stbFrames)
-                _frames.Add(breps.Frame(frame));
+                _frameBreps.Add(breps.Frame(frame));
         }
     }
 }

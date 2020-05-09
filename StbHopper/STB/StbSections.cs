@@ -154,11 +154,11 @@ namespace StbHopper.STB
         /// <summary>
         /// 部材幅
         /// </summary>
-        public List<float> Width { get; } = new List<float>();
+        public List<double> Width { get; } = new List<double>();
         /// <summary>
         /// 部材高さ
         /// </summary>
-        public List<float> Height { get; } = new List<float>();
+        public List<double> Height { get; } = new List<double>();
         /// <summary>
         /// 部材が矩形であるかどうか
         /// </summary>
@@ -229,8 +229,8 @@ namespace StbHopper.STB
     /// </summary>
     class StbColSecFigure
     {
-        public float Width { get; private set; }
-        public float Height { get; private set; }
+        public double Width { get; private set; }
+        public double Height { get; private set; }
         public bool IsRect { get; private set; }
 
         /// <summary>
@@ -242,20 +242,20 @@ namespace StbHopper.STB
             var stbFigure = stbColumn.Element("StbSecFigure");
             if (stbFigure.Element("StbSecRect") != null)
             {
-                Width = (float)stbFigure.Element("StbSecRect").Attribute("DX") / 1000f;
-                Height = (float)stbFigure.Element("StbSecRect").Attribute("DY") / 1000f;
+                Width = (double)stbFigure.Element("StbSecRect").Attribute("DX");
+                Height = (double)stbFigure.Element("StbSecRect").Attribute("DY");
                 IsRect = true;
             }
             else if (stbFigure.Element("StbSecCircle") != null)
             {
-                Width = (float)stbFigure.Element("StbSecCircle").Attribute("D") / 1000f;
-                Height = 0f;
+                Width = (double)stbFigure.Element("StbSecCircle").Attribute("D");
+                Height = 0;
                 IsRect = false;
             }
             else
             {
-                Width = 0f;
-                Height = 0f;
+                Width = 0;
+                Height = 0;
                 IsRect = false;
             }
         }
@@ -557,11 +557,11 @@ namespace StbHopper.STB
         /// <summary>
         /// 部材幅
         /// </summary>
-        public List<float> Width { get; } = new List<float>();
+        public List<double> Width { get; } = new List<double>();
         /// <summary>
         /// 部材高さ
         /// </summary>
-        public List<float> Depth { get; } = new List<float>();
+        public List<double> Depth { get; } = new List<double>();
         /// <summary>
         /// 各配筋の本数をまとめたリスト
         /// </summary>
@@ -626,8 +626,8 @@ namespace StbHopper.STB
     /// </summary>
     class StbBeamSecFigure
     {
-        public float Width { get; private set; }
-        public float Depth { get; private set; }
+        public double Width { get; private set; }
+        public double Depth { get; private set; }
 
         /// <summary>
         /// 与えられたstbデータからRC梁断面の形状を取得する。
@@ -639,23 +639,23 @@ namespace StbHopper.STB
 
             if (stbFigure.Element("StbSecHaunch") != null)
             {
-                Width = (int)stbFigure.Element("StbSecHaunch").Attribute("width_center") / 1000f;
-                Depth = (int)stbFigure.Element("StbSecHaunch").Attribute("depth_center") / 1000f;
+                Width = (int)stbFigure.Element("StbSecHaunch").Attribute("width_center");
+                Depth = (int)stbFigure.Element("StbSecHaunch").Attribute("depth_center");
             }
             else if (stbFigure.Element("StbSecStraight") != null)
             {
-                Width = (int)stbFigure.Element("StbSecStraight").Attribute("width") / 1000f;
-                Depth = (int)stbFigure.Element("StbSecStraight").Attribute("depth") / 1000f;
+                Width = (int)stbFigure.Element("StbSecStraight").Attribute("width");
+                Depth = (int)stbFigure.Element("StbSecStraight").Attribute("depth");
             }
             else if (stbFigure.Element("StbSecTaper") != null)
             {
-                Width = (int)stbFigure.Element("StbSecTaper").Attribute("width_end") / 1000f;
-                Depth = (int)stbFigure.Element("StbSecTaper").Attribute("depth_end") / 1000f;
+                Width = (int)stbFigure.Element("StbSecTaper").Attribute("width_end");
+                Depth = (int)stbFigure.Element("StbSecTaper").Attribute("depth_end");
             }
             else
             {
-                Width = 0f;
-                Depth = 0f;
+                Width = 0;
+                Depth = 0;
             }
         }
     }
