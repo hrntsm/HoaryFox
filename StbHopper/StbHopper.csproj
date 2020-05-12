@@ -33,8 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Component\StbHopperLine.cs" />
+    <Compile Include="Component\Stb2Bar.cs" />
+    <Compile Include="Component\Stb2Line.cs" />
     <Compile Include="Component\Stb2Brep.cs" />
+    <Compile Include="Properties\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Util\CreateBar.cs" />
     <Compile Include="Util\CreateBrep.cs" />
     <Compile Include="STB\Stb.cs" />
     <Compile Include="STB\StbMember.cs" />
@@ -65,7 +72,24 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\LibIcon.png" />
+    <Content Include="Resources\ProjectIcon.png" />
+    <Content Include="Resources\Stb2Brep.png" />
+    <Content Include="Resources\Stb2Line.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LibIcon.xcf" />
+    <None Include="Resources\ProjectIcon.xcf" />
+    <None Include="Resources\Stb2Brep.xcf" />
+    <None Include="Resources\Stb2Line.xcf" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

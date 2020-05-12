@@ -44,7 +44,7 @@ namespace StbHopper.Component
         /// new tabs/panels will automatically be created.
         /// </summary>
         public Stb2Brep()
-          : base("StbtoBrep", "S2B", "Read ST-Bridge file and display", "StbHopper", "v1.4")
+          : base("Stb to Brep", "S2B", "Read ST-Bridge file and display", "StbHopper", "v1.4")
         {
         }
 
@@ -107,7 +107,7 @@ namespace StbHopper.Component
         /// Provides an Icon for every component that will be visible in the User Interface.
         /// Icons need to be 24x24 pixels.
         /// </summary>
-        protected override System.Drawing.Bitmap Icon => null;
+        protected override System.Drawing.Bitmap Icon => Properties.Resource.Stb2Brep;
 
         /// <summary>
         /// Each component must have a unique Guid to identify it. 
