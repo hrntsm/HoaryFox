@@ -104,7 +104,7 @@ namespace StbHopper.Util
                             break;
                     }
 
-                    shapeType = height < 0 ? ShapeTypes.Pipe : ShapeTypes.BOX;
+                    shapeType = height <= 0 ? ShapeTypes.Pipe : ShapeTypes.BOX;
                 }
                 else if (kind == KindsStructure.S)
                 {
