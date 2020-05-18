@@ -28,7 +28,7 @@ namespace StbHopper.Component
         private readonly List<Line> _braces = new List<Line>();
 
         public Stb2Line()
-          : base(name: "Stb to Line", nickname: "S2L", description: "Read ST-Bridge file and display", category: "StbHopper", subCategory: "v1.4")
+          : base(name: "Stb to Line", nickname: "S2L", description: "Read ST-Bridge file and display", category: "StbHopper", subCategory: "Geometry")
         {
         }
 

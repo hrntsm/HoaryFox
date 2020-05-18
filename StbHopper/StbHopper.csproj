@@ -34,8 +34,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Component\Stb2Bar.cs" />
+    <Compile Include="Component\Stb2BeamName.cs" />
+    <Compile Include="Component\Stb2BraceName.cs" />
+    <Compile Include="Component\Stb2GirderName.cs" />
     <Compile Include="Component\Stb2Line.cs" />
     <Compile Include="Component\Stb2Brep.cs" />
+    <Compile Include="Component\Stb2ColName.cs" />
+    <Compile Include="Component\Stb2PostName.cs" />
     <Compile Include="Properties\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
