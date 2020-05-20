@@ -195,14 +195,9 @@ namespace StbHopper.STB
                 }
                 if (stbRcCol.Attribute("kind_column") != null)
                 {
-                    if ((string)stbRcCol.Attribute("kind_column") == "COLUMN")
-                    {
-                        KindColumn.Add(KindsColumn.Column);
-                    }
-                    else
-                    {
-                        KindColumn.Add(KindsColumn.Post);
-                    }
+                    KindColumn.Add((string) stbRcCol.Attribute("kind_column") == "COLUMN"
+                        ? KindsColumn.Column
+                        : KindsColumn.Post);
                 }
                 else
                 {
@@ -1025,8 +1020,10 @@ namespace StbHopper.STB
     public class StbSecSteel:StbData
     {
         public List<string> Name { get; } = new List<string>();
-        public List<float> A { get; } = new List<float>();
-        public List<float> B { get; } = new List<float>();
+        public List<float> P1 { get; } = new List<float>();
+        public List<float> P2 { get; } = new List<float>();
+        public List<float> P3 { get; } = new List<float>();
+        public List<float> P4 { get; } = new List<float>();
         public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
         public StbSecRollH RollH { get; } = new StbSecRollH();
@@ -1050,68 +1047,90 @@ namespace StbHopper.STB
             // TODO 継承を使ってきれいに書き直す
             RollH.Load(stbData);
             Name.AddRange(RollH.Name);
-            A.AddRange(RollH.A);
-            B.AddRange(RollH.B);
+            P1.AddRange(RollH.A);
+            P2.AddRange(RollH.B);
+            P3.AddRange(RollH.T1);
+            P4.AddRange(RollH.T2);
             ShapeType.AddRange(RollH.ShapeType);
 
             BuildH.Load(stbData);
             Name.AddRange(BuildH.Name);
-            A.AddRange(BuildH.A);
-            B.AddRange(BuildH.B);
+            P1.AddRange(BuildH.A);
+            P2.AddRange(BuildH.B);
+            P3.AddRange(BuildH.T1);
+            P4.AddRange(BuildH.T2);
             ShapeType.AddRange(BuildH.ShapeType);
 
             RollBOX.Load(stbData);
             Name.AddRange(RollBOX.Name);
-            A.AddRange(RollBOX.A);
-            B.AddRange(RollBOX.B);
+            P1.AddRange(RollBOX.A);
+            P2.AddRange(RollBOX.B);
+            P3.AddRange(RollBOX.T);
+            P4.AddRange(RollBOX.R);
             ShapeType.AddRange(RollBOX.ShapeType);
 
             BuildBOX.Load(stbData);
             Name.AddRange(BuildBOX.Name);
-            A.AddRange(BuildBOX.A);
-            B.AddRange(BuildBOX.B);
+            P1.AddRange(BuildBOX.A);
+            P2.AddRange(BuildBOX.B);
+            P3.AddRange(BuildBOX.T1);
+            P4.AddRange(BuildBOX.T2);
             ShapeType.AddRange(BuildBOX.ShapeType);
 
             Pipe.Load(stbData);
             Name.AddRange(Pipe.Name);
-            A.AddRange(Pipe.T);
-            B.AddRange(Pipe.D);
+            P1.AddRange(Pipe.T);
+            P2.AddRange(Pipe.D);
+            P3.AddRange(new List<float>(new float[Pipe.D.Count]));
+            P4.AddRange(new List<float>(new float[Pipe.D.Count]));
             ShapeType.AddRange(Pipe.ShapeType);
 
             RollT.Load(stbData);
             Name.AddRange(RollT.Name);
-            A.AddRange(RollT.A);
-            B.AddRange(RollT.B);
+            P1.AddRange(RollT.A);
+            P2.AddRange(RollT.B);
+            P3.AddRange(RollT.T1);
+            P4.AddRange(RollT.T2);
             ShapeType.AddRange(RollT.ShapeType);
 
             RollC.Load(stbData);
             Name.AddRange(RollC.Name);
-            A.AddRange(RollC.A);
-            B.AddRange(RollC.B);
+            P1.AddRange(RollC.A);
+            P2.AddRange(RollC.B);
+            P3.AddRange(RollC.T1);
+            P4.AddRange(RollC.T2);
             ShapeType.AddRange(RollC.ShapeType);
 
             RollL.Load(stbData);
             Name.AddRange(RollL.Name);
-            A.AddRange(RollL.A);
-            B.AddRange(RollL.B);
+            P1.AddRange(RollL.A);
+            P2.AddRange(RollL.B);
+            P3.AddRange(RollL.T1);
+            P4.AddRange(RollL.T2);
             ShapeType.AddRange(RollL.ShapeType);
 
             RollLipC.Load(stbData);
             Name.AddRange(RollLipC.Name);
-            A.AddRange(RollLipC.H);
-            B.AddRange(RollLipC.A);
+            P1.AddRange(RollLipC.H);
+            P2.AddRange(RollLipC.A);
+            P3.AddRange(RollLipC.C);
+            P4.AddRange(RollLipC.T);
             ShapeType.AddRange(RollLipC.ShapeType);
 
             RollFB.Load(stbData);
             Name.AddRange(RollFB.Name);
-            A.AddRange(RollFB.B);
-            B.AddRange(RollFB.T);
+            P1.AddRange(RollFB.B);
+            P2.AddRange(RollFB.T);
+            P3.AddRange(new List<float>(new float[Pipe.D.Count]));
+            P4.AddRange(new List<float>(new float[Pipe.D.Count]));
             ShapeType.AddRange(RollFB.ShapeType);
 
             RollBar.Load(stbData);
             Name.AddRange(RollBar.Name);
-            A.AddRange(RollBar.R);
-            B.AddRange(RollBar.R);
+            P1.AddRange(RollBar.R);
+            P2.AddRange(RollBar.R);
+            P3.AddRange(new List<float>(new float[Pipe.D.Count]));
+            P4.AddRange(new List<float>(new float[Pipe.D.Count]));
             ShapeType.AddRange(RollBar.ShapeType);
         }
     }

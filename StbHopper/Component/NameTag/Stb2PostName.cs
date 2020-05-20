@@ -2,28 +2,26 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Xml.Linq;
-
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using StbHopper.STB;
 
-
-namespace StbHopper.Component
+namespace StbHopper.Component.NameTag
 {
-    public class Stb2BraceName:GH_Component
+    public class Stb2PostName:GH_Component
     {
         private string _path;
         private int _size;
 
         private static StbNodes _stbNodes;
-        private static StbBraces _stbBraces;
+        private static StbPosts _stbPosts;
 
         private readonly List<Point3d> _nodes = new List<Point3d>();
-        private readonly List<string> _braces = new List<string>();
-        private readonly List<Point3d> _bracePos = new List<Point3d>();
+        private readonly List<string> _posts = new List<string>();
+        private readonly List<Point3d> _postPos = new List<Point3d>();
 
-        public Stb2BraceName()
-          : base(name: "Stb to Brace NameTag", nickname: "S2Br", description: "Read ST-Bridge file and display", category: "StbHopper", subCategory: "Tags")
+        public Stb2PostName()
+          : base(name: "Stb to Post NameTag", nickname: "S2Po", description: "Read ST-Bridge file and display", category: "StbHopper", subCategory: "Tags")
         {
         }
         
@@ -33,8 +31,8 @@ namespace StbHopper.Component
         {
             base.ClearData();
             _nodes.Clear();
-            _braces.Clear();
-            _bracePos.Clear();
+            _posts.Clear();
+            _postPos.Clear();
         }
 
         /// <summary>
@@ -51,7 +49,7 @@ namespace StbHopper.Component
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Braces", "Brc", "output StbBraces to Line", GH_ParamAccess.list);
+            pManager.AddTextParameter("Posts", "Pst", "output StbPosts to Line", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -75,27 +73,27 @@ namespace StbHopper.Component
                 var position = new Point3d(_stbNodes.X[i], _stbNodes.Y[i], _stbNodes.Z[i]);
                 _nodes.Add(position);
             }
-            
-            // StbBrace の取得
-            for (var i = 0; i < _stbBraces.Id.Count; i++)
+
+            // StbPosts の取得
+            for (var i = 0; i < _stbPosts.Id.Count; i++)
             {
-                var idNodeStart = _stbNodes.Id.IndexOf(_stbBraces.IdNodeStart[i]);
-                var idNodeEnd = _stbNodes.Id.IndexOf(_stbBraces.IdNodeEnd[i]);
-                var name = _stbBraces.Name[i];
-                _bracePos.Add(new Point3d( (_nodes[idNodeStart].X + _nodes[idNodeEnd].X) / 2.0,
+                var idNodeStart = _stbNodes.Id.IndexOf(_stbPosts.IdNodeStart[i]);
+                var idNodeEnd = _stbNodes.Id.IndexOf(_stbPosts.IdNodeEnd[i]);
+                var name = _stbPosts.Name[i];
+                _postPos.Add(new Point3d( (_nodes[idNodeStart].X + _nodes[idNodeEnd].X) / 2.0,
                     (_nodes[idNodeStart].Y + _nodes[idNodeEnd].Y) / 2.0,
                     (_nodes[idNodeStart].Z + _nodes[idNodeEnd].Z) / 2.0)
                 );
-                _braces.Add(name);
+                _posts.Add(name);
             }
 
-            DA.SetDataList(0, _braces);
+            DA.SetDataList(0, _posts);
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
-            for (int i = 0; i < _braces.Count; i++)
-                args.Display.Draw2dText(_braces[i], Color.Black, _bracePos[i], true, _size);
+            for (int i = 0; i < _posts.Count; i++)
+                args.Display.Draw2dText(_posts[i], Color.Black, _postPos[i], true, _size);
         }
 
         /// <summary>
@@ -109,19 +107,19 @@ namespace StbHopper.Component
         /// It is vital this Guid doesn't change otherwise old ghx files 
         /// that use the old ID will partially fail during loading.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("E566DDCB-4192-40B2-8E96-2083207CC5A8");
+        public override Guid ComponentGuid => new Guid("8FAC9887-B49F-4FC1-8B6B-7847FCE49339");
 
         private static void Init()
         {
             _stbNodes = new StbNodes();
-            _stbBraces = new StbBraces();
+            _stbPosts = new StbPosts();
         }
 
         private static void Load(XDocument xDocument)
         {
             var members = new List<StbData>()
             {
-                _stbNodes, _stbBraces
+                _stbNodes, _stbPosts
             };
 
             foreach (var member in members)

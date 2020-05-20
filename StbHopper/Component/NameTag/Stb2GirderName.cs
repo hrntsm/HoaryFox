@@ -2,28 +2,26 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Xml.Linq;
-
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using StbHopper.STB;
 
-
-namespace StbHopper.Component
+namespace StbHopper.Component.NameTag
 {
-    public class Stb2BeamName:GH_Component
+    public class Stb2GirderName:GH_Component
     {
         private string _path;
         private int _size;
 
         private static StbNodes _stbNodes;
-        private static StbBeams _stbBeams;
+        private static StbGirders _stbGirders;
 
         private readonly List<Point3d> _nodes = new List<Point3d>();
-        private readonly List<string> _beams = new List<string>();
-        private readonly List<Point3d> _beamPos = new List<Point3d>();
+        private readonly List<string> _girders = new List<string>();
+        private readonly List<Point3d> _girderPos = new List<Point3d>();
 
-        public Stb2BeamName()
-          : base(name: "Stb to Beam NameTag", nickname: "S2Be", description: "Read ST-Bridge file and display", category: "StbHopper", subCategory: "Tags")
+        public Stb2GirderName()
+          : base(name: "Stb to Girder NameTag", nickname: "S2G", description: "Read ST-Bridge file and display", category: "StbHopper", subCategory: "Tags")
         {
         }
         
@@ -33,8 +31,8 @@ namespace StbHopper.Component
         {
             base.ClearData();
             _nodes.Clear();
-            _beams.Clear();
-            _beamPos.Clear();
+            _girders.Clear();
+            _girderPos.Clear();
         }
 
         /// <summary>
@@ -51,7 +49,7 @@ namespace StbHopper.Component
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Beams", "Beam", "output StbBeams to Line", GH_ParamAccess.list);
+            pManager.AddTextParameter("Girders", "Gird", "output StbGirders to Line", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -76,26 +74,26 @@ namespace StbHopper.Component
                 _nodes.Add(position);
             }
 
-            // StbBeam の取得
-            for (var i = 0; i < _stbBeams.Id.Count; i++)
+            // StbGirder の取得
+            for (var i = 0; i < _stbGirders.Id.Count; i++)
             {
-                var idNodeStart = _stbNodes.Id.IndexOf(_stbBeams.IdNodeStart[i]);
-                var idNodeEnd = _stbNodes.Id.IndexOf(_stbBeams.IdNodeEnd[i]);
-                var name = _stbBeams.Name[i];
-                _beamPos.Add(new Point3d( (_nodes[idNodeStart].X + _nodes[idNodeEnd].X) / 2.0,
+                var idNodeStart = _stbNodes.Id.IndexOf(_stbGirders.IdNodeStart[i]);
+                var idNodeEnd = _stbNodes.Id.IndexOf(_stbGirders.IdNodeEnd[i]);
+                var name = _stbGirders.Name[i];
+                _girderPos.Add(new Point3d( (_nodes[idNodeStart].X + _nodes[idNodeEnd].X) / 2.0,
                     (_nodes[idNodeStart].Y + _nodes[idNodeEnd].Y) / 2.0,
                     (_nodes[idNodeStart].Z + _nodes[idNodeEnd].Z) / 2.0)
                 );
-                _beams.Add(name);
+                _girders.Add(name);
             }
 
-            DA.SetDataList(0, _beams);
+            DA.SetDataList(0, _girders);
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
-            for (int i = 0; i < _beams.Count; i++)
-                args.Display.Draw2dText(_beams[i], Color.Black, _beamPos[i], true, _size);
+            for (int i = 0; i < _girders.Count; i++)
+                args.Display.Draw2dText(_girders[i], Color.Black, _girderPos[i], true, _size);
         }
 
         /// <summary>
@@ -109,19 +107,19 @@ namespace StbHopper.Component
         /// It is vital this Guid doesn't change otherwise old ghx files 
         /// that use the old ID will partially fail during loading.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("758DE991-F652-4EDC-BC63-2A454BA43FB1");
+        public override Guid ComponentGuid => new Guid("35D72484-2675-487E-A970-5DE885582312");
 
         private static void Init()
         {
             _stbNodes = new StbNodes();
-            _stbBeams = new StbBeams();
+            _stbGirders = new StbGirders();
         }
 
         private static void Load(XDocument xDocument)
         {
             var members = new List<StbData>()
             {
-                _stbNodes, _stbBeams
+                _stbNodes, _stbGirders
             };
 
             foreach (var member in members)

@@ -128,8 +128,8 @@ namespace StbHopper.Util
                     }
 
                     secIndex = Stb2Brep.StbSecSteel.Name.IndexOf(shape);
-                    height = Stb2Brep.StbSecSteel.A[secIndex];
-                    width = Stb2Brep.StbSecSteel.B[secIndex];
+                    height = Stb2Brep.StbSecSteel.P1[secIndex];
+                    width = Stb2Brep.StbSecSteel.P2[secIndex];
                     shapeType = Stb2Brep.StbSecSteel.ShapeType[secIndex];
                 }
 
