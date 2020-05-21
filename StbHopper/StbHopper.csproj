@@ -38,7 +38,7 @@
     <Compile Include="Component\NameTag\Stb2ColName.cs" />
     <Compile Include="Component\NameTag\Stb2GirderName.cs" />
     <Compile Include="Component\NameTag\Stb2PostName.cs" />
-    <Compile Include="Component\SecTag\Stb2ColSec.cs" />
+    <Compile Include="Component\SectionTag\Stb2ColSec.cs" />
     <Compile Include="Component\Stb2Bar.cs" />
     <Compile Include="Component\Stb2Line.cs" />
     <Compile Include="Component\Stb2Brep.cs" />

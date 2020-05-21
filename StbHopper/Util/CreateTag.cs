@@ -4,7 +4,7 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using StbHopper.Component;
-using StbHopper.Component.SecTag;
+using StbHopper.Component.SectionTag;
 using StbHopper.STB;
 
 namespace StbHopper.Util
@@ -12,6 +12,7 @@ namespace StbHopper.Util
     public class CreateTag
     {
         private readonly StbNodes _nodes;
+        public List<Point3d> TagPos { get; } = new List<Point3d>();
 
         public CreateTag(StbNodes nodes)
         {
@@ -24,6 +25,8 @@ namespace StbHopper.Util
 
             double p1 = 0;
             double p2 = 0;
+            double p3 = 0;
+            double p4 = 0;
             string shape = string.Empty;
             string name = string.Empty;
 
@@ -31,17 +34,19 @@ namespace StbHopper.Util
             {
                 int idSection = frame.IdSection[eNum];
                 KindsStructure kind = frame.KindStructure[eNum];
-                GH_Path ghPath = new GH_Path(eNum);
+                GH_Path ghPath = new GH_Path(new int[]{eNum});
 
                 // 始点と終点の座標取得
                 int nodeIndexStart = _nodes.Id.IndexOf(frame.IdNodeStart[eNum]);
                 int nodeIndexEnd = _nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
-                Point3d nodeStart = new Point3d(_nodes.X[nodeIndexStart], _nodes.Y[nodeIndexStart],
-                    _nodes.Z[nodeIndexStart]);
+                Point3d nodeStart = new Point3d(_nodes.X[nodeIndexStart], _nodes.Y[nodeIndexStart], _nodes.Z[nodeIndexStart]);
                 Point3d nodeEnd = new Point3d(_nodes.X[nodeIndexEnd], _nodes.Y[nodeIndexEnd], _nodes.Z[nodeIndexEnd]);
+                TagPos.Add(new Point3d((nodeStart.X + nodeEnd.X) / 2.0,
+                    (nodeStart.Y + nodeEnd.Y) / 2.0,
+                    (nodeStart.Z + nodeEnd.Z) / 2.0));
 
                 int secIndex;
-                ShapeTypes shapeType;
+                ShapeTypes shapeType = ShapeTypes.BOX;
                 switch (kind)
                 {
                     case KindsStructure.RC:
@@ -60,14 +65,12 @@ namespace StbHopper.Util
                                 name = Stb2ColSec.SecBeamRc.Name[secIndex];
                                 p1 = Stb2ColSec.SecBeamRc.Depth[secIndex];
                                 p2 = Stb2ColSec.SecBeamRc.Width[secIndex];
+                                p3 = 0;
+                                p4 = 0;
                                 break;
                         }
 
                         shapeType = p1 <= 0 ? ShapeTypes.Pipe : ShapeTypes.BOX;
-                        sec.Append(new GH_String(name), ghPath);
-                        sec.Append(new GH_String(shapeType.ToString()), ghPath);
-                        sec.Append(new GH_String(p1.ToString()), ghPath);
-                        sec.Append(new GH_String(p2.ToString()), ghPath);
                         break;
                     case KindsStructure.S:
                     {
@@ -94,19 +97,19 @@ namespace StbHopper.Util
                         name = Stb2ColSec.StbSecSteel.Name[secIndex];
                         p1 = Stb2ColSec.StbSecSteel.P1[secIndex];
                         p2 = Stb2ColSec.StbSecSteel.P2[secIndex];
-                        double p3 = Stb2ColSec.StbSecSteel.P3[secIndex];
-                        double p4 = Stb2ColSec.StbSecSteel.P4[secIndex];
+                        p3 = Stb2ColSec.StbSecSteel.P3[secIndex];
+                        p4 = Stb2ColSec.StbSecSteel.P4[secIndex];
                         shapeType = Stb2ColSec.StbSecSteel.ShapeType[secIndex];
-                        
-                        sec.Append(new GH_String(name), ghPath);
-                        sec.Append(new GH_String(shapeType.ToString()), ghPath);
-                        sec.Append(new GH_String(p1.ToString()), ghPath);
-                        sec.Append(new GH_String(p2.ToString()), ghPath);
-                        sec.Append(new GH_String(p3.ToString()), ghPath);
-                        sec.Append(new GH_String(p4.ToString()), ghPath);
                         break;
                     }
                 }
+                        
+                sec.Append(new GH_String(name), ghPath);
+                sec.Append(new GH_String(shapeType.ToString()), ghPath);
+                sec.Append(new GH_String(p1.ToString()), ghPath);
+                sec.Append(new GH_String(p2.ToString()), ghPath);
+                sec.Append(new GH_String(p3.ToString()), ghPath);
+                sec.Append(new GH_String(p4.ToString()), ghPath);
             }
 
             return sec;

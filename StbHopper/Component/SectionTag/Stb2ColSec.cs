@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Xml.Linq;
-
-using Rhino.Geometry;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+using Rhino.Geometry;
 using StbHopper.STB;
 using StbHopper.Util;
 
-namespace StbHopper.Component.SecTag
+namespace StbHopper.Component.SectionTag
 {
     public class Stb2ColSec:GH_Component
     {
         private string _path;
+        private int _size;
 
         private static StbNodes _nodes;
         private static StbColumns _columns;
@@ -29,8 +30,9 @@ namespace StbHopper.Component.SecTag
         public static StbSecBraceS SecBraceS;
         public static StbSecSteel StbSecSteel;
 
-        private List<GH_Structure<GH_String>> _frameTags = new List<GH_Structure<GH_String>>();
-
+        private readonly List<GH_Structure<GH_String>> _frameTags = new List<GH_Structure<GH_String>>();
+        private readonly List<List<Point3d>>_tagPos = new List<List<Point3d>>();
+        
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
         /// constructor without any arguments.
@@ -47,7 +49,10 @@ namespace StbHopper.Component.SecTag
         {
             base.ClearData();
             _frameTags.Clear();
+            _tagPos.Clear();
         }
+        
+        public override bool IsPreviewCapable => true;
 
         /// <summary>
         /// Registers all the input parameters for this component.
@@ -55,6 +60,7 @@ namespace StbHopper.Component.SecTag
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("path", "path", "input ST-Bridge file path", GH_ParamAccess.item);
+            pManager.AddIntegerParameter("size", "size", "Tag size", GH_ParamAccess.item, 12);
         }
 
         /// <summary>
@@ -78,6 +84,7 @@ namespace StbHopper.Component.SecTag
         {
             // 対象の stb の pathを取得
             if (!DA.GetData("path", ref _path)) { return; }
+            if (!DA.GetData("size", ref _size)) { return; }
             var xDocument = XDocument.Load(_path);
 
             Init();
@@ -89,6 +96,20 @@ namespace StbHopper.Component.SecTag
             for (var i = 0; i < 5; i++)
             {
                 DA.SetDataTree(i, _frameTags[i]);
+            }
+        }
+
+        public override void DrawViewportWires(IGH_PreviewArgs args)
+        {
+            var column = _frameTags[0];
+            var columnPos = _tagPos[0];
+            var test = column.PathCount;
+            for (int i = 0; i < column.PathCount; i++)
+            {
+                var tags = column.Branches[i];
+                string tag = tags[0].ToString() + "\n" + tags[1].ToString() + "\n" + tags[2].ToString() + "\n" + 
+                             tags[3].ToString() + "\n" + tags[4].ToString() + "\n" + tags[5].ToString();
+                args.Display.Draw2dText(tag, Color.Black, columnPos[i], true, _size);
             }
         }
 
@@ -144,7 +165,10 @@ namespace StbHopper.Component.SecTag
             
             var tags = new CreateTag(_nodes);
             foreach (var frame in stbFrames)
+            {
                 _frameTags.Add(tags.Frame(frame));
+                _tagPos.Add(tags.TagPos);
+            }
         }
     }
 }
