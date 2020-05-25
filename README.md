@@ -1,6 +1,8 @@
-# StbHopper
+# HoaryFox
 
-Grasshopper Component which read ST-Bridge file(.stb) and display its model.
+Grasshopper Component which read ST-Bridge file(.stb) and display its model information.  
+You can easily check frames and present structure frame!!  
+If you need stand-alone ST-Bridge file viewer, Please see [STEVIA](https://github.com/hrntsm/STEVIA-Stb2U/wiki)
 
 ## Install
 
@@ -11,11 +13,10 @@ Grasshopper Component which read ST-Bridge file(.stb) and display its model.
 
 ## How to use
 
-Input file path you want to modeling and output some STB tag data(StbClumn, StbGirder, StbPost, StbBeam, StbBrace, StbSlab).
+Input st-bridge file path, output some its tag data(StbColumn, StbGirder, StbPost, StbBeam, StbBrace, StbSlab).
 
-It supports version 1.x, but version 2.x is supported.  
-If you need more infomation, refer to below youtube movie or send direct messege to my twitter account.
-<iframe width="560" height="315" src="https://www.youtube.com/embed/zxkE5YmaUKk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+It supports version 1.x, version 2.x is not supported.  
+If you need more information, send direct message to my twitter account.
 
 
 ## What is ST-Bridge
@@ -26,6 +27,9 @@ Quote from [building SMART Japan Structural Design Subcommittee](https://en.buil
 > + Simpler to use than IFC due to the clearly defined the range of use
 > + Integrate Japanese original methods of drawing methodology (Grids, part placement and section annotations, reinforcement information)
 > + Aim for coordination between domestic structural applications, building skeleton surveying applications, 3D Object CAD
+
+
+
 
 ## Contact information
 
