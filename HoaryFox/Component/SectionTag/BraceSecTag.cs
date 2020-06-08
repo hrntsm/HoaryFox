@@ -37,7 +37,7 @@ namespace HoaryFox.Component.SectionTag
         /// new tabs/panels will automatically be created.
         /// </summary>
         public BraceSecTag()
-          : base("Brace Section Tag", "S2BrSec", "Read ST-Bridge file and display Beam Section Tag", "HoaryFox", "Section")
+          : base("Brace Section Tag", "BraceSec", "Display Beam Section Tag", "HoaryFox", "Section")
         {
         }
 

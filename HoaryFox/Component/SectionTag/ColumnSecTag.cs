@@ -37,7 +37,7 @@ namespace HoaryFox.Component.SectionTag
         /// new tabs/panels will automatically be created.
         /// </summary>
         public ColumnSecTag()
-          : base("Column Section Tag", "S2ClSec", "Read ST-Bridge file and display Column Section Tag", "HoaryFox", "Section")
+          : base("Column Section Tag", "ColumSec", "Display Column Section Tag", "HoaryFox", "Section")
         {
         }
 

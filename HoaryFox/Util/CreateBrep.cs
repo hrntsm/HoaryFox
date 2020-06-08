@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using HoaryFox.Component;
-using HoaryFox.STB;
+
 using Rhino.Geometry;
+
+using HoaryFox.STB;
+using HoaryFox.Component.Geometry;
 
 namespace HoaryFox.Util
 {

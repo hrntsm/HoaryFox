@@ -21,7 +21,7 @@ namespace HoaryFox.Component.NameTag
         private readonly List<Point3d> _bracePos = new List<Point3d>();
 
         public BraceNameTag()
-          : base(name: "Brace Name Tag", nickname: "S2BrTg", description: "Read ST-Bridge file and display", category: "HoaryFox", subCategory: "Tags")
+          : base(name: "Brace Name Tag", nickname: "BraceTag", description: "Display Brace Name Tag", category: "HoaryFox", subCategory: "Name")
         {
         }
         

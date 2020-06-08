@@ -21,7 +21,7 @@ namespace HoaryFox.Component.NameTag
         private readonly List<Point3d> _postPos = new List<Point3d>();
 
         public PostNameTag()
-          : base(name: "Post Name Tag", nickname: "S2PoTg", description: "Read ST-Bridge file and display", category: "HoaryFox", subCategory: "Tags")
+          : base(name: "Post Name Tag", nickname: "PostTag", description: "Display Post Name Tag", category: "HoaryFox", subCategory: "Name")
         {
         }
         

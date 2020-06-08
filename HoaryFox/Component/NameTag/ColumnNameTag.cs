@@ -21,7 +21,7 @@ namespace HoaryFox.Component.NameTag
         private readonly List<Point3d> _columnPos = new List<Point3d>();
         
         public ColumnNameTag()
-          : base(name: "Column Name Tag", nickname: "S2ClTg", description: "Read ST-Bridge file and display", category: "HoaryFox", subCategory: "Tags")
+          : base(name: "Column Name Tag", nickname: "ColumnTag", description: "Display Column Name Tag", category: "HoaryFox", subCategory: "Name")
         {
         }
         

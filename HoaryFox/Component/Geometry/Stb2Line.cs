@@ -7,7 +7,7 @@ using HoaryFox.STB;
 using Rhino.Geometry;
 
 
-namespace HoaryFox.Component
+namespace HoaryFox.Component.Geometry
 {
     public class Stb2Line:GH_Component
     {

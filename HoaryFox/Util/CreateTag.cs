@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+
+using Rhino.Geometry;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+
 using HoaryFox.STB;
-using Rhino.Geometry;
 using HoaryFox.Component;
 using HoaryFox.Component.SectionTag;
 

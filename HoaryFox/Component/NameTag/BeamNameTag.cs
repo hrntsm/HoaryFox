@@ -21,7 +21,7 @@ namespace HoaryFox.Component.NameTag
         private readonly List<Point3d> _beamPos = new List<Point3d>();
 
         public BeamNameTag()
-          : base(name: "Beam Name Tag", nickname: "S2BeTg", description: "Read ST-Bridge file and display", category: "HoaryFox", subCategory: "Tags")
+          : base(name: "Beam Name Tag", nickname: "BeamTag", description: "Display Beam Name Tag", category: "HoaryFox", subCategory: "Name")
         {
         }
         

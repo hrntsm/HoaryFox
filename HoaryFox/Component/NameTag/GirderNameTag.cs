@@ -21,7 +21,7 @@ namespace HoaryFox.Component.NameTag
         private readonly List<Point3d> _girderPos = new List<Point3d>();
 
         public GirderNameTag()
-          : base(name: "Girder Name Tag", nickname: "S2GrTg", description: "Read ST-Bridge file and display", category: "HoaryFox", subCategory: "Tags")
+          : base(name: "Girder Name Tag", nickname: "GirderTag", description: "Display girder Name Tag ", category: "HoaryFox", subCategory: "Name")
         {
         }
         

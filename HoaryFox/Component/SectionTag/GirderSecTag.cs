@@ -37,7 +37,7 @@ namespace HoaryFox.Component.SectionTag
         /// new tabs/panels will automatically be created.
         /// </summary>
         public GirderSecTag()
-          : base("Girder Section Tag", "S2GrSec", "Read ST-Bridge file and display Girder Section Tag", "HoaryFox", "Section")
+          : base("Girder Section Tag", "GirderSec", "Display Girder Section Tag", "HoaryFox", "Section")
         {
         }
 

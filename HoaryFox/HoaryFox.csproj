@@ -43,9 +43,9 @@
     <Compile Include="Component\SectionTag\ColumnSecTag.cs" />
     <Compile Include="Component\SectionTag\PostSecTag.cs" />
     <Compile Include="Component\SectionTag\GirderSecTag.cs" />
-    <Compile Include="Component\Stb2Bar.cs" />
-    <Compile Include="Component\Stb2Line.cs" />
-    <Compile Include="Component\Stb2Brep.cs" />
+    <Compile Include="Component\Bar\Stb2Bar.cs" />
+    <Compile Include="Component\Geometry\Stb2Line.cs" />
+    <Compile Include="Component\Geometry\Stb2Brep.cs" />
     <Compile Include="Properties\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -101,6 +101,7 @@
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
