@@ -106,7 +106,7 @@ namespace HoaryFox.Component.SectionTag
         /// Provides an Icon for every component that will be visible in the User Interface.
         /// Icons need to be 24x24 pixels.
         /// </summary>
-        protected override System.Drawing.Bitmap Icon => null;
+        protected override System.Drawing.Bitmap Icon => Properties.Resource.GirderSection;
 
         /// <summary>
         /// Each component must have a unique Guid to identify it. 

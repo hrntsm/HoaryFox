@@ -63,9 +63,9 @@ namespace HoaryFox.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        internal static System.Drawing.Bitmap LibIcon {
+        internal static System.Drawing.Bitmap BeamName {
             get {
-                object obj = ResourceManager.GetObject("LibIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("BeamName", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace HoaryFox.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        internal static System.Drawing.Bitmap ProjectIcon {
+        internal static System.Drawing.Bitmap BeamSection {
             get {
-                object obj = ResourceManager.GetObject("ProjectIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("BeamSection", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace HoaryFox.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        internal static System.Drawing.Bitmap Stb2Brep {
+        internal static System.Drawing.Bitmap BraceName {
             get {
-                object obj = ResourceManager.GetObject("Stb2Brep", resourceCulture);
+                object obj = ResourceManager.GetObject("BraceName", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,9 +93,89 @@ namespace HoaryFox.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        internal static System.Drawing.Bitmap Stb2Line {
+        internal static System.Drawing.Bitmap BraceSection {
             get {
-                object obj = ResourceManager.GetObject("Stb2Line", resourceCulture);
+                object obj = ResourceManager.GetObject("BraceSection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap Brep {
+            get {
+                object obj = ResourceManager.GetObject("Brep", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap ColumnName {
+            get {
+                object obj = ResourceManager.GetObject("ColumnName", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap ColumnSection {
+            get {
+                object obj = ResourceManager.GetObject("ColumnSection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap GirderName {
+            get {
+                object obj = ResourceManager.GetObject("GirderName", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap GirderSection {
+            get {
+                object obj = ResourceManager.GetObject("GirderSection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap Line {
+            get {
+                object obj = ResourceManager.GetObject("Line", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap PostName {
+            get {
+                object obj = ResourceManager.GetObject("PostName", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap PostSection {
+            get {
+                object obj = ResourceManager.GetObject("PostSection", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
