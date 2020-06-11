@@ -8,7 +8,7 @@ namespace HoaryFox
     {
         public override string Name => "HoaryFox";
 
-        public override Bitmap Icon => Properties.Resource.LibIcon;
+        public override Bitmap Icon => Properties.Resource.InfoIcon;
 
         public override string Description => "This Component read ST-Bridge file(.stb) and display its model data.";
 

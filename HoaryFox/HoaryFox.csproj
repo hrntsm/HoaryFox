@@ -94,6 +94,7 @@
     <None Include="Resources\GirderSection.png" />
     <None Include="Resources\BraceSection.png" />
     <None Include="Resources\BeamSection.png" />
+    <None Include="Resources\InfoIcon.afdesign" />
     <None Include="Resources\Line.afdesign" />
     <None Include="Resources\Name.afdesign" />
     <None Include="Resources\PostName.png" />
@@ -107,7 +108,12 @@
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\InfoIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\InfoIcon_Info.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
