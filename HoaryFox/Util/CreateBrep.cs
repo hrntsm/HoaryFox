@@ -17,6 +17,52 @@ namespace HoaryFox.Util
             this._nodes = nodes;
         }
 
+        private List<Brep> GetPlaneBrep(List<Brep> brep, int count, Point3d[] pt)
+        {
+            // TODO: 10節点までとりあえず対応。節点が同一線上にあるとたぶんエラーになるので要対応
+            switch (count)
+            {
+                case 3:
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], 0.001));
+                    break;
+                case 4:
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2],  pt[3], 0.001));
+                    break;
+                case 5:
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[0], 0.001));
+                    break;
+                case 6:
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[0], 0.001));
+                    break;
+                case 7:
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[0], pt[3], 0.001));
+                    break;
+                case 8:
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[0], pt[3], 0.001));
+                    break;
+                case 9:
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[8], pt[0], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[3], pt[6], 0.001));
+                    break;
+                case 10:
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[8], pt[9], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[9], pt[0], pt[3], pt[6], 0.001));
+                    break;
+            }
+
+            return brep;
+        }
+
         public List<Brep> Slab(StbSlabs slabs)
         {
             List<Brep> brep = new List<Brep>();
@@ -24,19 +70,19 @@ namespace HoaryFox.Util
 
             foreach (List<int> nodeIds in slabs.NodeIdList)
             {
-                int[] index = new int[4];
-                Point3d[] pt = new Point3d[4];
+                int[] index = new int[10];
+                Point3d[] pt = new Point3d[10];
                 double offset = slabs.Level[slabNum];
 
                 for (int i = 0; i < nodeIds.Count; i++)
                 {
+                    if (i > 9) continue;
                     index[i] = _nodes.Id.IndexOf(nodeIds[i]);
                     pt[i] = new Point3d(_nodes.X[index[i]], _nodes.Y[index[i]], _nodes.Z[index[i]] + offset);
                 }
+                
+                brep = GetPlaneBrep(brep, nodeIds.Count, pt);
 
-                brep.Add(nodeIds.Count == 4
-                    ? Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 1)
-                    : Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], 1));
                 slabNum++;
             }
 
@@ -49,18 +95,17 @@ namespace HoaryFox.Util
 
             foreach (List<int> nodeIds in walls.NodeIdList)
             {
-                int[] index = new int[4];
-                Point3d[] pt = new Point3d[4];
+                int[] index = new int[10];
+                Point3d[] pt = new Point3d[10];
 
                 for (int i = 0; i < nodeIds.Count; i++)
                 {
+                    if (i > 9) continue;
                     index[i] = _nodes.Id.IndexOf(nodeIds[i]);
                     pt[i] = new Point3d(_nodes.X[index[i]], _nodes.Y[index[i]], _nodes.Z[index[i]]);
                 }
-
-                brep.Add(nodeIds.Count == 4
-                    ? Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 1)
-                    : Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], 1));
+                
+                brep = GetPlaneBrep(brep, nodeIds.Count, pt);
             }
 
             return brep;
