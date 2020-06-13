@@ -1,0 +1,33 @@
+# HoaryFox
+
+HoaryFox は 建築構造架構の可視化ツールです。
+ST-Bridge file(.stb) を読み込んで、表示をします。
+対応するデータの形式を一貫構造計算ソフトから出力されてるstbデータとすることで、使用しているソフトに限らずモデルの生成ができ、かつ可視化用に別途モデリングする必要がないことが特徴です。
+Rhinoを使わないスタンドアロンのビューアが必要な場合は [STEVIA](https://github.com/hrntsm/STEVIA-Stb2U/wiki) を使ってみてください。
+
+## Install
+
+1. Grasshopper内で, File > Special Folders > Components folderを選択し、gha fileをそこに保存します。
+2. コンポーネントを右クリックし プロパティの中で、ブロックしない に設定する
+3. Rhinoを再起動する。
+
+## How to use
+
+pathの個所にst-bridgeデータのパスを入力することで各コンポーネントに応じた図化がされます。
+対応はst-bridge ver1.4までなので、2.0以降では動きません
+
+## About ST-Bridge
+
+ST-Bridgeの規格を作成している [building SMART Japan の構造設計小委員会様](https://www.building-smart.or.jp/meeting/buildall/structural-design/) での記載を引用します。
+
+> ST-Bridgeとは・・・日本国内の建築構造分野での情報交換のための標準フォーマット
+>
+> + 利用範囲を明確にすることによって、IFCよりシンプルで扱い易い
+> + 日本独自の表現方法を取り込む（通り芯、部材配置と断面符号、配筋情報）
+> + 国内の構造系アプリ、躯体積算アプリ、3次元オブジェクトCADとの連携を目指す
+
+
+## Contact information
+
++ Twitter : [@hiron_rgkr](https://twitter.com/hiron_rgkr)
++ URL : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
