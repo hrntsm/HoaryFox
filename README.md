@@ -6,6 +6,7 @@ If you need stand-alone ST-Bridge file viewer, Please see [STEVIA](https://githu
 
 ## Install
 
+0. Download HoaryFox.gha file from [food4rhino](https://www.food4rhino.com/app/hoaryfox) or [release page](https://github.com/hrntsm/HoaryFox/releases)
 1. In Grasshopper, choose File > Special Folders > Components folder. Save the gha file there.
 2. Right-click the file > Properties > make sure there is no "blocked" text
 3. Restart Rhino and Grasshopper
