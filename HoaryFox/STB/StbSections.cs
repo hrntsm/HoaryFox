@@ -560,7 +560,7 @@ namespace HoaryFox.STB
         /// <summary>
         /// 各配筋の本数をまとめたリスト
         /// </summary>
-        public List<List<int>> BarList { get; } = new List<List<int>>();
+        public List<List<double>> BarList { get; } = new List<List<double>>();
 
         /// <summary>
         /// 与えられたstbデータからRC梁断面を取得する。
@@ -660,7 +660,7 @@ namespace HoaryFox.STB
     /// </summary>
     class StbBeamSecBarArrangement
     {
-        public List<int> BarList { get; } = new List<int>();
+        public List<double> BarList { get; } = new List<double>();
 
         public void Load(XElement stbBeam)
         {
@@ -675,7 +675,7 @@ namespace HoaryFox.STB
                 elementName = "StbSecBeam_Same_Section";
             else
             {
-                BarList.AddRange(new List<int> { 2, 2, 0, 0, 0, 0, 200, 2 });
+                BarList.AddRange(new List<double> { 2, 2, 0, 0, 0, 0, 200, 2 });
                 return;
             }
 
@@ -683,41 +683,41 @@ namespace HoaryFox.STB
 
             // Main 1
             if (stbBarElem.Attribute("count_main_top_1st") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_main_top_1st"));
+                BarList.Add((double)stbBarElem.Attribute("count_main_top_1st"));
             else
                 BarList.Add(0);
             if (stbBarElem.Attribute("count_main_bottom_1st") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_main_bottom_1st"));
+                BarList.Add((double)stbBarElem.Attribute("count_main_bottom_1st"));
             else
                 BarList.Add(0);
 
             // Main2
             if (stbBarElem.Attribute("count_main_top_2nd") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_main_top_2nd"));
+                BarList.Add((double)stbBarElem.Attribute("count_main_top_2nd"));
             else
                 BarList.Add(0);
             if (stbBarElem.Attribute("count_main_bottom_2nd") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_main_bottom_2nd"));
+                BarList.Add((double)stbBarElem.Attribute("count_main_bottom_2nd"));
             else
                 BarList.Add(0);
 
             // Main3
             if (stbBarElem.Attribute("count_main_top_3rd") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_main_top_3rd"));
+                BarList.Add((double)stbBarElem.Attribute("count_main_top_3rd"));
             else
                 BarList.Add(0);
             if (stbBarElem.Attribute("count_main_bottom_3rd") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_main_bottom_3rd"));
+                BarList.Add((double)stbBarElem.Attribute("count_main_bottom_3rd"));
             else
                 BarList.Add(0);
 
             // Band
             if (stbBarElem.Attribute("pitch_stirrup") != null)
-                BarList.Add((int)stbBarElem.Attribute("pitch_stirrup"));
+                BarList.Add((double)stbBarElem.Attribute("pitch_stirrup"));
             else
                 BarList.Add(0);
             if (stbBarElem.Attribute("count_stirrup") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_stirrup"));
+                BarList.Add((double)stbBarElem.Attribute("count_stirrup"));
             else
                 BarList.Add(0);
         }
