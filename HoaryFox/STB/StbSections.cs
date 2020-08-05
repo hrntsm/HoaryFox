@@ -166,7 +166,7 @@ namespace HoaryFox.STB
         /// <summary>
         /// 各配筋の本数をまとめたリスト
         /// </summary>
-        public List<List<int>> BarList { get; } = new List<List<int>>();
+        public List<List<double>> BarList { get; } = new List<List<double>>();
 
         /// <summary>
         /// 与えられたstbデータからRC柱断面を取得する。
@@ -261,7 +261,7 @@ namespace HoaryFox.STB
     /// </summary>
     class StbColSecBarArrangement
     {
-        public List<int> BarList { get; } = new List<int>();
+        public List<double> BarList { get; } = new List<double>();
 
         public void Load(XElement stbColumn, bool isRect)
         {
@@ -286,7 +286,7 @@ namespace HoaryFox.STB
             }
             else
             {
-                BarList.AddRange(new List<int> { 2, 2, 0, 0, 4, 200, 2, 2 });
+                BarList.AddRange(new List<double> { 2, 2, 0, 0, 4, 200, 2, 2 });
                 return;
             }
 
@@ -294,41 +294,41 @@ namespace HoaryFox.STB
 
             // Main 1
             if (stbBarElem.Attribute("count_main_X_1st") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_main_X_1st"));
+                BarList.Add((double)stbBarElem.Attribute("count_main_X_1st"));
             else
                 BarList.Add(0);
             if (stbBarElem.Attribute("count_main_X_1st") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_main_Y_1st"));
+                BarList.Add((double)stbBarElem.Attribute("count_main_Y_1st"));
             else
                 BarList.Add(0);
 
             // Main2
             if (stbBarElem.Attribute("count_main_X_2nd") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_main_X_2nd"));
+                BarList.Add((double)stbBarElem.Attribute("count_main_X_2nd"));
             else
                 BarList.Add(0);
             if (stbBarElem.Attribute("count_main_Y_2nd") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_main_Y_2nd"));
+                BarList.Add((double)stbBarElem.Attribute("count_main_Y_2nd"));
             else
                 BarList.Add(0);
 
             // Main total
             if (stbBarElem.Attribute("count_main_total") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_main_total"));
+                BarList.Add((double)stbBarElem.Attribute("count_main_total"));
             else
                 BarList.Add(0);
 
             // Band
             if (stbBarElem.Attribute("pitch_band") != null)
-                BarList.Add((int)stbBarElem.Attribute("pitch_band"));
+                BarList.Add((double)stbBarElem.Attribute("pitch_band"));
             else
                 BarList.Add(0);
             if (stbBarElem.Attribute("count_band_dir_X") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_band_dir_X"));
+                BarList.Add((double)stbBarElem.Attribute("count_band_dir_X"));
             else
                 BarList.Add(0);
             if (stbBarElem.Attribute("count_band_dir_Y") != null)
-                BarList.Add((int)stbBarElem.Attribute("count_band_dir_Y"));
+                BarList.Add((double)stbBarElem.Attribute("count_band_dir_Y"));
             else
                 BarList.Add(0);
         }
