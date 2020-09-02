@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Rhino.Geometry;
+﻿using System.Collections.Generic;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
-
 using HoaryFox.STB;
-using HoaryFox.Component;
-using HoaryFox.Component.SectionTag;
+using Rhino.Geometry;
 
-namespace HoaryFox.Util
+namespace HoaryFox.Member
 {
     public class CreateTag
     {

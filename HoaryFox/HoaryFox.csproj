@@ -33,33 +33,35 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Component\NameTag\BeamNameTag.cs" />
-    <Compile Include="Component\NameTag\BraceNameTag.cs" />
-    <Compile Include="Component\NameTag\ColumnNameTag.cs" />
-    <Compile Include="Component\NameTag\GirderNameTag.cs" />
-    <Compile Include="Component\NameTag\PostNameTag.cs" />
-    <Compile Include="Component\SectionTag\BeamSecTag.cs" />
-    <Compile Include="Component\SectionTag\BraceSecTag.cs" />
-    <Compile Include="Component\SectionTag\ColumnSecTag.cs" />
-    <Compile Include="Component\SectionTag\PostSecTag.cs" />
-    <Compile Include="Component\SectionTag\GirderSecTag.cs" />
+    <Compile Include="Component\IO\StbLoader.cs" />
     <Compile Include="Component\Bar\Stb2Bar.cs" />
     <Compile Include="Component\Geometry\Stb2Line.cs" />
     <Compile Include="Component\Geometry\Stb2Brep.cs" />
+    <Compile Include="Component\Tag\Name\BeamNameTag.cs" />
+    <Compile Include="Component\Tag\Name\BraceNameTag.cs" />
+    <Compile Include="Component\Tag\Name\ColumnNameTag.cs" />
+    <Compile Include="Component\Tag\Name\GirderNameTag.cs" />
+    <Compile Include="Component\Tag\Name\PostNameTag.cs" />
+    <Compile Include="Component\Tag\Section\BeamSecTag.cs" />
+    <Compile Include="Component\Tag\Section\BraceSecTag.cs" />
+    <Compile Include="Component\Tag\Section\ColumnSecTag.cs" />
+    <Compile Include="Component\Tag\Section\GirderSecTag.cs" />
+    <Compile Include="Component\Tag\Section\PostSecTag.cs" />
+    <Compile Include="Member\CreateLines.cs" />
     <Compile Include="Properties\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Util\CreateBar.cs" />
-    <Compile Include="Util\CreateBrep.cs" />
+    <Compile Include="Member\CreateBar.cs" />
+    <Compile Include="Member\CreateBrep.cs" />
     <Compile Include="STB\Stb.cs" />
     <Compile Include="STB\StbMember.cs" />
     <Compile Include="STB\StbModel.cs" />
     <Compile Include="STB\StbSections.cs" />
     <Compile Include="HoaryFoxInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\CreateTag.cs" />
+    <Compile Include="Member\CreateTag.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="GH_IO">
@@ -113,6 +115,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\InfoIcon_Info.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Component\Tag" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -6,7 +6,7 @@ using Grasshopper.Kernel;
 using HoaryFox.STB;
 using Rhino.Geometry;
 
-namespace HoaryFox.Component.NameTag
+namespace HoaryFox.Component.Tag.Name
 {
     public class BraceNameTag:GH_Component
     {
@@ -117,7 +117,7 @@ namespace HoaryFox.Component.NameTag
 
         private static void Load(XDocument xDocument)
         {
-            var members = new List<StbData>()
+            var members = new List<StbBase>()
             {
                 _stbNodes, _stbBraces
             };

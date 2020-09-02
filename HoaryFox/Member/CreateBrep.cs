@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using HoaryFox.STB;
 using Rhino.Geometry;
 
-using HoaryFox.STB;
-using HoaryFox.Component.Geometry;
-
-namespace HoaryFox.Util
+namespace HoaryFox.Member
 {
     public class CreateBrep
     {
-        private readonly StbNodes _nodes;
+        private readonly StbData _stbData;
 
-        public CreateBrep(StbNodes nodes)
+        public CreateBrep(StbData stbData)
         {
-            this._nodes = nodes;
+            _stbData = stbData;
         }
 
         private List<Brep> GetPlaneBrep(List<Brep> brep, int count, Point3d[] pt)
@@ -77,8 +74,8 @@ namespace HoaryFox.Util
                 for (int i = 0; i < nodeIds.Count; i++)
                 {
                     if (i > 9) continue;
-                    index[i] = _nodes.Id.IndexOf(nodeIds[i]);
-                    pt[i] = new Point3d(_nodes.X[index[i]], _nodes.Y[index[i]], _nodes.Z[index[i]] + offset);
+                    index[i] = _stbData.Nodes.Id.IndexOf(nodeIds[i]);
+                    pt[i] = new Point3d(_stbData.Nodes.X[index[i]], _stbData.Nodes.Y[index[i]], _stbData.Nodes.Z[index[i]] + offset);
                 }
                 
                 brep = GetPlaneBrep(brep, nodeIds.Count, pt);
@@ -101,8 +98,8 @@ namespace HoaryFox.Util
                 for (int i = 0; i < nodeIds.Count; i++)
                 {
                     if (i > 9) continue;
-                    index[i] = _nodes.Id.IndexOf(nodeIds[i]);
-                    pt[i] = new Point3d(_nodes.X[index[i]], _nodes.Y[index[i]], _nodes.Z[index[i]]);
+                    index[i] = _stbData.Nodes.Id.IndexOf(nodeIds[i]);
+                    pt[i] = new Point3d(_stbData.Nodes.X[index[i]], _stbData.Nodes.Y[index[i]], _stbData.Nodes.Z[index[i]]);
                 }
                 
                 brep = GetPlaneBrep(brep, nodeIds.Count, pt);
@@ -126,11 +123,10 @@ namespace HoaryFox.Util
                 KindsStructure kind = frame.KindStructure[eNum];
 
                 // 始点と終点の座標取得
-                int nodeIndexStart = _nodes.Id.IndexOf(frame.IdNodeStart[eNum]);
-                int nodeIndexEnd = _nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
-                Point3d nodeStart = new Point3d(_nodes.X[nodeIndexStart], _nodes.Y[nodeIndexStart],
-                    _nodes.Z[nodeIndexStart]);
-                Point3d nodeEnd = new Point3d(_nodes.X[nodeIndexEnd], _nodes.Y[nodeIndexEnd], _nodes.Z[nodeIndexEnd]);
+                int nodeIndexStart = _stbData.Nodes.Id.IndexOf(frame.IdNodeStart[eNum]);
+                int nodeIndexEnd = _stbData.Nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
+                Point3d nodeStart = new Point3d(_stbData.Nodes.X[nodeIndexStart], _stbData.Nodes.Y[nodeIndexStart], _stbData.Nodes.Z[nodeIndexStart]);
+                Point3d nodeEnd = new Point3d(_stbData.Nodes.X[nodeIndexEnd], _stbData.Nodes.Y[nodeIndexEnd], _stbData.Nodes.Z[nodeIndexEnd]);
 
                 int secIndex;
                 if (kind == KindsStructure.RC)
@@ -139,15 +135,15 @@ namespace HoaryFox.Util
                     {
                         case FrameType.Column:
                         case FrameType.Post:
-                            secIndex = Stb2Brep.SecColumnRc.Id.IndexOf(idSection);
-                            height = Stb2Brep.SecColumnRc.Height[secIndex];
-                            width = Stb2Brep.SecColumnRc.Width[secIndex];
+                            secIndex = _stbData.SecColumnRc.Id.IndexOf(idSection);
+                            height = _stbData.SecColumnRc.Height[secIndex];
+                            width = _stbData.SecColumnRc.Width[secIndex];
                             break;
                         case FrameType.Girder:
                         case FrameType.Beam:
-                            secIndex = Stb2Brep.SecBeamRc.Id.IndexOf(idSection);
-                            height = Stb2Brep.SecBeamRc.Depth[secIndex];
-                            width = Stb2Brep.SecBeamRc.Width[secIndex];
+                            secIndex = _stbData.SecBeamRc.Id.IndexOf(idSection);
+                            height = _stbData.SecBeamRc.Depth[secIndex];
+                            width = _stbData.SecBeamRc.Width[secIndex];
                             break;
                     }
 
@@ -160,24 +156,24 @@ namespace HoaryFox.Util
                     {
                         case FrameType.Column:
                         case FrameType.Post:
-                            idShape = Stb2Brep.SecColumnS.Id.IndexOf(idSection);
-                            shape = Stb2Brep.SecColumnS.Shape[idShape];
+                            idShape = _stbData.SecColumnS.Id.IndexOf(idSection);
+                            shape = _stbData.SecColumnS.Shape[idShape];
                             break;
                         case FrameType.Girder:
                         case FrameType.Beam:
-                            idShape = Stb2Brep.SecBeamS.Id.IndexOf(idSection);
-                            shape = Stb2Brep.SecBeamS.Shape[idShape];
+                            idShape = _stbData.SecBeamS.Id.IndexOf(idSection);
+                            shape = _stbData.SecBeamS.Shape[idShape];
                             break;
                         case FrameType.Brace:
-                            idShape = Stb2Brep.SecBraceS.Id.IndexOf(idSection);
-                            shape = Stb2Brep.SecBraceS.Shape[idShape];
+                            idShape = _stbData.SecBraceS.Id.IndexOf(idSection);
+                            shape = _stbData.SecBraceS.Shape[idShape];
                             break;
                     }
 
-                    secIndex = Stb2Brep.StbSecSteel.Name.IndexOf(shape);
-                    height = Stb2Brep.StbSecSteel.P1[secIndex];
-                    width = Stb2Brep.StbSecSteel.P2[secIndex];
-                    shapeType = Stb2Brep.StbSecSteel.ShapeType[secIndex];
+                    secIndex = _stbData.StbSecSteel.Name.IndexOf(shape);
+                    height = _stbData.StbSecSteel.P1[secIndex];
+                    width = _stbData.StbSecSteel.P2[secIndex];
+                    shapeType = _stbData.StbSecSteel.ShapeType[secIndex];
                 }
 
                 brep.AddRange(Point2Brep(nodeStart, nodeEnd, height, width, shapeType, frame.FrameType));
@@ -237,43 +233,43 @@ namespace HoaryFox.Util
             return brep;
         }
 
-        private static List<Brep> HShapeBrep(Point3d[] pointStart, Point3d[] pointEnd)
+        private List<Brep> HShapeBrep(Point3d[] pointStart, Point3d[] pointEnd)
         {
             var brep = new List<Brep>
             {
-                Brep.CreateFromCornerPoints(pointStart[3], pointStart[5], pointEnd[5], pointEnd[3], Stb2Brep.LengthTolerance),
-                Brep.CreateFromCornerPoints(pointStart[0], pointStart[2], pointEnd[2], pointEnd[0], Stb2Brep.LengthTolerance),
-                Brep.CreateFromCornerPoints(pointStart[4], pointStart[1], pointEnd[1], pointEnd[4], Stb2Brep.LengthTolerance)
+                Brep.CreateFromCornerPoints(pointStart[3], pointStart[5], pointEnd[5], pointEnd[3], _stbData.ToleLength),
+                Brep.CreateFromCornerPoints(pointStart[0], pointStart[2], pointEnd[2], pointEnd[0], _stbData.ToleLength),
+                Brep.CreateFromCornerPoints(pointStart[4], pointStart[1], pointEnd[1], pointEnd[4], _stbData.ToleLength)
             };
             return brep;
         }
 
-        private static List<Brep> BoxShapeBrep(Point3d[] pointStart, Point3d[] pointEnd)
+        private List<Brep> BoxShapeBrep(Point3d[] pointStart, Point3d[] pointEnd)
         {
             var brep = new List<Brep>
             {
-                Brep.CreateFromCornerPoints(pointStart[3], pointStart[5], pointEnd[5], pointEnd[3], Stb2Brep.LengthTolerance),
-                Brep.CreateFromCornerPoints(pointStart[0], pointStart[2], pointEnd[2], pointEnd[0], Stb2Brep.LengthTolerance),
-                Brep.CreateFromCornerPoints(pointStart[3], pointStart[0], pointEnd[0], pointEnd[3], Stb2Brep.LengthTolerance),
-                Brep.CreateFromCornerPoints(pointStart[5], pointStart[2], pointEnd[2], pointEnd[5], Stb2Brep.LengthTolerance)
+                Brep.CreateFromCornerPoints(pointStart[3], pointStart[5], pointEnd[5], pointEnd[3], _stbData.ToleLength),
+                Brep.CreateFromCornerPoints(pointStart[0], pointStart[2], pointEnd[2], pointEnd[0], _stbData.ToleLength),
+                Brep.CreateFromCornerPoints(pointStart[3], pointStart[0], pointEnd[0], pointEnd[3], _stbData.ToleLength),
+                Brep.CreateFromCornerPoints(pointStart[5], pointStart[2], pointEnd[2], pointEnd[5], _stbData.ToleLength)
             };
             return brep;
         }
 
-        private static List<Brep> LShapeBrep(Point3d[] pointStart, Point3d[] pointEnd)
+        private List<Brep> LShapeBrep(Point3d[] pointStart, Point3d[] pointEnd)
         {
             var brep = new List<Brep>
             {
-                Brep.CreateFromCornerPoints(pointStart[0], pointStart[2], pointEnd[2], pointEnd[0], Stb2Brep.LengthTolerance),
-                Brep.CreateFromCornerPoints(pointStart[5], pointStart[2], pointEnd[2], pointEnd[5], Stb2Brep.LengthTolerance)
+                Brep.CreateFromCornerPoints(pointStart[0], pointStart[2], pointEnd[2], pointEnd[0], _stbData.ToleLength),
+                Brep.CreateFromCornerPoints(pointStart[5], pointStart[2], pointEnd[2], pointEnd[5], _stbData.ToleLength)
             };
             return brep;
         }
 
-        private static List<Brep> PipeShapeBrep(Point3d nodeStart, Point3d nodeEnd, double width)
+        private List<Brep> PipeShapeBrep(Point3d nodeStart, Point3d nodeEnd, double width)
         {
             var brep = new List<Brep>();            
-            brep.AddRange(Brep.CreatePipe(new LineCurve(nodeStart, nodeEnd), width / 2, true, PipeCapMode.Flat, true, Stb2Brep.LengthTolerance, Stb2Brep.AngleTolerance));
+            brep.AddRange(Brep.CreatePipe(new LineCurve(nodeStart, nodeEnd), width / 2, true, PipeCapMode.Flat, true, _stbData.ToleLength, _stbData.ToleAngle));
             return brep;
         }
         

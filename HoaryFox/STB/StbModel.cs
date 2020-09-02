@@ -17,7 +17,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// 節点（複数） 各節点を管理
     /// </summary>
-    public class StbNodes:StbData
+    public class StbNodes:StbBase
     {
         public List<int> Id { get; } = new List<int>();
         public List<double> X { get; } = new List<double>();
@@ -103,7 +103,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// 階情報（複数）
     /// </summary>
-    public class StbStorys:StbData
+    public class StbStorys:StbBase
     {
         /// <summary>
         /// 階のID

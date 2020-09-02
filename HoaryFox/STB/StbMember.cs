@@ -5,7 +5,7 @@ using HoaryFox.STB;
 
 namespace HoaryFox.STB
 {
-    public class StbMembers:StbData
+    public class StbMembers:StbBase
     {
         public List<int> Id { get; } = new List<int>();
         public List<string> Name { get; } = new List<string>();

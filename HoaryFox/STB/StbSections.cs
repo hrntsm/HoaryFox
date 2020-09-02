@@ -125,7 +125,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// RC柱断面
     /// </summary>
-    public class StbSecColRC:StbData
+    public class StbSecColRC:StbBase
     {
         /// <summary>
         /// 部材のID
@@ -337,7 +337,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// S柱断面
     /// </summary>
-    public class StbSecColumnS:StbData
+    public class StbSecColumnS:StbBase
     {
         /// <summary>
         /// 部材のID
@@ -511,7 +511,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// RC梁断面
     /// </summary>
-    public class StbSecBeamRC:StbData
+    public class StbSecBeamRC:StbBase
     {
         /// <summary>
         /// 部材のID
@@ -727,7 +727,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// S梁断面
     /// </summary>
-    public class StbSecBeamS:StbData
+    public class StbSecBeamS:StbBase
     {
         /// <summary>
         /// 部材のID
@@ -887,7 +887,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// Sブレース断面
     /// </summary>
-    public class StbSecBraceS:StbData
+    public class StbSecBraceS:StbBase
     {
         /// <summary>
         /// 部材のID
@@ -1017,7 +1017,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// 鉄骨断面
     /// </summary>
-    public class StbSecSteel:StbData
+    public class StbSecSteel:StbBase
     {
         public List<string> Name { get; } = new List<string>();
         public List<float> P1 { get; } = new List<float>();

@@ -6,22 +6,22 @@ using Grasshopper.Kernel;
 using HoaryFox.STB;
 using Rhino.Geometry;
 
-namespace HoaryFox.Component.NameTag
+namespace HoaryFox.Component.Tag.Name
 {
-    public class GirderNameTag:GH_Component
+    public class ColumnNameTag:GH_Component
     {
         private string _path;
         private int _size;
 
         private static StbNodes _stbNodes;
-        private static StbGirders _stbGirders;
+        private static StbColumns _stbColumns;
 
         private readonly List<Point3d> _nodes = new List<Point3d>();
-        private readonly List<string> _girders = new List<string>();
-        private readonly List<Point3d> _girderPos = new List<Point3d>();
-
-        public GirderNameTag()
-          : base(name: "Girder Name Tag", nickname: "GirderTag", description: "Display girder Name Tag ", category: "HoaryFox", subCategory: "Name")
+        private readonly List<string> _columns = new List<string>();
+        private readonly List<Point3d> _columnPos = new List<Point3d>();
+        
+        public ColumnNameTag()
+          : base(name: "Column Name Tag", nickname: "ColumnTag", description: "Display Column Name Tag", category: "HoaryFox", subCategory: "Name")
         {
         }
         
@@ -31,8 +31,8 @@ namespace HoaryFox.Component.NameTag
         {
             base.ClearData();
             _nodes.Clear();
-            _girders.Clear();
-            _girderPos.Clear();
+            _columns.Clear();
+            _columnPos.Clear();    
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace HoaryFox.Component.NameTag
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Girders", "Gird", "output StbGirders to Line", GH_ParamAccess.list);
+            pManager.AddTextParameter("Columns", "Col", "output StbColumns to Line", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -74,52 +74,52 @@ namespace HoaryFox.Component.NameTag
                 _nodes.Add(position);
             }
 
-            // StbGirder の取得
-            for (var i = 0; i < _stbGirders.Id.Count; i++)
+            // StbColumns の取得
+            for (var i = 0; i < _stbColumns.Id.Count; i++)
             {
-                var idNodeStart = _stbNodes.Id.IndexOf(_stbGirders.IdNodeStart[i]);
-                var idNodeEnd = _stbNodes.Id.IndexOf(_stbGirders.IdNodeEnd[i]);
-                var name = _stbGirders.Name[i];
-                _girderPos.Add(new Point3d( (_nodes[idNodeStart].X + _nodes[idNodeEnd].X) / 2.0,
+                var idNodeStart = _stbNodes.Id.IndexOf(_stbColumns.IdNodeStart[i]);
+                var idNodeEnd = _stbNodes.Id.IndexOf(_stbColumns.IdNodeEnd[i]);
+                var name = _stbColumns.Name[i];
+                _columnPos.Add(new Point3d( (_nodes[idNodeStart].X + _nodes[idNodeEnd].X) / 2.0,
                     (_nodes[idNodeStart].Y + _nodes[idNodeEnd].Y) / 2.0,
                     (_nodes[idNodeStart].Z + _nodes[idNodeEnd].Z) / 2.0)
                 );
-                _girders.Add(name);
+                _columns.Add(name);
             }
 
-            DA.SetDataList(0, _girders);
+            DA.SetDataList(0, _columns);
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
-            for (int i = 0; i < _girders.Count; i++)
-                args.Display.Draw2dText(_girders[i], Color.Black, _girderPos[i], true, _size);
+            for (int i = 0; i < _columns.Count; i++)
+                args.Display.Draw2dText(_columns[i], Color.Black, _columnPos[i], true, _size);
         }
 
         /// <summary>
         /// Provides an Icon for every component that will be visible in the User Interface.
         /// Icons need to be 24x24 pixels.
         /// </summary>
-        protected override System.Drawing.Bitmap Icon => Properties.Resource.GirderName;
+        protected override System.Drawing.Bitmap Icon => Properties.Resource.ColumnName;
 
         /// <summary>
         /// Each component must have a unique Guid to identify it. 
         /// It is vital this Guid doesn't change otherwise old ghx files 
         /// that use the old ID will partially fail during loading.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("35D72484-2675-487E-A970-5DE885582312");
+        public override Guid ComponentGuid => new Guid("806B9DBE-0207-4E79-A1BE-DD0B37BA9B31");
 
         private static void Init()
         {
             _stbNodes = new StbNodes();
-            _stbGirders = new StbGirders();
+            _stbColumns = new StbColumns();
         }
 
         private static void Load(XDocument xDocument)
         {
-            var members = new List<StbData>()
+            var members = new List<StbBase>()
             {
-                _stbNodes, _stbGirders
+                _stbNodes, _stbColumns
             };
 
             foreach (var member in members)

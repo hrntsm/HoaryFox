@@ -5,19 +5,19 @@ using System.Xml.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+using HoaryFox.Member;
 using HoaryFox.STB;
-using HoaryFox.Util;
 using Rhino.Geometry;
 
-namespace HoaryFox.Component.SectionTag
+namespace HoaryFox.Component.Tag.Section
 {
-    public class BeamSecTag:GH_Component
+    public class ColumnSecTag:GH_Component
     {
         private string _path;
         private int _size;
 
         private static StbNodes _nodes;
-        private static StbBeams _beams;
+        private static StbColumns _columns;
         
         private static StbSecColRC _secColumnRc;
         private static StbSecBeamRC _secBeamRc;
@@ -36,8 +36,8 @@ namespace HoaryFox.Component.SectionTag
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public BeamSecTag()
-          : base("Beam Section Tag", "BeamSec", "Display Beam Section Tag", "HoaryFox", "Section")
+        public ColumnSecTag()
+          : base("Column Section Tag", "ColumSec", "Display Column Section Tag", "HoaryFox", "Section")
         {
         }
 
@@ -64,7 +64,7 @@ namespace HoaryFox.Component.SectionTag
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Beams", "Be", "output StbBeams to Section Tag", GH_ParamAccess.tree);
+            pManager.AddTextParameter("Columns", "Col", "output StbColumns to Section Tag", GH_ParamAccess.tree);
         }
 
         /// <summary>
@@ -106,19 +106,19 @@ namespace HoaryFox.Component.SectionTag
         /// Provides an Icon for every component that will be visible in the User Interface.
         /// Icons need to be 24x24 pixels.
         /// </summary>
-        protected override System.Drawing.Bitmap Icon => Properties.Resource.BeamSection;
+        protected override System.Drawing.Bitmap Icon => Properties.Resource.ColumnSection;
 
         /// <summary>
         /// Each component must have a unique Guid to identify it. 
         /// It is vital this Guid doesn't change otherwise old ghx files 
         /// that use the old ID will partially fail during loading.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("6310E95D-38AF-47A6-B792-E4680FE37F49");
+        public override Guid ComponentGuid => new Guid("63B2A2E1-A277-4ABA-B522-00D7969871C3");
 
         private static void Init()
         {
             _nodes = new StbNodes();
-            _beams = new StbBeams();
+            _columns = new StbColumns();
             _secColumnRc = new StbSecColRC();
             _secBeamRc = new StbSecBeamRC();
             _secColumnS = new StbSecColumnS();
@@ -129,9 +129,9 @@ namespace HoaryFox.Component.SectionTag
 
         private static void Load(XDocument xDoc)
         {
-            var members = new List<StbData>()
+            var members = new List<StbBase>()
             {
-                _nodes, _beams,
+                _nodes, _columns,
                 _secColumnRc, _secColumnS, _secBeamRc, _secBeamS, _secBraceS, _stbSecSteel
             };
 
@@ -144,7 +144,7 @@ namespace HoaryFox.Component.SectionTag
         private void GetTag()
         {
             var tags = new CreateTag(_nodes);
-            _frameTags = tags.Frame(_beams, _secColumnRc, _secColumnS, _secBeamRc, _secBeamS, _secBraceS, _stbSecSteel);
+            _frameTags = tags.Frame(_columns, _secColumnRc, _secColumnS, _secBeamRc, _secBeamS, _secBraceS, _stbSecSteel);
             _tagPos = tags.TagPos;
         }
     }
