@@ -170,10 +170,10 @@ namespace HoaryFox.Member
                             break;
                     }
 
-                    secIndex = _stbData.StbSecSteel.Name.IndexOf(shape);
-                    height = _stbData.StbSecSteel.P1[secIndex];
-                    width = _stbData.StbSecSteel.P2[secIndex];
-                    shapeType = _stbData.StbSecSteel.ShapeType[secIndex];
+                    secIndex = _stbData.SecSteel.Name.IndexOf(shape);
+                    height = _stbData.SecSteel.P1[secIndex];
+                    width = _stbData.SecSteel.P2[secIndex];
+                    shapeType = _stbData.SecSteel.ShapeType[secIndex];
                 }
 
                 brep.AddRange(Point2Brep(nodeStart, nodeEnd, height, width, shapeType, frame.FrameType));

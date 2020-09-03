@@ -13,29 +13,12 @@ namespace HoaryFox.Component.Tag.Section
 {
     public class PostSecTag:GH_Component
     {
-        private string _path;
+        private StbData _stbData;
         private int _size;
-
-        private static StbNodes _nodes;
-        private static StbPosts _posts;
-        
-        private static StbSecColRC _secColumnRc;
-        private static StbSecBeamRC _secBeamRc;
-        private static StbSecColumnS _secColumnS;
-        private static StbSecBeamS _secBeamS;
-        private static StbSecBraceS _secBraceS;
-        private static StbSecSteel _stbSecSteel;
 
         private GH_Structure<GH_String> _frameTags = new GH_Structure<GH_String>();
         private List<Point3d> _tagPos = new List<Point3d>();
         
-        /// <summary>
-        /// Each implementation of GH_Component must provide a public 
-        /// constructor without any arguments.
-        /// Category represents the Tab in which the component will appear, 
-        /// Subcategory the panel. If you use non-existing tab or panel names, 
-        /// new tabs/panels will automatically be created.
-        /// </summary>
         public PostSecTag()
           : base("Post Section Tag", "PostSec", "Display Post Section Tag", "HoaryFox", "Section")
         {
@@ -50,39 +33,22 @@ namespace HoaryFox.Component.Tag.Section
         
         public override bool IsPreviewCapable => true;
 
-        /// <summary>
-        /// Registers all the input parameters for this component.
-        /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("path", "path", "input ST-Bridge file path", GH_ParamAccess.item);
-            pManager.AddIntegerParameter("size", "size", "Tag size", GH_ParamAccess.item, 12);
+            pManager.AddGenericParameter("Data", "D", "input ST-Bridge file data", GH_ParamAccess.item);
+            pManager.AddIntegerParameter("Size", "S", "Tag size", GH_ParamAccess.item, 12);
         }
 
-        /// <summary>
-        /// Registers all the output parameters for this component.
-        /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("Posts", "Pst", "output StbPosts to Brep", GH_ParamAccess.tree);
         }
 
-        /// <summary>
-        /// This is the method that actually does the work.
-        /// </summary>
-        /// <param name="DA">The DA object can be used to retrieve data from input parameters and 
-        /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            // 対象の stb の pathを取得
-            if (!DA.GetData("path", ref _path)) { return; }
-            if (!DA.GetData("size", ref _size)) { return; }
-            var xDocument = XDocument.Load(_path);
-
-            Init();
-            Load(xDocument);
-
-            // meshの生成
+            if (!DA.GetData("Data", ref _stbData)) { return; }
+            if (!DA.GetData("Size", ref _size)) { return; }
+            
             GetTag();
 
             DA.SetDataTree(0, _frameTags);
@@ -102,49 +68,14 @@ namespace HoaryFox.Component.Tag.Section
             }
         }
 
-        /// <summary>
-        /// Provides an Icon for every component that will be visible in the User Interface.
-        /// Icons need to be 24x24 pixels.
-        /// </summary>
         protected override System.Drawing.Bitmap Icon => Properties.Resource.PostSection;
 
-        /// <summary>
-        /// Each component must have a unique Guid to identify it. 
-        /// It is vital this Guid doesn't change otherwise old ghx files 
-        /// that use the old ID will partially fail during loading.
-        /// </summary>
         public override Guid ComponentGuid => new Guid("C5891374-37F7-43E8-9D28-A901D87B497E");
-
-        private static void Init()
-        {
-            _nodes = new StbNodes();
-            _posts = new StbPosts();
-            _secColumnRc = new StbSecColRC();
-            _secBeamRc = new StbSecBeamRC();
-            _secColumnS = new StbSecColumnS();
-            _secBeamS = new StbSecBeamS();
-            _secBraceS = new StbSecBraceS();
-            _stbSecSteel = new StbSecSteel();
-        }
-
-        private static void Load(XDocument xDoc)
-        {
-            var members = new List<StbBase>()
-            {
-                _nodes, _posts,
-                _secColumnRc, _secColumnS, _secBeamRc, _secBeamS, _secBraceS, _stbSecSteel
-            };
-
-            foreach (var member in members)
-            {
-                member.Load(xDoc);
-            }
-        }
 
         private void GetTag()
         {
-            var tags = new CreateTag(_nodes);
-            _frameTags = tags.Frame(_posts, _secColumnRc, _secColumnS, _secBeamRc, _secBeamS, _secBraceS, _stbSecSteel);
+            var tags = new CreateTag(_stbData.Nodes);
+            _frameTags = tags.Frame(_stbData.Posts, _stbData.SecColumnRc, _stbData.SecColumnS, _stbData.SecBeamRc, _stbData.SecBeamS, _stbData.SecBraceS, _stbData.SecSteel);
             _tagPos = tags.TagPos;
         }
     }

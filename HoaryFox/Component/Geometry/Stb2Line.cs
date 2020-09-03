@@ -67,13 +67,13 @@ namespace HoaryFox.Component.Geometry
 
         private void MakeLine()
         {
-            var createMemberLines = new CreateLines(_stbData);
-            _nodes = createMemberLines.Nodes();
-            _columns = createMemberLines.Columns();
-            _girders = createMemberLines.Girders();
-            _posts = createMemberLines.Posts();
-            _beams = createMemberLines.Beams();
-            _braces = createMemberLines.Braces();
+            var createLines = new CreateLines(_stbData);
+            _nodes = _stbData.Nodes.Pt;
+            _columns = createLines.Columns();
+            _girders = createLines.Girders();
+            _posts = createLines.Posts();
+            _beams = createLines.Beams();
+            _braces = createLines.Braces();
         }
 
         protected override System.Drawing.Bitmap Icon => Properties.Resource.Line;

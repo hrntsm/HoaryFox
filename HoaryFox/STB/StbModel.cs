@@ -37,6 +37,7 @@ namespace HoaryFox.STB
                 X.Add((double)stbNode.Attribute("x"));
                 Y.Add((double)stbNode.Attribute("y"));
                 Z.Add((double)stbNode.Attribute("z"));
+                Pt.Add(new Point3d((double)stbNode.Attribute("x"),(double)stbNode.Attribute("y"), (double)stbNode.Attribute("z")));
 
                 // 必須ではないコード
                 if (stbNode.Attribute("id_member") != null)

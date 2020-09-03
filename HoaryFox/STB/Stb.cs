@@ -32,7 +32,7 @@ namespace HoaryFox.STB
         public StbSecColumnS SecColumnS;
         public StbSecBeamS SecBeamS;
         public StbSecBraceS SecBraceS;
-        public StbSecSteel StbSecSteel;
+        public StbSecSteel SecSteel;
 
         public StbData(string path, double toleLength, double toleAngle)
         {
@@ -61,7 +61,7 @@ namespace HoaryFox.STB
             SecColumnS = new StbSecColumnS();
             SecBeamS = new StbSecBeamS();
             SecBraceS = new StbSecBraceS();
-            StbSecSteel = new StbSecSteel();
+            SecSteel = new StbSecSteel();
         }
         
         private void Load(XDocument xDoc)
@@ -70,7 +70,7 @@ namespace HoaryFox.STB
             {
                 Nodes, Slabs, Walls,
                 Columns, Posts, Girders, Beams, Braces,
-                SecColumnRc, SecColumnS, SecBeamRc, SecBeamS, SecBraceS, StbSecSteel
+                SecColumnRc, SecColumnS, SecBeamRc, SecBeamS, SecBraceS, SecSteel
             };
 
             foreach (var member in members)
