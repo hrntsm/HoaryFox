@@ -110,6 +110,8 @@ namespace HoaryFox.STB
         BOX,
         Bar,
         Pipe,
+        RollBOX,
+        BuildBOX
     }
 
     /// <summary>
@@ -185,9 +187,9 @@ namespace HoaryFox.STB
                 DBarBand.Add((string)stbRcCol.Attribute("D_reinforcement_band"));
 
                 // 必須ではないコード
-                if (stbRcCol.Attribute("Floor") != null)
+                if (stbRcCol.Attribute("floor") != null)
                 {
-                    Floor.Add((string)stbRcCol.Attribute("Floor"));
+                    Floor.Add((string)stbRcCol.Attribute("floor"));
                 }
                 else
                 {
@@ -390,9 +392,9 @@ namespace HoaryFox.STB
                 Name.Add((string)stbStCol.Attribute("name"));
 
                 // 必須ではないコード
-                if (stbStCol.Attribute("Floor") != null)
+                if (stbStCol.Attribute("floor") != null)
                 {
-                    Floor.Add((string)stbStCol.Attribute("Floor"));
+                    Floor.Add((string)stbStCol.Attribute("floor"));
                 }
                 else
                 {
@@ -578,9 +580,9 @@ namespace HoaryFox.STB
                 DBarBand.Add((string)stbRcBeam.Attribute("D_reinforcement_band"));
 
                 // 必須ではないコード
-                if (stbRcBeam.Attribute("Floor") != null)
+                if (stbRcBeam.Attribute("floor") != null)
                 {
-                    Floor.Add((string)stbRcBeam.Attribute("Floor"));
+                    Floor.Add((string)stbRcBeam.Attribute("floor"));
                 }
                 else
                 {
@@ -600,6 +602,14 @@ namespace HoaryFox.STB
                 else
                 {
                     KindBeam.Add(KindsBeam.Girder);
+                }
+                if (stbRcBeam.Attribute("isFoundation") != null)
+                {
+                    IsFoundation.Add((bool)stbRcBeam.Attribute("isFoundation"));
+                }
+                else
+                {
+                    IsFoundation.Add(false);
                 }
 
                 // 子要素 StbSecFigure
@@ -782,9 +792,9 @@ namespace HoaryFox.STB
                 Name.Add((string)stbStBeam.Attribute("name"));
 
                 // 必須ではないコード
-                if (stbStBeam.Attribute("Floor") != null)
+                if (stbStBeam.Attribute("floor") != null)
                 {
-                    Floor.Add((string)stbStBeam.Attribute("Floor"));
+                    Floor.Add((string)stbStBeam.Attribute("floor"));
                 }
                 else
                 {
@@ -925,9 +935,9 @@ namespace HoaryFox.STB
                 Name.Add((string)stbStBrace.Attribute("name"));
 
                 // 必須ではないコード
-                if (stbStBrace.Attribute("Floor") != null)
+                if (stbStBrace.Attribute("floor") != null)
                 {
-                    Floor.Add((string)stbStBrace.Attribute("Floor"));
+                    Floor.Add((string)stbStBrace.Attribute("floor"));
                 }
                 else
                 {
@@ -1299,7 +1309,7 @@ namespace HoaryFox.STB
                 T.Add((float)StSection.Attribute("t"));
                 R.Add((float)StSection.Attribute("R"));
 
-                ShapeType.Add(ShapeTypes.BOX);
+                ShapeType.Add(ShapeTypes.RollBOX);
             }
         }
     }
@@ -1351,7 +1361,7 @@ namespace HoaryFox.STB
                 T1.Add((float)StSection.Attribute("t1"));
                 T2.Add((float)StSection.Attribute("t2"));
 
-                ShapeType.Add(ShapeTypes.BOX);
+                ShapeType.Add(ShapeTypes.BuildBOX);
             }
         }
     }

@@ -37,6 +37,7 @@
     <Compile Include="Component\Bar\Stb2Bar.cs" />
     <Compile Include="Component\Geometry\Stb2Line.cs" />
     <Compile Include="Component\Geometry\Stb2Brep.cs" />
+    <Compile Include="Component\Export\Stb2KElem.cs" />
     <Compile Include="Component\Tag\Name\BeamNameTag.cs" />
     <Compile Include="Component\Tag\Name\BraceNameTag.cs" />
     <Compile Include="Component\Tag\Name\ColumnNameTag.cs" />
@@ -74,6 +75,14 @@
     </Reference>
     <Reference Include="Grasshopper">
       <HintPath>C:\Program Files\Rhino 6\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="KarambaCommon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\hnatsume\AppData\Roaming\Grasshopper\Libraries\Karamba\karambaCommon.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="karambaGH, Version=1.15.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\hnatsume\AppData\Roaming\Grasshopper\Libraries\Karamba\karamba.gha</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RhinoCommon">
@@ -118,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Component\Tag" />
+    <Folder Include="Karamba" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
