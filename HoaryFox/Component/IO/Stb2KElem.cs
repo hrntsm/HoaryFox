@@ -22,19 +22,21 @@ namespace HoaryFox.Component.Export
     public class Stb2KElem:GH_Component
     {
         private StbData _stbData;
-        private List<GH_Element> _k3Elem = new List<GH_Element>();
+        private List<GH_Element> _k3ElemBe = new List<GH_Element>();
+        private List<GH_Element> _k3ElemSh = new List<GH_Element>();
         private List<string>[] _k3Ids = new List<string>[2];
         private List<CroSec> _k3CroSec = new List<CroSec>();
 
         public Stb2KElem()
-          : base("Stb to Karamba", "S2K", "Read ST-Bridge file and display", "HoaryFox", "Export")
+          : base("Stb to Karamba", "S2K", "Read ST-Bridge file and display", "HoaryFox", "IO")
         {
         }
 
         public override void ClearData()
         {
             base.ClearData();
-            _k3Elem.Clear();
+            _k3ElemBe.Clear();
+            _k3ElemSh.Clear();
             _k3CroSec.Clear();
         }
 
@@ -45,7 +47,8 @@ namespace HoaryFox.Component.Export
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new Param_Element(), "Element", "Elem", "Karamba Element", GH_ParamAccess.list);
+            pManager.AddParameter(new Param_Element(), "ElementBeam", "ElemBe", "Karamba Line Element", GH_ParamAccess.list);
+            // pManager.AddParameter(new Param_Element(), "ElementShell", "ElemSh", "Karamba Shell Element", GH_ParamAccess.list);
             pManager.AddParameter(new Param_CrossSection(), "CrossSection", "CroSec", "Karamba CrossSection", GH_ParamAccess.list);
         }
 
@@ -121,13 +124,14 @@ namespace HoaryFox.Component.Export
             {
                 elemList.Add(new GH_Element(e));
             }
-            _k3Elem = elemList;
+            _k3ElemBe = elemList;
 
-            DA.SetDataList(0, _k3Elem);
+            DA.SetDataList(0, _k3ElemBe);
+            // DA.SetDataList(1, _k3ElemSh);
             DA.SetDataList(1, _k3CroSec);
         }
 
-        protected override System.Drawing.Bitmap Icon => Properties.Resource.Brep;
+        protected override System.Drawing.Bitmap Icon => Properties.Resource.ToKaramba;
 
         public override Guid ComponentGuid => new Guid("C57461DA-E79B-49A0-B44B-71CF32057709");
 

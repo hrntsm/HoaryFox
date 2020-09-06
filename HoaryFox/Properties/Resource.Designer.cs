@@ -173,6 +173,16 @@ namespace HoaryFox.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
+        internal static System.Drawing.Bitmap LoadStb {
+            get {
+                object obj = ResourceManager.GetObject("LoadStb", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
         internal static System.Drawing.Bitmap PostName {
             get {
                 object obj = ResourceManager.GetObject("PostName", resourceCulture);
@@ -186,6 +196,16 @@ namespace HoaryFox.Properties {
         internal static System.Drawing.Bitmap PostSection {
             get {
                 object obj = ResourceManager.GetObject("PostSection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap ToKaramba {
+            get {
+                object obj = ResourceManager.GetObject("ToKaramba", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -40,7 +40,7 @@ namespace HoaryFox.Component.IO
             DA.SetData(0, _stbData);
         }
 
-        protected override System.Drawing.Bitmap Icon => Properties.Resource.Brep;
+        protected override System.Drawing.Bitmap Icon => Properties.Resource.LoadStb;
 
         public override Guid ComponentGuid => new Guid("B8B7631C-BCAE-4549-95F7-1954D4781D24");
     }

@@ -37,7 +37,7 @@
     <Compile Include="Component\Bar\Stb2Bar.cs" />
     <Compile Include="Component\Geometry\Stb2Line.cs" />
     <Compile Include="Component\Geometry\Stb2Brep.cs" />
-    <Compile Include="Component\Export\Stb2KElem.cs" />
+    <Compile Include="Component\IO\Stb2KElem.cs" />
     <Compile Include="Component\Tag\Name\BeamNameTag.cs" />
     <Compile Include="Component\Tag\Name\BraceNameTag.cs" />
     <Compile Include="Component\Tag\Name\ColumnNameTag.cs" />
@@ -124,10 +124,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\InfoIcon_Info.txt" />
+    <None Include="Resources\LoadStb.png" />
+    <None Include="Resources\ToKaramba.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Component\Tag" />
-    <Folder Include="Karamba" />
+    <Folder Include="Karamba\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
