@@ -19,6 +19,11 @@ Load STBコンポーネントにst-bridgeデータのパスを入力すること
 対応はst-bridge ver1.4までなので、2.0以降では動きません  
 詳しくは Samples のフォルダ内の参考データを参照してください。
 
+## Convert to karamba
+
+Karambaへのデータのコンバートは、梁要素のみ対応です。床や壁などの面材は非対応です。  
+L型断面、C型断面はKarambaが非対応な断面形状なため、等価な軸断面積の矩形断面に置換しています。
+
 ## About ST-Bridge
 
 ST-Bridgeの規格を作成している [building SMART Japan の構造設計小委員会様](https://www.building-smart.or.jp/meeting/buildall/structural-design/) での記載を引用します。

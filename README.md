@@ -22,6 +22,12 @@ If you need more information, send direct message to my twitter account.
 
 Please refer to Samples directory files.
 
+## Convert to karamba
+
+Conversion of data into Karamba supports only beam elements.  
+Mesh elements such as floor and wall are not supported.  
+L-type and C-type cross-sections are replaced by rectangular cross-sections with equivalent axial cross-sections because Karamba does not support them.
+
 ## What is ST-Bridge
 
 Quote from [building SMART Japan Structural Design Subcommittee](https://en.building-smart.or.jp/meeting/buildall/structural-design/) doing making specifications of ST-Bridge.
