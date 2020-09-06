@@ -145,13 +145,13 @@ namespace HoaryFox.Component.Export
             ShapeTypes shapeType;
 
             for (int eNum = 0; eNum < _stbData.Columns.Id.Count; eNum++)
-                _k3Ids[0].Add(_stbData.Columns.Name[eNum]);
+                _k3Ids[0].Add("Id" + _stbData.Columns.IdSection[eNum]);
             
             for (int eNum = 0; eNum < _stbData.Girders.Id.Count; eNum++)
-                _k3Ids[0].Add(_stbData.Girders.Name[eNum]);
+                _k3Ids[0].Add("Id" + _stbData.Girders.IdSection[eNum]);
             
             for (int eNum = 0; eNum < _stbData.Braces.Id.Count; eNum++)
-                _k3Ids[1].Add(_stbData.Braces.Name[eNum]);
+                _k3Ids[1].Add("Id" + _stbData.Braces.IdSection[eNum]);
 
             var fc21 = new FemMaterial_Isotrop("Concrete", "Fc21", 2186, 910.8, 910.8, 24, 1.00E-05, 1.67, Color.Gray);
             var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20600, 8076, 8076, 78.5, 1.20E-05, 23.5, Color.Brown);
@@ -159,7 +159,7 @@ namespace HoaryFox.Component.Export
 
             for (var i = 0; i < _stbData.SecColumnRc.Id.Count; i++)
             {
-                name = _stbData.SecColumnRc.Floor[i] + _stbData.SecColumnRc.Name[i];
+                name = "Id" + _stbData.SecColumnRc.Id[i];
                 p1 = _stbData.SecColumnRc.Height[i] / 10d;
                 p2 = _stbData.SecColumnRc.Width[i] / 10d;
                 
@@ -185,8 +185,7 @@ namespace HoaryFox.Component.Export
 
             for (var i = 0; i < _stbData.SecBeamRc.Id.Count; i++)
             {
-                var floor = _stbData.SecBeamRc.IsFoundation[i] ? "1" : _stbData.SecBeamRc.Floor[i];
-                name = floor + _stbData.SecBeamRc.Name[i];
+                name = "Id" + _stbData.SecBeamRc.Id[i];
                 p1 = _stbData.SecBeamRc.Depth[i] / 10d;
                 p2 = _stbData.SecBeamRc.Width[i] / 10d;
                 
@@ -266,21 +265,21 @@ namespace HoaryFox.Component.Export
                 {
                     if (_stbData.SecColumnS.Shape[j] != name) continue;
                     if (croSec != null)
-                        croSec.AddElemId(_stbData.SecColumnS.Floor[j] + _stbData.SecColumnS.Name[j]);
+                        croSec.AddElemId("Id" + _stbData.SecColumnS.Id[j]);
                 }
 
                 for (var j = 0; j < _stbData.SecBeamS.Id.Count; j++)
                 {
                     if (_stbData.SecBeamS.Shape[j] != name) continue;
                     if (croSec != null)
-                        croSec.AddElemId(_stbData.SecBeamS.Floor[j] + _stbData.SecBeamS.Name[j]);
+                        croSec.AddElemId("Id" + _stbData.SecBeamS.Id[j]);
                 }
 
                 for (var j = 0; j < _stbData.SecBraceS.Id.Count; j++)
                 {
                     if (_stbData.SecBraceS.Shape[j] != name) continue;
                     if (croSec != null)
-                        croSec.AddElemId(_stbData.SecBraceS.Floor[j] + _stbData.SecBraceS.Name[j]);
+                        croSec.AddElemId("Id" + _stbData.SecBraceS.Id[j]);
                 }
                 
                 _k3CroSec.Add(croSec);
