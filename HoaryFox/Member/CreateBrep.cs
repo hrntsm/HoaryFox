@@ -220,6 +220,8 @@ namespace HoaryFox.Member
                     brep = HShapeBrep(pointStart, pointEnd);
                     break;
                 case ShapeTypes.BOX:
+                case ShapeTypes.BuildBOX:
+                case ShapeTypes.RollBOX:
                     brep = BoxShapeBrep(pointStart, pointEnd);
                     break;
                 case ShapeTypes.Pipe:
