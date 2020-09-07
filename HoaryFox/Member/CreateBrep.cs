@@ -145,6 +145,13 @@ namespace HoaryFox.Member
                             height = _stbData.SecBeamRc.Depth[secIndex];
                             width = _stbData.SecBeamRc.Width[secIndex];
                             break;
+                        case FrameType.Brace:
+                        case FrameType.Slab:
+                        case FrameType.Wall:
+                        case FrameType.Any:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
 
                     shapeType = height <= 0 ? ShapeTypes.Pipe : ShapeTypes.BOX;
@@ -168,6 +175,12 @@ namespace HoaryFox.Member
                             idShape = _stbData.SecBraceS.Id.IndexOf(idSection);
                             shape = _stbData.SecBraceS.Shape[idShape];
                             break;
+                        case FrameType.Slab:
+                        case FrameType.Wall:
+                        case FrameType.Any:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
 
                     secIndex = _stbData.SecSteel.Name.IndexOf(shape);
@@ -212,6 +225,12 @@ namespace HoaryFox.Member
                     pointStart = GetBracePoints(nodeStart, width, angleY);
                     pointEnd = GetBracePoints(nodeEnd, width, angleY);
                     break;
+                case FrameType.Slab:
+                case FrameType.Wall:
+                case FrameType.Any:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(frameType), frameType, null);
             }
 
             switch (shapeType)
@@ -222,16 +241,47 @@ namespace HoaryFox.Member
                 case ShapeTypes.BOX:
                 case ShapeTypes.BuildBOX:
                 case ShapeTypes.RollBOX:
+                case ShapeTypes.FB:
                     brep = BoxShapeBrep(pointStart, pointEnd);
                     break;
+                case ShapeTypes.Bar:
                 case ShapeTypes.Pipe:
                     brep = PipeShapeBrep(nodeStart, nodeEnd, width);
                     break;
                 case ShapeTypes.L:
                     brep = LShapeBrep(pointStart, pointEnd);
                     break;
+                case ShapeTypes.T:
+                    brep = TShapeBrep(pointStart, pointEnd);
+                    break;
+                case ShapeTypes.C:
+                    brep = CShapeBrep(pointStart, pointEnd);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(shapeType), shapeType, null);
             }
 
+            return brep;
+        }
+
+        private List<Brep> CShapeBrep(Point3d[] pointStart, Point3d[] pointEnd)
+        {
+            var brep = new List<Brep>
+            {
+                Brep.CreateFromCornerPoints(pointStart[3], pointStart[4], pointEnd[5], pointEnd[4], _stbData.ToleLength),
+                Brep.CreateFromCornerPoints(pointStart[0], pointStart[1], pointEnd[1], pointEnd[0], _stbData.ToleLength),
+                Brep.CreateFromCornerPoints(pointStart[4], pointStart[1], pointEnd[1], pointEnd[4], _stbData.ToleLength)
+            };
+            return brep;
+        }
+
+        private List<Brep> TShapeBrep(Point3d[] pointStart, Point3d[] pointEnd)
+        {
+            var brep = new List<Brep>
+            {
+                Brep.CreateFromCornerPoints(pointStart[3], pointStart[5], pointEnd[5], pointEnd[3], _stbData.ToleLength),
+                Brep.CreateFromCornerPoints(pointStart[4], pointStart[1], pointEnd[1], pointEnd[4], _stbData.ToleLength)
+            };
             return brep;
         }
 
