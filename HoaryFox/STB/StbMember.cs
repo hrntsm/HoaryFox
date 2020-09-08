@@ -19,7 +19,7 @@ namespace HoaryFox.STB
         public virtual FrameType FrameType { get; } = FrameType.Any;
         public List<int> IdNodeStart { get; } = new List<int>();
         public List<int> IdNodeEnd { get; } = new List<int>();
-        public List<float> Rotate { get; } = new List<float>();
+        public List<double> Rotate { get; } = new List<double>();
     }
 
     public class StbColumns:StbFrame
@@ -39,7 +39,7 @@ namespace HoaryFox.STB
                     IdSection.Add((int) stbElem.Attribute("id_section"));
                     IdNodeStart.Add((int) stbElem.Attribute("idNode_bottom"));
                     IdNodeEnd.Add((int) stbElem.Attribute("idNode_top"));
-                    Rotate.Add((float) stbElem.Attribute("rotate"));
+                    Rotate.Add((double) stbElem.Attribute("rotate"));
 
                     switch ((string) stbElem.Attribute("kind_structure"))
                     {
@@ -83,7 +83,7 @@ namespace HoaryFox.STB
                     IdSection.Add((int)stbElem.Attribute("id_section"));
                     IdNodeStart.Add((int)stbElem.Attribute("idNode_bottom"));
                     IdNodeEnd.Add((int)stbElem.Attribute("idNode_top"));
-                    Rotate.Add((float)stbElem.Attribute("rotate"));
+                    Rotate.Add((double)stbElem.Attribute("rotate"));
 
                     switch ((string)stbElem.Attribute("kind_structure"))
                     {
@@ -128,7 +128,7 @@ namespace HoaryFox.STB
                     IdSection.Add((int)stbElem.Attribute("id_section"));
                     IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
                     IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
-                    Rotate.Add((float)stbElem.Attribute("rotate"));
+                    Rotate.Add((double)stbElem.Attribute("rotate"));
 
                     switch ((string)stbElem.Attribute("kind_structure"))
                     {
@@ -182,7 +182,7 @@ namespace HoaryFox.STB
                     IdSection.Add((int)stbElem.Attribute("id_section"));
                     IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
                     IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
-                    Rotate.Add((float)stbElem.Attribute("rotate"));
+                    Rotate.Add((double)stbElem.Attribute("rotate"));
 
                     switch ((string)stbElem.Attribute("kind_structure"))
                     {
@@ -235,7 +235,7 @@ namespace HoaryFox.STB
                     IdSection.Add((int)stbElem.Attribute("id_section"));
                     IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
                     IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
-                    Rotate.Add((float)stbElem.Attribute("rotate"));
+                    Rotate.Add((double)stbElem.Attribute("rotate"));
 
                     switch ((string)stbElem.Attribute("kind_structure"))
                     {

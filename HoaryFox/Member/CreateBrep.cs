@@ -79,7 +79,6 @@ namespace HoaryFox.Member
                 }
                 
                 brep = GetPlaneBrep(brep, nodeIds.Count, pt);
-
                 slabNum++;
             }
 
@@ -88,12 +87,12 @@ namespace HoaryFox.Member
 
         public List<Brep> Wall(StbWalls walls)
         {
-            List<Brep> brep = new List<Brep>();
+            var brep = new List<Brep>();
 
             foreach (List<int> nodeIds in walls.NodeIdList)
             {
-                int[] index = new int[10];
-                Point3d[] pt = new Point3d[10];
+                var index = new int[10];
+                var pt = new Point3d[10];
 
                 for (int i = 0; i < nodeIds.Count; i++)
                 {
@@ -110,23 +109,24 @@ namespace HoaryFox.Member
 
         public List<Brep> Frame(StbFrame frame)
         {
-            List<Brep> brep = new List<Brep>();
+            var brep = new List<Brep>();
 
             double height = -1;
             double width = -1;
-            string shape = string.Empty;
-            ShapeTypes shapeType = ShapeTypes.H;
+            var shape = string.Empty;
+            var shapeType = ShapeTypes.H;
 
-            for (int eNum = 0; eNum < frame.Id.Count; eNum++)
+            for (var eNum = 0; eNum < frame.Id.Count; eNum++)
             {
-                int idSection = frame.IdSection[eNum];
-                KindsStructure kind = frame.KindStructure[eNum];
+                var idSection = frame.IdSection[eNum];
+                var kind = frame.KindStructure[eNum];
+                var rotate = frame.Rotate[eNum];
 
                 // 始点と終点の座標取得
-                int nodeIndexStart = _stbData.Nodes.Id.IndexOf(frame.IdNodeStart[eNum]);
-                int nodeIndexEnd = _stbData.Nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
-                Point3d nodeStart = new Point3d(_stbData.Nodes.X[nodeIndexStart], _stbData.Nodes.Y[nodeIndexStart], _stbData.Nodes.Z[nodeIndexStart]);
-                Point3d nodeEnd = new Point3d(_stbData.Nodes.X[nodeIndexEnd], _stbData.Nodes.Y[nodeIndexEnd], _stbData.Nodes.Z[nodeIndexEnd]);
+                var nodeIndexStart = _stbData.Nodes.Id.IndexOf(frame.IdNodeStart[eNum]);
+                var nodeIndexEnd = _stbData.Nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
+                var nodeStart = new Point3d(_stbData.Nodes.X[nodeIndexStart], _stbData.Nodes.Y[nodeIndexStart], _stbData.Nodes.Z[nodeIndexStart]);
+                var nodeEnd = new Point3d(_stbData.Nodes.X[nodeIndexEnd], _stbData.Nodes.Y[nodeIndexEnd], _stbData.Nodes.Z[nodeIndexEnd]);
 
                 int secIndex;
                 if (kind == KindsStructure.RC)
@@ -189,18 +189,18 @@ namespace HoaryFox.Member
                     shapeType = _stbData.SecSteel.ShapeType[secIndex];
                 }
 
-                brep.AddRange(Point2Brep(nodeStart, nodeEnd, height, width, shapeType, frame.FrameType));
+                brep.AddRange(Point2Brep(nodeStart, nodeEnd, height, width, rotate, shapeType,  frame.FrameType));
             }
 
             return brep;
         }
 
 
-        private List<Brep> Point2Brep(Point3d nodeStart, Point3d nodeEnd, double height, double width, ShapeTypes shapeType, FrameType frameType)
+        private List<Brep> Point2Brep(Point3d nodeStart, Point3d nodeEnd, double height, double width, double rotate, ShapeTypes shapeType, FrameType frameType)
         {
-            Point3d[] pointStart = new Point3d[6];
-            Point3d[] pointEnd = new Point3d[6];
-            List<Brep> brep = new List<Brep>();
+            var pointStart = new Point3d[6];
+            var pointEnd = new Point3d[6];
+            var brep = new List<Brep>();
 
             double dx = nodeEnd.X - nodeStart.X;
             double dy = nodeEnd.Y - nodeStart.Y;
@@ -261,6 +261,25 @@ namespace HoaryFox.Member
                     throw new ArgumentOutOfRangeException(nameof(shapeType), shapeType, null);
             }
 
+            var rotateAngle = rotate * Math.PI / 180;
+            Point3d rotationCenter;
+            if (frameType == FrameType.Girder || frameType == FrameType.Beam)
+            {
+                rotationCenter = new Point3d(pointStart[4]);
+            }
+            else
+            {
+                rotationCenter = new Point3d(
+                    (pointStart[1].X + pointStart[4].X) / 2,
+                    (pointStart[1].Y + pointStart[4].Y) / 2,
+                    (pointStart[1].Z + pointStart[4].Z) / 2
+                );
+            }
+            var rotationAxis = new Vector3d(pointEnd[1] - pointStart[1]);
+            foreach (var b in brep)
+            {
+                b.Rotate(rotateAngle, rotationAxis, rotationCenter);
+            }
             return brep;
         }
 
