@@ -275,7 +275,7 @@ namespace HoaryFox.Member
                     (pointStart[1].Z + pointStart[4].Z) / 2
                 );
             }
-            var rotationAxis = new Vector3d(pointEnd[1] - pointStart[1]);
+            var rotationAxis = new Vector3d(pointStart[1] - pointEnd[1]);
             foreach (var b in brep)
             {
                 b.Rotate(rotateAngle, rotationAxis, rotationCenter);
