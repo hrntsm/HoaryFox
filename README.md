@@ -3,7 +3,7 @@
 Grasshopper Component which read ST-Bridge file(.stb) and display its model information.  
 You can easily check frames and present structure frame!!  
 If you need stand-alone ST-Bridge file viewer, Please see [STEVIA](https://github.com/hrntsm/STEVIA-Stb2U/wiki)  
-As a test function, it creates an analytical model of Karamba from st-bridge data.
+As a experimental function, it creates an analytical model of Karamba from st-bridge data.
 
 ## Install
 
@@ -17,7 +17,7 @@ As a test function, it creates an analytical model of Karamba from st-bridge dat
 
 Input st-bridge file path, output some its tag data(StbColumn, StbGirder, StbPost, StbBeam, StbBrace, StbSlab).
 
-It supports version 1.x, version 2.x is not supported.  
+Support for ST-bridge ver2.0 is now available from HoaryFox ver1.1.  
 If you need more information, send direct message to my twitter account.
 
 Please refer to Samples directory files.
@@ -27,6 +27,7 @@ Please refer to Samples directory files.
 Conversion of data into Karamba supports only beam elements.  
 Mesh elements such as floor and wall are not supported.  
 L-type and C-type cross-sections are replaced by rectangular cross-sections with equivalent axial cross-sections because Karamba does not support them.
+If you want to use Karamba convert, it is super recommended to save the file in the same directory as Karamba.gha
 
 ## What is ST-Bridge
 
@@ -41,3 +42,5 @@ Quote from [building SMART Japan Structural Design Subcommittee](https://en.buil
 
 + Twitter : [@hiron_rgkr](https://twitter.com/hiron_rgkr)
 + URL : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
++ Mail : stevia(at)hrntsm.com
+  + change (at) to @
