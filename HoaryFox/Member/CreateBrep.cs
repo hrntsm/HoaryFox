@@ -20,40 +20,40 @@ namespace HoaryFox.Member
             switch (count)
             {
                 case 3:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], _stbData.ToleLength));
                     break;
                 case 4:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2],  pt[3], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2],  pt[3], _stbData.ToleLength));
                     break;
                 case 5:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[0], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[0], _stbData.ToleLength));
                     break;
                 case 6:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[0], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[0], _stbData.ToleLength));
                     break;
                 case 7:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[0], pt[3], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[0], pt[3], _stbData.ToleLength));
                     break;
                 case 8:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[0], pt[3], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[0], pt[3], _stbData.ToleLength));
                     break;
                 case 9:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[8], pt[0], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[3], pt[6], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[8], pt[0], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[3], pt[6], _stbData.ToleLength));
                     break;
                 case 10:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[8], pt[9], 0.001));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[9], pt[0], pt[3], pt[6], 0.001));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[8], pt[9], _stbData.ToleLength));
+                    brep.Add(Brep.CreateFromCornerPoints(pt[9], pt[0], pt[3], pt[6], _stbData.ToleLength));
                     break;
             }
 
@@ -200,7 +200,7 @@ namespace HoaryFox.Member
         {
             var pointStart = new Point3d[6];
             var pointEnd = new Point3d[6];
-            var brep = new List<Brep>();
+            List<Brep> brep;
 
             double dx = nodeEnd.X - nodeStart.X;
             double dy = nodeEnd.Y - nodeStart.Y;
