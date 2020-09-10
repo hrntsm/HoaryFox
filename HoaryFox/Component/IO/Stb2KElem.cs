@@ -137,6 +137,7 @@ namespace HoaryFox.Component.Export
 
         private void GetCroSec()
         {
+            // TODO: 材軸の回転は未設定（どこで設定するかも謎）
             double p1;
             double p2;
             double p3;
