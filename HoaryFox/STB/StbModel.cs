@@ -1,25 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using Rhino.Geometry;
+using static HoaryFox.STB.StbData;
 
 namespace HoaryFox.STB
 {
     /// <summary>
     /// 位置・断面情報（節点・部材・階・軸）
     /// </summary>
-    public class StbModel
+    public class StbModel:StbBase
     {
-        // TODO 一括でStbModelに属するものを読み込めるようにする
-        //public void LoadAll(XDocument stbData) {
-        //}
     }
 
     /// <summary>
     /// 節点（複数） 各節点を管理
     /// </summary>
-    public class StbNodes:StbBase
+    public class StbNodes:StbModel
     {
         public List<int> Id { get; } = new List<int>();
+        public List<string> Guid { get; } = new List<string>();
         public List<double> X { get; } = new List<double>();
         public List<double> Y { get; } = new List<double>();
         public List<double> Z { get; } = new List<double>();
@@ -27,38 +28,72 @@ namespace HoaryFox.STB
         public List<KindsNode> Kind { get; } = new List<KindsNode>();
         public List<int> IdMember { get; } = new List<int>();
 
-        public override void Load(XDocument stbDoc)
+        public override void Load(XDocument stbDoc, StbVersion version, string xmlns)
         {
-            var stbNodes = stbDoc.Root.Descendants("StbNode");
+            var stbNodes = stbDoc.Root.Descendants(xmlns + "StbNode");
             foreach (var stbNode in stbNodes)
             {
                 // 必須コード
                 Id.Add((int)stbNode.Attribute("id"));
-                X.Add((double)stbNode.Attribute("x"));
-                Y.Add((double)stbNode.Attribute("y"));
-                Z.Add((double)stbNode.Attribute("z"));
-                Pt.Add(new Point3d((double)stbNode.Attribute("x"),(double)stbNode.Attribute("y"), (double)stbNode.Attribute("z")));
-
+                double posX;
+                double posY;
+                double posZ;
+                switch (version)
+                {
+                    case StbVersion.Ver1:
+                        posX = (double)stbNode.Attribute("x");
+                        posY = (double)stbNode.Attribute("y");
+                        posZ = (double)stbNode.Attribute("z");
+                        break;
+                    case StbVersion.Ver2:
+                        posX = (double)stbNode.Attribute("X");
+                        posY = (double)stbNode.Attribute("Y");
+                        posZ = (double)stbNode.Attribute("Z");
+                        if (stbNode.Attribute("guid") != null)
+                            Guid.Add((string)stbNode.Attribute("guid"));
+                        else
+                            Guid.Add(string.Empty);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(version), version, null);
+                }
+                X.Add(posX);
+                Y.Add(posY);
+                Z.Add(posZ);
+                Pt.Add(new Point3d(posX, posY, posZ));
+                
                 // 必須ではないコード
                 if (stbNode.Attribute("id_member") != null)
                     IdMember.Add((int)stbNode.Attribute("id_member"));
                 else
                     IdMember.Add(-1);
+                
+                // ver2 から必須
                 switch ((string)stbNode.Attribute("kind"))
                 {
+                    case "ON_GIRDER":
+                        Kind.Add(KindsNode.OnGirder);
+                        break;
                     case "ON_BEAM":
-                        Kind.Add(KindsNode.OnBeam); break;
+                        Kind.Add(KindsNode.OnBeam);
+                        break;
                     case "ON_COLUMN":
-                        Kind.Add(KindsNode.OnColumn); break;
+                        Kind.Add(KindsNode.OnColumn);
+                        break;
+                    case "ON_POST":
+                        Kind.Add(KindsNode.OnPost);
+                        break;
                     case "ON_GRID":
-                        Kind.Add(KindsNode.OnGrid); break;
+                        Kind.Add(KindsNode.OnGrid);
+                        break;
                     case "ON_CANTI":
-                        Kind.Add(KindsNode.OnCanti); break;
+                        Kind.Add(KindsNode.OnCanti);
+                        break;
                     case "ON_SLAB":
-                        Kind.Add(KindsNode.OnSlab); break;
-                    case "OTHER":
-                        Kind.Add(KindsNode.Other); break;
+                        Kind.Add(KindsNode.OnSlab);
+                        break;
                     default:
+                        Kind.Add(KindsNode.Other);
                         break;
                 }
             }
@@ -66,8 +101,10 @@ namespace HoaryFox.STB
 
         public enum KindsNode
         {
+            OnGirder,
             OnBeam,
             OnColumn,
+            OnPost,
             OnGrid,
             OnCanti,
             OnSlab,
@@ -78,17 +115,27 @@ namespace HoaryFox.STB
     /// <summary>
     /// 節点IDリスト
     /// </summary>
-    public class StbNodeIdList
+    public class StbNodeIdList:StbModel
     {
-        public List<int> Load(XElement stbElem)
+        public List<int> Load(XElement stbElem, StbVersion stbVersion)
         {
-            List<int> idList = new List<int>();
+            var idList = new List<int>();
 
-            var xNodeIds = stbElem.Element("StbNodeid_List").Elements("StbNodeid");
-            foreach (var xNodeId in xNodeIds)
+            switch (stbVersion)
             {
-                idList.Add((int)xNodeId.Attribute("id"));
+                case StbVersion.Ver1:
+                    IEnumerable<XElement> xNodeIds = stbElem.Element("StbNodeid_List").Elements("StbNodeid");
+                    foreach (var xNodeId in xNodeIds)
+                        idList.Add((int)xNodeId.Attribute("id"));
+                    break;
+                case StbVersion.Ver2:
+                    string xNodeIdOrders = stbElem.Value;
+                    List<string> nodeList = xNodeIdOrders.Split(' ').ToList();
+                    foreach (var node in nodeList)
+                        idList.Add(Int32.Parse(node));
+                    break;
             }
+
             return idList;
         }
     }
@@ -96,15 +143,14 @@ namespace HoaryFox.STB
     /// <summary>
     /// 軸情報
     /// </summary>
-    public class StbAxes
+    public class StbAxes:StbModel
     {
     }
-
 
     /// <summary>
     /// 階情報（複数）
     /// </summary>
-    public class StbStorys:StbBase
+    public class StbStories:StbModel
     {
         /// <summary>
         /// 階のID
@@ -117,7 +163,7 @@ namespace HoaryFox.STB
         /// <summary>
         /// 階高(m)
         /// </summary>
-        public List<float> Height { get; } = new List<float>();
+        public List<double> Height { get; } = new List<double>();
         /// <summary>
         /// 階属性
         /// </summary>
@@ -128,27 +174,36 @@ namespace HoaryFox.STB
         public List<string> StrengthConcrete { get; } = new List<string>();
         public List<List<int>> NodeIdList { get; } = new List<List<int>>();
 
-        public override void Load(XDocument stbData)
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var stbStorys = stbData.Root.Descendants("StbStory");
-            foreach (var stbStory in stbStorys)
+            var stbStories = stbData.Root.Descendants(xmlns + "StbStory");
+            foreach (var stbStory in stbStories)
             {
                 // 必須コード
                 Id.Add((int)stbStory.Attribute("id"));
-                Height.Add((float)stbStory.Attribute("height") / 1000f);
+                Height.Add((double)stbStory.Attribute("height"));
                 switch ((string)stbStory.Attribute("kind"))
                 {
                     case "GENERAL":
-                        Kind.Add(KindsStory.General); break;
+                        Kind.Add(KindsStory.General);
+                        break;
                     case "BASEMENT":
-                        Kind.Add(KindsStory.Basement); break;
+                        Kind.Add(KindsStory.Basement);
+                        break;
                     case "ROOF":
-                        Kind.Add(KindsStory.Roof); break;
+                        Kind.Add(KindsStory.Roof);
+                        break;
                     case "PENTHOUSE":
-                        Kind.Add(KindsStory.Penthouse); break;
+                        Kind.Add(KindsStory.Penthouse);
+                        break;
                     case "ISOLATION":
-                        Kind.Add(KindsStory.Isolation); break;
+                        Kind.Add(KindsStory.Isolation);
+                        break;
+                    case "DEPENDENCE":
+                        Kind.Add(KindsStory.Dependence);
+                        break;
                     default:
+                        Kind.Add(KindsStory.Any);
                         break;
                 }
 
@@ -182,7 +237,9 @@ namespace HoaryFox.STB
             Basement,
             Roof,
             Penthouse,
-            Isolation
+            Isolation,
+            Dependence,
+            Any
         }
     }
 
@@ -205,6 +262,9 @@ namespace HoaryFox.STB
         RC,
         S,
         SRC,
-        CFT
+        CFT,
+        Deck,
+        Precast,
+        Other
     }
 }

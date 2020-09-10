@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
+using Grasshopper.Kernel.Geometry;
+using HoaryFox.Member;
+using static HoaryFox.STB.StbData;
 
 namespace HoaryFox.STB
 {
@@ -117,7 +121,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// 断面情報
     /// </summary>
-    class StbSections
+    public class StbSections:StbBase
     {
         // TODO 一括でStbMemberに属するものを読み込めるようにする
         // public void LoadAll(XDocument stbData) {
@@ -127,7 +131,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// RC柱断面
     /// </summary>
-    public class StbSecColRC:StbBase
+    public class StbSecColRC:StbSections
     {
         /// <summary>
         /// 部材のID
@@ -174,17 +178,29 @@ namespace HoaryFox.STB
         /// 与えられたstbデータからRC柱断面を取得する。
         /// </summary>
         /// <param name="stbData"></param>
-        public override void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var stbRcCols = stbData.Root.Descendants("StbSecColumn_RC");
+            if (stbData.Root == null)
+                return;
+            
+            var stbRcCols = stbData.Root.Descendants(xmlns + "StbSecColumn_RC");
             foreach (var stbRcCol in stbRcCols)
             {
 
                 // 必須コード
                 Id.Add((int)stbRcCol.Attribute("id"));
                 Name.Add((string)stbRcCol.Attribute("name"));
-                DBarMain.Add((string)stbRcCol.Attribute("D_reinforcement_main"));
-                DBarBand.Add((string)stbRcCol.Attribute("D_reinforcement_band"));
+                switch (version)
+                {
+                    case StbVersion.Ver1:
+                        DBarMain.Add((string)stbRcCol.Attribute("D_reinforcement_main"));
+                        DBarBand.Add((string)stbRcCol.Attribute("D_reinforcement_band"));
+                        break;
+                    case StbVersion.Ver2:
+                        break;
+                }
 
                 // 必須ではないコード
                 if (stbRcCol.Attribute("floor") != null)
@@ -208,14 +224,14 @@ namespace HoaryFox.STB
 
                 // 子要素 StbSecFigure
                 var stbColSecFigure = new StbColSecFigure();
-                stbColSecFigure.Load(stbRcCol);
+                stbColSecFigure.Load(stbRcCol, version, xmlns);
                 Width.Add(stbColSecFigure.Width);
                 Height.Add(stbColSecFigure.Height);
                 IsRect.Add(stbColSecFigure.IsRect);
 
                 // 子要素 StbSecBar_Arrangement
                 var stbColSecBarArrangement = new StbColSecBarArrangement();
-                stbColSecBarArrangement.Load(stbRcCol, stbColSecFigure.IsRect);
+                stbColSecBarArrangement.Load(stbRcCol, version, xmlns);
                 BarList.Add(stbColSecBarArrangement.BarList);
             }
         }
@@ -234,26 +250,58 @@ namespace HoaryFox.STB
         /// 与えられたstbデータからRC柱断面の形状を取得する。
         /// </summary>
         /// <param name="stbColumn"></param>
-        public void Load(XElement stbColumn)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XElement stbColumn, StbVersion version, string xmlns)
         {
-            var stbFigure = stbColumn.Element("StbSecFigure");
-            if (stbFigure.Element("StbSecRect") != null)
+            XElement stbFigure;
+            switch (version)
             {
-                Width = (double)stbFigure.Element("StbSecRect").Attribute("DX");
-                Height = (double)stbFigure.Element("StbSecRect").Attribute("DY");
-                IsRect = true;
-            }
-            else if (stbFigure.Element("StbSecCircle") != null)
-            {
-                Width = (double)stbFigure.Element("StbSecCircle").Attribute("D");
-                Height = 0;
-                IsRect = false;
-            }
-            else
-            {
-                Width = 0;
-                Height = 0;
-                IsRect = false;
+                case StbVersion.Ver1:
+                    stbFigure = stbColumn.Element("StbSecFigure");
+                    if (stbFigure != null && stbFigure.Element("StbSecRect") != null)
+                    {
+                        Width = (double)stbFigure.Element("StbSecRect")?.Attribute("DX");
+                        Height = (double)stbFigure.Element("StbSecRect")?.Attribute("DY");
+                        IsRect = true;
+                    }
+                    else if (stbFigure != null && stbFigure.Element("StbSecCircle") != null)
+                    {
+                        Width = (double)stbFigure.Element("StbSecCircle")?.Attribute("D");
+                        Height = 0;
+                        IsRect = false;
+                    }
+                    else
+                    {
+                        Width = 0;
+                        Height = 0;
+                        IsRect = false;
+                    }
+                    break;
+                case StbVersion.Ver2:
+                    string tag;
+                    stbFigure = stbColumn.Element(xmlns + "StbSecFigureColumn_RC");
+                    if (stbFigure != null && stbFigure.Element(xmlns + "StbSecColumn_RC_Rect") != null)
+                    {
+                        tag = xmlns + "StbSecColumn_RC_Rect";
+                        Width = (double)stbFigure.Element(tag)?.Attribute("width_X");
+                        Height = (double)stbFigure.Element(tag)?.Attribute("width_Y");
+                        IsRect = true;
+                    }
+                    else if (stbFigure != null && stbFigure.Element(xmlns + "StbSecColumn_RC_Circle") != null)
+                    {
+                        tag = xmlns + "StbSecColumn_RC_Circle";
+                        Width = (double)stbFigure.Element(tag)?.Attribute("D");
+                        Height = 0;
+                        IsRect = false;
+                    }
+                    else
+                    {
+                        Width = 0;
+                        Height = 0;
+                        IsRect = false;
+                    }
+                    break;
             }
         }
     }
@@ -265,74 +313,85 @@ namespace HoaryFox.STB
     {
         public List<double> BarList { get; } = new List<double>();
 
-        public void Load(XElement stbColumn, bool isRect)
+        public void Load(XElement stbColumn, StbVersion version, string xmlns)
         {
-            string elementName;
-            var stbBar = stbColumn.Element("StbSecBar_Arrangement");
-
-            if (stbBar.Element("StbSecRect_Column_Same") != null)
+            switch (version)
             {
-                elementName = "StbSecRect_Column_Same";
-            }
-            else if (stbBar.Element("StbSecRect_Column_Not_Same") != null)
-            {
-                elementName = "StbSecRect_Column_Not_Same";
-            }
-            else if (stbBar.Element("StbSecCircle_Column_Same") != null)
-            {
-                elementName = "StbSecCircle_Column_Same";
-            }
-            else if (stbBar.Element("StbSecCircle_Column_Not_Same") != null)
-            {
-                elementName = "StbSecCircle_Column_Not_Same";
-            }
-            else
-            {
-                BarList.AddRange(new List<double> { 2, 2, 0, 0, 4, 200, 2, 2 });
-                return;
-            }
+                case StbVersion.Ver1:
+                    string elementName;
+                    var stbBar = stbColumn.Element("StbSecBar_Arrangement");
+                    if (stbBar == null)
+                        break;
 
-            var stbBarElem = stbBar.Element(elementName);
+                    if (stbBar.Element("StbSecRect_Column_Same") != null)
+                    {
+                        elementName = "StbSecRect_Column_Same";
+                    }
+                    else if (stbBar.Element("StbSecRect_Column_Not_Same") != null)
+                    {
+                        elementName = "StbSecRect_Column_Not_Same";
+                    }
+                    else if (stbBar.Element("StbSecCircle_Column_Same") != null)
+                    {
+                        elementName = "StbSecCircle_Column_Same";
+                    }
+                    else if (stbBar.Element("StbSecCircle_Column_Not_Same") != null)
+                    {
+                        elementName = "StbSecCircle_Column_Not_Same";
+                    }
+                    else
+                    {
+                        BarList.AddRange(new List<double> { 2, 2, 0, 0, 4, 200, 2, 2 });
+                        return;
+                    }
 
-            // Main 1
-            if (stbBarElem.Attribute("count_main_X_1st") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_main_X_1st"));
-            else
-                BarList.Add(0);
-            if (stbBarElem.Attribute("count_main_X_1st") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_main_Y_1st"));
-            else
-                BarList.Add(0);
+                    var stbBarElem = stbBar.Element(elementName);
+                    if (stbBarElem == null)
+                        break;
 
-            // Main2
-            if (stbBarElem.Attribute("count_main_X_2nd") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_main_X_2nd"));
-            else
-                BarList.Add(0);
-            if (stbBarElem.Attribute("count_main_Y_2nd") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_main_Y_2nd"));
-            else
-                BarList.Add(0);
+                    // Main 1
+                    if (stbBarElem.Attribute("count_main_X_1st") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_main_X_1st"));
+                    else
+                        BarList.Add(0);
+                    if (stbBarElem.Attribute("count_main_X_1st") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_main_Y_1st"));
+                    else
+                        BarList.Add(0);
 
-            // Main total
-            if (stbBarElem.Attribute("count_main_total") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_main_total"));
-            else
-                BarList.Add(0);
+                    // Main2
+                    if (stbBarElem.Attribute("count_main_X_2nd") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_main_X_2nd"));
+                    else
+                        BarList.Add(0);
+                    if (stbBarElem.Attribute("count_main_Y_2nd") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_main_Y_2nd"));
+                    else
+                        BarList.Add(0);
 
-            // Band
-            if (stbBarElem.Attribute("pitch_band") != null)
-                BarList.Add((double)stbBarElem.Attribute("pitch_band"));
-            else
-                BarList.Add(0);
-            if (stbBarElem.Attribute("count_band_dir_X") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_band_dir_X"));
-            else
-                BarList.Add(0);
-            if (stbBarElem.Attribute("count_band_dir_Y") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_band_dir_Y"));
-            else
-                BarList.Add(0);
+                    // Main total
+                    if (stbBarElem.Attribute("count_main_total") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_main_total"));
+                    else
+                        BarList.Add(0);
+
+                    // Band
+                    if (stbBarElem.Attribute("pitch_band") != null)
+                        BarList.Add((double)stbBarElem.Attribute("pitch_band"));
+                    else
+                        BarList.Add(0);
+                    if (stbBarElem.Attribute("count_band_dir_X") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_band_dir_X"));
+                    else
+                        BarList.Add(0);
+                    if (stbBarElem.Attribute("count_band_dir_Y") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_band_dir_Y"));
+                    else
+                        BarList.Add(0);
+                    break;
+                case StbVersion.Ver2:
+                    break;
+            }
         }
     }
 
@@ -382,9 +441,14 @@ namespace HoaryFox.STB
         /// 与えられたstbデータからS柱断面を取得する。
         /// </summary>
         /// <param name="stbData"></param>
-        public override void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var stbStCols = stbData.Root.Descendants("StbSecColumn_S");
+            if (stbData.Root == null)
+                return;
+            
+            var stbStCols = stbData.Root.Descendants(xmlns + "StbSecColumn_S");
             foreach (var stbStCol in stbStCols)
             {
                 // 必須コード
@@ -402,13 +466,14 @@ namespace HoaryFox.STB
                 }
                 if (stbStCol.Attribute("kind_column") != null)
                 {
-                    if ((string)stbStCol.Attribute("kind_column") == "COLUMN")
+                    switch ((string)stbStCol.Attribute("kind_column"))
                     {
-                        KindColumn.Add(KindsColumn.Column);
-                    }
-                    else
-                    {
-                        KindColumn.Add(KindsColumn.Post);
+                        case "COLUMN":
+                            KindColumn.Add(KindsColumn.Column);
+                            break;
+                        default:
+                            KindColumn.Add(KindsColumn.Post);
+                            break;
                     }
                 }
                 else
@@ -425,8 +490,6 @@ namespace HoaryFox.STB
                             BaseType.Add(BaseTypes.Embedded); break;
                         case "WRAP":
                             BaseType.Add(BaseTypes.Wrap); break;
-                        default:
-                            break;
                     }
                 }
                 else
@@ -460,7 +523,7 @@ namespace HoaryFox.STB
 
                 // 子要素 StbSecSteelColumn
                 var stbSecSteelColumn = new StbSecSteelColumn();
-                stbSecSteelColumn.Load(stbStCol);
+                stbSecSteelColumn.Load(stbStCol, version, xmlns);
                 Shape.Add(stbSecSteelColumn.Shape);
             }
         }
@@ -476,22 +539,71 @@ namespace HoaryFox.STB
         public string StrengthMain { get; private set; }
         public string StrengthWeb { get; private set; }
 
-        public void Load(XElement stbStCol)
+        public void Load(XElement stbStCol, StbVersion version, string xmlns)
         {
-            var secStCol = stbStCol.Element("StbSecSteelColumn");
-            // 必須コード
-            Pos = (string)secStCol.Attribute("pos");
-            Shape = (string)secStCol.Attribute("shape");
-            StrengthMain = (string)secStCol.Attribute("strength_main");
+            XElement stbFigure;
+            switch (version)
+            {
+                case StbVersion.Ver1:
+                    stbFigure = stbStCol.Element("StbSecSteelColumn");
+                    // 必須コード
+                    if (stbFigure != null)
+                    {
+                        Pos = (string) stbFigure.Attribute("pos");
+                        Shape = (string) stbFigure.Attribute("shape");
+                        StrengthMain = (string) stbFigure.Attribute("strength_main");
 
-            // 必須ではないコード
-            if (secStCol.Attribute("strength_web") != null)
-            {
-                StrengthWeb = (string)secStCol.Attribute("strength_web");
-            }
-            else
-            {
-                StrengthWeb = string.Empty;
+                        // 必須ではないコード
+                        if (stbFigure.Attribute("strength_web") != null)
+                        {
+                            StrengthWeb = (string) stbFigure.Attribute("strength_web");
+                        }
+                        else
+                        {
+                            StrengthWeb = string.Empty;
+                        }
+                    }
+                    break;
+                case StbVersion.Ver2:
+                    string tag;
+                    stbFigure = stbStCol.Element(xmlns + "StbSecSteelFigureColumn_S");
+                    if (stbFigure == null)
+                        break;
+                    
+                    if (stbFigure.Element(xmlns + "StbSecSteelColumn_S_Same") != null)
+                    {
+                        tag = xmlns + "StbSecSteelColumn_S_Same";
+                        Pos = "ALL";
+                        Shape = (string)stbFigure.Element(tag).Attribute("shape");
+                        StrengthMain = (string)stbFigure.Element(tag).Attribute("strength_main");
+                    }
+                    else if (stbFigure.Element(xmlns + "StbSecSteelColumn_S_NotSame") != null)
+                    {
+                        tag = xmlns + "StbSecSteelColumn_S_NotSame";
+                        foreach (var elem in stbFigure.Elements(tag))
+                        {
+                            if ((string)elem.Attribute("pos") == "BOTTOM")
+                            {
+                                Pos = "CENTER";
+                                Shape = (string)stbFigure.Element(tag).Attribute("shape");
+                                StrengthMain = (string)stbFigure.Element(tag).Attribute("strength_main");
+                            }
+                        }
+                    }
+                    else if (stbFigure.Element(xmlns + "StbSecSteelColumn_S_ThreeTypes") != null)
+                    {
+                        tag = xmlns + "StbSecSteelColumn_S_ThreeTypes";
+                        foreach (var elem in stbFigure.Elements(tag))
+                        {
+                            if ((string)elem.Attribute("pos") == "CENTER")
+                            {
+                                Pos = "CENTER";
+                                Shape = (string)stbFigure.Element(tag).Attribute("shape");
+                                StrengthMain = (string)stbFigure.Element(tag).Attribute("strength_main");
+                            }
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -499,21 +611,21 @@ namespace HoaryFox.STB
     /// <summary>
     /// SRC柱断面
     /// </summary>
-    public class StbSecColumnSRC
+    public class StbSecColumnSRC:StbSections
     {
     }
 
     /// <summary>
     /// CFT柱断面
     /// </summary>
-    public class StbSecColumnCFT
+    public class StbSecColumnCFT:StbSections
     {
     }
 
     /// <summary>
     /// RC梁断面
     /// </summary>
-    public class StbSecBeamRC:StbBase
+    public class StbSecBeamRC:StbSections
     {
         /// <summary>
         /// 部材のID
@@ -568,16 +680,28 @@ namespace HoaryFox.STB
         /// 与えられたstbデータからRC梁断面を取得する。
         /// </summary>
         /// <param name="stbData"></param>
-        public override void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var stbRcBeams = stbData.Root.Descendants("StbSecBeam_RC");
+            if (stbData.Root == null)
+                return;
+            
+            var stbRcBeams = stbData.Root.Descendants(xmlns + "StbSecBeam_RC");
             foreach (var stbRcBeam in stbRcBeams)
             {
                 // 必須コード
                 Id.Add((int)stbRcBeam.Attribute("id"));
                 Name.Add((string)stbRcBeam.Attribute("name"));
-                DBarMain.Add((string)stbRcBeam.Attribute("D_reinforcement_main"));
-                DBarBand.Add((string)stbRcBeam.Attribute("D_reinforcement_band"));
+                switch (version)
+                {
+                    case StbVersion.Ver1:
+                        DBarMain.Add((string)stbRcBeam.Attribute("D_reinforcement_main"));
+                        DBarBand.Add((string)stbRcBeam.Attribute("D_reinforcement_band"));
+                        break;
+                    case StbVersion.Ver2:
+                        break;
+                }
 
                 // 必須ではないコード
                 if (stbRcBeam.Attribute("floor") != null)
@@ -614,13 +738,13 @@ namespace HoaryFox.STB
 
                 // 子要素 StbSecFigure
                 var stbBeamSecFigure = new StbBeamSecFigure();
-                stbBeamSecFigure.Load(stbRcBeam);
+                stbBeamSecFigure.Load(stbRcBeam, version, xmlns);
                 Width.Add(stbBeamSecFigure.Width);
                 Depth.Add(stbBeamSecFigure.Depth);
 
                 // 子要素 StbSecBar_Arrangement
                 var stbBeamSecBarArrangement = new StbBeamSecBarArrangement();
-                stbBeamSecBarArrangement.Load(stbRcBeam);
+                stbBeamSecBarArrangement.Load(stbRcBeam, version, xmlns);
                 BarList.Add(stbBeamSecBarArrangement.BarList);
             }
         }
@@ -638,29 +762,84 @@ namespace HoaryFox.STB
         /// 与えられたstbデータからRC梁断面の形状を取得する。
         /// </summary>
         /// <param name="stbBeam"></param>
-        public void Load(XElement stbBeam)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XElement stbBeam, StbVersion version, string xmlns)
         {
-            var stbFigure = stbBeam.Element("StbSecFigure");
+            string tag;
+            XElement stbFigure;
+            switch (version)
+            {
+                case StbVersion.Ver1:
+                    stbFigure = stbBeam.Element("StbSecFigure");
 
-            if (stbFigure.Element("StbSecHaunch") != null)
-            {
-                Width = (int)stbFigure.Element("StbSecHaunch").Attribute("width_center");
-                Depth = (int)stbFigure.Element("StbSecHaunch").Attribute("depth_center");
-            }
-            else if (stbFigure.Element("StbSecStraight") != null)
-            {
-                Width = (int)stbFigure.Element("StbSecStraight").Attribute("width");
-                Depth = (int)stbFigure.Element("StbSecStraight").Attribute("depth");
-            }
-            else if (stbFigure.Element("StbSecTaper") != null)
-            {
-                Width = (int)stbFigure.Element("StbSecTaper").Attribute("width_end");
-                Depth = (int)stbFigure.Element("StbSecTaper").Attribute("depth_end");
-            }
-            else
-            {
-                Width = 0;
-                Depth = 0;
+                    if (stbFigure?.Element("StbSecHaunch") != null)
+                    {
+                        tag = "StbSecHaunch";
+                        Width = (double)stbFigure.Element(tag)?.Attribute("width_center");
+                        Depth = (double)stbFigure.Element(tag)?.Attribute("depth_center");
+                    }
+                    else if (stbFigure?.Element("StbSecStraight") != null)
+                    {
+                        tag = "StbSecStraight";
+                        Width = (double)stbFigure.Element(tag)?.Attribute("width");
+                        Depth = (double)stbFigure.Element(tag)?.Attribute("depth");
+                    }
+                    else if (stbFigure?.Element("StbSecTaper") != null)
+                    {
+                        tag = "StbSecTaper";
+                        Width = (double)stbFigure.Element(tag)?.Attribute("width_end");
+                        Depth = (double)stbFigure.Element(tag)?.Attribute("depth_end");
+                    }
+                    else
+                    {
+                        Width = 0;
+                        Depth = 0;
+                    }
+                    
+                    break;
+                case StbVersion.Ver2:
+                    stbFigure = stbBeam.Element(xmlns + "StbSecFigureBeam_RC");
+                    if (stbFigure == null)
+                        break;
+
+                    if (stbFigure.Element(xmlns + "StbSecBeam_RC_Straight") != null)
+                    {
+                        tag = xmlns + "StbSecBeam_RC_Straight";
+                        Width = (double)stbFigure.Element(tag)?.Attribute("width");
+                        Depth = (double)stbFigure.Element(tag)?.Attribute("depth");
+                    }
+                    else if (stbFigure.Element(xmlns + "StbSecBeam_RC_Taper") != null)
+                    {
+                        tag = xmlns + "StbSecBeam_RC_Taper";
+                        foreach (var elem in stbFigure.Elements(tag))
+                        {
+                            if ((string)elem.Attribute("pos") == "END")
+                            {
+                                Width = (double)stbFigure.Element(tag)?.Attribute("width");
+                                Depth = (double)stbFigure.Element(tag)?.Attribute("depth");
+                            }
+                        }
+                    }
+                    else if (stbFigure.Element(xmlns + "StbSecBeam_RC_Haunch") != null)
+                    {
+                        tag = xmlns + "StbSecBeam_RC_Haunch";
+                        foreach (var elem in stbFigure.Elements(tag))
+                        {
+                            if ((string)elem.Attribute("pos") == "CENTER")
+                            {
+                                Width = (double)stbFigure.Element(tag)?.Attribute("width");
+                                Depth = (double)stbFigure.Element(tag)?.Attribute("depth");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Width = 0;
+                        Depth = 0;
+                    }
+
+                    break;
             }
         }
     }
@@ -672,72 +851,83 @@ namespace HoaryFox.STB
     {
         public List<double> BarList { get; } = new List<double>();
 
-        public void Load(XElement stbBeam)
+        public void Load(XElement stbBeam, StbVersion version, string xmlns)
         {
-            string elementName;
-            var stbBar = stbBeam.Element("StbSecBar_Arrangement");
-
-            if (stbBar.Element("StbSecBeam_Start_Center_End_Section") != null)
-                elementName = "StbSecBeam_Start_Center_End_Section";
-            else if (stbBar.Element("StbSecBeam_Start_End_Section") != null)
-                elementName = "StbSecBeam_Start_End_Section";
-            else if (stbBar.Element("StbSecBeam_Same_Section") != null)
-                elementName = "StbSecBeam_Same_Section";
-            else
+            switch (version)
             {
-                BarList.AddRange(new List<double> { 2, 2, 0, 0, 0, 0, 200, 2 });
-                return;
+                case StbVersion.Ver1:
+                    string elementName;
+                    var stbBar = stbBeam.Element("StbSecBar_Arrangement");
+                    if (stbBar == null)
+                        break;
+
+                    if (stbBar.Element("StbSecBeam_Start_Center_End_Section") != null)
+                        elementName = "StbSecBeam_Start_Center_End_Section";
+                    else if (stbBar.Element("StbSecBeam_Start_End_Section") != null)
+                        elementName = "StbSecBeam_Start_End_Section";
+                    else if (stbBar.Element("StbSecBeam_Same_Section") != null)
+                        elementName = "StbSecBeam_Same_Section";
+                    else
+                    {
+                        BarList.AddRange(new List<double> { 2, 2, 0, 0, 0, 0, 200, 2 });
+                        return;
+                    }
+
+                    var stbBarElem = stbBar.Element(elementName);
+                    if (stbBarElem == null)
+                        break;
+
+                    // Main 1
+                    if (stbBarElem.Attribute("count_main_top_1st") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_main_top_1st"));
+                    else
+                        BarList.Add(0);
+                    if (stbBarElem.Attribute("count_main_bottom_1st") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_main_bottom_1st"));
+                    else
+                        BarList.Add(0);
+
+                    // Main2
+                    if (stbBarElem.Attribute("count_main_top_2nd") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_main_top_2nd"));
+                    else
+                        BarList.Add(0);
+                    if (stbBarElem.Attribute("count_main_bottom_2nd") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_main_bottom_2nd"));
+                    else
+                        BarList.Add(0);
+
+                    // Main3
+                    if (stbBarElem.Attribute("count_main_top_3rd") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_main_top_3rd"));
+                    else
+                        BarList.Add(0);
+                    if (stbBarElem.Attribute("count_main_bottom_3rd") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_main_bottom_3rd"));
+                    else
+                        BarList.Add(0);
+
+                    // Band
+                    if (stbBarElem.Attribute("pitch_stirrup") != null)
+                        BarList.Add((double)stbBarElem.Attribute("pitch_stirrup"));
+                    else
+                        BarList.Add(0);
+                    if (stbBarElem.Attribute("count_stirrup") != null)
+                        BarList.Add((double)stbBarElem.Attribute("count_stirrup"));
+                    else
+                        BarList.Add(0);
+                    
+                    break;
+                case StbVersion.Ver2:
+                    break;
             }
-
-            var stbBarElem = stbBar.Element(elementName);
-
-            // Main 1
-            if (stbBarElem.Attribute("count_main_top_1st") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_main_top_1st"));
-            else
-                BarList.Add(0);
-            if (stbBarElem.Attribute("count_main_bottom_1st") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_main_bottom_1st"));
-            else
-                BarList.Add(0);
-
-            // Main2
-            if (stbBarElem.Attribute("count_main_top_2nd") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_main_top_2nd"));
-            else
-                BarList.Add(0);
-            if (stbBarElem.Attribute("count_main_bottom_2nd") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_main_bottom_2nd"));
-            else
-                BarList.Add(0);
-
-            // Main3
-            if (stbBarElem.Attribute("count_main_top_3rd") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_main_top_3rd"));
-            else
-                BarList.Add(0);
-            if (stbBarElem.Attribute("count_main_bottom_3rd") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_main_bottom_3rd"));
-            else
-                BarList.Add(0);
-
-            // Band
-            if (stbBarElem.Attribute("pitch_stirrup") != null)
-                BarList.Add((double)stbBarElem.Attribute("pitch_stirrup"));
-            else
-                BarList.Add(0);
-            if (stbBarElem.Attribute("count_stirrup") != null)
-                BarList.Add((double)stbBarElem.Attribute("count_stirrup"));
-            else
-                BarList.Add(0);
         }
     }
-
 
     /// <summary>
     /// S梁断面
     /// </summary>
-    public class StbSecBeamS:StbBase
+    public class StbSecBeamS:StbSections
     {
         /// <summary>
         /// 部材のID
@@ -781,12 +971,16 @@ namespace HoaryFox.STB
         /// 与えられたstbデータからS梁断面を取得する。
         /// </summary>
         /// <param name="stbData"></param>
-        public override void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var stbStBeams = stbData.Root.Descendants("StbSecBeam_S");
+            if (stbData.Root == null)
+                return;
+            
+            var stbStBeams = stbData.Root.Descendants(xmlns + "StbSecBeam_S");
             foreach (var stbStBeam in stbStBeams)
             {
-
                 // 必須コード
                 Id.Add((int)stbStBeam.Attribute("id"));
                 Name.Add((string)stbStBeam.Attribute("name"));
@@ -802,13 +996,14 @@ namespace HoaryFox.STB
                 }
                 if (stbStBeam.Attribute("kind_beam") != null)
                 {
-                    if ((string)stbStBeam.Attribute("kind_beam") == "GIRDER")
+                    switch ((string)stbStBeam.Attribute("kind_beam"))
                     {
-                        KindBeam.Add(KindsBeam.Girder);
-                    }
-                    else
-                    {
-                        KindBeam.Add(KindsBeam.Beam);
+                        case "GIRDER":
+                            KindBeam.Add(KindsBeam.Girder);
+                            break;
+                        default:
+                            KindBeam.Add(KindsBeam.Beam);
+                            break;
                     }
                 }
                 else
@@ -850,7 +1045,7 @@ namespace HoaryFox.STB
 
                 // 子要素 StbSecSteelBeam
                 var stbSecSteelBeam = new StbSecSteelBeam();
-                stbSecSteelBeam.Load(stbStBeam);
+                stbSecSteelBeam.Load(stbStBeam, version, xmlns);
                 Shape.Add(stbSecSteelBeam.Shape);
             }
         }
@@ -866,23 +1061,90 @@ namespace HoaryFox.STB
         public string StrengthMain { get; private set; }
         public string StrengthWeb { get; private set; }
 
-        public void Load(XElement stbStBeam)
+        public void Load(XElement stbStBeam, StbVersion version, string xmlns)
         {
-            var secStBeam = stbStBeam.Element("StbSecSteelBeam");
-
-            // 必須コード
-            Pos = (string)secStBeam.Attribute("pos");
-            Shape = (string)secStBeam.Attribute("shape");
-            StrengthMain = (string)secStBeam.Attribute("strength_main");
-
-            // 必須ではないコード
-            if (secStBeam.Attribute("strength_web") != null)
+            XElement stbFigure;
+            switch (version)
             {
-                StrengthWeb = (string)secStBeam.Attribute("strength_web");
-            }
-            else
-            {
-                StrengthWeb = string.Empty;
+                case StbVersion.Ver1:
+                    stbFigure = stbStBeam.Element("StbSecSteelBeam");
+                    if (stbFigure == null)
+                        break;
+
+                    // 必須コード
+                    Pos = (string)stbFigure.Attribute("pos");
+                    Shape = (string)stbFigure.Attribute("shape");
+                    StrengthMain = (string)stbFigure.Attribute("strength_main");
+
+                    // 必須ではないコード
+                    if (stbFigure.Attribute("strength_web") != null)
+                        StrengthWeb = (string)stbFigure.Attribute("strength_web");
+                    else
+                        StrengthWeb = string.Empty;
+                    
+                    break;
+                case StbVersion.Ver2:
+                    string tag;
+                    stbFigure = stbStBeam.Element(xmlns + "StbSecSteelFigureBeam_S");
+                    if (stbFigure == null)
+                        break;
+
+                    if (stbFigure.Element(xmlns + "StbSecSteelBeam_S_Straight") != null)
+                    {
+                        tag = xmlns + "StbSecSteelBeam_S_Straight";
+                        Shape = (string)stbFigure.Element(tag)?.Attribute("shape");
+                        StrengthMain = (string)stbFigure.Element(tag)?.Attribute("strength_main");
+                    }
+                    else if (stbFigure.Element(xmlns + "StbSecSteelBeam_S_Taper") != null)
+                    {
+                        tag = xmlns + "StbSecSteelBeam_S_Taper";
+                        foreach (var elem in stbFigure.Elements(tag))
+                        {
+                            if ((string)elem.Attribute("pos") == "END")
+                            {
+                                Shape = (string)stbFigure.Element(tag)?.Attribute("shape");
+                                StrengthMain = (string)stbFigure.Element(tag)?.Attribute("strength_main");
+                            }
+                        }
+                    }
+                    else if (stbFigure.Element(xmlns + "StbSecSteelBeam_S_Joint") != null)
+                    {
+                        tag = xmlns + "StbSecSteelBeam_S_Joint";
+                        foreach (var elem in stbFigure.Elements(tag))
+                        {
+                            if ((string)elem.Attribute("pos") == "CENTER")
+                            {
+                                Shape = (string)stbFigure.Element(tag)?.Attribute("shape");
+                                StrengthMain = (string)stbFigure.Element(tag)?.Attribute("strength_main");
+                            }
+                        }
+                    }
+                    else if (stbFigure.Elements(xmlns + "StbSecSteelBeam_S_Haunch") != null)
+                    {
+                        tag = xmlns + "StbSecSteelBeam_S_Haunch";
+                        foreach (var elem in stbFigure.Elements(tag))
+                        {
+                            if ((string)elem.Attribute("pos") == "CENTER")
+                            {
+                                Shape = (string)stbFigure.Element(tag)?.Attribute("shape");
+                                StrengthMain = (string)stbFigure.Element(tag)?.Attribute("strength_main");
+                            }
+                        }
+                    }
+                    else if (stbFigure.Element(xmlns + "StbSecSteelBeam_S_FiveTypes") != null)
+                    {
+                        tag = xmlns + "StbSecSteelBeam_S_FiveTypes";
+                        foreach (var elem in stbFigure.Elements(tag))
+                        {
+                            if ((string)elem.Attribute("pos") == "CENTER")
+                            {
+                                Shape = (string)stbFigure.Element(tag)?.Attribute("shape");
+                                StrengthMain = (string)stbFigure.Element(tag)?.Attribute("strength_main");
+                            }
+                        }
+                    }
+
+                    break;
             }
         }
     }
@@ -890,14 +1152,14 @@ namespace HoaryFox.STB
     /// <summary>
     /// SRC梁断面
     /// </summary>
-    public class StbSecBeamSRC
+    public class StbSecBeamSRC:StbSections
     {
     }
 
     /// <summary>
     /// Sブレース断面
     /// </summary>
-    public class StbSecBraceS:StbBase
+    public class StbSecBraceS:StbSections
     {
         /// <summary>
         /// 部材のID
@@ -924,12 +1186,16 @@ namespace HoaryFox.STB
         /// 与えられたstbデータからSブレース断面を取得する。
         /// </summary>
         /// <param name="stbData"></param>
-        public override void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var stbStBraces = stbData.Root.Descendants("StbSecBrace_S");
+            if (stbData.Root == null)
+                return;
+            
+            var stbStBraces = stbData.Root.Descendants(xmlns + "StbSecBrace_S");
             foreach (var stbStBrace in stbStBraces)
             {
-
                 // 必須コード
                 Id.Add((int)stbStBrace.Attribute("id"));
                 Name.Add((string)stbStBrace.Attribute("name"));
@@ -945,13 +1211,14 @@ namespace HoaryFox.STB
                 }
                 if (stbStBrace.Attribute("kind_brace") != null)
                 {
-                    if ((string)stbStBrace.Attribute("kind_brace") == "HORIZONTAL")
+                    switch ((string)stbStBrace.Attribute("kind_brace"))
                     {
-                        KindBrace.Add(KindsBrace.Horizontal);
-                    }
-                    else
-                    {
-                        KindBrace.Add(KindsBrace.Vertical);
+                        case "HORIZONTAL":
+                            KindBrace.Add(KindsBrace.Horizontal);
+                            break;
+                        default:
+                            KindBrace.Add(KindsBrace.Vertical);
+                            break;
                     }
                 }
                 else
@@ -960,10 +1227,9 @@ namespace HoaryFox.STB
                 }
 
                 // 子要素 StbSecSteelBeam
-                StbSecSteelBrace stbSecSteelBrace = new StbSecSteelBrace();
-                stbSecSteelBrace.Load(stbStBrace);
+                var stbSecSteelBrace = new StbSecSteelBrace();
+                stbSecSteelBrace.Load(stbStBrace, version, xmlns);
                 Shape.Add(stbSecSteelBrace.Shape);
-
             }
         }
     }
@@ -982,23 +1248,62 @@ namespace HoaryFox.STB
         /// 属性の読み込み
         /// </summary>
         /// <param name="stbStBrace"></param>
-        public void Load(XElement stbStBrace)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XElement stbStBrace, StbVersion version, string xmlns)
         {
-            var secStBrace = stbStBrace.Element("StbSecSteelBrace");
-
-            // 必須コード
-            Pos = (string)secStBrace.Attribute("pos");
-            Shape = (string)secStBrace.Attribute("shape");
-            StrengthMain = (string)secStBrace.Attribute("strength_main");
-
-            // 必須ではないコード
-            if (secStBrace.Attribute("strength_web") != null)
+            XElement stbFigure;
+            switch (version)
             {
-                StrengthWeb = (string)secStBrace.Attribute("strength_web");
-            }
-            else
-            {
-                StrengthWeb = string.Empty;
+                case StbVersion.Ver1:
+                    stbFigure = stbStBrace.Element("StbSecSteelBrace");
+                    if (stbFigure == null)
+                        break;
+
+                    // 必須コード
+                    Pos = (string)stbFigure.Attribute("pos");
+                    Shape = (string)stbFigure.Attribute("shape");
+                    StrengthMain = (string)stbFigure.Attribute("strength_main");
+
+                    // 必須ではないコード
+                    if (stbFigure.Attribute("strength_web") != null)
+                        StrengthWeb = (string)stbFigure.Attribute("strength_web");
+                    else
+                        StrengthWeb = string.Empty;
+                    
+                    break;
+                case StbVersion.Ver2:
+                    string tag;
+                    stbFigure = stbStBrace.Element(xmlns + "StbSecSteelFigureBrace_S");
+                    if (stbFigure == null)
+                        break;
+
+                    if (stbFigure.Element(xmlns + "StbSecSteelBrace_S_Same") != null)
+                    {
+                        tag = xmlns + "StbSecSteelBrace_S_Same";
+                        Shape = (string)stbFigure.Element(tag)?.Attribute("shape");
+                        StrengthMain = (string)stbFigure.Element(tag)?.Attribute("strength_main");
+                    }
+                    else if (stbFigure.Element("StbSecSteelBrace_S_NotSame") != null)
+                    {
+                        tag = xmlns + "StbSecSteelBrace_S_NotSame";
+                        if ((string)stbFigure.Element(tag)?.Attribute("pos") == "TOP")
+                        {
+                            Shape = (string)stbFigure.Element(tag)?.Attribute("shape");
+                            StrengthMain = (string)stbFigure.Element(tag)?.Attribute("strength_main");
+                        }
+                    }
+                    else if (stbFigure.Element(xmlns + "StbSecSteelBrace_S_ThreeTypes") != null)
+                    {
+                        tag = xmlns + "StbSecSteelBrace_S_ThreeTypes";
+                        if ((string)stbFigure.Element(tag)?.Attribute("pos") == "CENTER")
+                        {
+                            Shape = (string)stbFigure.Element(tag)?.Attribute("shape");
+                            StrengthMain = (string)stbFigure.Element(tag)?.Attribute("strength_main");
+                        }
+                    }
+                    
+                    break;
             }
         }
     }
@@ -1027,7 +1332,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// 鉄骨断面
     /// </summary>
-    public class StbSecSteel:StbBase
+    public class StbSecSteel:StbSections
     {
         public List<string> Name { get; } = new List<string>();
         public List<float> P1 { get; } = new List<float>();
@@ -1038,24 +1343,26 @@ namespace HoaryFox.STB
 
         public StbSecRollH RollH { get; } = new StbSecRollH();
         public StbSecBuildH BuildH { get; } = new StbSecBuildH();
-        public StbSecRollBOX RollBOX { get; } = new StbSecRollBOX();
-        public StbSecBuildBOX BuildBOX { get; } = new StbSecBuildBOX();
+        public StbSecRollBox RollBOX { get; } = new StbSecRollBox();
+        public StbSecBuildBox BuildBOX { get; } = new StbSecBuildBox();
         public StbSecPipe Pipe { get; } = new StbSecPipe();
         public StbSecRollT RollT { get; } = new StbSecRollT();
         public StbSecRollC RollC { get; } = new StbSecRollC();
         public StbSecRollL RollL { get; } = new StbSecRollL();
         public StbSecRollLipC RollLipC { get; } = new StbSecRollLipC();
-        public StbSecRollFB RollFB { get; } = new StbSecRollFB();
-        public StbSecRollBar RollBar { get; } = new StbSecRollBar();
+        public StbSecFlatBar FlatBar { get; } = new StbSecFlatBar();
+        public StbSecRoundBar RoundBar { get; } = new StbSecRoundBar();
 
         /// <summary>
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public override void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             // TODO 継承を使ってきれいに書き直す
-            RollH.Load(stbData);
+            RollH.Load(stbData, version, xmlns);
             Name.AddRange(RollH.Name);
             P1.AddRange(RollH.A);
             P2.AddRange(RollH.B);
@@ -1063,7 +1370,7 @@ namespace HoaryFox.STB
             P4.AddRange(RollH.T2);
             ShapeType.AddRange(RollH.ShapeType);
 
-            BuildH.Load(stbData);
+            BuildH.Load(stbData, version, xmlns);
             Name.AddRange(BuildH.Name);
             P1.AddRange(BuildH.A);
             P2.AddRange(BuildH.B);
@@ -1071,7 +1378,7 @@ namespace HoaryFox.STB
             P4.AddRange(BuildH.T2);
             ShapeType.AddRange(BuildH.ShapeType);
 
-            RollBOX.Load(stbData);
+            RollBOX.Load(stbData, version, xmlns);
             Name.AddRange(RollBOX.Name);
             P1.AddRange(RollBOX.A);
             P2.AddRange(RollBOX.B);
@@ -1079,7 +1386,7 @@ namespace HoaryFox.STB
             P4.AddRange(RollBOX.R);
             ShapeType.AddRange(RollBOX.ShapeType);
 
-            BuildBOX.Load(stbData);
+            BuildBOX.Load(stbData, version, xmlns);
             Name.AddRange(BuildBOX.Name);
             P1.AddRange(BuildBOX.A);
             P2.AddRange(BuildBOX.B);
@@ -1087,7 +1394,7 @@ namespace HoaryFox.STB
             P4.AddRange(BuildBOX.T2);
             ShapeType.AddRange(BuildBOX.ShapeType);
 
-            Pipe.Load(stbData);
+            Pipe.Load(stbData, version, xmlns);
             Name.AddRange(Pipe.Name);
             P1.AddRange(Pipe.T);
             P2.AddRange(Pipe.D);
@@ -1095,7 +1402,7 @@ namespace HoaryFox.STB
             P4.AddRange(new List<float>(new float[Pipe.D.Count]));
             ShapeType.AddRange(Pipe.ShapeType);
 
-            RollT.Load(stbData);
+            RollT.Load(stbData, version, xmlns);
             Name.AddRange(RollT.Name);
             P1.AddRange(RollT.A);
             P2.AddRange(RollT.B);
@@ -1103,7 +1410,7 @@ namespace HoaryFox.STB
             P4.AddRange(RollT.T2);
             ShapeType.AddRange(RollT.ShapeType);
 
-            RollC.Load(stbData);
+            RollC.Load(stbData, version, xmlns);
             Name.AddRange(RollC.Name);
             P1.AddRange(RollC.A);
             P2.AddRange(RollC.B);
@@ -1111,7 +1418,7 @@ namespace HoaryFox.STB
             P4.AddRange(RollC.T2);
             ShapeType.AddRange(RollC.ShapeType);
 
-            RollL.Load(stbData);
+            RollL.Load(stbData, version, xmlns);
             Name.AddRange(RollL.Name);
             P1.AddRange(RollL.A);
             P2.AddRange(RollL.B);
@@ -1119,7 +1426,7 @@ namespace HoaryFox.STB
             P4.AddRange(RollL.T2);
             ShapeType.AddRange(RollL.ShapeType);
 
-            RollLipC.Load(stbData);
+            RollLipC.Load(stbData, version, xmlns);
             Name.AddRange(RollLipC.Name);
             P1.AddRange(RollLipC.H);
             P2.AddRange(RollLipC.A);
@@ -1127,21 +1434,21 @@ namespace HoaryFox.STB
             P4.AddRange(RollLipC.T);
             ShapeType.AddRange(RollLipC.ShapeType);
 
-            RollFB.Load(stbData);
-            Name.AddRange(RollFB.Name);
-            P1.AddRange(RollFB.B);
-            P2.AddRange(RollFB.T);
+            FlatBar.Load(stbData, version, xmlns);
+            Name.AddRange(FlatBar.Name);
+            P1.AddRange(FlatBar.B);
+            P2.AddRange(FlatBar.T);
             P3.AddRange(new List<float>(new float[Pipe.D.Count]));
             P4.AddRange(new List<float>(new float[Pipe.D.Count]));
-            ShapeType.AddRange(RollFB.ShapeType);
+            ShapeType.AddRange(FlatBar.ShapeType);
 
-            RollBar.Load(stbData);
-            Name.AddRange(RollBar.Name);
-            P1.AddRange(RollBar.R);
-            P2.AddRange(RollBar.R);
+            RoundBar.Load(stbData, version, xmlns);
+            Name.AddRange(RoundBar.Name);
+            P1.AddRange(RoundBar.R);
+            P2.AddRange(RoundBar.R);
             P3.AddRange(new List<float>(new float[Pipe.D.Count]));
             P4.AddRange(new List<float>(new float[Pipe.D.Count]));
-            ShapeType.AddRange(RollBar.ShapeType);
+            ShapeType.AddRange(RoundBar.ShapeType);
         }
     }
 
@@ -1187,19 +1494,25 @@ namespace HoaryFox.STB
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public void Load(XDocument stbData)
+        /// <param name="stbVersion"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XDocument stbData, StbVersion stbVersion, string xmlns)
         {
-            var StSections = stbData.Root.Descendants("StbSecRoll-H");
+            if (stbData.Root == null)
+                return;
+            
+            var stSecSteel = stbData.Root.Descendants(xmlns + "StbSecSteel");
+            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-H");
 
-            foreach (var StSection in StSections)
+            foreach (var stSection in stSections)
             {
                 // 必須コード
-                Name.Add((string)StSection.Attribute("name"));
-                A.Add((float)StSection.Attribute("A"));
-                B.Add((float)StSection.Attribute("B"));
-                T1.Add((float)StSection.Attribute("t1"));
-                T2.Add((float)StSection.Attribute("t2"));
-                R.Add((float)StSection.Attribute("r"));
+                Name.Add((string)stSection.Attribute("name"));
+                A.Add((float)stSection.Attribute("A"));
+                B.Add((float)stSection.Attribute("B"));
+                T1.Add((float)stSection.Attribute("t1"));
+                T2.Add((float)stSection.Attribute("t2"));
+                R.Add((float)stSection.Attribute("r"));
 
                 ShapeType.Add(ShapeTypes.H);
             }
@@ -1240,18 +1553,24 @@ namespace HoaryFox.STB
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var StSections = stbData.Root.Descendants("StbSecBuild-H");
+            if (stbData.Root == null)
+                return;
+            
+            var stSecSteel = stbData.Root.Descendants(xmlns + "StbSecSteel");
+            var stSections = stSecSteel.Elements(xmlns + "StbSecBuild-H");
 
-            foreach (var StSection in StSections)
+            foreach (var stSection in stSections)
             {
                 // 必須コード
-                Name.Add((string)StSection.Attribute("name"));
-                A.Add((float)StSection.Attribute("A"));
-                B.Add((float)StSection.Attribute("B"));
-                T1.Add((float)StSection.Attribute("t1"));
-                T2.Add((float)StSection.Attribute("t2"));
+                Name.Add((string)stSection.Attribute("name"));
+                A.Add((float)stSection.Attribute("A"));
+                B.Add((float)stSection.Attribute("B"));
+                T1.Add((float)stSection.Attribute("t1"));
+                T2.Add((float)stSection.Attribute("t2"));
 
                 ShapeType.Add(ShapeTypes.H);
             }
@@ -1261,7 +1580,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// ロール箱形断面
     /// </summary>
-    public class StbSecRollBOX
+    public class StbSecRollBox
     {
         /// <summary>
         /// 部材の名前
@@ -1296,18 +1615,32 @@ namespace HoaryFox.STB
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var StSections = stbData.Root.Descendants("StbSecRoll-BOX");
+            if (stbData.Root == null)
+                return;
+            
+            var stSecSteel = stbData.Root.Descendants(xmlns + "StbSecSteel");
+            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-BOX");
 
-            foreach (var StSection in StSections)
+            foreach (var stSection in stSections)
             {
                 // 必須コード
-                Name.Add((string)StSection.Attribute("name"));
-                A.Add((float)StSection.Attribute("A"));
-                B.Add((float)StSection.Attribute("B"));
-                T.Add((float)StSection.Attribute("t"));
-                R.Add((float)StSection.Attribute("R"));
+                Name.Add((string) stSection.Attribute("name"));
+                A.Add((float) stSection.Attribute("A"));
+                B.Add((float) stSection.Attribute("B"));
+                T.Add((float) stSection.Attribute("t"));
+                switch (version)
+                {
+                    case StbVersion.Ver1:
+                        R.Add((float) stSection.Attribute("R"));
+                        break;
+                    case StbVersion.Ver2:
+                        R.Add((float) stSection.Attribute("r"));
+                        break;
+                }
 
                 ShapeType.Add(ShapeTypes.RollBOX);
             }
@@ -1317,7 +1650,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// ビルト箱形断面
     /// </summary>
-    public class StbSecBuildBOX
+    public class StbSecBuildBox
     {
         /// <summary>
         /// 部材の名前
@@ -1348,18 +1681,24 @@ namespace HoaryFox.STB
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var StSections = stbData.Root.Descendants("StbSecBuild-BOX");
+            if (stbData.Root == null)
+                return;
+            
+            var stSecSteel = stbData.Root.Descendants(xmlns + "StbSecSteel");
+            var stSections = stSecSteel.Elements(xmlns + "StbSecBuild-BOX");
 
-            foreach (var StSection in StSections)
+            foreach (var stSection in stSections)
             {
                 // 必須コード
-                Name.Add((string)StSection.Attribute("name"));
-                A.Add((float)StSection.Attribute("A"));
-                B.Add((float)StSection.Attribute("B"));
-                T1.Add((float)StSection.Attribute("t1"));
-                T2.Add((float)StSection.Attribute("t2"));
+                Name.Add((string)stSection.Attribute("name"));
+                A.Add((float)stSection.Attribute("A"));
+                B.Add((float)stSection.Attribute("B"));
+                T1.Add((float)stSection.Attribute("t1"));
+                T2.Add((float)stSection.Attribute("t2"));
 
                 ShapeType.Add(ShapeTypes.BuildBOX);
             }
@@ -1392,16 +1731,22 @@ namespace HoaryFox.STB
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var StSections = stbData.Root.Descendants("StbSecPipe");
+            if (stbData.Root == null)
+                return;
+            
+            var stSecSteel = stbData.Root.Descendants(xmlns + "StbSecSteel");
+            var stSections = stSecSteel.Elements(xmlns + "StbSecPipe");
 
-            foreach (var StSection in StSections)
+            foreach (var stSection in stSections)
             {
                 // 必須コード
-                Name.Add((string)StSection.Attribute("name"));
-                D.Add((float)StSection.Attribute("D"));
-                T.Add((float)StSection.Attribute("t"));
+                Name.Add((string)stSection.Attribute("name"));
+                D.Add((float)stSection.Attribute("D"));
+                T.Add((float)stSection.Attribute("t"));
 
                 ShapeType.Add(ShapeTypes.Pipe);
             }
@@ -1450,19 +1795,25 @@ namespace HoaryFox.STB
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var StSections = stbData.Root.Descendants("StbSecRoll-T");
+            if (stbData.Root == null)
+                return;
+            
+            var stSecSteel = stbData.Root.Descendants(xmlns + "StbSecSteel");
+            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-T");
 
-            foreach (var StSection in StSections)
+            foreach (var stSection in stSections)
             {
                 // 必須コード
-                Name.Add((string)StSection.Attribute("name"));
-                A.Add((float)StSection.Attribute("A"));
-                B.Add((float)StSection.Attribute("B"));
-                T1.Add((float)StSection.Attribute("t1"));
-                T2.Add((float)StSection.Attribute("t2"));
-                R.Add((float)StSection.Attribute("r1"));
+                Name.Add((string)stSection.Attribute("name"));
+                A.Add((float)stSection.Attribute("A"));
+                B.Add((float)stSection.Attribute("B"));
+                T1.Add((float)stSection.Attribute("t1"));
+                T2.Add((float)stSection.Attribute("t2"));
+                R.Add((float)stSection.Attribute("r"));
 
                 ShapeType.Add(ShapeTypes.T);
             }
@@ -1515,20 +1866,26 @@ namespace HoaryFox.STB
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var StSections = stbData.Root.Descendants("StbSecRoll-C");
+            if (stbData.Root == null)
+                return;
+            
+            var stSecSteel = stbData.Root.Descendants(xmlns + "StbSecSteel");
+            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-C");
 
-            foreach (var StSection in StSections)
+            foreach (var stSection in stSections)
             {
                 // 必須コード
-                Name.Add((string)StSection.Attribute("name"));
-                A.Add((float)StSection.Attribute("A"));
-                B.Add((float)StSection.Attribute("B"));
-                T1.Add((float)StSection.Attribute("t1"));
-                T2.Add((float)StSection.Attribute("t2"));
-                R1.Add((float)StSection.Attribute("r1"));
-                R2.Add((float)StSection.Attribute("r2"));
+                Name.Add((string)stSection.Attribute("name"));
+                A.Add((float)stSection.Attribute("A"));
+                B.Add((float)stSection.Attribute("B"));
+                T1.Add((float)stSection.Attribute("t1"));
+                T2.Add((float)stSection.Attribute("t2"));
+                R1.Add((float)stSection.Attribute("r1"));
+                R2.Add((float)stSection.Attribute("r2"));
 
                 ShapeType.Add(ShapeTypes.C);
             }
@@ -1581,20 +1938,26 @@ namespace HoaryFox.STB
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var StSections = stbData.Root.Descendants("StbSecRoll-L");
+            if (stbData.Root == null)
+                return;
+            
+            var stSecSteel = stbData.Root.Descendants(xmlns + "StbSecSteel");
+            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-L");
 
-            foreach (var StSection in StSections)
+            foreach (var stSection in stSections)
             {
                 // 必須コード
-                Name.Add((string)StSection.Attribute("name"));
-                A.Add((float)StSection.Attribute("A"));
-                B.Add((float)StSection.Attribute("B"));
-                T1.Add((float)StSection.Attribute("t1"));
-                T2.Add((float)StSection.Attribute("t2"));
-                R1.Add((float)StSection.Attribute("r1"));
-                R2.Add((float)StSection.Attribute("r2"));
+                Name.Add((string)stSection.Attribute("name"));
+                A.Add((float)stSection.Attribute("A"));
+                B.Add((float)stSection.Attribute("B"));
+                T1.Add((float)stSection.Attribute("t1"));
+                T2.Add((float)stSection.Attribute("t2"));
+                R1.Add((float)stSection.Attribute("r1"));
+                R2.Add((float)stSection.Attribute("r2"));
 
                 ShapeType.Add(ShapeTypes.L);
             }
@@ -1639,18 +2002,24 @@ namespace HoaryFox.STB
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var StSections = stbData.Root.Descendants("StbSecRoll-LipC");
+            if (stbData.Root == null)
+                return;
+            
+            var stSecSteel = stbData.Root.Descendants(xmlns + "StbSecSteel");
+            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-LipC");
 
-            foreach (var StSection in StSections)
+            foreach (var stSection in stSections)
             {
                 // 必須コード
-                Name.Add((string)StSection.Attribute("name"));
-                H.Add((float)StSection.Attribute("H"));
-                A.Add((float)StSection.Attribute("A"));
-                C.Add((float)StSection.Attribute("C"));
-                T.Add((float)StSection.Attribute("t"));
+                Name.Add((string)stSection.Attribute("name"));
+                H.Add((float)stSection.Attribute("H"));
+                A.Add((float)stSection.Attribute("A"));
+                C.Add((float)stSection.Attribute("C"));
+                T.Add((float)stSection.Attribute("t"));
 
                 ShapeType.Add(ShapeTypes.C);
             }
@@ -1660,7 +2029,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// フラットバー断面
     /// </summary>
-    public class StbSecRollFB
+    public class StbSecFlatBar
     {
         /// <summary>
         /// 部材の名前
@@ -1683,16 +2052,32 @@ namespace HoaryFox.STB
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var StSections = stbData.Root.Descendants("StbSecRoll-FB");
+            if (stbData.Root == null)
+                return;
+            
+            IEnumerable<XElement> stSections  = null;
+            var stSecSteel = stbData.Root.Descendants(xmlns + "StbSecSteel");
+            switch (version)
+            {
+                case StbVersion.Ver1:
+                    stSections = stSecSteel.Elements(xmlns + "StbSecRoll-FB");
+                    break;
+                case StbVersion.Ver2:
+                    stSections = stSecSteel.Elements(xmlns + "StbSecFlatBar");
+                    break;
+            }
 
-            foreach (var StSection in StSections)
+            if (stSections == null) return;
+            foreach (var stSection in stSections)
             {
                 // 必須コード
-                Name.Add((string)StSection.Attribute("name"));
-                B.Add((float)StSection.Attribute("B"));
-                T.Add((float)StSection.Attribute("t"));
+                Name.Add((string) stSection.Attribute("name"));
+                B.Add((float) stSection.Attribute("B"));
+                T.Add((float) stSection.Attribute("t"));
 
                 ShapeType.Add(ShapeTypes.FB);
             }
@@ -1702,7 +2087,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// 丸鋼断面
     /// </summary>
-    public class StbSecRollBar
+    public class StbSecRoundBar
     {
         /// <summary>
         /// 部材の名前
@@ -1721,15 +2106,32 @@ namespace HoaryFox.STB
         /// 属性情報の読み込み
         /// </summary>
         /// <param name="stbData"></param>
-        public void Load(XDocument stbData)
+        /// <param name="version"></param>
+        /// <param name="xmlns"></param>
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var StSections = stbData.Root.Descendants("StbSecRoll-Bar");
+            if (stbData.Root == null)
+                return;
+            
+            IEnumerable<XElement> stSections  = null;
+            var stSecSteel = stbData.Root.Descendants(xmlns + "StbSecSteel");
 
-            foreach (var StSection in StSections)
+            switch (version)
+            {
+                case StbVersion.Ver1:
+                    stSections = stbData.Root.Descendants(xmlns + "StbSecRoll-Bar");
+                    break;
+                case StbVersion.Ver2:
+                    stSections = stbData.Root.Descendants(xmlns + "StbSecRoundBar");
+                    break;
+            }
+
+            if (stSections == null) return;
+            foreach (var stSection in stSections)
             {
                 // 必須コード
-                Name.Add((string)StSection.Attribute("name"));
-                R.Add((float)StSection.Attribute("R"));
+                Name.Add((string) stSection.Attribute("name"));
+                R.Add((float) stSection.Attribute("R"));
 
                 ShapeType.Add(ShapeTypes.Bar);
             }

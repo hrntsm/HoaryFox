@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Xml;
 using System.Xml.Linq;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
@@ -7,7 +9,7 @@ namespace HoaryFox.STB
 {
     public class StbBase
     {
-        public virtual void Load(XDocument stbData)
+        public virtual void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
         {
         }
     }
@@ -17,7 +19,9 @@ namespace HoaryFox.STB
         public readonly string Path;
         public readonly double ToleLength;
         public readonly double ToleAngle;
-        
+
+        public string Xmlns;
+        public StbVersion Version;
         public StbNodes Nodes;
         public StbColumns Columns;
         public StbPosts Posts;
@@ -41,7 +45,30 @@ namespace HoaryFox.STB
             ToleAngle = toleAngle;
             
             var xDocument = XDocument.Load(Path);
-            
+
+            var root = xDocument.Root;
+            if (root != null)
+            {
+                if (root.Attribute("xmlns") != null)
+                {
+                    Xmlns = "{" + (string)root.Attribute("xmlns") + "}";
+                }
+                else
+                {
+                    Xmlns = string.Empty;
+                }
+
+                var tmp = (string) root.Attribute("version");
+                switch (tmp.Split('.')[0])
+                {
+                    case "1":
+                        Version = StbVersion.Ver1;
+                        break;
+                    case "2":
+                        Version = StbVersion.Ver2;
+                        break;
+                }
+            }
             Init();
             Load(xDocument);
         }
@@ -75,8 +102,14 @@ namespace HoaryFox.STB
 
             foreach (var member in members)
             {
-                member.Load(xDoc);
+                member.Load(xDoc, Version, Xmlns);
             }
+        }
+        
+        public enum StbVersion
+        {
+            Ver1,
+            Ver2
         }
     }
 }
