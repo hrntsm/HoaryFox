@@ -42,5 +42,5 @@ Quote from [building SMART Japan Structural Design Subcommittee](https://en.buil
 
 + Twitter : [@hiron_rgkr](https://twitter.com/hiron_rgkr)
 + URL : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
-+ Mail : stevia(at)hrntsm.com
++ Mail : support(at)hrntsm.com
   + change (at) to @
