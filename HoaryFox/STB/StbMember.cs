@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Authentication.ExtendedProtection.Configuration;
 using System.Xml.Linq;
 using HoaryFox.STB;
+using Rhino.ApplicationSettings;
 using Rhino.Geometry;
+using static HoaryFox.STB.StbData;
 
 namespace HoaryFox.STB
 {
@@ -29,7 +34,7 @@ namespace HoaryFox.STB
         public override string Tag { get; } = "StbColumn";
         public override FrameType FrameType { get; } = FrameType.Column;
 
-        public override void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -41,11 +46,11 @@ namespace HoaryFox.STB
                     IdSection.Add((int) stbElem.Attribute("id_section"));
                     switch (version)
                     {
-                        case StbData.StbVersion.Ver1:
+                        case StbVersion.Ver1:
                             IdNodeStart.Add((int) stbElem.Attribute("idNode_bottom"));
                             IdNodeEnd.Add((int) stbElem.Attribute("idNode_top"));
                             break;
-                        case StbData.StbVersion.Ver2:
+                        case StbVersion.Ver2:
                             IdNodeStart.Add((int) stbElem.Attribute("id_node_bottom"));
                             IdNodeEnd.Add((int) stbElem.Attribute("id_node_top"));
                             break;
@@ -87,7 +92,7 @@ namespace HoaryFox.STB
         public override string Tag { get; } = "StbPost";
         public override FrameType FrameType { get; } = FrameType.Post;
 
-        public override void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -99,11 +104,11 @@ namespace HoaryFox.STB
                     IdSection.Add((int)stbElem.Attribute("id_section"));
                     switch (version)
                     {
-                        case StbData.StbVersion.Ver1:
+                        case StbVersion.Ver1:
                             IdNodeStart.Add((int) stbElem.Attribute("idNode_bottom"));
                             IdNodeEnd.Add((int) stbElem.Attribute("idNode_top"));
                             break;
-                        case StbData.StbVersion.Ver2:
+                        case StbVersion.Ver2:
                             IdNodeStart.Add((int) stbElem.Attribute("id_node_bottom"));
                             IdNodeEnd.Add((int) stbElem.Attribute("id_node_top"));
                             break;
@@ -143,7 +148,7 @@ namespace HoaryFox.STB
         public override FrameType FrameType { get; } = FrameType.Girder;
         public List<double> Level { get; } = new List<double>();
 
-        public override void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -155,11 +160,11 @@ namespace HoaryFox.STB
                     IdSection.Add((int)stbElem.Attribute("id_section"));
                     switch (version)
                     {
-                        case StbData.StbVersion.Ver1:
+                        case StbVersion.Ver1:
                             IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
                             IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
                             break;
-                        case StbData.StbVersion.Ver2:
+                        case StbVersion.Ver2:
                             IdNodeStart.Add((int)stbElem.Attribute("id_node_start"));
                             IdNodeEnd.Add((int)stbElem.Attribute("id_node_end"));
                             break;
@@ -210,7 +215,7 @@ namespace HoaryFox.STB
         public override FrameType FrameType { get; } = FrameType.Beam;
         public List<double> Level { get; } = new List<double>();
 
-        public override void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -222,11 +227,11 @@ namespace HoaryFox.STB
                     IdSection.Add((int)stbElem.Attribute("id_section"));
                     switch (version)
                     {
-                        case StbData.StbVersion.Ver1:
+                        case StbVersion.Ver1:
                             IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
                             IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
                             break;
-                        case StbData.StbVersion.Ver2:
+                        case StbVersion.Ver2:
                             IdNodeStart.Add((int)stbElem.Attribute("id_node_start"));
                             IdNodeEnd.Add((int)stbElem.Attribute("id_node_end"));
                             break;
@@ -276,7 +281,7 @@ namespace HoaryFox.STB
         public override string Tag { get; } = "StbBrace";
         public override FrameType FrameType { get; } = FrameType.Brace;
 
-        public override void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -288,11 +293,11 @@ namespace HoaryFox.STB
                     IdSection.Add((int)stbElem.Attribute("id_section"));
                     switch (version)
                     {
-                        case StbData.StbVersion.Ver1:
+                        case StbVersion.Ver1:
                             IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
                             IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
                             break;
-                        case StbData.StbVersion.Ver2:
+                        case StbVersion.Ver2:
                             IdNodeStart.Add((int)stbElem.Attribute("id_node_start"));
                             IdNodeEnd.Add((int)stbElem.Attribute("id_node_end"));
                             break;
@@ -338,7 +343,7 @@ namespace HoaryFox.STB
         public List<TypesHanch> TypeHaunch { get; } = new List<TypesHanch>();
         public List<List<int>> NodeIdList { get; } = new List<List<int>>();
 
-        public override void Load(XDocument stbDoc, StbData.StbVersion version, string xmlns)
+        public override void Load(XDocument stbDoc, StbVersion version, string xmlns)
         {
             if (stbDoc.Root != null)
             {
@@ -402,9 +407,10 @@ namespace HoaryFox.STB
     public class StbWalls:StbMembers
     {
         public List<List<int>> NodeIdList { get; } = new List<List<int>>();
+        public List<StbOpen> Opens { get; } = new List<StbOpen>();
         public List<KindsLayout> KindLayout { get; } = new List<KindsLayout>();
 
-        public override void Load(XDocument stbDoc, StbData.StbVersion version, string xmlns)
+        public override void Load(XDocument stbDoc, StbVersion version, string xmlns)
         {
             if (stbDoc.Root != null)
             {
@@ -440,7 +446,67 @@ namespace HoaryFox.STB
                     // 子要素 StbNodeid_List
                     var stbNodeIdList = new StbNodeIdList();
                     NodeIdList.Add(stbNodeIdList.Load(stbSlab, version));
+                    var stbOpen = new StbOpen();
+                    stbOpen.Load(stbSlab, version);
+                    Opens.Add(stbOpen);
                 }
+            }
+        }
+    }
+
+    public class StbOpen
+    {
+        public List<int> Id { get; } = new List<int>();
+        public List<string> Name { get; } = new List<string>();
+        public List<int> IdSection { get; } = new List<int>();
+        public List<double> PositionX { get; } = new List<double>();
+        public List<double> PositionY { get; } = new List<double>();
+        public List<double> LengthX { get; } = new List<double>();
+        public List<double> LengthY { get; } = new List<double>();
+        public List<double> Rotate { get; } = new List<double>();
+        
+        public void Load(XElement stbElem, StbVersion version)
+        {
+            switch (version)
+            {
+                case StbVersion.Ver1:
+                    var xOpens = stbElem.Elements("StbOpen");
+                    if (xOpens == null)
+                    {
+                            Id.Add(-1);
+                            Name.Add(string.Empty);
+                            IdSection.Add(-1);
+                            PositionX.Add(-1);
+                            PositionY.Add(-1);
+                            LengthX.Add(-1);
+                            LengthY.Add(-1);
+                            Rotate.Add(-1);
+                    }
+                    else
+                    {
+                        foreach (var xOpen in xOpens)
+                        {
+                            if (xOpen.Attribute("id") != null)
+                                Id.Add((int) xOpen.Attribute("id"));
+                            else
+                                Id.Add(0);
+
+                            if (xOpen.Attribute("name") != null)
+                                Name.Add((string)xOpen.Attribute("name"));
+                            else
+                                Name.Add(string.Empty);
+                        
+                            IdSection.Add((int)xOpen.Attribute("id_section"));
+                            PositionX.Add((double)xOpen.Attribute("position_X"));
+                            PositionY.Add((double)xOpen.Attribute("position_Y"));
+                            LengthX.Add((double)xOpen.Attribute("length_X"));
+                            LengthY.Add((double)xOpen.Attribute("length_Y"));
+                            Rotate.Add((double)xOpen.Attribute("rotate"));
+                        }
+                    }
+                    break;
+                case StbVersion.Ver2:
+                    break;
             }
         }
     }
