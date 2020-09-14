@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using HoaryFox.STB;
 using HoaryFox.STB.Member;
 using HoaryFox.STB.Model;
 using HoaryFox.STB.Section;
 using Rhino.Geometry;
+using Rhino.Geometry.Collections;
 
 namespace HoaryFox.Member
 {
@@ -17,72 +19,119 @@ namespace HoaryFox.Member
             _stbData = stbData;
         }
 
-        private List<Brep> GetPlaneBrep(List<Brep> brep, int count, Point3d[] pt)
+        private Brep GetPlaneBrep(int count, Point3d[] pt, StbOpen open)
         {
-            // TODO: 10節点までとりあえず対応。節点が同一線上にあるとたぶんエラーになるので要対応
-            switch (count)
+            Brep brep = null;
+            Brep planeBrep = null;
+            var tol = _stbData.ToleLength;
+            
+            // TODO: 10節点までとりあえず対応。節点が同一線上にあるとたぶんエラーになるので とりあえずtry-catch で対応
+            try
             {
-                case 3:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], _stbData.ToleLength));
-                    break;
-                case 4:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2],  pt[3], _stbData.ToleLength));
-                    break;
-                case 5:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[0], _stbData.ToleLength));
-                    break;
-                case 6:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[0], _stbData.ToleLength));
-                    break;
-                case 7:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[0], pt[3], _stbData.ToleLength));
-                    break;
-                case 8:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[0], pt[3], _stbData.ToleLength));
-                    break;
-                case 9:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[8], pt[0], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[3], pt[6], _stbData.ToleLength));
-                    break;
-                case 10:
-                    brep.Add(Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[8], pt[9], _stbData.ToleLength));
-                    brep.Add(Brep.CreateFromCornerPoints(pt[9], pt[0], pt[3], pt[6], _stbData.ToleLength));
-                    break;
+                switch (count)
+                {
+                    case 3:
+                        brep = Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], tol);
+                        break;
+                    case 4:
+                        brep = Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2],  pt[3], tol);
+                        break;
+                    case 5:
+                        brep = Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], tol);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[0], tol), tol, true);
+                        break;
+                    case 6:
+                        brep = Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], tol);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[0], pt[3], pt[4], pt[5], tol), tol, true);
+                        break;
+                    case 7:
+                        brep = Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], tol);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], tol), tol, false);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[6], pt[0], pt[3], tol), tol, true);
+                        break;
+                    case 8:
+                        brep = Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], tol);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], tol), tol, false);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[0], pt[3], tol), tol, true);
+                        break;
+                    case 9:
+                        brep = Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], tol);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], tol), tol, false);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[8], pt[0], tol), tol, false);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[0], pt[3], pt[6], tol), tol, true);
+                        break;
+                    case 10:
+                        brep = Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], tol);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[3], pt[4], pt[5], pt[6], tol), tol, false);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[6], pt[7], pt[8], pt[9], tol), tol, false);
+                        brep.Join(Brep.CreateFromCornerPoints(pt[9], pt[0], pt[3], pt[6], tol), tol, true);
+                        break;
+                    default:
+                        brep = null;
+                        break;
+                }
+            }
+            catch(NullReferenceException)
+            {
+                brep = Brep.CreateFromCornerPoints(pt[0], pt[1], pt[2], pt[3], tol);
             }
 
-            return brep;
+            if (open  != null)
+            {
+                if (open.Id.Count != 0  && brep != null)
+                {
+                    var surface = brep.Surfaces[0];
+                    var trimSurf = new List<Brep>();
+
+                    for (var i = 0; i < open.Id.Count; i++)
+                    {
+                        var intervalX = new Interval(open.PositionX[i], open.PositionX[i] + open.LengthX[i]);
+                        var intervalY = new Interval(open.PositionY[i], open.PositionY[i] + open.LengthY[i]);
+                        trimSurf.Add(surface.Trim(intervalX, intervalY).ToBrep());
+                    }
+                    try
+                    {
+                        var diffBrep = Brep.CreateBooleanDifference(new Brep[]{ brep }, trimSurf.ToArray(), tol)[0];
+                        planeBrep = diffBrep;
+                    }
+                    catch
+                    {
+                        planeBrep = brep;
+                    }
+                }
+                else
+                {
+                    planeBrep = brep;
+                }
+            }
+            else
+            {
+                planeBrep = brep;
+            }
+
+            return planeBrep;
         }
 
         public List<Brep> Slab(StbSlabs slabs)
         {
-            List<Brep> brep = new List<Brep>();
-            int slabNum = 0;
+            var brep = new List<Brep>();
+            var count = 0;
 
-            foreach (List<int> nodeIds in slabs.NodeIdList)
+            foreach (var nodeIds in slabs.NodeIdList)
             {
-                int[] index = new int[10];
-                Point3d[] pt = new Point3d[10];
-                double offset = slabs.Level[slabNum];
+                var index = new int[10];
+                var pt = new Point3d[10];
+                var offset = slabs.Level[count];
 
-                for (int i = 0; i < nodeIds.Count; i++)
+                for (var i = 0; i < nodeIds.Count; i++)
                 {
                     if (i > 9) continue;
                     index[i] = _stbData.Nodes.Id.IndexOf(nodeIds[i]);
                     pt[i] = new Point3d(_stbData.Nodes.X[index[i]], _stbData.Nodes.Y[index[i]], _stbData.Nodes.Z[index[i]] + offset);
                 }
                 
-                brep = GetPlaneBrep(brep, nodeIds.Count, pt);
-                slabNum++;
+                brep.Add(GetPlaneBrep(nodeIds.Count, pt, null));
+                count++;
             }
 
             return brep;
@@ -91,20 +140,22 @@ namespace HoaryFox.Member
         public List<Brep> Wall(StbWalls walls)
         {
             var brep = new List<Brep>();
+            var count = 0;
 
-            foreach (List<int> nodeIds in walls.NodeIdList)
+            foreach (var nodeIds in walls.NodeIdList)
             {
                 var index = new int[10];
                 var pt = new Point3d[10];
 
-                for (int i = 0; i < nodeIds.Count; i++)
+                for (var i = 0; i < nodeIds.Count; i++)
                 {
                     if (i > 9) continue;
                     index[i] = _stbData.Nodes.Id.IndexOf(nodeIds[i]);
                     pt[i] = new Point3d(_stbData.Nodes.X[index[i]], _stbData.Nodes.Y[index[i]], _stbData.Nodes.Z[index[i]]);
                 }
-                
-                brep = GetPlaneBrep(brep, nodeIds.Count, pt);
+
+                brep.Add(GetPlaneBrep(nodeIds.Count, pt, walls.Opens[count]));
+                count++;
             }
 
             return brep;
