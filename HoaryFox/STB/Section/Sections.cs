@@ -1,162 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
-using Grasshopper.Kernel.Geometry;
-using HoaryFox.Member;
 using static HoaryFox.STB.StbData;
 
-namespace HoaryFox.STB
+namespace HoaryFox.STB.Section
 {
-    /// <summary>
-    /// 主柱か間柱かの柱の種別
-    /// </summary>
-    public enum KindsColumn
-    {
-        Column,
-        Post
-    }
-
-    /// <summary>
-    /// 大梁か小梁かの梁種別
-    /// </summary>
-    public enum KindsBeam
-    {
-        Girder,
-        Beam
-    }
-
-    /// <summary>
-    /// ブレースが鉛直か水平かの梁種別
-    /// </summary>
-    public enum KindsBrace
-    {
-        Vertical,
-        Horizontal
-    }
-
-    /// <summary>
-    /// 柱脚形式
-    /// </summary>
-    public enum BaseTypes
-    {
-        /// <summary>
-        /// 露出柱脚
-        /// </summary>
-        Expose,
-        /// <summary>
-        /// 埋込柱脚
-        /// </summary>
-        Embedded,
-        /// <summary>
-        /// 非埋込柱脚
-        /// </summary>
-        Unembedded,
-        /// <summary>
-        /// 根巻柱脚
-        /// </summary>
-        Wrap
-    }
-
-    /// <summary>
-    /// ロールHの内での種別
-    /// </summary>
-    public enum RollHType
-    {
-        H,
-        SH
-    }
-
-    /// <summary>
-    /// ロールBOXの内での種別
-    /// </summary>
-    public enum RollBOXType
-    {
-        BCP,
-        BCR,
-        STKR,
-        ELSE
-    }
-
-    /// <summary>
-    /// ロールTの内での種別
-    /// </summary>
-    public enum RollTType
-    {
-        T,
-        ST
-    }
-
-    /// <summary>
-    /// 溝形の内での種別
-    /// </summary>
-    public enum RollCType
-    {
-        C,
-        DoubleC
-    }
-
-    /// <summary>
-    /// 山形の内での種別
-    /// </summary>
-    public enum RollLType
-    {
-        L,
-        DoubleL
-    }
-
-    public enum ShapeTypes
-    {
-        H,
-        L,
-        T,
-        C,
-        FB,
-        BOX,
-        Bar,
-        Pipe,
-        RollBOX,
-        BuildBOX
-    }
-
-    /// <summary>
-    /// 断面情報
-    /// </summary>
-    public class StbSections:StbBase
-    {
-        // TODO 一括でStbMemberに属するものを読み込めるようにする
-        // public void LoadAll(XDocument stbData) {
-        // }
-    }
-
     /// <summary>
     /// RC柱断面
     /// </summary>
-    public class StbSecColRC:StbSections
+    public class StbSecColumnRc : StbRcSections, IStbLoader
     {
-        /// <summary>
-        /// 部材のID
-        /// </summary>
-        public List<int> Id { get; } = new List<int>();
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
-        /// <summary>
-        /// 部材が所属する階
-        /// </summary>
-        public List<string> Floor { get; } = new List<string>();
         /// <summary>
         /// 部材が主柱か間柱かの区別
         /// </summary>
         public List<KindsColumn> KindColumn { get; } = new List<KindsColumn>();
-        /// <summary>
-        /// 主筋径
-        /// </summary>
-        public List<string> DBarMain { get; } = new List<string>();
-        /// <summary>
-        /// フープ径
-        /// </summary>
-        public List<string> DBarBand { get; } = new List<string>();
         /// <summary>
         /// 部材幅
         /// </summary>
@@ -169,10 +25,6 @@ namespace HoaryFox.STB
         /// 部材が矩形であるかどうか
         /// </summary>
         public List<bool> IsRect { get; } = new List<bool>();
-        /// <summary>
-        /// 各配筋の本数をまとめたリスト
-        /// </summary>
-        public List<List<double>> BarList { get; } = new List<List<double>>();
 
         /// <summary>
         /// 与えられたstbデータからRC柱断面を取得する。
@@ -180,7 +32,7 @@ namespace HoaryFox.STB
         /// <param name="stbData"></param>
         /// <param name="version"></param>
         /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root == null)
                 return;
@@ -398,20 +250,8 @@ namespace HoaryFox.STB
     /// <summary>
     /// S柱断面
     /// </summary>
-    public class StbSecColumnS:StbBase
+    public class StbSecColumnS : StbSteelSections, IStbLoader
     {
-        /// <summary>
-        /// 部材のID
-        /// </summary>
-        public List<int> Id { get; } = new List<int>();
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
-        /// <summary>
-        /// 部材が所属する階
-        /// </summary>
-        public List<string> Floor { get; } = new List<string>();
         /// <summary>
         /// 部材が主柱か間柱かの区別
         /// </summary>
@@ -432,10 +272,6 @@ namespace HoaryFox.STB
         /// 柱脚の継手のID
         /// </summary>
         public List<int> JointIdBottom { get; } = new List<int>();
-        /// <summary>
-        /// 断面形状の名称
-        /// </summary>
-        public List<string> Shape { get; } = new List<string>();
 
         /// <summary>
         /// 与えられたstbデータからS柱断面を取得する。
@@ -443,7 +279,7 @@ namespace HoaryFox.STB
         /// <param name="stbData"></param>
         /// <param name="version"></param>
         /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root == null)
                 return;
@@ -611,34 +447,22 @@ namespace HoaryFox.STB
     /// <summary>
     /// SRC柱断面
     /// </summary>
-    public class StbSecColumnSRC:StbSections
+    public class StbSecColumnSrc : StbSrcSections
     {
     }
 
     /// <summary>
     /// CFT柱断面
     /// </summary>
-    public class StbSecColumnCFT:StbSections
+    public class StbSecColumnCft : StbSrcSections
     {
     }
 
     /// <summary>
     /// RC梁断面
     /// </summary>
-    public class StbSecBeamRC:StbSections
+    public class StbSecBeamRc : StbRcSections, IStbLoader
     {
-        /// <summary>
-        /// 部材のID
-        /// </summary>
-        public List<int> Id { get; } = new List<int>();
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
-        /// <summary>
-        /// 部材が所属する階
-        /// </summary>
-        public List<string> Floor { get; } = new List<string>();
         /// <summary>
         /// 部材が大梁か小梁かの区別
         /// </summary>
@@ -656,14 +480,6 @@ namespace HoaryFox.STB
         /// </summary>
         public List<bool> IsOutIn { get; } = new List<bool>();
         /// <summary>
-        /// 主筋径
-        /// </summary>
-        public List<string> DBarMain { get; } = new List<string>();
-        /// <summary>
-        /// フープ径
-        /// </summary>
-        public List<string> DBarBand { get; } = new List<string>();
-        /// <summary>
         /// 部材幅
         /// </summary>
         public List<double> Width { get; } = new List<double>();
@@ -671,10 +487,6 @@ namespace HoaryFox.STB
         /// 部材高さ
         /// </summary>
         public List<double> Depth { get; } = new List<double>();
-        /// <summary>
-        /// 各配筋の本数をまとめたリスト
-        /// </summary>
-        public List<List<double>> BarList { get; } = new List<List<double>>();
 
         /// <summary>
         /// 与えられたstbデータからRC梁断面を取得する。
@@ -682,7 +494,7 @@ namespace HoaryFox.STB
         /// <param name="stbData"></param>
         /// <param name="version"></param>
         /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root == null)
                 return;
@@ -927,20 +739,8 @@ namespace HoaryFox.STB
     /// <summary>
     /// S梁断面
     /// </summary>
-    public class StbSecBeamS:StbSections
+    public class StbSecBeamS : StbSteelSections, IStbLoader
     {
-        /// <summary>
-        /// 部材のID
-        /// </summary>
-        public List<int> Id { get; } = new List<int>();
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
-        /// <summary>
-        /// 部材が所属する階
-        /// </summary>
-        public List<string> Floor { get; } = new List<string>();
         /// <summary>
         /// 部材が大梁か小梁かの区別
         /// </summary>
@@ -961,10 +761,6 @@ namespace HoaryFox.STB
         /// 終端の継手のID
         /// </summary>
         public List<int> JointIdEnd { get; } = new List<int>();
-        /// <summary>
-        /// 断面形状の名称
-        /// </summary>
-        public List<string> Shape { get; } = new List<string>();
 
 
         /// <summary>
@@ -973,7 +769,7 @@ namespace HoaryFox.STB
         /// <param name="stbData"></param>
         /// <param name="version"></param>
         /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root == null)
                 return;
@@ -1054,13 +850,8 @@ namespace HoaryFox.STB
     /// <summary>
     /// S梁断面形状の名称
     /// </summary>
-    class StbSecSteelBeam
+    class StbSecSteelBeam : StbSteelShapes
     {
-        public string Pos { get; private set; }
-        public string Shape { get; private set; }
-        public string StrengthMain { get; private set; }
-        public string StrengthWeb { get; private set; }
-
         public void Load(XElement stbStBeam, StbVersion version, string xmlns)
         {
             XElement stbFigure;
@@ -1119,7 +910,7 @@ namespace HoaryFox.STB
                             }
                         }
                     }
-                    else if (stbFigure.Elements(xmlns + "StbSecSteelBeam_S_Haunch") != null)
+                    else if (stbFigure.Element(xmlns + "StbSecSteelBeam_S_Haunch") != null)
                     {
                         tag = xmlns + "StbSecSteelBeam_S_Haunch";
                         foreach (var elem in stbFigure.Elements(tag))
@@ -1152,35 +943,19 @@ namespace HoaryFox.STB
     /// <summary>
     /// SRC梁断面
     /// </summary>
-    public class StbSecBeamSRC:StbSections
+    public class StbSecBeamSRC
     {
     }
 
     /// <summary>
     /// Sブレース断面
     /// </summary>
-    public class StbSecBraceS:StbSections
+    public class StbSecBraceS : StbSteelSections, IStbLoader
     {
-        /// <summary>
-        /// 部材のID
-        /// </summary>
-        public List<int> Id { get; } = new List<int>();
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
-        /// <summary>
-        /// 部材が所属する階
-        /// </summary>
-        public List<string> Floor { get; } = new List<string>();
         /// <summary>
         /// 部材が水平か鉛直かの区別
         /// </summary>
         public List<KindsBrace> KindBrace { get; } = new List<KindsBrace>();
-        /// <summary>
-        /// 断面形状の名称
-        /// </summary>
-        public List<string> Shape { get; } = new List<string>();
 
         /// <summary>
         /// 与えられたstbデータからSブレース断面を取得する。
@@ -1188,7 +963,7 @@ namespace HoaryFox.STB
         /// <param name="stbData"></param>
         /// <param name="version"></param>
         /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root == null)
                 return;
@@ -1237,13 +1012,8 @@ namespace HoaryFox.STB
     /// <summary>
     /// Sブレース断面形状の名称
     /// </summary>
-    public class StbSecSteelBrace
+    public class StbSecSteelBrace : StbSteelShapes
     {
-        public string Pos { get; private set; }
-        public string Shape { get; private set; }
-        public string StrengthMain { get; private set; }
-        public string StrengthWeb { get; private set; }
-
         /// <summary>
         /// 属性の読み込み
         /// </summary>
@@ -1332,19 +1102,18 @@ namespace HoaryFox.STB
     /// <summary>
     /// 鉄骨断面
     /// </summary>
-    public class StbSecSteel:StbSections
+    public class StbSecSteel : StbBase, IStbLoader
     {
-        public List<string> Name { get; } = new List<string>();
         public List<float> P1 { get; } = new List<float>();
         public List<float> P2 { get; } = new List<float>();
         public List<float> P3 { get; } = new List<float>();
         public List<float> P4 { get; } = new List<float>();
         public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
-        public StbSecRollH RollH { get; } = new StbSecRollH();
-        public StbSecBuildH BuildH { get; } = new StbSecBuildH();
-        public StbSecRollBox RollBOX { get; } = new StbSecRollBox();
-        public StbSecBuildBox BuildBOX { get; } = new StbSecBuildBox();
+        public StbSecRoll Roll { get; } = new StbSecRoll();
+        public StbSecBuild Build { get; } = new StbSecBuild();
+        public StbSecRollBox RollBox { get; } = new StbSecRollBox();
+        public StbSecBuildBox BuildBox { get; } = new StbSecBuildBox();
         public StbSecPipe Pipe { get; } = new StbSecPipe();
         public StbSecRollT RollT { get; } = new StbSecRollT();
         public StbSecRollC RollC { get; } = new StbSecRollC();
@@ -1359,40 +1128,40 @@ namespace HoaryFox.STB
         /// <param name="stbData"></param>
         /// <param name="version"></param>
         /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             // TODO 継承を使ってきれいに書き直す
-            RollH.Load(stbData, version, xmlns);
-            Name.AddRange(RollH.Name);
-            P1.AddRange(RollH.A);
-            P2.AddRange(RollH.B);
-            P3.AddRange(RollH.T1);
-            P4.AddRange(RollH.T2);
-            ShapeType.AddRange(RollH.ShapeType);
+            Roll.Load(stbData, version, xmlns);
+            Name.AddRange(Roll.Name);
+            P1.AddRange(Roll.A);
+            P2.AddRange(Roll.B);
+            P3.AddRange(Roll.T1);
+            P4.AddRange(Roll.T2);
+            ShapeType.AddRange(Roll.ShapeType);
 
-            BuildH.Load(stbData, version, xmlns);
-            Name.AddRange(BuildH.Name);
-            P1.AddRange(BuildH.A);
-            P2.AddRange(BuildH.B);
-            P3.AddRange(BuildH.T1);
-            P4.AddRange(BuildH.T2);
-            ShapeType.AddRange(BuildH.ShapeType);
+            Build.Load(stbData, version, xmlns);
+            Name.AddRange(Build.Name);
+            P1.AddRange(Build.A);
+            P2.AddRange(Build.B);
+            P3.AddRange(Build.T1);
+            P4.AddRange(Build.T2);
+            ShapeType.AddRange(Build.ShapeType);
 
-            RollBOX.Load(stbData, version, xmlns);
-            Name.AddRange(RollBOX.Name);
-            P1.AddRange(RollBOX.A);
-            P2.AddRange(RollBOX.B);
-            P3.AddRange(RollBOX.T);
-            P4.AddRange(RollBOX.R);
-            ShapeType.AddRange(RollBOX.ShapeType);
+            RollBox.Load(stbData, version, xmlns);
+            Name.AddRange(RollBox.Name);
+            P1.AddRange(RollBox.A);
+            P2.AddRange(RollBox.B);
+            P3.AddRange(RollBox.T);
+            P4.AddRange(RollBox.R);
+            ShapeType.AddRange(RollBox.ShapeType);
 
-            BuildBOX.Load(stbData, version, xmlns);
-            Name.AddRange(BuildBOX.Name);
-            P1.AddRange(BuildBOX.A);
-            P2.AddRange(BuildBOX.B);
-            P3.AddRange(BuildBOX.T1);
-            P4.AddRange(BuildBOX.T2);
-            ShapeType.AddRange(BuildBOX.ShapeType);
+            BuildBox.Load(stbData, version, xmlns);
+            Name.AddRange(BuildBox.Name);
+            P1.AddRange(BuildBox.A);
+            P2.AddRange(BuildBox.B);
+            P3.AddRange(BuildBox.T1);
+            P4.AddRange(BuildBox.T2);
+            ShapeType.AddRange(BuildBox.ShapeType);
 
             Pipe.Load(stbData, version, xmlns);
             Name.AddRange(Pipe.Name);
@@ -1455,40 +1224,16 @@ namespace HoaryFox.STB
     /// <summary>
     /// ロールH形断面
     /// </summary>
-    public class StbSecRollH
+    public class StbSecRoll : StbSectionHTCL, IStbLoader
     {
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
         /// <summary>
         /// 形状のタイプ
         /// </summary>
         public List<RollHType> Type { get; } = new List<RollHType>();
         /// <summary>
-        /// 部材せい
-        /// </summary>
-        public List<float> A { get; } = new List<float>();
-        /// <summary>
-        /// フランジ幅
-        /// </summary>
-        public List<float> B { get; } = new List<float>();
-        /// <summary>
-        /// ウェブ厚
-        /// </summary>
-        public List<float> T1 { get; } = new List<float>();
-        /// <summary>
-        /// フランジ厚
-        /// </summary>
-        public List<float> T2 { get; } = new List<float>();
-        /// <summary>
         /// フィレット半径
         /// </summary>
         public List<float> R { get; } = new List<float>();
-        /// <summary>
-        /// 断面形状タイプ
-        /// </summary>
-        public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
         /// <summary>
         /// 属性情報の読み込み
@@ -1522,33 +1267,8 @@ namespace HoaryFox.STB
     /// <summary>
     /// ビルトH形断面
     /// </summary>
-    public class StbSecBuildH
+    public class StbSecBuild : StbSectionHTCL, IStbLoader
     {
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
-        /// <summary>
-        /// 部材せい
-        /// </summary>
-        public List<float> A { get; } = new List<float>();
-        /// <summary>
-        /// フランジ幅
-        /// </summary>
-        public List<float> B { get; } = new List<float>();
-        /// <summary>
-        /// ウェブ厚
-        /// </summary>
-        public List<float> T1 { get; } = new List<float>();
-        /// <summary>
-        /// フランジ厚
-        /// </summary>
-        public List<float> T2 { get; } = new List<float>();
-        /// <summary>
-        /// 断面形状タイプ
-        /// </summary>
-        public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
-
         /// <summary>
         /// 属性情報の読み込み
         /// </summary>
@@ -1580,24 +1300,12 @@ namespace HoaryFox.STB
     /// <summary>
     /// ロール箱形断面
     /// </summary>
-    public class StbSecRollBox
+    public class StbSecRollBox : StbSectionBox, IStbLoader
     {
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
         /// <summary>
         /// 形状のタイプ
         /// </summary>
         public List<RollBOXType> Type { get; } = new List<RollBOXType>();
-        /// <summary>
-        /// 部材せい
-        /// </summary>
-        public List<float> A { get; } = new List<float>();
-        /// <summary>
-        /// 部材幅
-        /// </summary>
-        public List<float> B { get; } = new List<float>();
         /// <summary>
         /// 板厚
         /// </summary>
@@ -1606,10 +1314,6 @@ namespace HoaryFox.STB
         /// コーナー半径
         /// </summary>
         public List<float> R { get; } = new List<float>();
-        /// <summary>
-        /// 断面形状タイプ
-        /// </summary>
-        public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
         /// <summary>
         /// 属性情報の読み込み
@@ -1650,20 +1354,8 @@ namespace HoaryFox.STB
     /// <summary>
     /// ビルト箱形断面
     /// </summary>
-    public class StbSecBuildBox
+    public class StbSecBuildBox : StbSectionBox, IStbLoader
     {
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
-        /// <summary>
-        /// 部材せい
-        /// </summary>
-        public List<float> A { get; } = new List<float>();
-        /// <summary>
-        /// 部材幅
-        /// </summary>
-        public List<float> B { get; } = new List<float>();
         /// <summary>
         /// ウェブ厚
         /// </summary>
@@ -1672,10 +1364,6 @@ namespace HoaryFox.STB
         /// フランジ厚
         /// </summary>
         public List<float> T2 { get; } = new List<float>();
-        /// <summary>
-        /// 断面形状タイプ
-        /// </summary>
-        public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
         /// <summary>
         /// 属性情報の読み込み
@@ -1708,12 +1396,8 @@ namespace HoaryFox.STB
     /// <summary>
     /// 円形断面
     /// </summary>
-    public class StbSecPipe
+    public class StbSecPipe : StbSteelParameters, IStbLoader
     {
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
         /// <summary>
         /// 直径
         /// </summary>
@@ -1722,10 +1406,6 @@ namespace HoaryFox.STB
         /// 板厚
         /// </summary>
         public List<float> T { get; } = new List<float>();
-        /// <summary>
-        /// 断面形状タイプ
-        /// </summary>
-        public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
         /// <summary>
         /// 属性情報の読み込み
@@ -1756,40 +1436,16 @@ namespace HoaryFox.STB
     /// <summary>
     /// T形断面
     /// </summary>
-    public class StbSecRollT
+    public class StbSecRollT : StbSectionHTCL, IStbLoader
     {
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
         /// <summary>
         /// 形状のタイプ
         /// </summary>
         public List<RollTType> Type { get; } = new List<RollTType>();
         /// <summary>
-        /// 部材せい
-        /// </summary>
-        public List<float> A { get; } = new List<float>();
-        /// <summary>
-        /// フランジ幅
-        /// </summary>
-        public List<float> B { get; } = new List<float>();
-        /// <summary>
-        /// ウェブ厚
-        /// </summary>
-        public List<float> T1 { get; } = new List<float>();
-        /// <summary>
-        /// フランジ厚
-        /// </summary>
-        public List<float> T2 { get; } = new List<float>();
-        /// <summary>
         /// フィレット半径
         /// </summary>
         public List<float> R { get; } = new List<float>();
-        /// <summary>
-        /// 断面形状タイプ
-        /// </summary>
-        public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
         /// <summary>
         /// 属性情報の読み込み
@@ -1823,32 +1479,12 @@ namespace HoaryFox.STB
     /// <summary>
     /// 溝形断面
     /// </summary>
-    public class StbSecRollC
+    public class StbSecRollC : StbSectionHTCL, IStbLoader
     {
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
         /// <summary>
         /// 形状のタイプ
         /// </summary>
         public List<RollCType> Type { get; } = new List<RollCType>();
-        /// <summary>
-        /// 部材せい
-        /// </summary>
-        public List<float> A { get; } = new List<float>();
-        /// <summary>
-        /// フランジ幅
-        /// </summary>
-        public List<float> B { get; } = new List<float>();
-        /// <summary>
-        /// ウェブ厚
-        /// </summary>
-        public List<float> T1 { get; } = new List<float>();
-        /// <summary>
-        /// フランジ厚
-        /// </summary>
-        public List<float> T2 { get; } = new List<float>();
         /// <summary>
         /// フィレット半径
         /// </summary>
@@ -1857,10 +1493,6 @@ namespace HoaryFox.STB
         /// フランジ先端半径
         /// </summary>
         public List<float> R2 { get; } = new List<float>();
-        /// <summary>
-        /// 断面形状タイプ
-        /// </summary>
-        public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
         /// <summary>
         /// 属性情報の読み込み
@@ -1895,32 +1527,12 @@ namespace HoaryFox.STB
     /// <summary>
     /// 山形断面
     /// </summary>
-    public class StbSecRollL
+    public class StbSecRollL : StbSectionHTCL, IStbLoader
     {
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
         /// <summary>
         /// 形状のタイプ
         /// </summary>
         public List<RollLType> Type { get; } = new List<RollLType>();
-        /// <summary>
-        /// 部材せい
-        /// </summary>
-        public List<float> A { get; } = new List<float>();
-        /// <summary>
-        /// フランジ幅
-        /// </summary>
-        public List<float> B { get; } = new List<float>();
-        /// <summary>
-        /// ウェブ厚
-        /// </summary>
-        public List<float> T1 { get; } = new List<float>();
-        /// <summary>
-        /// フランジ厚
-        /// </summary>
-        public List<float> T2 { get; } = new List<float>();
         /// <summary>
         /// フィレット半径
         /// </summary>
@@ -1929,10 +1541,6 @@ namespace HoaryFox.STB
         /// フランジ先端半径
         /// </summary>
         public List<float> R2 { get; } = new List<float>();
-        /// <summary>
-        /// 断面形状タイプ
-        /// </summary>
-        public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
         /// <summary>
         /// 属性情報の読み込み
@@ -1967,12 +1575,8 @@ namespace HoaryFox.STB
     /// <summary>
     /// リップ溝形断面
     /// </summary>
-    public class StbSecRollLipC
+    public class StbSecRollLipC : StbSteelParameters, IStbLoader
     {
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
         /// <summary>
         /// 形状のタイプ
         /// </summary>
@@ -1993,10 +1597,6 @@ namespace HoaryFox.STB
         /// 板厚
         /// </summary>
         public List<float> T { get; } = new List<float>();
-        /// <summary>
-        /// 断面形状タイプ
-        /// </summary>
-        public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
         /// <summary>
         /// 属性情報の読み込み
@@ -2029,12 +1629,8 @@ namespace HoaryFox.STB
     /// <summary>
     /// フラットバー断面
     /// </summary>
-    public class StbSecFlatBar
+    public class StbSecFlatBar : StbSteelParameters, IStbLoader
     {
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
         /// <summary>
         /// 幅
         /// </summary>
@@ -2043,10 +1639,6 @@ namespace HoaryFox.STB
         /// 板厚
         /// </summary>
         public List<float> T { get; } = new List<float>();
-        /// <summary>
-        /// 断面形状タイプ
-        /// </summary>
-        public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
         /// <summary>
         /// 属性情報の読み込み
@@ -2071,7 +1663,9 @@ namespace HoaryFox.STB
                     break;
             }
 
-            if (stSections == null) return;
+            if (stSections == null)
+                return;
+            
             foreach (var stSection in stSections)
             {
                 // 必須コード
@@ -2087,20 +1681,12 @@ namespace HoaryFox.STB
     /// <summary>
     /// 丸鋼断面
     /// </summary>
-    public class StbSecRoundBar
+    public class StbSecRoundBar : StbSteelParameters, IStbLoader
     {
-        /// <summary>
-        /// 部材の名前
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
         /// <summary>
         /// 直径
         /// </summary>
         public List<float> R { get; } = new List<float>();
-        /// <summary>
-        /// 断面形状タイプ
-        /// </summary>
-        public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
         /// <summary>
         /// 属性情報の読み込み
@@ -2126,7 +1712,9 @@ namespace HoaryFox.STB
                     break;
             }
 
-            if (stSections == null) return;
+            if (stSections == null)
+                return;
+            
             foreach (var stSection in stSections)
             {
                 // 必須コード

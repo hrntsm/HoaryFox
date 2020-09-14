@@ -2,6 +2,9 @@
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using HoaryFox.STB;
+using HoaryFox.STB.Member;
+using HoaryFox.STB.Model;
+using HoaryFox.STB.Section;
 using Rhino.Geometry;
 
 namespace HoaryFox.Member
@@ -16,7 +19,7 @@ namespace HoaryFox.Member
             this._nodes = nodes;
         }
 
-        public GH_Structure<GH_String> Frame(StbFrame frame, StbSecColRC colRc, StbSecColumnS colS, StbSecBeamRC beamRc, StbSecBeamS beamS, StbSecBraceS braceS, StbSecSteel secSteel)
+        public GH_Structure<GH_String> Frame(StbFrame frame, StbSecColumnRc columnRc, StbSecColumnS colS, StbSecBeamRc beamRc, StbSecBeamS beamS, StbSecBraceS braceS, StbSecSteel secSteel)
         {
             GH_Structure<GH_String> sec = new GH_Structure<GH_String>();
         
@@ -44,15 +47,15 @@ namespace HoaryFox.Member
                 ShapeTypes shapeType = ShapeTypes.BOX;
                 switch (kind)
                 {
-                    case KindsStructure.RC:
+                    case KindsStructure.Rc:
                         switch (frame.FrameType)
                         {
                             case FrameType.Column:
                             case FrameType.Post:
-                                secIndex = colRc.Id.IndexOf(idSection);
-                                name = colRc.Name[secIndex];
-                                p1 = colRc.Height[secIndex];
-                                p2 = colRc.Width[secIndex];
+                                secIndex = columnRc.Id.IndexOf(idSection);
+                                name = columnRc.Name[secIndex];
+                                p1 = columnRc.Height[secIndex];
+                                p2 = columnRc.Width[secIndex];
                                 break;
                             case FrameType.Girder:
                             case FrameType.Beam:

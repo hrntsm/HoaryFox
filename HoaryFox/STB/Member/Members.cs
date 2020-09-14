@@ -1,35 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
-using HoaryFox.STB;
-using Rhino.Geometry;
+using HoaryFox.STB.Model;
 
-namespace HoaryFox.STB
+namespace HoaryFox.STB.Member
 {
-    public class StbMembers:StbBase
-    {
-        public List<int> Id { get; } = new List<int>();
-        public List<string> Name { get; } = new List<string>();
-        public List<int> IdSection { get; } = new List<int>();
-        public List<KindsStructure> KindStructure { get; } = new List<KindsStructure>();
-    }
 
-    public class StbFrame:StbMembers
-    {
-        public virtual string Tag { get; } = "StbFrame";
-        public virtual FrameType FrameType { get; } = FrameType.Any;
-        public List<int> IdNodeStart { get; } = new List<int>();
-        public List<int> IdNodeEnd { get; } = new List<int>();
-        public List<double> Rotate { get; } = new List<double>();
-    }
-
-    public class StbColumns:StbFrame
+    public class StbColumns : StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbColumn";
         public override FrameType FrameType { get; } = FrameType.Column;
 
-        public override void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -59,16 +40,16 @@ namespace HoaryFox.STB
                     switch ((string) stbElem.Attribute("kind_structure"))
                     {
                         case "RC":
-                            KindStructure.Add(KindsStructure.RC);
+                            KindStructure.Add(KindsStructure.Rc);
                             break;
                         case "S":
                             KindStructure.Add(KindsStructure.S);
                             break;
                         case "SRC":
-                            KindStructure.Add(KindsStructure.SRC);
+                            KindStructure.Add(KindsStructure.Src);
                             break;
                         case "CFT":
-                            KindStructure.Add(KindsStructure.CFT);
+                            KindStructure.Add(KindsStructure.Cft);
                             break;
                         default:
                             KindStructure.Add(KindsStructure.Other);
@@ -82,12 +63,12 @@ namespace HoaryFox.STB
     /// <summary>
     /// 間柱情報（複数）
     /// </summary>
-    public class StbPosts:StbFrame
+    public class StbPosts : StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbPost";
         public override FrameType FrameType { get; } = FrameType.Post;
 
-        public override void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -117,16 +98,16 @@ namespace HoaryFox.STB
                     switch ((string)stbElem.Attribute("kind_structure"))
                     {
                         case "RC":
-                            KindStructure.Add(KindsStructure.RC);
+                            KindStructure.Add(KindsStructure.Rc);
                             break;
                         case "S":
                             KindStructure.Add(KindsStructure.S);
                             break;
                         case "SRC":
-                            KindStructure.Add(KindsStructure.SRC);
+                            KindStructure.Add(KindsStructure.Src);
                             break;
                         case "CFT":
-                            KindStructure.Add(KindsStructure.CFT);
+                            KindStructure.Add(KindsStructure.Cft);
                             break;
                     }
                 }
@@ -137,13 +118,13 @@ namespace HoaryFox.STB
     /// <summary>
     /// 大梁情報（複数）
     /// </summary>
-    public class StbGirders:StbFrame
+    public class StbGirders : StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbGirder";
         public override FrameType FrameType { get; } = FrameType.Girder;
         public List<double> Level { get; } = new List<double>();
 
-        public override void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -173,16 +154,16 @@ namespace HoaryFox.STB
                     switch ((string)stbElem.Attribute("kind_structure"))
                     {
                         case "RC":
-                            KindStructure.Add(KindsStructure.RC);
+                            KindStructure.Add(KindsStructure.Rc);
                             break;
                         case "S":
                             KindStructure.Add(KindsStructure.S);
                             break;
                         case "SRC":
-                            KindStructure.Add(KindsStructure.SRC);
+                            KindStructure.Add(KindsStructure.Src);
                             break;
                         case "CFT":
-                            KindStructure.Add(KindsStructure.CFT);
+                            KindStructure.Add(KindsStructure.Cft);
                             break;
                         default:
                             break;
@@ -204,13 +185,13 @@ namespace HoaryFox.STB
     /// <summary>
     /// 小梁情報（複数）
     /// </summary>
-    public class StbBeams:StbFrame
+    public class StbBeams : StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbBeam";
         public override FrameType FrameType { get; } = FrameType.Beam;
         public List<double> Level { get; } = new List<double>();
 
-        public override void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -240,16 +221,16 @@ namespace HoaryFox.STB
                     switch ((string)stbElem.Attribute("kind_structure"))
                     {
                         case "RC":
-                            KindStructure.Add(KindsStructure.RC);
+                            KindStructure.Add(KindsStructure.Rc);
                             break;
                         case "S":
                             KindStructure.Add(KindsStructure.S);
                             break;
                         case "SRC":
-                            KindStructure.Add(KindsStructure.SRC);
+                            KindStructure.Add(KindsStructure.Src);
                             break;
                         case "CFT":
-                            KindStructure.Add(KindsStructure.CFT);
+                            KindStructure.Add(KindsStructure.Cft);
                             break;
                         default:
                             break;
@@ -271,12 +252,12 @@ namespace HoaryFox.STB
     /// <summary>
     /// ブレース情報（複数）
     /// </summary>
-    public class StbBraces:StbFrame
+    public class StbBraces : StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbBrace";
         public override FrameType FrameType { get; } = FrameType.Brace;
 
-        public override void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -306,16 +287,16 @@ namespace HoaryFox.STB
                     switch ((string)stbElem.Attribute("kind_structure"))
                     {
                         case "RC":
-                            KindStructure.Add(KindsStructure.RC);
+                            KindStructure.Add(KindsStructure.Rc);
                             break;
                         case "S":
                             KindStructure.Add(KindsStructure.S);
                             break;
                         case "SRC":
-                            KindStructure.Add(KindsStructure.SRC);
+                            KindStructure.Add(KindsStructure.Src);
                             break;
                         case "CFT":
-                            KindStructure.Add(KindsStructure.CFT);
+                            KindStructure.Add(KindsStructure.Cft);
                             break;
                     }
                 }
@@ -326,7 +307,7 @@ namespace HoaryFox.STB
     /// <summary>
     /// スラブ情報（複数）
     /// </summary>
-    public class StbSlabs:StbMembers
+    public class StbSlabs : StbPlate, IStbLoader
     {
         public List<KindsSlab> KindSlab { get; } = new List<KindsSlab>();
         public List<double> Level { get; } = new List<double>();
@@ -336,9 +317,8 @@ namespace HoaryFox.STB
         public List<double> AngleLoad { get; } = new List<double>();
         public List<bool> IsFoundation { get; } = new List<bool>();
         public List<TypesHanch> TypeHaunch { get; } = new List<TypesHanch>();
-        public List<List<int>> NodeIdList { get; } = new List<List<int>>();
 
-        public override void Load(XDocument stbDoc, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbDoc, StbData.StbVersion version, string xmlns)
         {
             if (stbDoc.Root != null)
             {
@@ -355,7 +335,7 @@ namespace HoaryFox.STB
                         switch ((string) stbElem.Attribute("kind_structure"))
                         {
                             case "RC":
-                                KindStructure.Add(KindsStructure.RC);
+                                KindStructure.Add(KindsStructure.Rc);
                                 break;
                             case "DECK":
                                 KindStructure.Add(KindsStructure.Deck);
@@ -372,10 +352,10 @@ namespace HoaryFox.STB
                         switch ((string)stbElem.Attribute("kind_slab"))
                         {
                             case "NORMAL":
-                                KindSlab.Add(KindsSlab.NORMAL);
+                                KindSlab.Add(KindsSlab.Normal);
                                 break;
                             default:
-                                KindSlab.Add(KindsSlab.CANTI);
+                                KindSlab.Add(KindsSlab.Canti);
                                 break;
                         }
                     }
@@ -399,12 +379,11 @@ namespace HoaryFox.STB
     /// <summary>
     /// 壁情報（複数）
     /// </summary>
-    public class StbWalls:StbMembers
+    public class StbWalls : StbPlate, IStbLoader
     {
-        public List<List<int>> NodeIdList { get; } = new List<List<int>>();
         public List<KindsLayout> KindLayout { get; } = new List<KindsLayout>();
 
-        public override void Load(XDocument stbDoc, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbDoc, StbData.StbVersion version, string xmlns)
         {
             if (stbDoc.Root != null)
             {
@@ -415,7 +394,7 @@ namespace HoaryFox.STB
                     Id.Add((int)stbSlab.Attribute("id"));
                     Name.Add((string)stbSlab.Attribute("name"));
                     IdSection.Add((int)stbSlab.Attribute("id_section"));
-                    KindStructure.Add(KindsStructure.RC); // 壁はRCのみ
+                    KindStructure.Add(KindsStructure.Rc); // 壁はRCのみ
                     
                     // ver2から必須
                     if (stbSlab.Attribute("kind_layout") != null)
@@ -443,44 +422,5 @@ namespace HoaryFox.STB
                 }
             }
         }
-    }
-
-    public enum KindsSlab
-    {
-        NORMAL,
-        CANTI
-    }
-
-    public enum KindsLayout
-    {
-        OnGirder,
-        OnBeam,
-        OnSlab,
-        Other
-    }
-
-    public enum DirsLoad
-    {
-        OneWay,
-        TwoWay
-    }
-
-    public enum TypesHanch
-    {
-        BOTH,
-        TOP,
-        BOTTOM
-    }
-
-    public enum FrameType
-    {
-        Column,
-        Post,
-        Girder,
-        Beam,
-        Brace,
-        Slab,
-        Wall,
-        Any
     }
 }

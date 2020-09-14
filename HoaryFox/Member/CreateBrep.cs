@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using HoaryFox.STB;
+using HoaryFox.STB.Member;
+using HoaryFox.STB.Model;
+using HoaryFox.STB.Section;
 using Rhino.Geometry;
 
 namespace HoaryFox.Member
@@ -129,7 +132,7 @@ namespace HoaryFox.Member
                 var nodeEnd = new Point3d(_stbData.Nodes.X[nodeIndexEnd], _stbData.Nodes.Y[nodeIndexEnd], _stbData.Nodes.Z[nodeIndexEnd]);
 
                 int secIndex;
-                if (kind == KindsStructure.RC)
+                if (kind == KindsStructure.Rc)
                 {
                     switch (frame.FrameType)
                     {

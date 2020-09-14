@@ -3,15 +3,32 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using Grasshopper.Kernel;
+using HoaryFox.STB.Member;
+using HoaryFox.STB.Model;
+using HoaryFox.STB.Section;
 using Rhino.Geometry;
 
 namespace HoaryFox.STB
 {
+    interface IStbLoader
+    {
+        void Load(XDocument stbFile, StbData.StbVersion version, string xmlns);
+    }
+    
     public class StbBase
     {
-        public virtual void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
-        {
-        }
+        /// <summary>
+        /// STBデータ内のタグ
+        /// </summary>
+        public virtual string Tag { get; } = "StbBase";
+        /// <summary>
+        /// GUID
+        /// </summary>
+        public List<string> Guid { get; } = new List<string>();
+        /// <summary>
+        /// 部材の名前
+        /// </summary>
+        public List<string> Name { get; } = new List<string>();
     }
 
     public class StbData
@@ -31,8 +48,8 @@ namespace HoaryFox.STB
         public StbSlabs Slabs;
         public StbWalls Walls;
         
-        public StbSecColRC SecColumnRc;
-        public StbSecBeamRC SecBeamRc;
+        public StbSecColumnRc SecColumnRc;
+        public StbSecBeamRc SecBeamRc;
         public StbSecColumnS SecColumnS;
         public StbSecBeamS SecBeamS;
         public StbSecBraceS SecBraceS;
@@ -83,8 +100,8 @@ namespace HoaryFox.STB
             Braces = new StbBraces();
             Slabs = new StbSlabs();
             Walls = new StbWalls();
-            SecColumnRc = new StbSecColRC();
-            SecBeamRc = new StbSecBeamRC();
+            SecColumnRc = new StbSecColumnRc();
+            SecBeamRc = new StbSecBeamRc();
             SecColumnS = new StbSecColumnS();
             SecBeamS = new StbSecBeamS();
             SecBraceS = new StbSecBraceS();
@@ -93,7 +110,7 @@ namespace HoaryFox.STB
         
         private void Load(XDocument xDoc)
         {
-            var members = new List<StbBase>()
+            var members = new List<IStbLoader>()
             {
                 Nodes, Slabs, Walls,
                 Columns, Posts, Girders, Beams, Braces,

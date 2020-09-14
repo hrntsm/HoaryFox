@@ -5,22 +5,14 @@ using System.Xml.Linq;
 using Rhino.Geometry;
 using static HoaryFox.STB.StbData;
 
-namespace HoaryFox.STB
+namespace HoaryFox.STB.Model
 {
-    /// <summary>
-    /// 位置・断面情報（節点・部材・階・軸）
-    /// </summary>
-    public class StbModel:StbBase
-    {
-    }
 
     /// <summary>
     /// 節点（複数） 各節点を管理
     /// </summary>
-    public class StbNodes:StbModel
+    public class StbNodes : StbModel, IStbLoader
     {
-        public List<int> Id { get; } = new List<int>();
-        public List<string> Guid { get; } = new List<string>();
         public List<double> X { get; } = new List<double>();
         public List<double> Y { get; } = new List<double>();
         public List<double> Z { get; } = new List<double>();
@@ -28,7 +20,7 @@ namespace HoaryFox.STB
         public List<KindsNode> Kind { get; } = new List<KindsNode>();
         public List<int> IdMember { get; } = new List<int>();
 
-        public override void Load(XDocument stbDoc, StbVersion version, string xmlns)
+        public void Load(XDocument stbDoc, StbVersion version, string xmlns)
         {
             var stbNodes = stbDoc.Root.Descendants(xmlns + "StbNode");
             foreach (var stbNode in stbNodes)
@@ -98,24 +90,12 @@ namespace HoaryFox.STB
                 }
             }
         }
-
-        public enum KindsNode
-        {
-            OnGirder,
-            OnBeam,
-            OnColumn,
-            OnPost,
-            OnGrid,
-            OnCanti,
-            OnSlab,
-            Other
-        }
     }
 
     /// <summary>
     /// 節点IDリスト
     /// </summary>
-    public class StbNodeIdList:StbModel
+    public class StbNodeIdList
     {
         public List<int> Load(XElement stbElem, StbVersion stbVersion)
         {
@@ -150,16 +130,8 @@ namespace HoaryFox.STB
     /// <summary>
     /// 階情報（複数）
     /// </summary>
-    public class StbStories:StbModel
+    public class StbStories:StbModel, IStbLoader
     {
-        /// <summary>
-        /// 階のID
-        /// </summary>
-        public List<int> Id { get; } = new List<int>();
-        /// <summary>
-        /// 階名称
-        /// </summary>
-        public List<string> Name { get; } = new List<string>();
         /// <summary>
         /// 階高(m)
         /// </summary>
@@ -174,7 +146,7 @@ namespace HoaryFox.STB
         public List<string> StrengthConcrete { get; } = new List<string>();
         public List<List<int>> NodeIdList { get; } = new List<List<int>>();
 
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             var stbStories = stbData.Root.Descendants(xmlns + "StbStory");
             foreach (var stbStory in stbStories)
@@ -230,17 +202,6 @@ namespace HoaryFox.STB
                 // 所属節点の読み込み　List<List<int>> NodeIdList　の Set 部分の作成
             }
         }
-
-        public enum KindsStory
-        {
-            General,
-            Basement,
-            Roof,
-            Penthouse,
-            Isolation,
-            Dependence,
-            Any
-        }
     }
 
     /// <summary>
@@ -255,16 +216,5 @@ namespace HoaryFox.STB
     /// </summary>
     public class StbSlabFrames
     {
-    }
-
-    public enum KindsStructure
-    {
-        RC,
-        S,
-        SRC,
-        CFT,
-        Deck,
-        Precast,
-        Other
     }
 }

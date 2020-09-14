@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using HoaryFox.STB;
+using HoaryFox.STB.Model;
 using Rhino.Geometry;
 
 namespace HoaryFox.Member

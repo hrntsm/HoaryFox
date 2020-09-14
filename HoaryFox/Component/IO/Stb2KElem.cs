@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Special.SketchElements;
-using HoaryFox.Member;
-using HoaryFox.STB;
-using Rhino.Geometry;
 using System.Drawing;
-using Karamba.Utilities;
-using Karamba.Geometry;
+using Grasshopper.Kernel;
+using HoaryFox.STB;
+using HoaryFox.STB.Section;
 using Karamba.CrossSections;
-using Karamba.Supports;
-using Karamba.Loads;
-using Karamba.GHopper;
+using Karamba.Geometry;
 using Karamba.GHopper.CrossSections;
 using Karamba.GHopper.Elements;
 using Karamba.Materials;
+using Karamba.Utilities;
 
-
-namespace HoaryFox.Component.Export
+namespace HoaryFox.Component.IO
 {
     public class Stb2KElem:GH_Component
     {

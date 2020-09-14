@@ -56,10 +56,16 @@
     </Compile>
     <Compile Include="Member\CreateBar.cs" />
     <Compile Include="Member\CreateBrep.cs" />
-    <Compile Include="STB\Stb.cs" />
-    <Compile Include="STB\StbMember.cs" />
-    <Compile Include="STB\StbModel.cs" />
-    <Compile Include="STB\StbSections.cs" />
+    <Compile Include="STB\Member\Base.cs" />
+    <Compile Include="STB\Member\Enum.cs" />
+    <Compile Include="STB\Member\Members.cs" />
+    <Compile Include="STB\Model\Base.cs" />
+    <Compile Include="STB\Model\Enum.cs" />
+    <Compile Include="STB\Model\Models.cs" />
+    <Compile Include="STB\Section\Base.cs" />
+    <Compile Include="STB\Section\Enum.cs" />
+    <Compile Include="STB\Section\Sections.cs" />
+    <Compile Include="STB\StbBase.cs" />
     <Compile Include="HoaryFoxInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Member\CreateTag.cs" />

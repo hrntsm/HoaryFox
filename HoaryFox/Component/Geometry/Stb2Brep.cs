@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using Grasshopper.Kernel;
 using HoaryFox.Member;
 using HoaryFox.STB;
+using HoaryFox.STB.Member;
 using Rhino.Geometry;
 
 namespace HoaryFox.Component.Geometry
