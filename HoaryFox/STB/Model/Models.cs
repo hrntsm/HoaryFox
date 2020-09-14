@@ -97,26 +97,24 @@ namespace HoaryFox.STB.Model
     /// </summary>
     public class StbNodeIdList
     {
-        public List<int> Load(XElement stbElem, StbVersion stbVersion)
+        public List<int> IdList { get; }= new List<int>();
+        
+        public void Load(XElement stbElem, StbVersion stbVersion)
         {
-            var idList = new List<int>();
-
             switch (stbVersion)
             {
                 case StbVersion.Ver1:
                     IEnumerable<XElement> xNodeIds = stbElem.Element("StbNodeid_List").Elements("StbNodeid");
                     foreach (var xNodeId in xNodeIds)
-                        idList.Add((int)xNodeId.Attribute("id"));
+                        IdList.Add((int)xNodeId.Attribute("id"));
                     break;
                 case StbVersion.Ver2:
                     string xNodeIdOrders = stbElem.Value;
                     List<string> nodeList = xNodeIdOrders.Split(' ').ToList();
                     foreach (var node in nodeList)
-                        idList.Add(Int32.Parse(node));
+                        IdList.Add(Int32.Parse(node));
                     break;
             }
-
-            return idList;
         }
     }
 

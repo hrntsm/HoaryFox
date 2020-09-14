@@ -1,22 +1,16 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using HoaryFox.STB;
-using Rhino.ApplicationSettings;
-using Rhino.Geometry;
-using static HoaryFox.STB.StbData;
 using HoaryFox.STB.Model;
+using static HoaryFox.STB.StbData;
 
 namespace HoaryFox.STB.Member
 {
-
-    public class StbColumns : StbFrame, IStbLoader
+    public class StbColumns:StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbColumn";
         public override FrameType FrameType { get; } = FrameType.Column;
 
-        public void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -69,12 +63,12 @@ namespace HoaryFox.STB.Member
     /// <summary>
     /// 間柱情報（複数）
     /// </summary>
-    public class StbPosts : StbFrame, IStbLoader
+    public class StbPosts:StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbPost";
         public override FrameType FrameType { get; } = FrameType.Post;
 
-        public void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -124,13 +118,13 @@ namespace HoaryFox.STB.Member
     /// <summary>
     /// 大梁情報（複数）
     /// </summary>
-    public class StbGirders : StbFrame, IStbLoader
+    public class StbGirders:StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbGirder";
         public override FrameType FrameType { get; } = FrameType.Girder;
         public List<double> Level { get; } = new List<double>();
 
-        public void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -191,13 +185,13 @@ namespace HoaryFox.STB.Member
     /// <summary>
     /// 小梁情報（複数）
     /// </summary>
-    public class StbBeams : StbFrame, IStbLoader
+    public class StbBeams:StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbBeam";
         public override FrameType FrameType { get; } = FrameType.Beam;
         public List<double> Level { get; } = new List<double>();
 
-        public void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -258,12 +252,12 @@ namespace HoaryFox.STB.Member
     /// <summary>
     /// ブレース情報（複数）
     /// </summary>
-    public class StbBraces : StbFrame, IStbLoader
+    public class StbBraces:StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbBrace";
         public override FrameType FrameType { get; } = FrameType.Brace;
 
-        public void Load(XDocument stbData, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root != null)
             {
@@ -313,7 +307,7 @@ namespace HoaryFox.STB.Member
     /// <summary>
     /// スラブ情報（複数）
     /// </summary>
-    public class StbSlabs : StbPlate, IStbLoader
+    public class StbSlabs:StbPlate, IStbLoader
     {
         public List<KindsSlab> KindSlab { get; } = new List<KindsSlab>();
         public List<double> Level { get; } = new List<double>();
@@ -323,7 +317,6 @@ namespace HoaryFox.STB.Member
         public List<double> AngleLoad { get; } = new List<double>();
         public List<bool> IsFoundation { get; } = new List<bool>();
         public List<TypesHanch> TypeHaunch { get; } = new List<TypesHanch>();
-        public List<List<int>> NodeIdList { get; } = new List<List<int>>();
 
         public void Load(XDocument stbDoc, StbVersion version, string xmlns)
         {
@@ -377,7 +370,8 @@ namespace HoaryFox.STB.Member
 
                     // 子要素 StbNodeid_List
                     var stbNodeIdList = new StbNodeIdList();
-                    NodeIdList.Add(stbNodeIdList.Load(stbElem, version));
+                    stbNodeIdList.Load(stbElem, version);
+                    NodeIdList.Add(stbNodeIdList.IdList);
                 }
             }
         }
@@ -388,12 +382,10 @@ namespace HoaryFox.STB.Member
     /// </summary>
     public class StbWalls : StbPlate, IStbLoader
     {
-        public List<List<int>> NodeIdList { get; } = new List<List<int>>();
         public List<StbOpen> Opens { get; } = new List<StbOpen>();
         public List<KindsLayout> KindLayout { get; } = new List<KindsLayout>();
 
-        public override void Load(XDocument stbDoc, StbVersion version, string xmlns)
-        public void Load(XDocument stbDoc, StbData.StbVersion version, string xmlns)
+        public void Load(XDocument stbDoc, StbVersion version, string xmlns)
         {
             if (stbDoc.Root != null)
             {
@@ -428,7 +420,8 @@ namespace HoaryFox.STB.Member
 
                     // 子要素 StbNodeid_List
                     var stbNodeIdList = new StbNodeIdList();
-                    NodeIdList.Add(stbNodeIdList.Load(stbSlab, version));
+                    stbNodeIdList.Load(stbSlab, version);
+                    NodeIdList.Add(stbNodeIdList.IdList);
                     var stbOpen = new StbOpen();
                     stbOpen.Load(stbSlab, version);
                     Opens.Add(stbOpen);
@@ -437,99 +430,43 @@ namespace HoaryFox.STB.Member
         }
     }
 
-    public class StbOpen
+    public class StbOpen : StbMembers
     {
-        public List<int> Id { get; } = new List<int>();
-        public List<string> Name { get; } = new List<string>();
-        public List<int> IdSection { get; } = new List<int>();
         public List<double> PositionX { get; } = new List<double>();
         public List<double> PositionY { get; } = new List<double>();
         public List<double> LengthX { get; } = new List<double>();
         public List<double> LengthY { get; } = new List<double>();
         public List<double> Rotate { get; } = new List<double>();
-        
+
         public void Load(XElement stbElem, StbVersion version)
         {
             switch (version)
             {
                 case StbVersion.Ver1:
                     var xOpens = stbElem.Elements("StbOpen");
-                    if (xOpens == null)
+                    foreach (var xOpen in xOpens)
                     {
-                            Id.Add(-1);
-                            Name.Add(string.Empty);
-                            IdSection.Add(-1);
-                            PositionX.Add(-1);
-                            PositionY.Add(-1);
-                            LengthX.Add(-1);
-                            LengthY.Add(-1);
-                            Rotate.Add(-1);
-                    }
-                    else
-                    {
-                        foreach (var xOpen in xOpens)
-                        {
-                            if (xOpen.Attribute("id") != null)
-                                Id.Add((int) xOpen.Attribute("id"));
-                            else
-                                Id.Add(0);
+                        if (xOpen.Attribute("id") != null)
+                            Id.Add((int) xOpen.Attribute("id"));
+                        else
+                            Id.Add(0);
 
-                            if (xOpen.Attribute("name") != null)
-                                Name.Add((string)xOpen.Attribute("name"));
-                            else
-                                Name.Add(string.Empty);
-                        
-                            IdSection.Add((int)xOpen.Attribute("id_section"));
-                            PositionX.Add((double)xOpen.Attribute("position_X"));
-                            PositionY.Add((double)xOpen.Attribute("position_Y"));
-                            LengthX.Add((double)xOpen.Attribute("length_X"));
-                            LengthY.Add((double)xOpen.Attribute("length_Y"));
-                            Rotate.Add((double)xOpen.Attribute("rotate"));
-                        }
+                        if (xOpen.Attribute("name") != null)
+                            Name.Add((string) xOpen.Attribute("name"));
+                        else
+                            Name.Add(string.Empty);
+
+                        IdSection.Add((int) xOpen.Attribute("id_section"));
+                        PositionX.Add((double) xOpen.Attribute("position_X"));
+                        PositionY.Add((double) xOpen.Attribute("position_Y"));
+                        LengthX.Add((double) xOpen.Attribute("length_X"));
+                        LengthY.Add((double) xOpen.Attribute("length_Y"));
+                        Rotate.Add((double) xOpen.Attribute("rotate"));
                     }
                     break;
                 case StbVersion.Ver2:
                     break;
             }
         }
-    }
-
-    public enum KindsSlab
-    {
-        NORMAL,
-        CANTI
-    }
-
-    public enum KindsLayout
-    {
-        OnGirder,
-        OnBeam,
-        OnSlab,
-        Other
-    }
-
-    public enum DirsLoad
-    {
-        OneWay,
-        TwoWay
-    }
-
-    public enum TypesHanch
-    {
-        BOTH,
-        TOP,
-        BOTTOM
-    }
-
-    public enum FrameType
-    {
-        Column,
-        Post,
-        Girder,
-        Beam,
-        Brace,
-        Slab,
-        Wall,
-        Any
     }
 }
