@@ -13,6 +13,7 @@ namespace HoaryFox.STB.Model
     /// </summary>
     public class StbNodes : StbModel, IStbLoader
     {
+        public override string Tag { get; } = "StbNode";
         public List<double> X { get; } = new List<double>();
         public List<double> Y { get; } = new List<double>();
         public List<double> Z { get; } = new List<double>();
@@ -22,7 +23,10 @@ namespace HoaryFox.STB.Model
 
         public void Load(XDocument stbDoc, StbVersion version, string xmlns)
         {
-            var stbNodes = stbDoc.Root.Descendants(xmlns + "StbNode");
+            if (stbDoc.Root == null)
+                return;
+            
+            var stbNodes = stbDoc.Root.Descendants(xmlns + Tag);
             foreach (var stbNode in stbNodes)
             {
                 // 必須コード
@@ -104,15 +108,16 @@ namespace HoaryFox.STB.Model
             switch (stbVersion)
             {
                 case StbVersion.Ver1:
-                    IEnumerable<XElement> xNodeIds = stbElem.Element("StbNodeid_List").Elements("StbNodeid");
-                    foreach (var xNodeId in xNodeIds)
-                        IdList.Add((int)xNodeId.Attribute("id"));
+                    var xNodeIds = stbElem.Element("StbNodeid_List")?.Elements("StbNodeid");
+                    if (xNodeIds != null)
+                        foreach (var xNodeId in xNodeIds)
+                            IdList.Add((int) xNodeId.Attribute("id"));
                     break;
                 case StbVersion.Ver2:
-                    string xNodeIdOrders = stbElem.Value;
-                    List<string> nodeList = xNodeIdOrders.Split(' ').ToList();
+                    var xNodeIdOrders = stbElem.Value;
+                    var nodeList = xNodeIdOrders.Split(' ').ToList();
                     foreach (var node in nodeList)
-                        IdList.Add(Int32.Parse(node));
+                        IdList.Add(int.Parse(node));
                     break;
             }
         }
@@ -130,6 +135,7 @@ namespace HoaryFox.STB.Model
     /// </summary>
     public class StbStories:StbModel, IStbLoader
     {
+        public override string Tag { get; } = "StbStory";
         /// <summary>
         /// 階高(m)
         /// </summary>
@@ -146,7 +152,10 @@ namespace HoaryFox.STB.Model
 
         public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            var stbStories = stbData.Root.Descendants(xmlns + "StbStory");
+            if (stbData.Root == null)
+                return;
+            
+            var stbStories = stbData.Root.Descendants(xmlns + Tag);
             foreach (var stbStory in stbStories)
             {
                 // 必須コード

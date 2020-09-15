@@ -7,6 +7,7 @@ namespace HoaryFox.STB.Section
     /// </summary>
     public class StbSections : StbBase
     {
+        public override string Tag { get; } = "StbSections";
         /// <summary>
         /// 部材のID
         /// </summary>
@@ -19,6 +20,7 @@ namespace HoaryFox.STB.Section
 
     public class StbRcSections : StbSections
     {
+        public override string Tag { get; } = "StbRcSections";
         /// <summary>
         /// 主筋径
         /// </summary>
@@ -35,6 +37,7 @@ namespace HoaryFox.STB.Section
 
     public class StbSteelSections : StbSections
     {
+        public override string Tag { get; } = "StbSteelSections";
         /// <summary>
         /// 断面形状の名称
         /// </summary>
@@ -43,6 +46,7 @@ namespace HoaryFox.STB.Section
     
     public class StbSrcSections : StbSections
     {
+        public override string Tag { get; } = "StbSrcSections";
     }
 
     public class StbSteelShapes
@@ -56,6 +60,7 @@ namespace HoaryFox.STB.Section
 
     public class StbSteelParameters : StbBase
     {
+        public override string Tag { get; } = "StbSecSteel";
         /// <summary>
         /// 断面形状タイプ
         /// </summary>

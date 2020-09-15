@@ -12,49 +12,49 @@ namespace HoaryFox.STB.Member
 
         public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            if (stbData.Root != null)
+            if (stbData.Root == null) 
+                return;
+            
+            var stbElems = stbData.Root.Descendants(xmlns + Tag);
+            foreach (var stbElem in stbElems)
             {
-                var stbElems = stbData.Root.Descendants(xmlns + Tag);
-                foreach (var stbElem in stbElems)
+                Id.Add((int) stbElem.Attribute("id"));
+                Name.Add((string) stbElem.Attribute("name"));
+                IdSection.Add((int) stbElem.Attribute("id_section"));
+                switch (version)
                 {
-                    Id.Add((int) stbElem.Attribute("id"));
-                    Name.Add((string) stbElem.Attribute("name"));
-                    IdSection.Add((int) stbElem.Attribute("id_section"));
-                    switch (version)
-                    {
-                        case StbVersion.Ver1:
-                            IdNodeStart.Add((int) stbElem.Attribute("idNode_bottom"));
-                            IdNodeEnd.Add((int) stbElem.Attribute("idNode_top"));
-                            break;
-                        case StbVersion.Ver2:
-                            IdNodeStart.Add((int) stbElem.Attribute("id_node_bottom"));
-                            IdNodeEnd.Add((int) stbElem.Attribute("id_node_top"));
-                            break;
-                    }
+                    case StbVersion.Ver1:
+                        IdNodeStart.Add((int) stbElem.Attribute("idNode_bottom"));
+                        IdNodeEnd.Add((int) stbElem.Attribute("idNode_top"));
+                        break;
+                    case StbVersion.Ver2:
+                        IdNodeStart.Add((int) stbElem.Attribute("id_node_bottom"));
+                        IdNodeEnd.Add((int) stbElem.Attribute("id_node_top"));
+                        break;
+                }
 
-                    if (stbElem.Attribute("rotate") != null)
-                        Rotate.Add((double) stbElem.Attribute("rotate"));
-                    else
-                        Rotate.Add(0d);
+                if (stbElem.Attribute("rotate") != null)
+                    Rotate.Add((double) stbElem.Attribute("rotate"));
+                else
+                    Rotate.Add(0d);
 
-                    switch ((string) stbElem.Attribute("kind_structure"))
-                    {
-                        case "RC":
-                            KindStructure.Add(KindsStructure.Rc);
-                            break;
-                        case "S":
-                            KindStructure.Add(KindsStructure.S);
-                            break;
-                        case "SRC":
-                            KindStructure.Add(KindsStructure.Src);
-                            break;
-                        case "CFT":
-                            KindStructure.Add(KindsStructure.Cft);
-                            break;
-                        default:
-                            KindStructure.Add(KindsStructure.Other);
-                            break;
-                    }
+                switch ((string) stbElem.Attribute("kind_structure"))
+                {
+                    case "RC":
+                        KindStructure.Add(KindsStructure.Rc);
+                        break;
+                    case "S":
+                        KindStructure.Add(KindsStructure.S);
+                        break;
+                    case "SRC":
+                        KindStructure.Add(KindsStructure.Src);
+                        break;
+                    case "CFT":
+                        KindStructure.Add(KindsStructure.Cft);
+                        break;
+                    default:
+                        KindStructure.Add(KindsStructure.Other);
+                        break;
                 }
             }
         }
@@ -70,46 +70,46 @@ namespace HoaryFox.STB.Member
 
         public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            if (stbData.Root != null)
+            if (stbData.Root == null)
+                return;
+            
+            var stbElems = stbData.Root.Descendants(xmlns + Tag);
+            foreach (var stbElem in stbElems)
             {
-                var stbElems = stbData.Root.Descendants(xmlns + Tag);
-                foreach (var stbElem in stbElems)
+                Id.Add((int)stbElem.Attribute("id"));
+                Name.Add((string)stbElem.Attribute("name"));
+                IdSection.Add((int)stbElem.Attribute("id_section"));
+                switch (version)
                 {
-                    Id.Add((int)stbElem.Attribute("id"));
-                    Name.Add((string)stbElem.Attribute("name"));
-                    IdSection.Add((int)stbElem.Attribute("id_section"));
-                    switch (version)
-                    {
-                        case StbVersion.Ver1:
-                            IdNodeStart.Add((int) stbElem.Attribute("idNode_bottom"));
-                            IdNodeEnd.Add((int) stbElem.Attribute("idNode_top"));
-                            break;
-                        case StbVersion.Ver2:
-                            IdNodeStart.Add((int) stbElem.Attribute("id_node_bottom"));
-                            IdNodeEnd.Add((int) stbElem.Attribute("id_node_top"));
-                            break;
-                    }
+                    case StbVersion.Ver1:
+                        IdNodeStart.Add((int) stbElem.Attribute("idNode_bottom"));
+                        IdNodeEnd.Add((int) stbElem.Attribute("idNode_top"));
+                        break;
+                    case StbVersion.Ver2:
+                        IdNodeStart.Add((int) stbElem.Attribute("id_node_bottom"));
+                        IdNodeEnd.Add((int) stbElem.Attribute("id_node_top"));
+                        break;
+                }
 
-                    if (stbElem.Attribute("rotate") != null)
-                        Rotate.Add((double) stbElem.Attribute("rotate"));
-                    else
-                        Rotate.Add(0d);
+                if (stbElem.Attribute("rotate") != null)
+                    Rotate.Add((double) stbElem.Attribute("rotate"));
+                else
+                    Rotate.Add(0d);
 
-                    switch ((string)stbElem.Attribute("kind_structure"))
-                    {
-                        case "RC":
-                            KindStructure.Add(KindsStructure.Rc);
-                            break;
-                        case "S":
-                            KindStructure.Add(KindsStructure.S);
-                            break;
-                        case "SRC":
-                            KindStructure.Add(KindsStructure.Src);
-                            break;
-                        case "CFT":
-                            KindStructure.Add(KindsStructure.Cft);
-                            break;
-                    }
+                switch ((string)stbElem.Attribute("kind_structure"))
+                {
+                    case "RC":
+                        KindStructure.Add(KindsStructure.Rc);
+                        break;
+                    case "S":
+                        KindStructure.Add(KindsStructure.S);
+                        break;
+                    case "SRC":
+                        KindStructure.Add(KindsStructure.Src);
+                        break;
+                    case "CFT":
+                        KindStructure.Add(KindsStructure.Cft);
+                        break;
                 }
             }
         }
@@ -126,57 +126,57 @@ namespace HoaryFox.STB.Member
 
         public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            if (stbData.Root != null)
+            if (stbData.Root == null)
+                return;
+
+            var stbElems = stbData.Root.Descendants(xmlns + Tag);
+            foreach (var stbElem in stbElems)
             {
-                var stbElems = stbData.Root.Descendants(xmlns + Tag);
-                foreach (var stbElem in stbElems)
+                Id.Add((int)stbElem.Attribute("id"));
+                Name.Add((string)stbElem.Attribute("name"));
+                IdSection.Add((int)stbElem.Attribute("id_section"));
+                switch (version)
                 {
-                    Id.Add((int)stbElem.Attribute("id"));
-                    Name.Add((string)stbElem.Attribute("name"));
-                    IdSection.Add((int)stbElem.Attribute("id_section"));
-                    switch (version)
-                    {
-                        case StbVersion.Ver1:
-                            IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
-                            IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
-                            break;
-                        case StbVersion.Ver2:
-                            IdNodeStart.Add((int)stbElem.Attribute("id_node_start"));
-                            IdNodeEnd.Add((int)stbElem.Attribute("id_node_end"));
-                            break;
-                    }
+                    case StbVersion.Ver1:
+                        IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
+                        IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
+                        break;
+                    case StbVersion.Ver2:
+                        IdNodeStart.Add((int)stbElem.Attribute("id_node_start"));
+                        IdNodeEnd.Add((int)stbElem.Attribute("id_node_end"));
+                        break;
+                }
 
-                    if (stbElem.Attribute("rotate") != null)
-                        Rotate.Add((double) stbElem.Attribute("rotate"));
-                    else
-                        Rotate.Add(0d);
+                if (stbElem.Attribute("rotate") != null)
+                    Rotate.Add((double) stbElem.Attribute("rotate"));
+                else
+                    Rotate.Add(0d);
 
-                    switch ((string)stbElem.Attribute("kind_structure"))
-                    {
-                        case "RC":
-                            KindStructure.Add(KindsStructure.Rc);
-                            break;
-                        case "S":
-                            KindStructure.Add(KindsStructure.S);
-                            break;
-                        case "SRC":
-                            KindStructure.Add(KindsStructure.Src);
-                            break;
-                        case "CFT":
-                            KindStructure.Add(KindsStructure.Cft);
-                            break;
-                        default:
-                            break;
-                    }
+                switch ((string)stbElem.Attribute("kind_structure"))
+                {
+                    case "RC":
+                        KindStructure.Add(KindsStructure.Rc);
+                        break;
+                    case "S":
+                        KindStructure.Add(KindsStructure.S);
+                        break;
+                    case "SRC":
+                        KindStructure.Add(KindsStructure.Src);
+                        break;
+                    case "CFT":
+                        KindStructure.Add(KindsStructure.Cft);
+                        break;
+                    default:
+                        break;
+                }
 
-                    if (stbElem.Attribute("level") != null)
-                    {
-                        Level.Add((double)stbElem.Attribute("level"));
-                    }
-                    else
-                    {
-                        Level.Add(0d);
-                    }
+                if (stbElem.Attribute("level") != null)
+                {
+                    Level.Add((double)stbElem.Attribute("level"));
+                }
+                else
+                {
+                    Level.Add(0d);
                 }
             }
         }
@@ -185,7 +185,7 @@ namespace HoaryFox.STB.Member
     /// <summary>
     /// 小梁情報（複数）
     /// </summary>
-    public class StbBeams:StbFrame, IStbLoader
+    public class StbBeams : StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbBeam";
         public override FrameType FrameType { get; } = FrameType.Beam;
@@ -193,57 +193,57 @@ namespace HoaryFox.STB.Member
 
         public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            if (stbData.Root != null)
+            if (stbData.Root == null)
+                return;
+            
+            var stbElems = stbData.Root.Descendants(xmlns + Tag);
+            foreach (var stbElem in stbElems)
             {
-                var stbElems = stbData.Root.Descendants(xmlns + Tag);
-                foreach (var stbElem in stbElems)
+                Id.Add((int)stbElem.Attribute("id"));
+                Name.Add((string)stbElem.Attribute("name"));
+                IdSection.Add((int)stbElem.Attribute("id_section"));
+                switch (version)
                 {
-                    Id.Add((int)stbElem.Attribute("id"));
-                    Name.Add((string)stbElem.Attribute("name"));
-                    IdSection.Add((int)stbElem.Attribute("id_section"));
-                    switch (version)
-                    {
-                        case StbVersion.Ver1:
-                            IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
-                            IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
-                            break;
-                        case StbVersion.Ver2:
-                            IdNodeStart.Add((int)stbElem.Attribute("id_node_start"));
-                            IdNodeEnd.Add((int)stbElem.Attribute("id_node_end"));
-                            break;
-                    }
+                    case StbVersion.Ver1:
+                        IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
+                        IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
+                        break;
+                    case StbVersion.Ver2:
+                        IdNodeStart.Add((int)stbElem.Attribute("id_node_start"));
+                        IdNodeEnd.Add((int)stbElem.Attribute("id_node_end"));
+                        break;
+                }
 
-                    if (stbElem.Attribute("rotate") != null)
-                        Rotate.Add((double) stbElem.Attribute("rotate"));
-                    else
-                        Rotate.Add(0d);
+                if (stbElem.Attribute("rotate") != null)
+                    Rotate.Add((double) stbElem.Attribute("rotate"));
+                else
+                    Rotate.Add(0d);
 
-                    switch ((string)stbElem.Attribute("kind_structure"))
-                    {
-                        case "RC":
-                            KindStructure.Add(KindsStructure.Rc);
-                            break;
-                        case "S":
-                            KindStructure.Add(KindsStructure.S);
-                            break;
-                        case "SRC":
-                            KindStructure.Add(KindsStructure.Src);
-                            break;
-                        case "CFT":
-                            KindStructure.Add(KindsStructure.Cft);
-                            break;
-                        default:
-                            break;
-                    }
+                switch ((string)stbElem.Attribute("kind_structure"))
+                {
+                    case "RC":
+                        KindStructure.Add(KindsStructure.Rc);
+                        break;
+                    case "S":
+                        KindStructure.Add(KindsStructure.S);
+                        break;
+                    case "SRC":
+                        KindStructure.Add(KindsStructure.Src);
+                        break;
+                    case "CFT":
+                        KindStructure.Add(KindsStructure.Cft);
+                        break;
+                    default:
+                        break;
+                }
 
-                    if (stbElem.Attribute("level") != null)
-                    {
-                        Level.Add((double)stbElem.Attribute("level"));
-                    }
-                    else
-                    {
-                        Level.Add(0d);
-                    }
+                if (stbElem.Attribute("level") != null)
+                {
+                    Level.Add((double)stbElem.Attribute("level"));
+                }
+                else
+                {
+                    Level.Add(0d);
                 }
             }
         }
@@ -252,53 +252,53 @@ namespace HoaryFox.STB.Member
     /// <summary>
     /// ブレース情報（複数）
     /// </summary>
-    public class StbBraces:StbFrame, IStbLoader
+    public class StbBraces : StbFrame, IStbLoader
     {
         public override string Tag { get; } = "StbBrace";
         public override FrameType FrameType { get; } = FrameType.Brace;
 
         public void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            if (stbData.Root != null)
+            if (stbData.Root == null)
+                return;
+            
+            var stbElems = stbData.Root.Descendants(xmlns + Tag);
+            foreach (var stbElem in stbElems)
             {
-                var stbElems = stbData.Root.Descendants(xmlns + Tag);
-                foreach (var stbElem in stbElems)
+                Id.Add((int)stbElem.Attribute("id"));
+                Name.Add((string)stbElem.Attribute("name"));
+                IdSection.Add((int)stbElem.Attribute("id_section"));
+                switch (version)
                 {
-                    Id.Add((int)stbElem.Attribute("id"));
-                    Name.Add((string)stbElem.Attribute("name"));
-                    IdSection.Add((int)stbElem.Attribute("id_section"));
-                    switch (version)
-                    {
-                        case StbVersion.Ver1:
-                            IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
-                            IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
-                            break;
-                        case StbVersion.Ver2:
-                            IdNodeStart.Add((int)stbElem.Attribute("id_node_start"));
-                            IdNodeEnd.Add((int)stbElem.Attribute("id_node_end"));
-                            break;
-                    }
+                    case StbVersion.Ver1:
+                        IdNodeStart.Add((int)stbElem.Attribute("idNode_start"));
+                        IdNodeEnd.Add((int)stbElem.Attribute("idNode_end"));
+                        break;
+                    case StbVersion.Ver2:
+                        IdNodeStart.Add((int)stbElem.Attribute("id_node_start"));
+                        IdNodeEnd.Add((int)stbElem.Attribute("id_node_end"));
+                        break;
+                }
 
-                    if (stbElem.Attribute("rotate") != null)
-                        Rotate.Add((double) stbElem.Attribute("rotate"));
-                    else
-                        Rotate.Add(0d);
+                if (stbElem.Attribute("rotate") != null)
+                    Rotate.Add((double) stbElem.Attribute("rotate"));
+                else
+                    Rotate.Add(0d);
 
-                    switch ((string)stbElem.Attribute("kind_structure"))
-                    {
-                        case "RC":
-                            KindStructure.Add(KindsStructure.Rc);
-                            break;
-                        case "S":
-                            KindStructure.Add(KindsStructure.S);
-                            break;
-                        case "SRC":
-                            KindStructure.Add(KindsStructure.Src);
-                            break;
-                        case "CFT":
-                            KindStructure.Add(KindsStructure.Cft);
-                            break;
-                    }
+                switch ((string)stbElem.Attribute("kind_structure"))
+                {
+                    case "RC":
+                        KindStructure.Add(KindsStructure.Rc);
+                        break;
+                    case "S":
+                        KindStructure.Add(KindsStructure.S);
+                        break;
+                    case "SRC":
+                        KindStructure.Add(KindsStructure.Src);
+                        break;
+                    case "CFT":
+                        KindStructure.Add(KindsStructure.Cft);
+                        break;
                 }
             }
         }
@@ -320,59 +320,59 @@ namespace HoaryFox.STB.Member
 
         public void Load(XDocument stbDoc, StbVersion version, string xmlns)
         {
-            if (stbDoc.Root != null)
+            if (stbDoc.Root == null)
+                return;
+            
+            var stbElems = stbDoc.Root.Descendants(xmlns + "StbSlab");
+            foreach (var stbElem in stbElems)
             {
-                var stbElems = stbDoc.Root.Descendants(xmlns + "StbSlab");
-                foreach (var stbElem in stbElems)
+                // 必須コード
+                Id.Add((int)stbElem.Attribute("id"));
+                Name.Add((string)stbElem.Attribute("name"));
+                IdSection.Add((int)stbElem.Attribute("id_section"));
+
+                if (stbElem.Attribute("kind_structure") != null)
                 {
-                    // 必須コード
-                    Id.Add((int)stbElem.Attribute("id"));
-                    Name.Add((string)stbElem.Attribute("name"));
-                    IdSection.Add((int)stbElem.Attribute("id_section"));
-
-                    if (stbElem.Attribute("kind_structure") != null)
+                    switch ((string) stbElem.Attribute("kind_structure"))
                     {
-                        switch ((string) stbElem.Attribute("kind_structure"))
-                        {
-                            case "RC":
-                                KindStructure.Add(KindsStructure.Rc);
-                                break;
-                            case "DECK":
-                                KindStructure.Add(KindsStructure.Deck);
-                                break;
-                            case "PRECAST":
-                                KindStructure.Add(KindsStructure.Precast);
-                                break;
-                        }
+                        case "RC":
+                            KindStructure.Add(KindsStructure.Rc);
+                            break;
+                        case "DECK":
+                            KindStructure.Add(KindsStructure.Deck);
+                            break;
+                        case "PRECAST":
+                            KindStructure.Add(KindsStructure.Precast);
+                            break;
                     }
-
-                    // 必須ではないコード
-                    if (stbElem.Attribute("kind_slab") != null)
-                    {
-                        switch ((string)stbElem.Attribute("kind_slab"))
-                        {
-                            case "NORMAL":
-                                KindSlab.Add(KindsSlab.Normal);
-                                break;
-                            default:
-                                KindSlab.Add(KindsSlab.Canti);
-                                break;
-                        }
-                    }
-                    if (stbElem.Attribute("level") != null)
-                    {
-                        Level.Add((double)stbElem.Attribute("level"));
-                    }
-                    else
-                    {
-                        Level.Add(0d);
-                    }
-
-                    // 子要素 StbNodeid_List
-                    var stbNodeIdList = new StbNodeIdList();
-                    stbNodeIdList.Load(stbElem, version);
-                    NodeIdList.Add(stbNodeIdList.IdList);
                 }
+
+                // 必須ではないコード
+                if (stbElem.Attribute("kind_slab") != null)
+                {
+                    switch ((string)stbElem.Attribute("kind_slab"))
+                    {
+                        case "NORMAL":
+                            KindSlab.Add(KindsSlab.Normal);
+                            break;
+                        default:
+                            KindSlab.Add(KindsSlab.Canti);
+                            break;
+                    }
+                }
+                if (stbElem.Attribute("level") != null)
+                {
+                    Level.Add((double)stbElem.Attribute("level"));
+                }
+                else
+                {
+                    Level.Add(0d);
+                }
+
+                // 子要素 StbNodeid_List
+                var stbNodeIdList = new StbNodeIdList();
+                stbNodeIdList.Load(stbElem, version);
+                NodeIdList.Add(stbNodeIdList.IdList);
             }
         }
     }
@@ -387,45 +387,45 @@ namespace HoaryFox.STB.Member
 
         public void Load(XDocument stbDoc, StbVersion version, string xmlns)
         {
-            if (stbDoc.Root != null)
+            if (stbDoc.Root == null)
+                return;
+            
+            var stbSlabs = stbDoc.Root.Descendants(xmlns + "StbWall");
+            foreach (var stbSlab in stbSlabs)
             {
-                var stbSlabs = stbDoc.Root.Descendants(xmlns + "StbWall");
-                foreach (var stbSlab in stbSlabs)
-                {
-                    // 必須コード
-                    Id.Add((int)stbSlab.Attribute("id"));
-                    Name.Add((string)stbSlab.Attribute("name"));
-                    IdSection.Add((int)stbSlab.Attribute("id_section"));
-                    KindStructure.Add(KindsStructure.Rc); // 壁はRCのみ
+                // 必須コード
+                Id.Add((int)stbSlab.Attribute("id"));
+                Name.Add((string)stbSlab.Attribute("name"));
+                IdSection.Add((int)stbSlab.Attribute("id_section"));
+                KindStructure.Add(KindsStructure.Rc); // 壁はRCのみ
                     
-                    // ver2から必須
-                    if (stbSlab.Attribute("kind_layout") != null)
+                // ver2から必須
+                if (stbSlab.Attribute("kind_layout") != null)
+                {
+                    switch ((string)stbSlab.Attribute("kind_layout"))
                     {
-                        switch ((string)stbSlab.Attribute("kind_layout"))
-                        {
-                            case "ON_GIRDER":
-                                KindLayout.Add(KindsLayout.OnGirder);
-                                break;
-                            case "ON_BEAM":
-                                KindLayout.Add(KindsLayout.OnBeam);
-                                break;
-                            case "ON_SLAB":
-                                KindLayout.Add(KindsLayout.OnSlab);
-                                break;
-                            default:
-                                KindLayout.Add(KindsLayout.Other);
-                                break;
-                        }
+                        case "ON_GIRDER":
+                            KindLayout.Add(KindsLayout.OnGirder);
+                            break;
+                        case "ON_BEAM":
+                            KindLayout.Add(KindsLayout.OnBeam);
+                            break;
+                        case "ON_SLAB":
+                            KindLayout.Add(KindsLayout.OnSlab);
+                            break;
+                        default:
+                            KindLayout.Add(KindsLayout.Other);
+                            break;
                     }
-
-                    // 子要素 StbNodeid_List
-                    var stbNodeIdList = new StbNodeIdList();
-                    stbNodeIdList.Load(stbSlab, version);
-                    NodeIdList.Add(stbNodeIdList.IdList);
-                    var stbOpen = new StbOpen();
-                    stbOpen.Load(stbSlab, version);
-                    Opens.Add(stbOpen);
                 }
+
+                // 子要素 StbNodeid_List
+                var stbNodeIdList = new StbNodeIdList();
+                stbNodeIdList.Load(stbSlab, version);
+                NodeIdList.Add(stbNodeIdList.IdList);
+                var stbOpen = new StbOpen();
+                stbOpen.Load(stbSlab, version);
+                Opens.Add(stbOpen);
             }
         }
     }
