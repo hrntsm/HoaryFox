@@ -7,15 +7,16 @@ using HoaryFox.STB.Member;
 using HoaryFox.STB.Model;
 using HoaryFox.STB.Section;
 using Rhino.Geometry;
+using static HoaryFox.STB.StbData;
 
 namespace HoaryFox.STB
 {
     interface IStbLoader
     {
-        void Load(XDocument stbFile, StbData.StbVersion version, string xmlns);
+        void Load(XDocument stbFile, StbVersion version, string xmlns);
     }
     
-    public class StbBase
+    public class StbBase: IStbLoader
     {
         /// <summary>
         /// STBデータ内のタグ
@@ -29,6 +30,23 @@ namespace HoaryFox.STB
         /// 部材の名前
         /// </summary>
         public List<string> Name { get; } = new List<string>();
+
+        public virtual void Load(XDocument stbFile, StbVersion version, string xmlns)
+        {
+            if (stbFile.Root == null) 
+                return;
+            
+            var stbElems = stbFile.Root.Descendants(xmlns + Tag);
+            foreach (var stbElem in stbElems)
+            {
+                ElementLoader(stbElem, version, xmlns);
+            }
+        }
+
+        protected virtual void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
+        {
+            Name.Add((string) stbElem.Attribute("name"));
+        }
     }
 
     public class StbData

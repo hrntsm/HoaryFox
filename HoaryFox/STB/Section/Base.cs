@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Linq;
+using static HoaryFox.STB.StbData;
 
 namespace HoaryFox.STB.Section
 {
@@ -16,6 +18,17 @@ namespace HoaryFox.STB.Section
         /// 部材が所属する階
         /// </summary>
         public List<string> Floor { get; } = new List<string>();
+
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
+        {
+            base.ElementLoader(stbElem, version, xmlns);
+            Id.Add((int)stbElem.Attribute("id"));
+            
+            if (stbElem.Attribute("floor") != null)
+                Floor.Add((string)stbElem.Attribute("floor"));
+            else
+                Floor.Add(string.Empty);
+        }
     }
 
     public class StbRcSections : StbSections
@@ -33,6 +46,24 @@ namespace HoaryFox.STB.Section
         /// 各配筋の本数をまとめたリスト
         /// </summary>
         public List<List<double>> BarList { get; } = new List<List<double>>();
+
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
+        {
+            base.ElementLoader(stbElem, version, xmlns);
+            switch (version)
+            {
+                case StbVersion.Ver1:
+                    DBarMain.Add((string)stbElem.Attribute("D_reinforcement_main"));
+                    DBarBand.Add((string)stbElem.Attribute("D_reinforcement_band"));
+                    break;
+                case StbVersion.Ver2:
+                    break;
+            }
+            
+            var stbColSecBarArrangement = new StbColSecBarArrangement();
+            stbColSecBarArrangement.Load(stbElem, version, xmlns);
+            BarList.Add(stbColSecBarArrangement.BarList);
+        }
     }
 
     public class StbSteelSections : StbSections
