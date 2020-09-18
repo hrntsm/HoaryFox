@@ -4,14 +4,12 @@
 # Enable below if you want to restrict actions to specific branches
  on:
    push:
-     branches: [ develop, master ]
-#   pull_request:
-#     branches: [ main, develop, master ]
+     branches: 
+       - develop
+       - master
 
 jobs:
-
   build:
-
     strategy:
       matrix:
         configuration: [Debug, Release]
