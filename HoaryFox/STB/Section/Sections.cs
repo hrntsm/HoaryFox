@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Permissions;
 using System.Xml.Linq;
 using static HoaryFox.STB.StbData;
 
@@ -1018,23 +1019,25 @@ namespace HoaryFox.STB.Section
     /// </summary>
     public class StbSecSteel : StbBase
     {
-        public List<float> P1 { get; } = new List<float>();
-        public List<float> P2 { get; } = new List<float>();
-        public List<float> P3 { get; } = new List<float>();
-        public List<float> P4 { get; } = new List<float>();
+        public List<double> P1 { get; } = new List<double>();
+        public List<double> P2 { get; } = new List<double>();
+        public List<double> P3 { get; } = new List<double>();
+        public List<double> P4 { get; } = new List<double>();
+        public List<double> P5 { get; } = new List<double>();
+        public List<double> P6 { get; } = new List<double>();
         public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
 
-        public StbSecRollH RollH { get; } = new StbSecRollH();
-        public StbSecBuildH BuildH { get; } = new StbSecBuildH();
-        public StbSecRollBox RollBox { get; } = new StbSecRollBox();
-        public StbSecBuildBox BuildBox { get; } = new StbSecBuildBox();
-        public StbSecPipe Pipe { get; } = new StbSecPipe();
-        public StbSecRollT RollT { get; } = new StbSecRollT();
-        public StbSecRollC RollC { get; } = new StbSecRollC();
-        public StbSecRollL RollL { get; } = new StbSecRollL();
-        public StbSecRollLipC RollLipC { get; } = new StbSecRollLipC();
-        public StbSecFlatBar FlatBar { get; } = new StbSecFlatBar();
-        public StbSecRoundBar RoundBar { get; } = new StbSecRoundBar();
+        private StbSecRollH RollH { get; } = new StbSecRollH();
+        private StbSecBuildH BuildH { get; } = new StbSecBuildH();
+        private StbSecRollBox RollBox { get; } = new StbSecRollBox();
+        private StbSecBuildBox BuildBox { get; } = new StbSecBuildBox();
+        private StbSecPipe Pipe { get; } = new StbSecPipe();
+        private StbSecRollT RollT { get; } = new StbSecRollT();
+        private StbSecRollC RollC { get; } = new StbSecRollC();
+        private StbSecRollL RollL { get; } = new StbSecRollL();
+        private StbSecRollLipC RollLipC { get; } = new StbSecRollLipC();
+        private StbSecFlatBar FlatBar { get; } = new StbSecFlatBar();
+        private StbSecRoundBar RoundBar { get; } = new StbSecRoundBar();
 
         /// <summary>
         /// 属性情報の読み込み
@@ -1044,266 +1047,109 @@ namespace HoaryFox.STB.Section
         /// <param name="xmlns"></param>
         public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
-            // TODO 継承を使ってきれいに書き直す
-            RollH.Load(stbData, version, xmlns);
-            Name.AddRange(RollH.Name);
-            P1.AddRange(RollH.A);
-            P2.AddRange(RollH.B);
-            P3.AddRange(RollH.T1);
-            P4.AddRange(RollH.T2);
-            ShapeType.AddRange(RollH.ShapeType);
+            var sections = new List<StbSteelParameters>
+            {
+                RollH, BuildH, RollBox, BuildBox, Pipe, RollT, RollC, RollL, RollLipC, FlatBar, RoundBar
+            };
 
-            BuildH.Load(stbData, version, xmlns);
-            Name.AddRange(BuildH.Name);
-            P1.AddRange(BuildH.A);
-            P2.AddRange(BuildH.B);
-            P3.AddRange(BuildH.T1);
-            P4.AddRange(BuildH.T2);
-            ShapeType.AddRange(BuildH.ShapeType);
-
-            RollBox.Load(stbData, version, xmlns);
-            Name.AddRange(RollBox.Name);
-            P1.AddRange(RollBox.A);
-            P2.AddRange(RollBox.B);
-            P3.AddRange(RollBox.T);
-            P4.AddRange(RollBox.R);
-            ShapeType.AddRange(RollBox.ShapeType);
-
-            BuildBox.Load(stbData, version, xmlns);
-            Name.AddRange(BuildBox.Name);
-            P1.AddRange(BuildBox.A);
-            P2.AddRange(BuildBox.B);
-            P3.AddRange(BuildBox.T1);
-            P4.AddRange(BuildBox.T2);
-            ShapeType.AddRange(BuildBox.ShapeType);
-
-            Pipe.Load(stbData, version, xmlns);
-            Name.AddRange(Pipe.Name);
-            P1.AddRange(Pipe.T);
-            P2.AddRange(Pipe.D);
-            P3.AddRange(new List<float>(new float[Pipe.D.Count]));
-            P4.AddRange(new List<float>(new float[Pipe.D.Count]));
-            ShapeType.AddRange(Pipe.ShapeType);
-
-            RollT.Load(stbData, version, xmlns);
-            Name.AddRange(RollT.Name);
-            P1.AddRange(RollT.A);
-            P2.AddRange(RollT.B);
-            P3.AddRange(RollT.T1);
-            P4.AddRange(RollT.T2);
-            ShapeType.AddRange(RollT.ShapeType);
-
-            RollC.Load(stbData, version, xmlns);
-            Name.AddRange(RollC.Name);
-            P1.AddRange(RollC.A);
-            P2.AddRange(RollC.B);
-            P3.AddRange(RollC.T1);
-            P4.AddRange(RollC.T2);
-            ShapeType.AddRange(RollC.ShapeType);
-
-            RollL.Load(stbData, version, xmlns);
-            Name.AddRange(RollL.Name);
-            P1.AddRange(RollL.A);
-            P2.AddRange(RollL.B);
-            P3.AddRange(RollL.T1);
-            P4.AddRange(RollL.T2);
-            ShapeType.AddRange(RollL.ShapeType);
-
-            RollLipC.Load(stbData, version, xmlns);
-            Name.AddRange(RollLipC.Name);
-            P1.AddRange(RollLipC.H);
-            P2.AddRange(RollLipC.A);
-            P3.AddRange(RollLipC.C);
-            P4.AddRange(RollLipC.T);
-            ShapeType.AddRange(RollLipC.ShapeType);
-
-            FlatBar.Load(stbData, version, xmlns);
-            Name.AddRange(FlatBar.Name);
-            P1.AddRange(FlatBar.B);
-            P2.AddRange(FlatBar.T);
-            P3.AddRange(new List<float>(new float[Pipe.D.Count]));
-            P4.AddRange(new List<float>(new float[Pipe.D.Count]));
-            ShapeType.AddRange(FlatBar.ShapeType);
-
-            RoundBar.Load(stbData, version, xmlns);
-            Name.AddRange(RoundBar.Name);
-            P1.AddRange(RoundBar.R);
-            P2.AddRange(RoundBar.R);
-            P3.AddRange(new List<float>(new float[Pipe.D.Count]));
-            P4.AddRange(new List<float>(new float[Pipe.D.Count]));
-            ShapeType.AddRange(RoundBar.ShapeType);
+            foreach (var section in sections)
+            {
+                section.Load(stbData, version, xmlns);
+                Name.AddRange(section.Name);
+                P1.AddRange(section.P1);
+                P2.AddRange(section.P2);
+                P3.AddRange(section.P3);
+                P4.AddRange(section.P4);
+                P5.AddRange(section.P5);
+                P6.AddRange(section.P6);
+                ShapeType.AddRange(section.ShapeType);
+            }
         }
     }
 
     /// <summary>
     /// ロールH形断面
     /// </summary>
-    public class StbSecRollH : StbSectionHTCL
+    public class StbSecRollH : StbSteelParameters
     {
-        /// <summary>
-        /// 形状のタイプ
-        /// </summary>
-        public List<RollHType> Type { get; } = new List<RollHType>();
-        /// <summary>
-        /// フィレット半径
-        /// </summary>
-        public List<float> R { get; } = new List<float>();
+        public override string ElementTag { get; } = "StbSecRoll-H";
 
-        /// <summary>
-        /// 属性情報の読み込み
-        /// </summary>
-        /// <param name="stbData"></param>
-        /// <param name="stbVersion"></param>
-        /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion stbVersion, string xmlns)
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
         {
-            if (stbData.Root == null)
-                return;
-            
-            var stSecSteel = stbData.Root.Descendants(xmlns + Tag);
-            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-H");
-
-            foreach (var stSection in stSections)
-            {
-                // 必須コード
-                Name.Add((string)stSection.Attribute("name"));
-                A.Add((float)stSection.Attribute("A"));
-                B.Add((float)stSection.Attribute("B"));
-                T1.Add((float)stSection.Attribute("t1"));
-                T2.Add((float)stSection.Attribute("t2"));
-                R.Add((float)stSection.Attribute("r"));
-
-                ShapeType.Add(ShapeTypes.H);
-            }
+            base.ElementLoader(stbElem, version, xmlns);
+            P1.Add((double)stbElem.Attribute("A"));
+            P2.Add((double)stbElem.Attribute("B"));
+            P3.Add((double)stbElem.Attribute("t1"));
+            P4.Add((double)stbElem.Attribute("t2"));
+            P5.Add((double)stbElem.Attribute("r"));
+            P6.Add(-1d);
+            ShapeType.Add(ShapeTypes.H);
         }
     }
 
     /// <summary>
     /// ビルトH形断面
     /// </summary>
-    public class StbSecBuildH : StbSectionHTCL
+    public class StbSecBuildH : StbSteelParameters
     {
-        /// <summary>
-        /// 属性情報の読み込み
-        /// </summary>
-        /// <param name="stbData"></param>
-        /// <param name="version"></param>
-        /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public override string ElementTag { get; } = "StbSecBuild-H";
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
         {
-            if (stbData.Root == null)
-                return;
-            
-            var stSecSteel = stbData.Root.Descendants(xmlns + Tag);
-            var stSections = stSecSteel.Elements(xmlns + "StbSecBuild-H");
-
-            foreach (var stSection in stSections)
-            {
-                // 必須コード
-                Name.Add((string)stSection.Attribute("name"));
-                A.Add((float)stSection.Attribute("A"));
-                B.Add((float)stSection.Attribute("B"));
-                T1.Add((float)stSection.Attribute("t1"));
-                T2.Add((float)stSection.Attribute("t2"));
-
-                ShapeType.Add(ShapeTypes.H);
-            }
+            base.ElementLoader(stbElem, version, xmlns);
+            P1.Add((double)stbElem.Attribute("A"));
+            P2.Add((double)stbElem.Attribute("B"));
+            P3.Add((double)stbElem.Attribute("t1"));
+            P4.Add((double)stbElem.Attribute("t2"));
+            P5.Add(-1d);
+            P6.Add(-1d);
+            ShapeType.Add(ShapeTypes.H);
         }
     }
 
     /// <summary>
     /// ロール箱形断面
     /// </summary>
-    public class StbSecRollBox : StbSectionBox
+    public class StbSecRollBox : StbSteelParameters
     {
-        /// <summary>
-        /// 形状のタイプ
-        /// </summary>
-        public List<RollBOXType> Type { get; } = new List<RollBOXType>();
-        /// <summary>
-        /// 板厚
-        /// </summary>
-        public List<float> T { get; } = new List<float>();
-        /// <summary>
-        /// コーナー半径
-        /// </summary>
-        public List<float> R { get; } = new List<float>();
-
-        /// <summary>
-        /// 属性情報の読み込み
-        /// </summary>
-        /// <param name="stbData"></param>
-        /// <param name="version"></param>
-        /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public override string ElementTag { get; } = "StbSecRoll-BOX";
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
         {
-            if (stbData.Root == null)
-                return;
-            
-            var stSecSteel = stbData.Root.Descendants(xmlns + Tag);
-            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-BOX");
-
-            foreach (var stSection in stSections)
+            base.ElementLoader(stbElem, version, xmlns);
+            P1.Add((double)stbElem.Attribute("A"));
+            P2.Add((double)stbElem.Attribute("B"));
+            P3.Add((double)stbElem.Attribute("t"));
+            switch (version)
             {
-                // 必須コード
-                Name.Add((string) stSection.Attribute("name"));
-                A.Add((float) stSection.Attribute("A"));
-                B.Add((float) stSection.Attribute("B"));
-                T.Add((float) stSection.Attribute("t"));
-                switch (version)
-                {
-                    case StbVersion.Ver1:
-                        R.Add((float) stSection.Attribute("R"));
-                        break;
-                    case StbVersion.Ver2:
-                        R.Add((float) stSection.Attribute("r"));
-                        break;
-                }
-
-                ShapeType.Add(ShapeTypes.RollBOX);
+                case StbVersion.Ver1:
+                    P4.Add((float) stbElem.Attribute("R"));
+                    break;
+                case StbVersion.Ver2:
+                    P4.Add((float) stbElem.Attribute("r"));
+                    break;
             }
+            P5.Add(-1d);
+            P6.Add(-1d);
+            ShapeType.Add(ShapeTypes.RollBOX);
         }
     }
 
     /// <summary>
     /// ビルト箱形断面
     /// </summary>
-    public class StbSecBuildBox : StbSectionBox
+    public class StbSecBuildBox : StbSteelParameters
     {
-        /// <summary>
-        /// ウェブ厚
-        /// </summary>
-        public List<float> T1 { get; } = new List<float>();
-        /// <summary>
-        /// フランジ厚
-        /// </summary>
-        public List<float> T2 { get; } = new List<float>();
-
-        /// <summary>
-        /// 属性情報の読み込み
-        /// </summary>
-        /// <param name="stbData"></param>
-        /// <param name="version"></param>
-        /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public override string ElementTag { get; } = "StbSecBuild-BOX";
+        
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
         {
-            if (stbData.Root == null)
-                return;
-            
-            var stSecSteel = stbData.Root.Descendants(xmlns + Tag);
-            var stSections = stSecSteel.Elements(xmlns + "StbSecBuild-BOX");
-
-            foreach (var stSection in stSections)
-            {
-                // 必須コード
-                Name.Add((string)stSection.Attribute("name"));
-                A.Add((float)stSection.Attribute("A"));
-                B.Add((float)stSection.Attribute("B"));
-                T1.Add((float)stSection.Attribute("t1"));
-                T2.Add((float)stSection.Attribute("t2"));
-
-                ShapeType.Add(ShapeTypes.BuildBOX);
-            }
+            base.ElementLoader(stbElem, version, xmlns);
+            P1.Add((double)stbElem.Attribute("A"));
+            P2.Add((double)stbElem.Attribute("B"));
+            P3.Add((double)stbElem.Attribute("t1"));
+            P4.Add((double)stbElem.Attribute("t2"));
+            P5.Add(-1d);
+            P6.Add(-1d);
+            ShapeType.Add(ShapeTypes.BuildBOX);
         }
     }
 
@@ -1312,177 +1158,78 @@ namespace HoaryFox.STB.Section
     /// </summary>
     public class StbSecPipe : StbSteelParameters
     {
-        /// <summary>
-        /// 直径
-        /// </summary>
-        public List<float> D { get; } = new List<float>();
-        /// <summary>
-        /// 板厚
-        /// </summary>
-        public List<float> T { get; } = new List<float>();
-
-        /// <summary>
-        /// 属性情報の読み込み
-        /// </summary>
-        /// <param name="stbData"></param>
-        /// <param name="version"></param>
-        /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public override string ElementTag { get; } = "StbSecPipe";
+        
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
         {
-            if (stbData.Root == null)
-                return;
-            
-            var stSecSteel = stbData.Root.Descendants(xmlns + Tag);
-            var stSections = stSecSteel.Elements(xmlns + "StbSecPipe");
-
-            foreach (var stSection in stSections)
-            {
-                // 必須コード
-                Name.Add((string)stSection.Attribute("name"));
-                D.Add((float)stSection.Attribute("D"));
-                T.Add((float)stSection.Attribute("t"));
-
-                ShapeType.Add(ShapeTypes.Pipe);
-            }
+            base.ElementLoader(stbElem, version, xmlns);
+            P1.Add((double)stbElem.Attribute("t"));
+            P2.Add((double)stbElem.Attribute("D"));
+            P3.Add(-1d);
+            P4.Add(-1d);
+            P5.Add(-1d);
+            P6.Add(-1d);
+            ShapeType.Add(ShapeTypes.Pipe);
         }
     }
 
     /// <summary>
     /// T形断面
     /// </summary>
-    public class StbSecRollT : StbSectionHTCL
+    public class StbSecRollT : StbSteelParameters
     {
-        /// <summary>
-        /// 形状のタイプ
-        /// </summary>
-        public List<RollTType> Type { get; } = new List<RollTType>();
-        /// <summary>
-        /// フィレット半径
-        /// </summary>
-        public List<float> R { get; } = new List<float>();
-
-        /// <summary>
-        /// 属性情報の読み込み
-        /// </summary>
-        /// <param name="stbData"></param>
-        /// <param name="version"></param>
-        /// <param name="xmlns"></param>
-        public override　void Load(XDocument stbData, StbVersion version, string xmlns)
+        public override string ElementTag { get; } = "StbSecRoll-T";
+        
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
         {
-            if (stbData.Root == null)
-                return;
-            
-            var stSecSteel = stbData.Root.Descendants(xmlns + Tag);
-            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-T");
-
-            foreach (var stSection in stSections)
-            {
-                // 必須コード
-                Name.Add((string)stSection.Attribute("name"));
-                A.Add((float)stSection.Attribute("A"));
-                B.Add((float)stSection.Attribute("B"));
-                T1.Add((float)stSection.Attribute("t1"));
-                T2.Add((float)stSection.Attribute("t2"));
-                R.Add((float)stSection.Attribute("r"));
-
-                ShapeType.Add(ShapeTypes.T);
-            }
+            base.ElementLoader(stbElem, version, xmlns);
+            P1.Add((double)stbElem.Attribute("A"));
+            P2.Add((double)stbElem.Attribute("B"));
+            P3.Add((double)stbElem.Attribute("t1"));
+            P4.Add((double)stbElem.Attribute("t2"));
+            P5.Add((double)stbElem.Attribute("r"));
+            P6.Add(-1d);
+            ShapeType.Add(ShapeTypes.T);
         }
     }
 
     /// <summary>
     /// 溝形断面
     /// </summary>
-    public class StbSecRollC : StbSectionHTCL
+    public class StbSecRollC : StbSteelParameters
     {
-        /// <summary>
-        /// 形状のタイプ
-        /// </summary>
-        public List<RollCType> Type { get; } = new List<RollCType>();
-        /// <summary>
-        /// フィレット半径
-        /// </summary>
-        public List<float> R1 { get; } = new List<float>();
-        /// <summary>
-        /// フランジ先端半径
-        /// </summary>
-        public List<float> R2 { get; } = new List<float>();
-
-        /// <summary>
-        /// 属性情報の読み込み
-        /// </summary>
-        /// <param name="stbData"></param>
-        /// <param name="version"></param>
-        /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public override string ElementTag { get; } = "StbSecRoll-C";
+        
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
         {
-            if (stbData.Root == null)
-                return;
-            
-            var stSecSteel = stbData.Root.Descendants(xmlns + Tag);
-            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-C");
-
-            foreach (var stSection in stSections)
-            {
-                // 必須コード
-                Name.Add((string)stSection.Attribute("name"));
-                A.Add((float)stSection.Attribute("A"));
-                B.Add((float)stSection.Attribute("B"));
-                T1.Add((float)stSection.Attribute("t1"));
-                T2.Add((float)stSection.Attribute("t2"));
-                R1.Add((float)stSection.Attribute("r1"));
-                R2.Add((float)stSection.Attribute("r2"));
-
-                ShapeType.Add(ShapeTypes.C);
-            }
+            base.ElementLoader(stbElem, version, xmlns);
+            P1.Add((double)stbElem.Attribute("A"));
+            P2.Add((double)stbElem.Attribute("B"));
+            P3.Add((double)stbElem.Attribute("t1"));
+            P4.Add((double)stbElem.Attribute("t2"));
+            P5.Add((double)stbElem.Attribute("r1"));
+            P6.Add((double)stbElem.Attribute("r2"));
+            ShapeType.Add(ShapeTypes.C);
         }
     }
 
     /// <summary>
     /// 山形断面
     /// </summary>
-    public class StbSecRollL : StbSectionHTCL
+    public class StbSecRollL : StbSteelParameters
     {
-        /// <summary>
-        /// 形状のタイプ
-        /// </summary>
-        public List<RollLType> Type { get; } = new List<RollLType>();
-        /// <summary>
-        /// フィレット半径
-        /// </summary>
-        public List<float> R1 { get; } = new List<float>();
-        /// <summary>
-        /// フランジ先端半径
-        /// </summary>
-        public List<float> R2 { get; } = new List<float>();
-
-        /// <summary>
-        /// 属性情報の読み込み
-        /// </summary>
-        /// <param name="stbData"></param>
-        /// <param name="version"></param>
-        /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public override string ElementTag { get; } = "StbSecRoll-L";
+        
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
         {
-            if (stbData.Root == null)
-                return;
-            
-            var stSecSteel = stbData.Root.Descendants(xmlns + Tag);
-            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-L");
-
-            foreach (var stSection in stSections)
-            {
-                // 必須コード
-                Name.Add((string)stSection.Attribute("name"));
-                A.Add((float)stSection.Attribute("A"));
-                B.Add((float)stSection.Attribute("B"));
-                T1.Add((float)stSection.Attribute("t1"));
-                T2.Add((float)stSection.Attribute("t2"));
-                R1.Add((float)stSection.Attribute("r1"));
-                R2.Add((float)stSection.Attribute("r2"));
-
-                ShapeType.Add(ShapeTypes.L);
-            }
+            base.ElementLoader(stbElem, version, xmlns);
+            P1.Add((double)stbElem.Attribute("A"));
+            P2.Add((double)stbElem.Attribute("B"));
+            P3.Add((double)stbElem.Attribute("t1"));
+            P4.Add((double)stbElem.Attribute("t2"));
+            P5.Add((double)stbElem.Attribute("r1"));
+            P6.Add((double)stbElem.Attribute("r2"));
+            ShapeType.Add(ShapeTypes.L);
         }
     }
 
@@ -1491,52 +1238,18 @@ namespace HoaryFox.STB.Section
     /// </summary>
     public class StbSecRollLipC : StbSteelParameters
     {
-        /// <summary>
-        /// 形状のタイプ
-        /// </summary>
-        public List<RollCType> Type { get; } = new List<RollCType>();
-        /// <summary>
-        /// 部材せい
-        /// </summary>
-        public List<float> H { get; } = new List<float>();
-        /// <summary>
-        /// フランジ幅
-        /// </summary>
-        public List<float> A { get; } = new List<float>();
-        /// <summary>
-        /// リップ長
-        /// </summary>
-        public List<float> C { get; } = new List<float>();
-        /// <summary>
-        /// 板厚
-        /// </summary>
-        public List<float> T { get; } = new List<float>();
-
-        /// <summary>
-        /// 属性情報の読み込み
-        /// </summary>
-        /// <param name="stbData"></param>
-        /// <param name="version"></param>
-        /// <param name="xmlns"></param>
-        public override void Load(XDocument stbData, StbVersion version, string xmlns)
+        public override string ElementTag { get; } = "StbSecRoll-LipC";
+        
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
         {
-            if (stbData.Root == null)
-                return;
-            
-            var stSecSteel = stbData.Root.Descendants(xmlns + Tag);
-            var stSections = stSecSteel.Elements(xmlns + "StbSecRoll-LipC");
-
-            foreach (var stSection in stSections)
-            {
-                // 必須コード
-                Name.Add((string)stSection.Attribute("name"));
-                H.Add((float)stSection.Attribute("H"));
-                A.Add((float)stSection.Attribute("A"));
-                C.Add((float)stSection.Attribute("C"));
-                T.Add((float)stSection.Attribute("t"));
-
-                ShapeType.Add(ShapeTypes.C);
-            }
+            base.ElementLoader(stbElem, version, xmlns);
+            P1.Add((double)stbElem.Attribute("H"));
+            P2.Add((double)stbElem.Attribute("A"));
+            P3.Add((double)stbElem.Attribute("C"));
+            P4.Add((double)stbElem.Attribute("t"));
+            P5.Add(-1d);
+            P6.Add(-1d);
+            ShapeType.Add(ShapeTypes.C);
         }
     }
 
@@ -1545,21 +1258,18 @@ namespace HoaryFox.STB.Section
     /// </summary>
     public class StbSecFlatBar : StbSteelParameters
     {
-        /// <summary>
-        /// 幅
-        /// </summary>
-        public List<float> B { get; } = new List<float>();
-        /// <summary>
-        /// 板厚
-        /// </summary>
-        public List<float> T { get; } = new List<float>();
-
-        /// <summary>
-        /// 属性情報の読み込み
-        /// </summary>
-        /// <param name="stbData"></param>
-        /// <param name="version"></param>
-        /// <param name="xmlns"></param>
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
+        {
+            base.ElementLoader(stbElem, version, xmlns);
+            P1.Add((double)stbElem.Attribute("B"));
+            P2.Add((double)stbElem.Attribute("t"));
+            P3.Add(-1d);
+            P4.Add(-1d);
+            P5.Add(-1d);
+            P6.Add(-1d);
+            ShapeType.Add(ShapeTypes.FB);
+        }
+        
         public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root == null)
@@ -1581,14 +1291,7 @@ namespace HoaryFox.STB.Section
                 return;
             
             foreach (var stSection in stSections)
-            {
-                // 必須コード
-                Name.Add((string) stSection.Attribute("name"));
-                B.Add((float) stSection.Attribute("B"));
-                T.Add((float) stSection.Attribute("t"));
-
-                ShapeType.Add(ShapeTypes.FB);
-            }
+                ElementLoader(stSection, version, xmlns);
         }
     }
 
@@ -1597,17 +1300,18 @@ namespace HoaryFox.STB.Section
     /// </summary>
     public class StbSecRoundBar : StbSteelParameters
     {
-        /// <summary>
-        /// 直径
-        /// </summary>
-        public List<float> R { get; } = new List<float>();
+        protected override void ElementLoader(XElement stbElem, StbVersion version, string xmlns)
+        {
+            base.ElementLoader(stbElem, version, xmlns);
+            P1.Add((double)stbElem.Attribute("R"));
+            P2.Add((double)stbElem.Attribute("R"));
+            P3.Add(-1d);
+            P4.Add(-1d);
+            P5.Add(-1d);
+            P6.Add(-1d);
+            ShapeType.Add(ShapeTypes.Bar);
+        }
 
-        /// <summary>
-        /// 属性情報の読み込み
-        /// </summary>
-        /// <param name="stbData"></param>
-        /// <param name="version"></param>
-        /// <param name="xmlns"></param>
         public override void Load(XDocument stbData, StbVersion version, string xmlns)
         {
             if (stbData.Root == null)
@@ -1619,10 +1323,10 @@ namespace HoaryFox.STB.Section
             switch (version)
             {
                 case StbVersion.Ver1:
-                    stSections = stbData.Root.Descendants(xmlns + "StbSecRoll-Bar");
+                    stSections = stSecSteel.Elements(xmlns + "StbSecRoll-Bar");
                     break;
                 case StbVersion.Ver2:
-                    stSections = stbData.Root.Descendants(xmlns + "StbSecRoundBar");
+                    stSections = stSecSteel.Elements(xmlns + "StbSecRoundBar");
                     break;
             }
 
@@ -1630,13 +1334,7 @@ namespace HoaryFox.STB.Section
                 return;
             
             foreach (var stSection in stSections)
-            {
-                // 必須コード
-                Name.Add((string) stSection.Attribute("name"));
-                R.Add((float) stSection.Attribute("R"));
-
-                ShapeType.Add(ShapeTypes.Bar);
-            }
+                ElementLoader(stSection, version, xmlns);
         }
     }
 }

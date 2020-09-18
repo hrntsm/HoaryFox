@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using static HoaryFox.STB.StbData;
 
@@ -92,41 +93,29 @@ namespace HoaryFox.STB.Section
     public class StbSteelParameters : StbBase
     {
         public override string Tag { get; } = "StbSecSteel";
+        public virtual string ElementTag { get; } = String.Empty;
         /// <summary>
         /// 断面形状タイプ
         /// </summary>
         public List<ShapeTypes> ShapeType { get; } = new List<ShapeTypes>();
-    }
 
-    public class StbSectionHTCL : StbSteelParameters
-    {
-        /// <summary>
-        /// 部材せい
-        /// </summary>
-        public List<float> A { get; } = new List<float>();
-        /// <summary>
-        /// フランジ幅
-        /// </summary>
-        public List<float> B { get; } = new List<float>();
-        /// <summary>
-        /// ウェブ厚
-        /// </summary>
-        public List<float> T1 { get; } = new List<float>();
-        /// <summary>
-        /// フランジ厚
-        /// </summary>
-        public List<float> T2 { get; } = new List<float>();
-    }
+        public List<double> P1 { get; } = new List<double>();
+        public List<double> P2 { get; } = new List<double>();
+        public List<double> P3 { get; } = new List<double>();
+        public List<double> P4 { get; } = new List<double>();
+        public List<double> P5 { get; } = new List<double>();
+        public List<double> P6 { get; } = new List<double>();
 
-    public class StbSectionBox : StbSteelParameters
-    {
-        /// <summary>
-        /// 部材せい
-        /// </summary>
-        public List<float> A { get; } = new List<float>();
-        /// <summary>
-        /// 部材幅
-        /// </summary>
-        public List<float> B { get; } = new List<float>();
+        public override void Load(XDocument stbData, StbVersion stbVersion, string xmlns)
+        {
+            if (stbData.Root == null)
+                return;
+
+            var stSecSteel = stbData.Root.Descendants(xmlns + Tag);
+            var stSections = stSecSteel.Elements(xmlns + ElementTag);
+
+            foreach (var stSection in stSections)
+                ElementLoader(stSection, stbVersion, xmlns);
+        }
     }
 }
