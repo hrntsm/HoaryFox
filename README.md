@@ -1,5 +1,10 @@
 # HoaryFox
 
+![Platform](https://img.shields.io/badge/platform-Rhino6%20%7C%20Grasshopper-orange)
+![License](https://img.shields.io/github/license/hrntsm/HoaryFox)
+![Release](https://img.shields.io/github/v/release/hrntsm/HoaryFox)
+![Download](https://img.shields.io/github/downloads/hrntsm/HoaryFox/total)
+
 Grasshopper Component which read ST-Bridge file(.stb) and display its model information.  
 You can easily check frames and present structure frame!!  
 If you need stand-alone ST-Bridge file viewer, Please see [STEVIA](https://github.com/hrntsm/STEVIA-Stb2U/wiki)  
@@ -13,7 +18,7 @@ As a experimental function, it creates an analytical model of Karamba from st-br
 3. Right-click the file > Properties > make sure there is no "blocked" text
 4. Restart Rhino and Grasshopper
 
-## How to use
+## Usage
 
 Input st-bridge file path, output some its tag data(StbColumn, StbGirder, StbPost, StbBeam, StbBrace, StbSlab).
 
@@ -40,7 +45,12 @@ Quote from [building SMART Japan Structural Design Subcommittee](https://en.buil
 
 ## Contact information
 
-+ Twitter : [@hiron_rgkr](https://twitter.com/hiron_rgkr)
+![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)
 + URL : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
 + Mail : support(at)hrntsm.com
   + change (at) to @
+  
+## License
+
+HoaryFox is licensed undaer the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  
+Copyright© 2019, hrntsm
