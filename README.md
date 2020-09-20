@@ -45,12 +45,12 @@ Quote from [building SMART Japan Structural Design Subcommittee](https://en.buil
 
 ## Contact information
 
-![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)
-+ URL : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
++ ![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)
++ HP : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
 + Mail : support(at)hrntsm.com
   + change (at) to @
   
 ## License
 
-HoaryFox is licensed undaer the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  
+HoaryFox is licensed under the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  
 Copyright© 2019, hrntsm
