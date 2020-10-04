@@ -43,7 +43,7 @@ ST-Bridgeの規格を作成している [building SMART Japan の構造設計小
 
 ## Contact information
 
-+ ![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)
+[![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)](https://twitter.com/hiron_rgkr)
 + Twitter : [@hiron_rgkr](https://twitter.com/hiron_rgkr)
 + HP : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
 + Mail : support(at)hrntsm.com

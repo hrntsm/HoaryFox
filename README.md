@@ -45,9 +45,9 @@ Quote from [building SMART Japan Structural Design Subcommittee](https://en.buil
 
 ## Contact information
 
-+ ![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)
-+ Twitter : [@hiron_rgkr](https://twitter.com/hiron_rgkr)
-+ HP : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
+[![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)](https://twitter.com/hiron_rgkr)
++ HomePage : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
++ blog : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
 + Mail : support(at)hrntsm.com
   + change (at) to @
   
