@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Grasshopper.Kernel;
-using HoaryFox.STB;
-using HoaryFox.STB.Section;
+using STBReader;
+using STBReader.Section;
 using Karamba.CrossSections;
 using Karamba.Geometry;
 using Karamba.GHopper.CrossSections;

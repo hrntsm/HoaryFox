@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Xml.Linq;
 using Grasshopper.Kernel;
-using HoaryFox.STB;
+using STBReader;
 using Rhino.Geometry;
 
 namespace HoaryFox.Component.Tag.Name

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-
 using Grasshopper.Kernel;
-using HoaryFox.STB;
-using Rhino.Geometry;
+using STBReader;
 
 namespace HoaryFox.Component.IO
 {

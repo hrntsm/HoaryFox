@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
-using HoaryFox.STB;
-using HoaryFox.STB.Member;
-using HoaryFox.STB.Model;
-using HoaryFox.STB.Section;
+using STBReader;
+using STBReader.Member;
+using STBReader.Model;
+using STBReader.Section;
 using Rhino.Geometry;
 
 namespace HoaryFox.Member

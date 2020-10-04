@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using HoaryFox.STB;
-using HoaryFox.STB.Model;
+using System.Linq;
+using STBReader;
+using STBReader.Model;
 using Rhino.Geometry;
 
 namespace HoaryFox.Member
@@ -23,7 +24,9 @@ namespace HoaryFox.Member
             {
                 var idNodeStart = _nodes.Id.IndexOf(_stbData.Columns.IdNodeStart[i]);
                 var idNodeEnd = _stbData.Nodes.Id.IndexOf(_stbData.Columns.IdNodeEnd[i]);
-                columns.Add(new Line(_nodes.Pt[idNodeStart], _nodes.Pt[idNodeEnd]));
+                var ptStart = new Point3d(_nodes.X[idNodeStart], _nodes.Y[idNodeStart], _nodes.Z[idNodeStart]);
+                var ptEnd = new Point3d(_nodes.X[idNodeEnd], _nodes.Y[idNodeEnd], _nodes.Z[idNodeEnd]);
+                columns.Add(new Line(ptStart, ptEnd));
             }
 
             return columns;
@@ -36,7 +39,9 @@ namespace HoaryFox.Member
             {
                 var idNodeStart = _nodes.Id.IndexOf(_stbData.Girders.IdNodeStart[i]);
                 var idNodeEnd = _nodes.Id.IndexOf(_stbData.Girders.IdNodeEnd[i]);
-                girders.Add(new Line(_nodes.Pt[idNodeStart], _nodes.Pt[idNodeEnd]));
+                var ptStart = new Point3d(_nodes.X[idNodeStart], _nodes.Y[idNodeStart], _nodes.Z[idNodeStart]);
+                var ptEnd = new Point3d(_nodes.X[idNodeEnd], _nodes.Y[idNodeEnd], _nodes.Z[idNodeEnd]);
+                girders.Add(new Line(ptStart, ptEnd));
             }
 
             return girders;
@@ -50,7 +55,9 @@ namespace HoaryFox.Member
             {
                 var idNodeStart = _nodes.Id.IndexOf(_stbData.Posts.IdNodeStart[i]);
                 var idNodeEnd = _nodes.Id.IndexOf(_stbData.Posts.IdNodeEnd[i]);
-                posts.Add(new Line(_nodes.Pt[idNodeStart], _nodes.Pt[idNodeEnd]));
+                var ptStart = new Point3d(_nodes.X[idNodeStart], _nodes.Y[idNodeStart], _nodes.Z[idNodeStart]);
+                var ptEnd = new Point3d(_nodes.X[idNodeEnd], _nodes.Y[idNodeEnd], _nodes.Z[idNodeEnd]);
+                posts.Add(new Line(ptStart, ptEnd));
             }
 
             return posts;
@@ -64,7 +71,9 @@ namespace HoaryFox.Member
             {
                 var idNodeStart = _nodes.Id.IndexOf(_stbData.Beams.IdNodeStart[i]);
                 var idNodeEnd = _nodes.Id.IndexOf(_stbData.Beams.IdNodeEnd[i]);
-                beams.Add(new Line(_nodes.Pt[idNodeStart], _nodes.Pt[idNodeEnd]));
+                var ptStart = new Point3d(_nodes.X[idNodeStart], _nodes.Y[idNodeStart], _nodes.Z[idNodeStart]);
+                var ptEnd = new Point3d(_nodes.X[idNodeEnd], _nodes.Y[idNodeEnd], _nodes.Z[idNodeEnd]);
+                beams.Add(new Line(ptStart, ptEnd));
             }
 
             return beams;
@@ -78,10 +87,17 @@ namespace HoaryFox.Member
             {
                 var idNodeStart = _nodes.Id.IndexOf(_stbData.Braces.IdNodeStart[i]);
                 var idNodeEnd = _nodes.Id.IndexOf(_stbData.Braces.IdNodeEnd[i]);
-                braces.Add(new Line(_nodes.Pt[idNodeStart], _nodes.Pt[idNodeEnd]));
+                var ptStart = new Point3d(_nodes.X[idNodeStart], _nodes.Y[idNodeStart], _nodes.Z[idNodeStart]);
+                var ptEnd = new Point3d(_nodes.X[idNodeEnd], _nodes.Y[idNodeEnd], _nodes.Z[idNodeEnd]);
+                braces.Add(new Line(ptStart, ptEnd));
             }
 
             return braces;
+        }
+
+        public List<Point3d> Nodes()
+        {
+            return _nodes.Pt.Select(point => new Point3d(point.X, point.Y, point.Z)).ToList();
         }
     }
 }

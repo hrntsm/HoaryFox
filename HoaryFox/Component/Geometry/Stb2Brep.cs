@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
-
+using Rhino.Geometry;
 using Grasshopper.Kernel;
 using HoaryFox.Member;
-using HoaryFox.STB;
-using HoaryFox.STB.Member;
-using Rhino.Geometry;
+using STBReader;
+using STBReader.Member;
 
 namespace HoaryFox.Component.Geometry
 {
