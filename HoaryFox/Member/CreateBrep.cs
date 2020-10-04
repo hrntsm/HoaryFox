@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using HoaryFox.STB;
-using HoaryFox.STB.Member;
-using HoaryFox.STB.Model;
-using HoaryFox.STB.Section;
+using STBReader;
+using STBReader.Member;
+using STBReader.Model;
+using STBReader.Section;
 using Rhino.Geometry;
-using Rhino.Geometry.Collections;
 
 namespace HoaryFox.Member
 {

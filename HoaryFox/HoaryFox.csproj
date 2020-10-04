@@ -36,10 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Component\IO\StbLoader.cs" />
+    <Compile Include="Component\IO\Stb2KElem.cs" />
     <Compile Include="Component\Bar\Stb2Bar.cs" />
     <Compile Include="Component\Geometry\Stb2Line.cs" />
     <Compile Include="Component\Geometry\Stb2Brep.cs" />
-    <Compile Include="Component\IO\Stb2KElem.cs" />
     <Compile Include="Component\Tag\Name\BeamNameTag.cs" />
     <Compile Include="Component\Tag\Name\BraceNameTag.cs" />
     <Compile Include="Component\Tag\Name\ColumnNameTag.cs" />
@@ -51,26 +51,27 @@
     <Compile Include="Component\Tag\Section\GirderSecTag.cs" />
     <Compile Include="Component\Tag\Section\PostSecTag.cs" />
     <Compile Include="Member\CreateLines.cs" />
+    <Compile Include="Member\CreateBar.cs" />
+    <Compile Include="Member\CreateBrep.cs" />
+    <Compile Include="Member\CreateTag.cs" />
+    <Compile Include="STBReader\STBReader\Member\Base.cs" />
+    <Compile Include="STBReader\STBReader\Member\Enum.cs" />
+    <Compile Include="STBReader\STBReader\Member\Members.cs" />
+    <Compile Include="STBReader\STBReader\Model\Base.cs" />
+    <Compile Include="STBReader\STBReader\Model\Enum.cs" />
+    <Compile Include="STBReader\STBReader\Model\Models.cs" />
+    <Compile Include="STBReader\STBReader\Section\Base.cs" />
+    <Compile Include="STBReader\STBReader\Section\Enum.cs" />
+    <Compile Include="STBReader\STBReader\Section\Sections.cs" />
+    <Compile Include="STBReader\STBReader\StbBase.cs" />
+    <Compile Include="STBReader\STBReader\StbData.cs" />
+    <Compile Include="HoaryFoxInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Member\CreateBar.cs" />
-    <Compile Include="Member\CreateBrep.cs" />
-    <Compile Include="STB\Member\Base.cs" />
-    <Compile Include="STB\Member\Enum.cs" />
-    <Compile Include="STB\Member\Members.cs" />
-    <Compile Include="STB\Model\Base.cs" />
-    <Compile Include="STB\Model\Enum.cs" />
-    <Compile Include="STB\Model\Models.cs" />
-    <Compile Include="STB\Section\Base.cs" />
-    <Compile Include="STB\Section\Enum.cs" />
-    <Compile Include="STB\Section\Sections.cs" />
-    <Compile Include="STB\StbBase.cs" />
-    <Compile Include="HoaryFoxInfo.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Member\CreateTag.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Eto, Version=2.5.0.0, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">

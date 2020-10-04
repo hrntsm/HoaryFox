@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
-
 using Grasshopper.Kernel;
 using HoaryFox.Member;
-using HoaryFox.STB;
+using STBReader;
 using Rhino.Geometry;
 
 
@@ -68,7 +66,7 @@ namespace HoaryFox.Component.Geometry
         private void MakeLine()
         {
             var createLines = new CreateLines(_stbData);
-            _nodes = _stbData.Nodes.Pt;
+            _nodes = createLines.Nodes();
             _columns = createLines.Columns();
             _girders = createLines.Girders();
             _posts = createLines.Posts();
