@@ -1,0 +1,3 @@
+[submodule "STBReader"]
+	path = STBReader
+	url = https://github.com/hrntsm/STBReader
