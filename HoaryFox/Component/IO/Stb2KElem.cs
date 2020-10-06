@@ -148,8 +148,8 @@ namespace HoaryFox.Component.IO
             for (int eNum = 0; eNum < _stbData.Braces.Id.Count; eNum++)
                 _k3Ids[1].Add("Id" + _stbData.Braces.IdSection[eNum]);
 
-            var fc21 = new FemMaterial_Isotrop("Concrete", "Fc21", 2186, 910.8, 910.8, 24, 1.00E-05, 1.67, Color.Gray);
-            var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20600, 8076, 8076, 78.5, 1.20E-05, 23.5, Color.Brown);
+            var fc21 = new FemMaterial_Isotrop("Concrete", "Fc21", 2186_0000, 911_0000, 911_0000, 24, 17_0000, 1.00E-05, Color.Gray);
+            var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20600_0000, 8076_0000, 8076_0000, 78.5, 235_0000, 1.20E-05, Color.Brown);
 
 
             for (var i = 0; i < _stbData.SecColumnRc.Id.Count; i++)
