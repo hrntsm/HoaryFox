@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Grasshopper.Kernel;
 using STBReader;
 using STBReader.Section;
 using Karamba.CrossSections;
+using Karamba.Elements;
 using Karamba.Geometry;
 using Karamba.GHopper.CrossSections;
 using Karamba.GHopper.Elements;
@@ -17,9 +19,9 @@ namespace HoaryFox.Component.IO
     {
         private StbData _stbData;
         private List<GH_Element> _k3ElemBe = new List<GH_Element>();
-        private List<GH_Element> _k3ElemSh = new List<GH_Element>();
-        private List<string>[] _k3Ids = new List<string>[2];
-        private List<CroSec> _k3CroSec = new List<CroSec>();
+        private readonly List<GH_Element> _k3ElemSh = new List<GH_Element>();
+        private readonly List<string>[] _k3Ids = new List<string>[2];
+        private readonly List<CroSec> _k3CroSec = new List<CroSec>();
 
         public Stb2KElem()
           : base("Stb to Karamba", "S2K", "Read ST-Bridge file and display", "HoaryFox", "IO")
@@ -42,7 +44,6 @@ namespace HoaryFox.Component.IO
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new Param_Element(), "ElementBeam", "ElemBe", "Karamba Line Element", GH_ParamAccess.list);
-            // pManager.AddParameter(new Param_Element(), "ElementShell", "ElemSh", "Karamba Shell Element", GH_ParamAccess.list);
             pManager.AddParameter(new Param_CrossSection(), "CrossSection", "CroSec", "Karamba CrossSection", GH_ParamAccess.list);
         }
 
@@ -63,8 +64,8 @@ namespace HoaryFox.Component.IO
             
             for (var i = 0; i < _stbData.Columns.Id.Count; i++)
             {
-                var idNodeStart = _stbData.Nodes.Id.IndexOf(_stbData.Columns.IdNodeStart[i]);
-                var idNodeEnd = _stbData.Nodes.Id.IndexOf(_stbData.Columns.IdNodeEnd[i]);
+                int idNodeStart = _stbData.Nodes.Id.IndexOf(_stbData.Columns.IdNodeStart[i]);
+                int idNodeEnd = _stbData.Nodes.Id.IndexOf(_stbData.Columns.IdNodeEnd[i]);
                 var p0 = new Point3(
                     _stbData.Nodes.Pt[idNodeStart].X / 1000d,
                     _stbData.Nodes.Pt[idNodeStart].Y / 1000d,
@@ -79,8 +80,8 @@ namespace HoaryFox.Component.IO
             }
             for (var i = 0; i < _stbData.Girders.Id.Count; i++)
             {
-                var idNodeStart = _stbData.Nodes.Id.IndexOf(_stbData.Girders.IdNodeStart[i]);
-                var idNodeEnd = _stbData.Nodes.Id.IndexOf(_stbData.Girders.IdNodeEnd[i]);
+                int idNodeStart = _stbData.Nodes.Id.IndexOf(_stbData.Girders.IdNodeStart[i]);
+                int idNodeEnd = _stbData.Nodes.Id.IndexOf(_stbData.Girders.IdNodeEnd[i]);
                 var p0 = new Point3(
                     _stbData.Nodes.Pt[idNodeStart].X / 1000d,
                     _stbData.Nodes.Pt[idNodeStart].Y / 1000d,
@@ -93,7 +94,7 @@ namespace HoaryFox.Component.IO
                 );
                 k3Elems[0].Add(new Line3(p0, p1));
             }
-            var elems = k3d.Part.LineToBeam(k3Elems[0], _k3Ids[0], new List<CroSec>(){}, logger, out nodes);
+            List<BuilderBeam> elems = k3d.Part.LineToBeam(k3Elems[0], _k3Ids[0], new List<CroSec>(), logger, out nodes);
             
             for (var i = 0; i < _stbData.Braces.Id.Count; i++)
             {
@@ -111,17 +112,12 @@ namespace HoaryFox.Component.IO
                 );
                 k3Elems[1].Add(new Line3(p0, p1));
             }
-            elems.AddRange(k3d.Part.LineToBeam(k3Elems[1], _k3Ids[1], new List<CroSec>(){}, logger, out nodes, false));
+            elems.AddRange(k3d.Part.LineToBeam(k3Elems[1], _k3Ids[1], new List<CroSec>(), logger, out nodes, false));
             
-            var elemList = new List<GH_Element>();
-            foreach (var e in elems)
-            {
-                elemList.Add(new GH_Element(e));
-            }
+            List<GH_Element> elemList = elems.Select(e => new GH_Element(e)).ToList();
             _k3ElemBe = elemList;
 
             DA.SetDataList(0, _k3ElemBe);
-            // DA.SetDataList(1, _k3ElemSh);
             DA.SetDataList(1, _k3CroSec);
         }
 
@@ -139,14 +135,18 @@ namespace HoaryFox.Component.IO
             string name;
             ShapeTypes shapeType;
 
-            for (int eNum = 0; eNum < _stbData.Columns.Id.Count; eNum++)
+            for (var eNum = 0; eNum < _stbData.Columns.Id.Count; eNum++)
+            {
                 _k3Ids[0].Add("Id" + _stbData.Columns.IdSection[eNum]);
-            
-            for (int eNum = 0; eNum < _stbData.Girders.Id.Count; eNum++)
+            }
+            for (var eNum = 0; eNum < _stbData.Girders.Id.Count; eNum++)
+            {
                 _k3Ids[0].Add("Id" + _stbData.Girders.IdSection[eNum]);
-            
-            for (int eNum = 0; eNum < _stbData.Braces.Id.Count; eNum++)
+            }
+            for (var eNum = 0; eNum < _stbData.Braces.Id.Count; eNum++)
+            {
                 _k3Ids[1].Add("Id" + _stbData.Braces.IdSection[eNum]);
+            }
 
             var fc21 = new FemMaterial_Isotrop("Concrete", "Fc21", 2186_0000, 911_0000, 911_0000, 24, 17_0000, 1.00E-05, Color.Gray);
             var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20600_0000, 8076_0000, 8076_0000, 78.5, 235_0000, 1.20E-05, Color.Brown);
@@ -195,14 +195,8 @@ namespace HoaryFox.Component.IO
                 name = _stbData.SecSteel.Name[i];
                 p1 = _stbData.SecSteel.P1[i] / 10d;
                 p2 = _stbData.SecSteel.P2[i] / 10d;
-                if (_stbData.SecSteel.P3.Count < i+1)
-                    p3 = 0;
-                else
-                    p3 = _stbData.SecSteel.P3[i] / 10d;
-                if (_stbData.SecSteel.P4.Count < i+1)
-                    p4 = 0;
-                else
-                    p4 = _stbData.SecSteel.P4[i] / 10d;
+                p3 = _stbData.SecSteel.P3.Count < i + 1 ? 0 : _stbData.SecSteel.P3[i] / 10d;
+                p4 = _stbData.SecSteel.P4.Count < i + 1 ? 0 : _stbData.SecSteel.P4[i] / 10d;
                 shapeType = _stbData.SecSteel.ShapeType[i];
 
                 CroSec croSec = null;
@@ -258,25 +252,28 @@ namespace HoaryFox.Component.IO
 
                 for (var j = 0; j < _stbData.SecColumnS.Id.Count; j++)
                 {
-                    if (_stbData.SecColumnS.Shape[j] != name) continue;
-                    if (croSec != null)
-                        croSec.AddElemId("Id" + _stbData.SecColumnS.Id[j]);
+                    if (_stbData.SecColumnS.Shape[j] != name)
+                    {
+                        continue;
+                    }
+                    croSec?.AddElemId("Id" + _stbData.SecColumnS.Id[j]);
                 }
-
                 for (var j = 0; j < _stbData.SecBeamS.Id.Count; j++)
                 {
-                    if (_stbData.SecBeamS.Shape[j] != name) continue;
-                    if (croSec != null)
-                        croSec.AddElemId("Id" + _stbData.SecBeamS.Id[j]);
+                    if (_stbData.SecBeamS.Shape[j] != name)
+                    {
+                        continue;
+                    }
+                    croSec?.AddElemId("Id" + _stbData.SecBeamS.Id[j]);
                 }
-
                 for (var j = 0; j < _stbData.SecBraceS.Id.Count; j++)
                 {
-                    if (_stbData.SecBraceS.Shape[j] != name) continue;
-                    if (croSec != null)
-                        croSec.AddElemId("Id" + _stbData.SecBraceS.Id[j]);
+                    if (_stbData.SecBraceS.Shape[j] != name)
+                    {
+                        continue;
+                    }
+                    croSec?.AddElemId("Id" + _stbData.SecBraceS.Id[j]);
                 }
-                
                 _k3CroSec.Add(croSec);
             }
         }

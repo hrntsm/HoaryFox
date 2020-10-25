@@ -6,10 +6,9 @@ namespace HoaryFox.Component.IO
 {
     public class StbLoader:GH_Component
     {
-        private StbData _stbData;
         private string _path;
-        private readonly double _lengthTolerance = GH_Component.DocumentTolerance();
-        private readonly double _angleTolerance = GH_Component.DocumentAngleTolerance();
+        private readonly double _lengthTolerance = DocumentTolerance();
+        private readonly double _angleTolerance = DocumentAngleTolerance();
             
         public StbLoader()
           : base("Load stb data", "Loader", "Read ST-Bridge file and display", "HoaryFox", "IO")
@@ -31,13 +30,12 @@ namespace HoaryFox.Component.IO
             // 対象の stb の pathを取得
             if (!DA.GetData("path", ref _path)) { return; }
             
-            _stbData = new StbData(_path, _lengthTolerance, _angleTolerance);
+            var stbData = new StbData(_path, _lengthTolerance, _angleTolerance);
             
-            DA.SetData(0, _stbData);
+            DA.SetData(0, stbData);
         }
 
         protected override System.Drawing.Bitmap Icon => Properties.Resource.LoadStb;
-
         public override Guid ComponentGuid => new Guid("B8B7631C-BCAE-4549-95F7-1954D4781D24");
     }
 }

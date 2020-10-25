@@ -19,7 +19,7 @@ namespace HoaryFox.Component.Tag.Section
         private List<Point3d> _tagPos = new List<Point3d>();
         
         public ColumnSecTag()
-          : base("Column Section Tag", "ColumSec", "Display Column Section Tag", "HoaryFox", "Section")
+          : base("Column Section Tag", "ColumnSec", "Display Column Section Tag", "HoaryFox", "Section")
         {
         }
 
@@ -55,20 +55,21 @@ namespace HoaryFox.Component.Tag.Section
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
-            if (_frameTags.DataCount != 0)
+            if (_frameTags.DataCount == 0)
             {
-                for (int i = 0; i < _frameTags.PathCount; i++)
-                {
-                    var tags = _frameTags.Branches[i];
-                    string tag = tags[0].ToString() + "\n" + tags[1].ToString() + "\n" + tags[2].ToString() + "\n" + 
-                                 tags[3].ToString() + "\n" + tags[4].ToString() + "\n" + tags[5].ToString();
-                    args.Display.Draw2dText(tag, Color.Black, _tagPos[i], false, _size);
-                }
+                return;
+            }
+
+            for (var i = 0; i < _frameTags.PathCount; i++)
+            {
+                List<GH_String> tags = _frameTags.Branches[i];
+                string tag = tags[0].ToString() + "\n" + tags[1].ToString() + "\n" + tags[2].ToString() + "\n" + 
+                             tags[3].ToString() + "\n" + tags[4].ToString() + "\n" + tags[5].ToString();
+                args.Display.Draw2dText(tag, Color.Black, _tagPos[i], false, _size);
             }
         }
 
-        protected override System.Drawing.Bitmap Icon => Properties.Resource.ColumnSection;
-
+        protected override Bitmap Icon => Properties.Resource.ColumnSection;
         public override Guid ComponentGuid => new Guid("63B2A2E1-A277-4ABA-B522-00D7969871C3");
 
         private void GetTag()

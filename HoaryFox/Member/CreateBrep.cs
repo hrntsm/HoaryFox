@@ -20,7 +20,7 @@ namespace HoaryFox.Member
         private Brep GetPlaneBrep(Point3d[] pts, StbOpen open)
         {
             Brep brep;
-            var tol = _stbData.ToleLength;
+            double tol = _stbData.ToleLength;
             
             try
             {
@@ -35,7 +35,7 @@ namespace HoaryFox.Member
                         brep = Brep.CreateFromCornerPoints(pts[0], pts[1], pts[2], pts[3], tol);
                         break;
                     default:
-                        foreach (var pt in pts)
+                        foreach (Point3d pt in pts)
                         {
                             centerPt.X += pt.X / pts.Length;
                             centerPt.Y += pt.Y / pts.Length;
@@ -43,7 +43,9 @@ namespace HoaryFox.Member
                         }
                         brep = Brep.CreateFromCornerPoints(pts[0], pts[1], centerPt, tol);
                         for (var i = 0; i < pts.Length - 2; i++)
+                        {
                             brep.Join(Brep.CreateFromCornerPoints(pts[i + 1], pts[i + 2], centerPt, tol), tol, false);
+                        }
                         brep.Join(Brep.CreateFromCornerPoints(pts[pts.Length - 1], pts[0], centerPt, tol), tol, true);
                         break;
                 }
@@ -53,12 +55,12 @@ namespace HoaryFox.Member
                 brep = null;
             }
 
-            var planeBrep = brep;
+            Brep planeBrep = brep;
             if (open  != null && pts.Length == 4)
             {
                 if (open.Id.Count != 0  && brep != null)
                 {
-                    var surface = brep.Surfaces[0];
+                    Surface surface = brep.Surfaces[0];
                     var trimSurf = new List<Brep>();
                     
                     try
@@ -87,11 +89,11 @@ namespace HoaryFox.Member
             var brep = new List<Brep>();
             var count = 0;
 
-            foreach (var nodeIds in slabs.NodeIdList)
+            foreach (List<int> nodeIds in slabs.NodeIdList)
             {
                 var index = new int[nodeIds.Count];
                 var pts = new Point3d[nodeIds.Count];
-                var offset = slabs.Level[count];
+                double offset = slabs.Level[count];
 
                 for (var i = 0; i < nodeIds.Count; i++)
                 {
@@ -111,7 +113,7 @@ namespace HoaryFox.Member
             var brep = new List<Brep>();
             var count = 0;
 
-            foreach (var nodeIds in walls.NodeIdList)
+            foreach (List<int> nodeIds in walls.NodeIdList)
             {
                 var index = new int[nodeIds.Count];
                 var pts = new Point3d[nodeIds.Count];
@@ -140,13 +142,13 @@ namespace HoaryFox.Member
 
             for (var eNum = 0; eNum < frame.Id.Count; eNum++)
             {
-                var idSection = frame.IdSection[eNum];
-                var kind = frame.KindStructure[eNum];
-                var rotate = frame.Rotate[eNum];
+                int idSection = frame.IdSection[eNum];
+                KindsStructure kind = frame.KindStructure[eNum];
+                double rotate = frame.Rotate[eNum];
 
                 // 始点と終点の座標取得
-                var nodeIndexStart = _stbData.Nodes.Id.IndexOf(frame.IdNodeStart[eNum]);
-                var nodeIndexEnd = _stbData.Nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
+                int nodeIndexStart = _stbData.Nodes.Id.IndexOf(frame.IdNodeStart[eNum]);
+                int nodeIndexEnd = _stbData.Nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
                 var nodeStart = new Point3d(_stbData.Nodes.X[nodeIndexStart], _stbData.Nodes.Y[nodeIndexStart], _stbData.Nodes.Z[nodeIndexStart]);
                 var nodeEnd = new Point3d(_stbData.Nodes.X[nodeIndexEnd], _stbData.Nodes.Y[nodeIndexEnd], _stbData.Nodes.Z[nodeIndexEnd]);
 
@@ -233,7 +235,7 @@ namespace HoaryFox.Member
         }
 
 
-        private List<Brep> Point2Brep(Point3d nodeStart, Point3d nodeEnd, double height, double width, double rotate, ShapeTypes shapeType, FrameType frameType)
+        private IEnumerable<Brep> Point2Brep(Point3d nodeStart, Point3d nodeEnd, double height, double width, double rotate, ShapeTypes shapeType, FrameType frameType)
         {
             var pointStart = new Point3d[6];
             var pointEnd = new Point3d[6];
@@ -298,7 +300,7 @@ namespace HoaryFox.Member
                     throw new ArgumentOutOfRangeException(nameof(shapeType), shapeType, null);
             }
 
-            var rotateAngle = rotate * Math.PI / 180d;
+            double rotateAngle = rotate * Math.PI / 180d;
             var rotationCenter = new Point3d[2];
             if (frameType == FrameType.Girder || frameType == FrameType.Beam)
             {
@@ -319,7 +321,7 @@ namespace HoaryFox.Member
                 );
             }
             var rotationAxis = new Vector3d(rotationCenter[1] - rotationCenter[0]);
-            foreach (var b in brep)
+            foreach (Brep b in brep)
             {
                 b.Rotate(rotateAngle, rotationAxis, rotationCenter[0]);
             }
@@ -392,7 +394,7 @@ namespace HoaryFox.Member
             //  Y        3 - 4 - 5 
             //  ^        |   |   |  
             //  o >  X   0 - 1 - 2
-            Point3d[] points = new Point3d[6];
+            var points = new Point3d[6];
 
             points[0] = new Point3d(node.X - width / 2 * Math.Sin(angle),
                                     node.Y - height / 2,
@@ -426,7 +428,7 @@ namespace HoaryFox.Member
             //  Y        3 - 4 - 5 
             //  ^        |   |   |  
             //  o >  X   0 - 1 - 2
-            Point3d[] points = new Point3d[6];
+            var points = new Point3d[6];
 
             points[0] = new Point3d(node.X + width / 2 * Math.Sin(angle),
                                     node.Y + width / 2 * Math.Cos(angle),
@@ -460,7 +462,7 @@ namespace HoaryFox.Member
             //  Y        3 - 4 - 5 
             //  ^        |   |   |  
             //  o >  X   0 - 1 - 2
-            Point3d[] points = new Point3d[6];
+            var points = new Point3d[6];
 
             points[0] = new Point3d(node.X + width / 2 * Math.Sin(angle),
                                     node.Y + width / 2 * Math.Cos(angle),

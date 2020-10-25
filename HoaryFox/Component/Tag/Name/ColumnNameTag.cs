@@ -4,6 +4,8 @@ using System.Drawing;
 using Grasshopper.Kernel;
 using STBReader;
 using Rhino.Geometry;
+using STBReader.Member;
+using STBReader.Model;
 
 namespace HoaryFox.Component.Tag.Name
 {
@@ -45,13 +47,13 @@ namespace HoaryFox.Component.Tag.Name
             if (!DA.GetData("Data", ref _stbData)) { return; }
             if (!DA.GetData("Size", ref _size)) { return; }
 
-            var nodes = _stbData.Nodes;
-            var columns = _stbData.Columns;
+            StbNodes nodes = _stbData.Nodes;
+            StbColumns columns = _stbData.Columns;
             
             for (var i = 0; i < columns.Id.Count; i++)
             {
-                var idNodeStart = nodes.Id.IndexOf(columns.IdNodeStart[i]);
-                var idNodeEnd = nodes.Id.IndexOf(columns.IdNodeEnd[i]);
+                int idNodeStart = nodes.Id.IndexOf(columns.IdNodeStart[i]);
+                int idNodeEnd = nodes.Id.IndexOf(columns.IdNodeEnd[i]);
                 _columnName.Add(columns.Name[i]);
                 _columnPos.Add(new Point3d(
                     (nodes.X[idNodeStart] + nodes.X[idNodeEnd]) / 2.0,
@@ -66,11 +68,12 @@ namespace HoaryFox.Component.Tag.Name
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
             for (var i = 0; i < _columnName.Count; i++)
+            {
                 args.Display.Draw2dText(_columnName[i], Color.Black, _columnPos[i], true, _size);
+            }
         }
 
-        protected override System.Drawing.Bitmap Icon => Properties.Resource.ColumnName;
-
+        protected override Bitmap Icon => Properties.Resource.ColumnName;
         public override Guid ComponentGuid => new Guid("806B9DBE-0207-4E79-A1BE-DD0B37BA9B31");
     }
 }
