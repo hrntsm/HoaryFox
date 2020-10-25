@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using STBReader;
@@ -21,30 +23,30 @@ namespace HoaryFox.Member
 
         public GH_Structure<GH_String> Frame(StbFrame frame, StbSecColumnRc columnRc, StbSecColumnS colS, StbSecBeamRc beamRc, StbSecBeamS beamS, StbSecBraceS braceS, StbSecSteel secSteel)
         {
-            GH_Structure<GH_String> sec = new GH_Structure<GH_String>();
+            var sec = new GH_Structure<GH_String>();
         
             double p1 = 0;
             double p2 = 0;
             double p3 = 0;
             double p4 = 0;
-            string shape = string.Empty;
-            string name = string.Empty;
+            var shape = string.Empty;
+            var name = string.Empty;
         
-            for (int eNum = 0; eNum < frame.Id.Count; eNum++)
+            for (var eNum = 0; eNum < frame.Id.Count; eNum++)
             {
                 int idSection = frame.IdSection[eNum];
                 KindsStructure kind = frame.KindStructure[eNum];
-                GH_Path ghPath = new GH_Path(new int[]{eNum});
+                var ghPath = new GH_Path(new[]{eNum});
         
                 // 始点と終点の座標取得
                 int startIndex = _nodes.Id.IndexOf(frame.IdNodeStart[eNum]);
                 int endIndex = _nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
-                Point3d nodeStart = new Point3d(_nodes.X[startIndex], _nodes.Y[startIndex], _nodes.Z[startIndex]);
-                Point3d nodeEnd = new Point3d(_nodes.X[endIndex], _nodes.Y[endIndex], _nodes.Z[endIndex]);
+                var nodeStart = new Point3d(_nodes.X[startIndex], _nodes.Y[startIndex], _nodes.Z[startIndex]);
+                var nodeEnd = new Point3d(_nodes.X[endIndex], _nodes.Y[endIndex], _nodes.Z[endIndex]);
                 TagPos.Add(new Point3d((nodeStart.X + nodeEnd.X) / 2.0, (nodeStart.Y + nodeEnd.Y) / 2.0, (nodeStart.Z + nodeEnd.Z) / 2.0));
         
                 int secIndex;
-                ShapeTypes shapeType = ShapeTypes.BOX;
+                var shapeType = ShapeTypes.BOX;
                 switch (kind)
                 {
                     case KindsStructure.Rc:
@@ -66,8 +68,17 @@ namespace HoaryFox.Member
                                 p3 = 0;
                                 p4 = 0;
                                 break;
+                            case FrameType.Brace:
+                                break;
+                            case FrameType.Slab:
+                                break;
+                            case FrameType.Wall:
+                                break;
+                            case FrameType.Any:
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
                         }
-        
                         shapeType = p1 <= 0 ? ShapeTypes.Pipe : ShapeTypes.BOX;
                         break;
                     case KindsStructure.S:
@@ -89,6 +100,14 @@ namespace HoaryFox.Member
                                 idShape = braceS.Id.IndexOf(idSection);
                                 shape = braceS.Shape[idShape];
                                 break;
+                            case FrameType.Slab:
+                                break;
+                            case FrameType.Wall:
+                                break;
+                            case FrameType.Any:
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
                         }
         
                         secIndex = secSteel.Name.IndexOf(shape);
@@ -100,14 +119,26 @@ namespace HoaryFox.Member
                         shapeType = secSteel.ShapeType[secIndex];
                         break;
                     }
+                    case KindsStructure.Src:
+                        break;
+                    case KindsStructure.Cft:
+                        break;
+                    case KindsStructure.Deck:
+                        break;
+                    case KindsStructure.Precast:
+                        break;
+                    case KindsStructure.Other:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
                         
                 sec.Append(new GH_String(name), ghPath);
                 sec.Append(new GH_String(shapeType.ToString()), ghPath);
-                sec.Append(new GH_String(p1.ToString()), ghPath);
-                sec.Append(new GH_String(p2.ToString()), ghPath);
-                sec.Append(new GH_String(p3.ToString()), ghPath);
-                sec.Append(new GH_String(p4.ToString()), ghPath);
+                sec.Append(new GH_String(p1.ToString(CultureInfo.InvariantCulture)), ghPath);
+                sec.Append(new GH_String(p2.ToString(CultureInfo.InvariantCulture)), ghPath);
+                sec.Append(new GH_String(p3.ToString(CultureInfo.InvariantCulture)), ghPath);
+                sec.Append(new GH_String(p4.ToString(CultureInfo.InvariantCulture)), ghPath);
             }
         
             return sec;

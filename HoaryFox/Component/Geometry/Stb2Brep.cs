@@ -59,12 +59,12 @@ namespace HoaryFox.Component.Geometry
         }
 
         protected override System.Drawing.Bitmap Icon => Properties.Resource.Brep;
-
         public override Guid ComponentGuid => new Guid("7d2f0c4e-4888-4607-8548-592104f6f06f");
 
         private void MakeBrep()
         {
-            var stbFrames = new List<StbFrame>() {
+            var stbFrames = new List<StbFrame>
+            {
                 _stbData.Columns, _stbData.Girders, _stbData.Posts, _stbData.Beams, _stbData.Braces
             };
             
@@ -73,8 +73,10 @@ namespace HoaryFox.Component.Geometry
             _slabBreps = breps.Slab(_stbData.Slabs);
             _wallBreps = breps.Wall(_stbData.Walls);
 
-            foreach (var frame in stbFrames)
+            foreach (StbFrame frame in stbFrames)
+            {
                 _frameBreps.Add(breps.Frame(frame));
+            }
         }
     }
 }

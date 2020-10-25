@@ -4,6 +4,8 @@ using System.Drawing;
 using Grasshopper.Kernel;
 using STBReader;
 using Rhino.Geometry;
+using STBReader.Member;
+using STBReader.Model;
 
 namespace HoaryFox.Component.Tag.Name
 {
@@ -45,13 +47,13 @@ namespace HoaryFox.Component.Tag.Name
             if (!DA.GetData("Data", ref _stbData)) { return; }
             if (!DA.GetData("Size", ref _size)) { return; }
 
-            var nodes = _stbData.Nodes;
-            var braces = _stbData.Braces;
+            StbNodes nodes = _stbData.Nodes;
+            StbBraces braces = _stbData.Braces;
         
             for (var i = 0; i < braces.Id.Count; i++)
             {
-                var idNodeStart = nodes.Id.IndexOf(braces.IdNodeStart[i]);
-                var idNodeEnd = nodes.Id.IndexOf(braces.IdNodeEnd[i]);
+                int idNodeStart = nodes.Id.IndexOf(braces.IdNodeStart[i]);
+                int idNodeEnd = nodes.Id.IndexOf(braces.IdNodeEnd[i]);
                 _braceName.Add(braces.Name[i]);
                 _bracePos.Add(new Point3d( 
                     (nodes.X[idNodeStart] + nodes.X[idNodeEnd]) / 2.0,
@@ -66,11 +68,12 @@ namespace HoaryFox.Component.Tag.Name
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
             for (var i = 0; i < _braceName.Count; i++)
+            {
                 args.Display.Draw2dText(_braceName[i], Color.Black, _bracePos[i], true, _size);
+            }
         }
 
-        protected override System.Drawing.Bitmap Icon => Properties.Resource.BraceName;
-
+        protected override Bitmap Icon => Properties.Resource.BraceName;
         public override Guid ComponentGuid => new Guid("E566DDCB-4192-40B2-8E96-2083207CC5A8");
     }
 }

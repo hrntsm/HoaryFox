@@ -55,20 +55,21 @@ namespace HoaryFox.Component.Tag.Section
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
-            if (_frameTags.DataCount != 0)
+            if (_frameTags.DataCount == 0)
             {
-                for (int i = 0; i < _frameTags.PathCount; i++)
-                {
-                    var tags = _frameTags.Branches[i];
-                    string tag = tags[0].ToString() + "\n" + tags[1].ToString() + "\n" + tags[2].ToString() + "\n" + 
-                                 tags[3].ToString() + "\n" + tags[4].ToString() + "\n" + tags[5].ToString();
-                    args.Display.Draw2dText(tag, Color.Black, _tagPos[i], false, _size);
-                }
+                return;
+            }
+
+            for (var i = 0; i < _frameTags.PathCount; i++)
+            {
+                List<GH_String> tags = _frameTags.Branches[i];
+                string tag = tags[0].ToString() + "\n" + tags[1].ToString() + "\n" + tags[2].ToString() + "\n" + 
+                             tags[3].ToString() + "\n" + tags[4].ToString() + "\n" + tags[5].ToString();
+                args.Display.Draw2dText(tag, Color.Black, _tagPos[i], false, _size);
             }
         }
 
-        protected override System.Drawing.Bitmap Icon => Properties.Resource.PostSection;
-
+        protected override Bitmap Icon => Properties.Resource.PostSection;
         public override Guid ComponentGuid => new Guid("C5891374-37F7-43E8-9D28-A901D87B497E");
 
         private void GetTag()
