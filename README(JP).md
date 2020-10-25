@@ -1,9 +1,9 @@
 # HoaryFox
 
 ![Platform](https://img.shields.io/badge/platform-Rhino6%20%7C%20Grasshopper-orange)
-![License](https://img.shields.io/github/license/hrntsm/HoaryFox)
-![Release](https://img.shields.io/github/v/release/hrntsm/HoaryFox)
-![Download](https://img.shields.io/github/downloads/hrntsm/HoaryFox/total)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c0a462728dce4983802d447ed67d3e7c)](https://www.codacy.com/gh/hrntsm/HoaryFox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hrntsm/HoaryFox&amp;utm_campaign=Badge_Grade)
+[![Release](https://img.shields.io/github/v/release/hrntsm/HoaryFox)](https://github.com/hrntsm/HoaryFox/releases)
+[![License](https://img.shields.io/github/license/hrntsm/HoaryFox)](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE)
 
 HoaryFox は 建築構造架構の可視化ツールです。  
 ST-Bridge file(.stb) を読み込んで、表示をします。  
@@ -52,4 +52,4 @@ ST-Bridgeの規格を作成している [building SMART Japan の構造設計小
 ## License
 
 HoaryFox is licensed under the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  
-Copyright© 2019, hrntsm
+Copyright© 2019-2020, hrntsm
