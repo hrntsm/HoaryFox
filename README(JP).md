@@ -4,6 +4,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c0a462728dce4983802d447ed67d3e7c)](https://www.codacy.com/gh/hrntsm/HoaryFox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hrntsm/HoaryFox&amp;utm_campaign=Badge_Grade)
 [![Release](https://img.shields.io/github/v/release/hrntsm/HoaryFox)](https://github.com/hrntsm/HoaryFox/releases)
 [![License](https://img.shields.io/github/license/hrntsm/HoaryFox)](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE)
+[![download](https://img.shields.io/badge/download-Food4Rhino-lightgrey)](https://www.food4rhino.com/app/hoaryfox)
 
 HoaryFox は 建築構造架構の可視化ツールです。  
 ST-Bridge file(.stb) を読み込んで、表示をします。  
