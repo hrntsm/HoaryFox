@@ -6,12 +6,12 @@ using Rhino.Geometry;
 
 namespace HoaryFox.Member
 {
-    public class CreateLines
+    public class FrameLines
     {
         private readonly StbData _stbData;
         private readonly StbNodes _nodes;
         
-        public CreateLines(StbData stbData)
+        public FrameLines(StbData stbData)
         {
             _stbData = stbData;
             _nodes = stbData.Nodes;

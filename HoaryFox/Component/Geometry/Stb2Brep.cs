@@ -68,7 +68,7 @@ namespace HoaryFox.Component.Geometry
                 _stbData.Columns, _stbData.Girders, _stbData.Posts, _stbData.Beams, _stbData.Braces
             };
             
-            var breps = new CreateBrep(_stbData);
+            var breps = new FrameBreps(_stbData);
 
             _slabBreps = breps.Slab(_stbData.Slabs);
             _wallBreps = breps.Wall(_stbData.Walls);
