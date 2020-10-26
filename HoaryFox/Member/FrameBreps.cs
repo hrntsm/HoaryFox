@@ -64,7 +64,7 @@ namespace HoaryFox.Member
             return brep;
         }
 
-        public List<Brep> Frame(StbFrame frame)
+        public List<Brep> Frame(StbFrame frameData)
         {
             var brep = new List<Brep>();
 
@@ -73,15 +73,15 @@ namespace HoaryFox.Member
             var shape = string.Empty;
             var shapeType = ShapeTypes.H;
 
-            for (var eNum = 0; eNum < frame.Id.Count; eNum++)
+            for (var eNum = 0; eNum < frameData.Id.Count; eNum++)
             {
-                int idSection = frame.IdSection[eNum];
-                KindsStructure kind = frame.KindStructure[eNum];
-                double rotate = frame.Rotate[eNum];
+                int idSection = frameData.IdSection[eNum];
+                KindsStructure kind = frameData.KindStructure[eNum];
+                double rotate = frameData.Rotate[eNum];
 
                 // 始点と終点の座標取得
-                int nodeIndexStart = _stbData.Nodes.Id.IndexOf(frame.IdNodeStart[eNum]);
-                int nodeIndexEnd = _stbData.Nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
+                int nodeIndexStart = _stbData.Nodes.Id.IndexOf(frameData.IdNodeStart[eNum]);
+                int nodeIndexEnd = _stbData.Nodes.Id.IndexOf(frameData.IdNodeEnd[eNum]);
                 var nodeStart = new Point3d(_stbData.Nodes.X[nodeIndexStart], _stbData.Nodes.Y[nodeIndexStart], _stbData.Nodes.Z[nodeIndexStart]);
                 var nodeEnd = new Point3d(_stbData.Nodes.X[nodeIndexEnd], _stbData.Nodes.Y[nodeIndexEnd], _stbData.Nodes.Z[nodeIndexEnd]);
 
@@ -89,7 +89,7 @@ namespace HoaryFox.Member
                 switch (kind)
                 {
                     case KindsStructure.Rc:
-                        switch (frame.FrameType)
+                        switch (frameData.FrameType)
                         {
                             case FrameType.Column:
                             case FrameType.Post:
@@ -117,7 +117,7 @@ namespace HoaryFox.Member
                     case KindsStructure.S:
                     {
                         int idShape;
-                        switch (frame.FrameType)
+                        switch (frameData.FrameType)
                         {
                             case FrameType.Column:
                             case FrameType.Post:
@@ -157,7 +157,7 @@ namespace HoaryFox.Member
                         throw new ArgumentOutOfRangeException();
                 }
 
-                brep.AddRange(CreateBreps.FromEndPoint(_stbData, nodeStart, nodeEnd, height, width, rotate, shapeType,  frame.FrameType));
+                brep.AddRange(CreateBreps.FromEndPoint(_stbData, nodeStart, nodeEnd, height, width, rotate, shapeType,  frameData.FrameType));
             }
 
             return brep;
