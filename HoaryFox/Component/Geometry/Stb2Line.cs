@@ -65,7 +65,7 @@ namespace HoaryFox.Component.Geometry
 
         private void MakeLine()
         {
-            var createLines = new CreateLines(_stbData);
+            var createLines = new FrameLines(_stbData);
             _nodes = createLines.Nodes();
             _columns = createLines.Columns();
             _girders = createLines.Girders();

@@ -50,10 +50,13 @@
     <Compile Include="Component\Tag\Section\ColumnSecTag.cs" />
     <Compile Include="Component\Tag\Section\GirderSecTag.cs" />
     <Compile Include="Component\Tag\Section\PostSecTag.cs" />
-    <Compile Include="Member\CreateLines.cs" />
+    <Compile Include="Member\CreateBreps.cs" />
+    <Compile Include="Member\FrameLines.cs" />
     <Compile Include="Member\CreateBar.cs" />
-    <Compile Include="Member\CreateBrep.cs" />
+    <Compile Include="Member\FrameBreps.cs" />
     <Compile Include="Member\CreateTag.cs" />
+    <Compile Include="Member\FramePoints.cs" />
+    <Compile Include="Member\SteelCroSecBrep.cs" />
     <Compile Include="STBReader\STBReader\Member\Base.cs" />
     <Compile Include="STBReader\STBReader\Member\Enum.cs" />
     <Compile Include="STBReader\STBReader\Member\Members.cs" />
