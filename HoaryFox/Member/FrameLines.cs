@@ -45,7 +45,7 @@ namespace HoaryFox.Member
 
         public List<Point3d> Nodes()
         {
-            return _nodes.Pt.Select(point => new Point3d(point.X, point.Y, point.Z)).ToList();
+            return _nodes.Position.Select(point => new Point3d(point.X, point.Y, point.Z)).ToList();
         }
 
         private List<Line> CreateFrameLines(StbFrame frame)

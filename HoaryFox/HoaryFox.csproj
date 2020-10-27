@@ -50,6 +50,8 @@
     <Compile Include="Component\Tag\Section\ColumnSecTag.cs" />
     <Compile Include="Component\Tag\Section\GirderSecTag.cs" />
     <Compile Include="Component\Tag\Section\PostSecTag.cs" />
+    <Compile Include="KarambaConnect\CrossSection.cs" />
+    <Compile Include="KarambaConnect\Element.cs" />
     <Compile Include="Member\CreateBreps.cs" />
     <Compile Include="Member\FrameLines.cs" />
     <Compile Include="Member\CreateBar.cs" />
