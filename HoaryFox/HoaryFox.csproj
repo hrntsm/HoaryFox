@@ -35,6 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Component\Base\NameTagBase.cs" />
+    <Compile Include="Component\Base\SecTagBase.cs" />
     <Compile Include="Component\IO\StbLoader.cs" />
     <Compile Include="Component\IO\Stb2KElem.cs" />
     <Compile Include="Component\Bar\Stb2Bar.cs" />
