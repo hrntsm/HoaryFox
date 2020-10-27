@@ -14,7 +14,7 @@ namespace HoaryFox.Member
     public class CreateTag
     {
         private readonly StbNodes _nodes;
-        public List<Point3d> TagPos { get; } = new List<Point3d>();
+        public List<Point3d> Position { get; } = new List<Point3d>();
 
         public CreateTag(StbNodes nodes)
         {
@@ -43,7 +43,7 @@ namespace HoaryFox.Member
                 int endIndex = _nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
                 var nodeStart = new Point3d(_nodes.X[startIndex], _nodes.Y[startIndex], _nodes.Z[startIndex]);
                 var nodeEnd = new Point3d(_nodes.X[endIndex], _nodes.Y[endIndex], _nodes.Z[endIndex]);
-                TagPos.Add(new Point3d((nodeStart.X + nodeEnd.X) / 2.0, (nodeStart.Y + nodeEnd.Y) / 2.0, (nodeStart.Z + nodeEnd.Z) / 2.0));
+                Position.Add(new Point3d((nodeStart.X + nodeEnd.X) / 2.0, (nodeStart.Y + nodeEnd.Y) / 2.0, (nodeStart.Z + nodeEnd.Z) / 2.0));
         
                 int secIndex;
                 var shapeType = ShapeTypes.BOX;
