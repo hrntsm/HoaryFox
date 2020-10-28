@@ -156,8 +156,9 @@ namespace HoaryFox.Member
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-
-                brep.AddRange(CreateBreps.FromEndPoint(_stbData, nodeStart, nodeEnd, height, width, rotate, shapeType,  frameData.FrameType));
+                
+                var shapeInfo = new ShapeInfo(nodeStart, nodeEnd, height, width, rotate);
+                brep.AddRange(CreateBreps.FromEndPoint(_stbData, shapeInfo, shapeType, frameData.FrameType));
             }
 
             return brep;
