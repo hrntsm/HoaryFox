@@ -156,11 +156,30 @@ namespace HoaryFox.Member
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-
-                brep.AddRange(CreateBreps.FromEndPoint(_stbData, nodeStart, nodeEnd, height, width, rotate, shapeType,  frameData.FrameType));
+                
+                var shapeInfo = new ShapeInfo(nodeStart, nodeEnd, height, width, rotate);
+                brep.AddRange(CreateBreps.FromEndPoint(_stbData, shapeInfo, shapeType, frameData.FrameType));
             }
 
             return brep;
+        }
+    }
+        
+    public struct ShapeInfo
+    {
+        public Point3d NodeStart { get; }
+        public Point3d NodeEnd { get; }
+        public double Height { get; }
+        public double Width { get; }
+        public double Rotate { get; }
+        
+        public ShapeInfo(Point3d nodeStart, Point3d nodeEnd, double height, double width, double rotate)
+        {
+            NodeStart = nodeStart;
+            NodeEnd = nodeEnd;
+            Height = height;
+            Width = width;
+            Rotate = rotate;
         }
     }
 }
