@@ -53,43 +53,34 @@ namespace HoaryFox.Member
 
         private static List<Brep> GetSecBrep(StbData stbData, ShapeTypes shapeType, List<List<Point3d>> origins, ShapeInfo shapeInfo)
         {
-            List<Brep> brep;
             var secBrep = new SteelCroSecBrep(stbData, origins);
             switch (shapeType)
             {
                 case ShapeTypes.H:
-                    brep = secBrep.HShape();
-                    break;
+                    return secBrep.HShape();
                 case ShapeTypes.BOX:
                 case ShapeTypes.BuildBOX:
                 case ShapeTypes.RollBOX:
                 case ShapeTypes.FB:
-                    brep = secBrep.BoxShape();
-                    break;
+                    return secBrep.BoxShape();
                 case ShapeTypes.Bar:
                 case ShapeTypes.Pipe:
-                    brep = secBrep.PipeShape(shapeInfo);
-                    break;
+                    return secBrep.PipeShape(shapeInfo);
                 case ShapeTypes.L:
-                    brep = secBrep.LShape();
-                    break;
+                    return secBrep.LShape();
                 case ShapeTypes.T:
-                    brep = secBrep.TShape();
-                    break;
+                    return secBrep.TShape();
                 case ShapeTypes.C:
-                    brep = secBrep.CShape();
-                    break;
+                    return secBrep.CShape();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(shapeType), shapeType, null);
             }
-
-            return brep;
         }
 
+        // 梁は部材天端の中心が起点に対して、柱・ブレースは部材芯が起点なので場合分け
         private static List<List<Point3d>> GetOriginPoints(FrameType frameType, ShapeInfo shapeInfo, IReadOnlyList<double> angles)
         {
             var origin = new List<List<Point3d>>();
-            // 梁は部材天端の中心が起点に対して、柱・ブレースは部材芯が起点なので場合分け
             switch (frameType)
             {
                 case FrameType.Column:
@@ -105,10 +96,6 @@ namespace HoaryFox.Member
                 case FrameType.Brace:
                     origin.Add(FramePoints.Brace(shapeInfo.NodeStart, shapeInfo.Width, angles[0]));
                     origin.Add(FramePoints.Brace(shapeInfo.NodeEnd, shapeInfo.Width, angles[0]));
-                    break;
-                case FrameType.Slab:
-                case FrameType.Wall:
-                case FrameType.Any:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(frameType), frameType, null);
