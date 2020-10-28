@@ -164,22 +164,4 @@ namespace HoaryFox.Member
             return brep;
         }
     }
-        
-    public struct ShapeInfo
-    {
-        public Point3d NodeStart { get; }
-        public Point3d NodeEnd { get; }
-        public double Height { get; }
-        public double Width { get; }
-        public double Rotate { get; }
-        
-        public ShapeInfo(Point3d nodeStart, Point3d nodeEnd, double height, double width, double rotate)
-        {
-            NodeStart = nodeStart;
-            NodeEnd = nodeEnd;
-            Height = height;
-            Width = width;
-            Rotate = rotate;
-        }
-    }
 }

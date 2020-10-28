@@ -26,11 +26,6 @@ namespace HoaryFox.Member
 
         private static List<Brep> ApplyRotation(List<Brep> breps, double rotate, FrameType frameType, List<List<Point3d>> origins)
         {
-            if (rotate == 0d)
-            {
-                return breps;
-            }
-            
             double rotateAngle = rotate * Math.PI / 180d;
             var rotationCenter = new Point3d[2];
             if (frameType == FrameType.Girder || frameType == FrameType.Beam)
