@@ -92,8 +92,8 @@ namespace HoaryFox.Component.Base
 
         private void GetTag(StbFrame stbFrame)
         {
-            var tags = new CreateTag(_stbData.Nodes);
-            _frameTags = tags.Frame(stbFrame, _stbData.SecColumnRc, _stbData.SecColumnS, _stbData.SecBeamRc, _stbData.SecBeamS, _stbData.SecBraceS, _stbData.SecSteel);
+            var tags = new CreateTag(_stbData.Nodes, _stbData.SecColumnRc, _stbData.SecColumnS, _stbData.SecBeamRc, _stbData.SecBeamS, _stbData.SecBraceS, _stbData.SecSteel);
+            _frameTags = tags.Frame(stbFrame);
             _tagPos = tags.Position;
         }
     }
