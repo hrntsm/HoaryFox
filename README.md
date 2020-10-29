@@ -6,7 +6,6 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c0a462728dce4983802d447ed67d3e7c)](https://www.codacy.com/gh/hrntsm/HoaryFox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hrntsm/HoaryFox&amp;utm_campaign=Badge_Grade)
 [![Maintainability](https://api.codeclimate.com/v1/badges/bc78a575fcf5e9448929/maintainability)](https://codeclimate.com/github/hrntsm/HoaryFox/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/bc78a575fcf5e9448929/test_coverage)](https://codeclimate.com/github/hrntsm/HoaryFox/test_coverage)
 
 Grasshopper Component which read ST-Bridge file(.stb) and display its model information.  
 You can easily check frames and present structure frame!!  
