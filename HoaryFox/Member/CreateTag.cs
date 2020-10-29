@@ -146,7 +146,7 @@ namespace HoaryFox.Member
                 case FrameType.Slab:
                 case FrameType.Wall:
                 case FrameType.Any:
-                    throw new Exception("Wrong frame type");
+                    throw new ArgumentException("Wrong frame type");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
