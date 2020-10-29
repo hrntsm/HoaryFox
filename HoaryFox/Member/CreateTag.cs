@@ -34,32 +34,32 @@ namespace HoaryFox.Member
             _colRc = colRc;
         }
 
-        public GH_Structure<GH_String> Frame(StbFrame frame)
+        public GH_Structure<GH_String> Frame(StbFrame frameData)
         {
             var ghSecStrings = new GH_Structure<GH_String>();
 
-            for (var eNum = 0; eNum < frame.Id.Count; eNum++)
+            for (var eNum = 0; eNum < frameData.Id.Count; eNum++)
             {
                 TagInfo tagInfo;
-                int idSection = frame.IdSection[eNum];
+                int idSection = frameData.IdSection[eNum];
                 var ghPath = new GH_Path(new[]{eNum});
-                KindsStructure kind = frame.KindStructure[eNum];
-                SetTagPosition(frame, eNum);
+                KindsStructure kind = frameData.KindStructure[eNum];
+                SetTagPosition(frameData, eNum);
 
                 switch (kind)
                 {
                     case KindsStructure.Rc:
-                        tagInfo = TagRc(frame, idSection);
+                        tagInfo = TagRc(frameData, idSection);
                         break;
                     case KindsStructure.S:
-                        tagInfo = TagSteel(frame, idSection);
+                        tagInfo = TagSteel(frameData, idSection);
                         break;
                     case KindsStructure.Src:
                     case KindsStructure.Cft:
                     case KindsStructure.Deck:
                     case KindsStructure.Precast:
                     case KindsStructure.Other:
-                        throw new Exception("Wrong kind structure");
+                        throw new ArgumentException("Wrong kind structure");
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -108,7 +108,7 @@ namespace HoaryFox.Member
                 case FrameType.Slab:
                 case FrameType.Wall:
                 case FrameType.Any:
-                    throw new Exception("Wrong frame type");
+                    throw new ArgumentException("Wrong frame type");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -123,7 +123,6 @@ namespace HoaryFox.Member
                 P3 = _secSteel.P3[secIndex],
                 P4 = _secSteel.P4[secIndex]
             };
-
             return tagInfo;
         }
 
