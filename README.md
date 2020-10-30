@@ -1,9 +1,11 @@
 # HoaryFox
 
-![Platform](https://img.shields.io/badge/platform-Rhino6%20%7C%20Grasshopper-orange)
-![License](https://img.shields.io/github/license/hrntsm/HoaryFox)
-![Release](https://img.shields.io/github/v/release/hrntsm/HoaryFox)
-![Download](https://img.shields.io/github/downloads/hrntsm/HoaryFox/total)
+[![License](https://img.shields.io/github/license/hrntsm/HoaryFox)](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE)
+[![Release](https://img.shields.io/github/v/release/hrntsm/HoaryFox)](https://github.com/hrntsm/HoaryFox/releases)
+[![download](https://img.shields.io/badge/download-Food4Rhino-lightgray)](https://www.food4rhino.com/app/hoaryfox)
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c0a462728dce4983802d447ed67d3e7c)](https://www.codacy.com/gh/hrntsm/HoaryFox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hrntsm/HoaryFox&amp;utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/bc78a575fcf5e9448929/maintainability)](https://codeclimate.com/github/hrntsm/HoaryFox/maintainability)
 
 Grasshopper Component which read ST-Bridge file(.stb) and display its model information.  
 You can easily check frames and present structure frame!!  
@@ -46,12 +48,19 @@ Quote from [building SMART Japan Structural Design Subcommittee](https://en.buil
 ## Contact information
 
 [![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)](https://twitter.com/hiron_rgkr)
-+ HomePage : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
-+ blog : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
++ HP : [https://hrntsm.github.io/](https://hrntsm.github.io/)
++ Blog : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
 + Mail : support(at)hrntsm.com
   + change (at) to @
-  
+
+## Donation
+
+This software is being updated with your support.
+If you like this software, please donation.
+
+- [pixivFANBOX](https://hiron.fanbox.cc/)
+
 ## License
 
 HoaryFox is licensed under the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  
-Copyright© 2019, hrntsm
+Copyright© 2019-2020, hrntsm

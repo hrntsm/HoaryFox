@@ -35,6 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Component\Base\NameTagBase.cs" />
+    <Compile Include="Component\Base\SecTagBase.cs" />
     <Compile Include="Component\IO\StbLoader.cs" />
     <Compile Include="Component\IO\Stb2KElem.cs" />
     <Compile Include="Component\Bar\Stb2Bar.cs" />
@@ -50,10 +52,16 @@
     <Compile Include="Component\Tag\Section\ColumnSecTag.cs" />
     <Compile Include="Component\Tag\Section\GirderSecTag.cs" />
     <Compile Include="Component\Tag\Section\PostSecTag.cs" />
-    <Compile Include="Member\CreateLines.cs" />
+    <Compile Include="KarambaConnect\CrossSection.cs" />
+    <Compile Include="KarambaConnect\Element.cs" />
+    <Compile Include="Member\CreateBreps.cs" />
+    <Compile Include="Member\FrameLines.cs" />
     <Compile Include="Member\CreateBar.cs" />
-    <Compile Include="Member\CreateBrep.cs" />
+    <Compile Include="Member\FrameBreps.cs" />
     <Compile Include="Member\CreateTag.cs" />
+    <Compile Include="Member\FramePoints.cs" />
+    <Compile Include="Member\ShapeInfo.cs" />
+    <Compile Include="Member\SteelCroSecBrep.cs" />
     <Compile Include="STBReader\STBReader\Member\Base.cs" />
     <Compile Include="STBReader\STBReader\Member\Enum.cs" />
     <Compile Include="STBReader\STBReader\Member\Members.cs" />
@@ -87,12 +95,12 @@
     <Reference Include="Grasshopper, Version=6.29.20238.11500, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
       <HintPath>..\packages\Grasshopper.6.29.20238.11501\lib\net45\Grasshopper.dll</HintPath>
     </Reference>
-    <Reference Include="KarambaCommon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>C:\Users\hnatsume\AppData\Roaming\Grasshopper\Libraries\Karamba\karambaCommon.dll</HintPath>
+    <Reference Include="karambaCommon">
+      <HintPath>..\..\..\..\AppData\Roaming\Grasshopper\Libraries\Karamba\karambaCommon.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="karambaGH, Version=1.15.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>C:\Users\hnatsume\AppData\Roaming\Grasshopper\Libraries\Karamba\karamba.gha</HintPath>
+      <HintPath>..\..\..\..\AppData\Roaming\Grasshopper\Libraries\Karamba\karamba.gha</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Rhino.UI, Version=6.29.20238.11500, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">

@@ -1,9 +1,11 @@
 # HoaryFox
 
-![Platform](https://img.shields.io/badge/platform-Rhino6%20%7C%20Grasshopper-orange)
-![License](https://img.shields.io/github/license/hrntsm/HoaryFox)
-![Release](https://img.shields.io/github/v/release/hrntsm/HoaryFox)
-![Download](https://img.shields.io/github/downloads/hrntsm/HoaryFox/total)
+[![License](https://img.shields.io/github/license/hrntsm/HoaryFox)](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE)
+[![Release](https://img.shields.io/github/v/release/hrntsm/HoaryFox)](https://github.com/hrntsm/HoaryFox/releases)
+[![download](https://img.shields.io/badge/download-Food4Rhino-lightgray)](https://www.food4rhino.com/app/hoaryfox)
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c0a462728dce4983802d447ed67d3e7c)](https://www.codacy.com/gh/hrntsm/HoaryFox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hrntsm/HoaryFox&amp;utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/bc78a575fcf5e9448929/maintainability)](https://codeclimate.com/github/hrntsm/HoaryFox/maintainability)
 
 HoaryFox は 建築構造架構の可視化ツールです。  
 ST-Bridge file(.stb) を読み込んで、表示をします。  
@@ -40,16 +42,19 @@ ST-Bridgeの規格を作成している [building SMART Japan の構造設計小
 > + 日本独自の表現方法を取り込む（通り芯、部材配置と断面符号、配筋情報）
 > + 国内の構造系アプリ、躯体積算アプリ、3次元オブジェクトCADとの連携を目指す
 
-
 ## Contact information
 
 [![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)](https://twitter.com/hiron_rgkr)
-+ Twitter : [@hiron_rgkr](https://twitter.com/hiron_rgkr)
-+ HP : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
++ HP : [https://hrntsm.github.io/](https://hrntsm.github.io/)
++ Blog : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
 + Mail : support(at)hrntsm.com
   + (at) を @ に置き換えてください
-  
+
+## Donation
+
+[PixivFANBOX](https://hiron.fanbox.cc/) よりドネートしていただけると開発のモチベーションが上がります。
+
 ## License
 
 HoaryFox is licensed under the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  
-Copyright© 2019, hrntsm
+Copyright© 2019-2020, hrntsm

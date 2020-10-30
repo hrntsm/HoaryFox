@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using Grasshopper.GUI;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using STBReader;
@@ -12,105 +15,166 @@ namespace HoaryFox.Member
     public class CreateTag
     {
         private readonly StbNodes _nodes;
-        public List<Point3d> TagPos { get; } = new List<Point3d>();
+        private readonly StbSecColumnRc _colRc;
+        private readonly StbSecColumnS _colS;
+        private readonly StbSecBeamRc _beamRc;
+        private readonly StbSecBeamS _beamS;
+        private readonly StbSecBraceS _braceS;
+        private readonly StbSecSteel _secSteel;
+        public List<Point3d> Position { get; } = new List<Point3d>();
 
-        public CreateTag(StbNodes nodes)
+        public CreateTag(StbNodes nodes, StbSecColumnRc colRc, StbSecColumnS colS, StbSecBeamRc beamRc, StbSecBeamS beamS, StbSecBraceS braceS, StbSecSteel secSteel)
         {
-            this._nodes = nodes;
+            _nodes = nodes;
+            _secSteel = secSteel;
+            _braceS = braceS;
+            _beamS = beamS;
+            _beamRc = beamRc;
+            _colS = colS;
+            _colRc = colRc;
         }
 
-        public GH_Structure<GH_String> Frame(StbFrame frame, StbSecColumnRc columnRc, StbSecColumnS colS, StbSecBeamRc beamRc, StbSecBeamS beamS, StbSecBraceS braceS, StbSecSteel secSteel)
+        public GH_Structure<GH_String> Frame(StbFrame frameData)
         {
-            GH_Structure<GH_String> sec = new GH_Structure<GH_String>();
-        
-            double p1 = 0;
-            double p2 = 0;
-            double p3 = 0;
-            double p4 = 0;
-            string shape = string.Empty;
-            string name = string.Empty;
-        
-            for (int eNum = 0; eNum < frame.Id.Count; eNum++)
+            var ghSecStrings = new GH_Structure<GH_String>();
+
+            for (var eNum = 0; eNum < frameData.Id.Count; eNum++)
             {
-                int idSection = frame.IdSection[eNum];
-                KindsStructure kind = frame.KindStructure[eNum];
-                GH_Path ghPath = new GH_Path(new int[]{eNum});
-        
-                // 始点と終点の座標取得
-                int startIndex = _nodes.Id.IndexOf(frame.IdNodeStart[eNum]);
-                int endIndex = _nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
-                Point3d nodeStart = new Point3d(_nodes.X[startIndex], _nodes.Y[startIndex], _nodes.Z[startIndex]);
-                Point3d nodeEnd = new Point3d(_nodes.X[endIndex], _nodes.Y[endIndex], _nodes.Z[endIndex]);
-                TagPos.Add(new Point3d((nodeStart.X + nodeEnd.X) / 2.0, (nodeStart.Y + nodeEnd.Y) / 2.0, (nodeStart.Z + nodeEnd.Z) / 2.0));
-        
-                int secIndex;
-                ShapeTypes shapeType = ShapeTypes.BOX;
+                TagInfo tagInfo;
+                int idSection = frameData.IdSection[eNum];
+                var ghPath = new GH_Path(new[]{eNum});
+                KindsStructure kind = frameData.KindStructure[eNum];
+                SetTagPosition(frameData, eNum);
+
                 switch (kind)
                 {
                     case KindsStructure.Rc:
-                        switch (frame.FrameType)
-                        {
-                            case FrameType.Column:
-                            case FrameType.Post:
-                                secIndex = columnRc.Id.IndexOf(idSection);
-                                name = columnRc.Name[secIndex];
-                                p1 = columnRc.Height[secIndex];
-                                p2 = columnRc.Width[secIndex];
-                                break;
-                            case FrameType.Girder:
-                            case FrameType.Beam:
-                                secIndex = beamRc.Id.IndexOf(idSection);
-                                name = beamRc.Name[secIndex];
-                                p1 = beamRc.Depth[secIndex];
-                                p2 = beamRc.Width[secIndex];
-                                p3 = 0;
-                                p4 = 0;
-                                break;
-                        }
-        
-                        shapeType = p1 <= 0 ? ShapeTypes.Pipe : ShapeTypes.BOX;
+                        tagInfo = TagRc(frameData, idSection);
                         break;
                     case KindsStructure.S:
-                    {
-                        int idShape;
-                        switch (frame.FrameType)
-                        {
-                            case FrameType.Column:
-                            case FrameType.Post:
-                                idShape = colS.Id.IndexOf(idSection);
-                                shape = colS.Shape[idShape];
-                                break;
-                            case FrameType.Girder:
-                            case FrameType.Beam:
-                                idShape = beamS.Id.IndexOf(idSection);
-                                shape = beamS.Shape[idShape];
-                                break;
-                            case FrameType.Brace:
-                                idShape = braceS.Id.IndexOf(idSection);
-                                shape = braceS.Shape[idShape];
-                                break;
-                        }
-        
-                        secIndex = secSteel.Name.IndexOf(shape);
-                        name = secSteel.Name[secIndex];
-                        p1 = secSteel.P1[secIndex];
-                        p2 = secSteel.P2[secIndex];
-                        p3 = secSteel.P3[secIndex];
-                        p4 = secSteel.P4[secIndex];
-                        shapeType = secSteel.ShapeType[secIndex];
+                        tagInfo = TagSteel(frameData, idSection);
                         break;
-                    }
+                    case KindsStructure.Src:
+                    case KindsStructure.Cft:
+                    case KindsStructure.Deck:
+                    case KindsStructure.Precast:
+                    case KindsStructure.Other:
+                        throw new ArgumentException("Wrong kind structure");
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
                         
-                sec.Append(new GH_String(name), ghPath);
-                sec.Append(new GH_String(shapeType.ToString()), ghPath);
-                sec.Append(new GH_String(p1.ToString()), ghPath);
-                sec.Append(new GH_String(p2.ToString()), ghPath);
-                sec.Append(new GH_String(p3.ToString()), ghPath);
-                sec.Append(new GH_String(p4.ToString()), ghPath);
+                ghSecStrings.Append(new GH_String(tagInfo.Name), ghPath);
+                ghSecStrings.Append(new GH_String(tagInfo.ShapeTypes.ToString()), ghPath);
+                ghSecStrings.Append(new GH_String(tagInfo.P1.ToString(CultureInfo.InvariantCulture)), ghPath);
+                ghSecStrings.Append(new GH_String(tagInfo.P2.ToString(CultureInfo.InvariantCulture)), ghPath);
+                ghSecStrings.Append(new GH_String(tagInfo.P3.ToString(CultureInfo.InvariantCulture)), ghPath);
+                ghSecStrings.Append(new GH_String(tagInfo.P4.ToString(CultureInfo.InvariantCulture)), ghPath);
             }
         
-            return sec;
+            return ghSecStrings;
+        }
+
+        private void SetTagPosition(StbFrame frame, int eNum)
+        {
+            // 始点と終点の座標取得
+            int startIndex = _nodes.Id.IndexOf(frame.IdNodeStart[eNum]);
+            int endIndex = _nodes.Id.IndexOf(frame.IdNodeEnd[eNum]);
+            var nodeStart = new Point3d(_nodes.X[startIndex], _nodes.Y[startIndex], _nodes.Z[startIndex]);
+            var nodeEnd = new Point3d(_nodes.X[endIndex], _nodes.Y[endIndex], _nodes.Z[endIndex]);
+            Position.Add(new Point3d((nodeStart.X + nodeEnd.X) / 2.0, (nodeStart.Y + nodeEnd.Y) / 2.0, (nodeStart.Z + nodeEnd.Z) / 2.0));
+        }
+
+        private TagInfo TagSteel(StbFrame frame, int idSection)
+        {
+            int idShape;
+            string shapeName;
+            switch (frame.FrameType)
+            {
+                case FrameType.Column:
+                case FrameType.Post:
+                    idShape = _colS.Id.IndexOf(idSection);
+                    shapeName = _colS.Shape[idShape];
+                    break;
+                case FrameType.Girder:
+                case FrameType.Beam:
+                    idShape = _beamS.Id.IndexOf(idSection);
+                    shapeName = _beamS.Shape[idShape];
+                    break;
+                case FrameType.Brace:
+                    idShape = _braceS.Id.IndexOf(idSection);
+                    shapeName = _braceS.Shape[idShape];
+                    break;
+                case FrameType.Slab:
+                case FrameType.Wall:
+                case FrameType.Any:
+                    throw new ArgumentException("Wrong frame type");
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            int secIndex = _secSteel.Name.IndexOf(shapeName);
+            var tagInfo = new TagInfo
+            {
+                Name = _secSteel.Name[secIndex],
+                ShapeTypes = _secSteel.ShapeType[secIndex],
+                P1 = _secSteel.P1[secIndex],
+                P2 = _secSteel.P2[secIndex],
+                P3 = _secSteel.P3[secIndex],
+                P4 = _secSteel.P4[secIndex]
+            };
+            return tagInfo;
+        }
+
+        private TagInfo TagRc(StbFrame frame, int idSection)
+        {
+            int secIndex;
+            TagInfo tagInfo;
+            switch (frame.FrameType)
+            {
+                case FrameType.Column:
+                case FrameType.Post:
+                    secIndex = _colRc.Id.IndexOf(idSection);
+                    tagInfo = new TagInfo(_colRc.Name[secIndex], _colRc.Height[secIndex], _colRc.Width[secIndex], 0d, 0d);
+                    break;
+                case FrameType.Girder:
+                case FrameType.Beam:
+                    secIndex = _beamRc.Id.IndexOf(idSection);
+                    tagInfo = new TagInfo(_beamRc.Name[secIndex], _beamRc.Depth[secIndex], _beamRc.Width[secIndex], 0d, 0d);
+                    break;
+                case FrameType.Brace:
+                case FrameType.Slab:
+                case FrameType.Wall:
+                case FrameType.Any:
+                    throw new ArgumentException("Wrong frame type");
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            tagInfo.ShapeTypes = tagInfo.P1 <= 0 ? ShapeTypes.Pipe : ShapeTypes.BOX;
+            return tagInfo;
+        }
+    }
+
+    public class TagInfo
+    {
+        public string Name { get; set; }
+        public ShapeTypes ShapeTypes { get;  set; }
+        public double P1 { get; set; }
+        public double P2 { get; set; }
+        public double P3 { get; set; }
+        public double P4 { get; set; }
+
+        public TagInfo()
+        {
+        }
+
+        public TagInfo(string name, double p1, double p2, double p3, double p4)
+        {
+            Name = name;
+            P1 = p1;
+            P2 = p2;
+            P3 = p3;
+            P4 = p4;
         }
     }
 }
