@@ -96,11 +96,11 @@
       <HintPath>..\packages\Grasshopper.6.29.20238.11501\lib\net45\Grasshopper.dll</HintPath>
     </Reference>
     <Reference Include="karambaCommon">
-      <HintPath>..\..\..\..\..\..\Program Files\Rhino 6\Plug-ins\Karamba\karambaCommon.dll</HintPath>
+      <HintPath>..\..\..\..\AppData\Roaming\Grasshopper\Libraries\Karamba\karambaCommon.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="karambaGH, Version=1.15.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\..\..\Program Files\Rhino 6\Plug-ins\Karamba\karamba.gha</HintPath>
+      <HintPath>..\..\..\..\AppData\Roaming\Grasshopper\Libraries\Karamba\karamba.gha</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Rhino.UI, Version=6.29.20238.11500, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
