@@ -14,6 +14,8 @@ namespace HoaryFox.KarambaConnect
         public static List<string>[] GetIndex(StbData stbData)
         {
             var k3Ids = new List<string>[2];
+            k3Ids[0] = new List<string>();
+            k3Ids[1] = new List<string>();
 
             var frameList = new List<StbFrame> { stbData.Columns, stbData.Girders, stbData.Braces };
             foreach (StbFrame frame in frameList)
