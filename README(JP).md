@@ -42,7 +42,6 @@ ST-Bridgeの規格を作成している [building SMART Japan の構造設計小
 > + 日本独自の表現方法を取り込む（通り芯、部材配置と断面符号、配筋情報）
 > + 国内の構造系アプリ、躯体積算アプリ、3次元オブジェクトCADとの連携を目指す
 
-
 ## Contact information
 
 [![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)](https://twitter.com/hiron_rgkr)
@@ -50,7 +49,11 @@ ST-Bridgeの規格を作成している [building SMART Japan の構造設計小
 + Blog : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
 + Mail : support(at)hrntsm.com
   + (at) を @ に置き換えてください
-  
+
+## Donation
+
+[PixivFANBOX](https://hiron.fanbox.cc/) よりドネートしていただけると開発のモチベーションが上がります。
+
 ## License
 
 HoaryFox is licensed under the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  

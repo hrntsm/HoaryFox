@@ -52,7 +52,14 @@ Quote from [building SMART Japan Structural Design Subcommittee](https://en.buil
 + Blog : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
 + Mail : support(at)hrntsm.com
   + change (at) to @
-  
+
+## Donation
+
+This software is being updated with your support.
+If you like this software, please donation.
+
+- [pixivFANBOX](https://hiron.fanbox.cc/)
+
 ## License
 
 HoaryFox is licensed under the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  
