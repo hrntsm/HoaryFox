@@ -18,7 +18,7 @@ jobs:
       Solution_Name: HoaryFox.sln
       Plugin_File_Name: HoaryFox
       Debug_File_Path: '.\HoaryFox\bin\'
-      Release_File_Path: '.\Mice\release\'
+      Release_File_Path: '.\HoaryFox\release\'
 
     steps:
       - name: Checkout
