@@ -82,12 +82,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Grasshopper">
-      <Version>6.29.20238.11501</Version>
-    </PackageReference>
-    <PackageReference Include="RhinoCommon">
-      <Version>6.29.20238.11501</Version>
-    </PackageReference>
     <Reference Include="karambaCommon">
       <HintPath>..\..\..\..\AppData\Roaming\Grasshopper\Libraries\Karamba\karambaCommon.dll</HintPath>
       <Private>False</Private>
@@ -138,7 +132,14 @@
     <None Include="Resources\LoadStb.png" />
     <None Include="Resources\ToKaramba.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="Grasshopper">
+      <Version>6.31.20315.17001</Version>
+    </PackageReference>
+    <PackageReference Include="RhinoCommon">
+      <Version>6.31.20315.17001</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
