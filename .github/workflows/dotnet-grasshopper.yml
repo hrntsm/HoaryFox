@@ -50,4 +50,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: HoaryFox
-          path: STBDotNet/bin/
+          path: .\HoaryFox\release\
