@@ -49,5 +49,5 @@ jobs:
         if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.Plugin_File_Name }}
-          path: ${{ env.Release_File_Path }}/${{ env.Plugin_File_Name }}.gha
+          name: HoaryFox
+          path: STBDotNet/bin/Release/
