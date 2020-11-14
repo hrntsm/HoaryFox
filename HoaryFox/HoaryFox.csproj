@@ -115,7 +115,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Content Include="Library\karamba132\karambaGH.dll" />
+    <Content Include="Library\karamba133\karambaGH.dll" />
     <None Include="Resources\Brep.afdesign" />
     <None Include="Resources\Brep.png" />
     <None Include="Resources\ColumnName.png" />
@@ -144,10 +145,13 @@
     <None Include="Resources\InfoIcon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Library\karamba132\karambaCommon.dll" />
+    <Content Include="Library\karamba133\karambaCommon.dll" />
     <Content Include="Resources\InfoIcon_Info.txt" />
     <None Include="Resources\LoadStb.png" />
     <None Include="Resources\ToKaramba.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
