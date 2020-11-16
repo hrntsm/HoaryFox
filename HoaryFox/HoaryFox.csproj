@@ -86,8 +86,9 @@
       <HintPath>..\..\..\..\AppData\Roaming\Grasshopper\Libraries\Karamba\karambaCommon.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="karambaGH, Version=1.15.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\AppData\Roaming\Grasshopper\Libraries\Karamba\karamba.gha</HintPath>
+    <Reference Include="kConnect, Version=1.15.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Library\karamba132full\kConnect.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -96,8 +97,10 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Library\karamba132full\karambaCommon.dll" />
     <Content Include="Library\karamba132\karambaGH.dll" />
     <Content Include="Library\karamba133\karambaGH.dll" />
+    <Content Include="Library\karamba132full\kConnect.dll" />
     <None Include="Resources\Brep.afdesign" />
     <None Include="Resources\Brep.png" />
     <None Include="Resources\ColumnName.png" />
@@ -134,10 +137,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Grasshopper">
-      <Version>6.31.20315.17001</Version>
+      <Version>6.20.19322.20361</Version>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="RhinoCommon">
-      <Version>6.31.20315.17001</Version>
+      <Version>6.20.19322.20361</Version>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
