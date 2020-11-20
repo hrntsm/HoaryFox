@@ -5,14 +5,14 @@ using System.Linq;
 using Grasshopper.Kernel;
 using HoaryFox.KarambaConnect;
 using STBReader;
+using STBReader.Model;
+using STBReader.Member;
 using Karamba.CrossSections;
 using Karamba.Elements;
 using Karamba.Geometry;
 using Karamba.GHopper.CrossSections;
 using Karamba.GHopper.Elements;
 using Karamba.Utilities;
-using STBReader.Member;
-using STBReader.Model;
 
 namespace HoaryFox.Component.IO
 {
@@ -59,7 +59,7 @@ namespace HoaryFox.Component.IO
             DA.SetDataList(1, k3CroSec);
         }
 
-        protected override Bitmap Icon => Properties.Resource.ToKaramba;
+        protected override Bitmap Icon => karambaConnect.Properties.Resource.ToKaramba;
         public override Guid ComponentGuid => new Guid("C57461DA-E79B-49A0-B44B-71CF32057709");
     }
 }
