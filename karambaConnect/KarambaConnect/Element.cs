@@ -17,7 +17,7 @@ namespace HoaryFox.KarambaConnect
             var elems = new List<BuilderBeam>();
             StbNodes nodes = stbData.Nodes;
             
-            var k3Elems = new List<Line3>[2]{ new List<Line3>() , new List<Line3>() };
+            var k3Elems = new[]{ new List<Line3>() , new List<Line3>() };
 
             foreach (StbFrame frame in new List<StbFrame>{ stbData.Columns, stbData.Girders, stbData.Braces} )
             {
