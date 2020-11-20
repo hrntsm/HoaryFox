@@ -41,7 +41,11 @@ jobs:
         run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
         env:
           Configuration: ${{ matrix.configuration }}
-
+          
+      - name: Copy karambaConnect to /HoaryFox/bin dir
+        shell: powershell
+        run: cp ./karambaConnect/bin/karambaConnect.gha ./HoaryFox/bin/karambaConnect.gha
+          
       - name: Upload release build of plugin as artefact
         if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
         uses: actions/upload-artifact@v2
@@ -50,6 +54,6 @@ jobs:
           path: |
              ./HoaryFox/bin/HoaryFox.gha
              ./HoaryFox/bin/STBReader.dll
-             ./karambaConnect/bin/karambaConnect.gha
+             ./HoaryFox/bin/karambaConnect.gha
              
              
