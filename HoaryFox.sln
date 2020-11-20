@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.705
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoaryFox", "HoaryFox\HoaryFox.csproj", "{9637855D-D144-4448-9F56-A391A3575DAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "karambaConnect", "karambaConnect\karambaConnect.csproj", "{CD5D3228-2B3E-4112-9B42-C82615673DFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9637855D-D144-4448-9F56-A391A3575DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9637855D-D144-4448-9F56-A391A3575DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9637855D-D144-4448-9F56-A391A3575DAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD5D3228-2B3E-4112-9B42-C82615673DFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD5D3228-2B3E-4112-9B42-C82615673DFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD5D3228-2B3E-4112-9B42-C82615673DFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD5D3228-2B3E-4112-9B42-C82615673DFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
