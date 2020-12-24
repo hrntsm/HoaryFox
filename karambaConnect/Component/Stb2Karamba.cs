@@ -3,27 +3,23 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel;
-using HoaryFox.KarambaConnect;
-using STBReader;
-using STBReader.Model;
-using STBReader.Member;
 using Karamba.CrossSections;
 using Karamba.Elements;
-using Karamba.Geometry;
 using Karamba.GHopper.CrossSections;
 using Karamba.GHopper.Elements;
-using Karamba.Utilities;
+using karambaConnect.S2K;
+using STBReader;
 
-namespace HoaryFox.Component.IO
+namespace karambaConnect.Component
 {
-    public class Stb2KElem:GH_Component
+    public class Stb2Karamba:GH_Component
     {
         private StbData _stbData;
         private List<GH_Element> _k3ElemBe = new List<GH_Element>();
         private readonly List<GH_Element> _k3ElemSh = new List<GH_Element>();
 
-        public Stb2KElem()
-          : base("Stb to Karamba", "S2K", "Read ST-Bridge file and display", "HoaryFox", "IO")
+        public Stb2Karamba()
+          : base("Stb to Karamba", "S2K", "Convert ST-Bridge file to Karamba.", "HoaryFox", "IO")
         {
         }
 

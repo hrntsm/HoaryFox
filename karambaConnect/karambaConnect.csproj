@@ -43,6 +43,9 @@
       <HintPath>Library\karamba132full\kConnect.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="STBDotNet">
+      <HintPath>..\..\STBDotNet\STBDotNet\bin\Debug\netstandard2.0\STBDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="STBReader">
       <HintPath>Library\STBReader.dll</HintPath>
       <Private>True</Private>
@@ -56,10 +59,11 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\Stb2KElem.cs" />
+    <Compile Include="Component\Karamba2Stb.cs" />
+    <Compile Include="Component\Stb2Karamba.cs" />
     <Compile Include="karambaConnectInfo.cs" />
-    <Compile Include="KarambaConnect\CrossSection.cs" />
-    <Compile Include="KarambaConnect\Element.cs" />
+    <Compile Include="S2K\CrossSection.cs" />
+    <Compile Include="S2K\Element.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -91,6 +95,9 @@
       <Version>6.20.19322.20361</Version>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="K2S\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
