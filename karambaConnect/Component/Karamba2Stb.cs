@@ -3,7 +3,6 @@ using Grasshopper.Kernel;
 using Karamba.GHopper.Models;
 using Karamba.Models;
 using STBDotNet.Elements;
-using STBDotNet.Elements.StbCommon;
 using STBDotNet.Serialization;
 
 namespace karambaConnect.Component
@@ -65,23 +64,12 @@ namespace karambaConnect.Component
             var elem = new StbElements
             {
                 Version = "1.4.00",
-                Common = SetCommon(),
-                Model = {Nodes = model.nodes.ToStb()}
+                Common = K2S.StbCommon.Set(),
+                Model = K2S.StbModel.Set(model)
             };
             return elem;
         }
 
-        private static Common SetCommon()
-        {
-            var common = new Common
-            {
-                AppName = "HoaryFox Stb Converter",
-                ProjectName = "Grasshopper Karamba model",
-                Guid = Guid.NewGuid().ToString("D")
-            };
-
-            return common;
-        }
 
         // protected override Bitmap Icon => karambaConnect.Properties.Resource.ToKaramba;
         public override Guid ComponentGuid => new Guid("38296D06-E47A-403F-BFE8-00E873A99CF8");
