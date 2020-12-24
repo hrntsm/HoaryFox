@@ -35,12 +35,12 @@
   <ItemGroup>
     <Reference Include="karambaCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Library\karamba132full\karambaCommon.dll</HintPath>
+      <HintPath>Library\karamba133\karambaCommon.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="kConnect, Version=1.15.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="karambaGH, Version=1.15.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Library\karamba132full\kConnect.dll</HintPath>
+      <HintPath>Library\karamba133\karambaGH.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="STBDotNet">
@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Component\Karamba2Stb.cs" />
     <Compile Include="Component\Stb2Karamba.cs" />
+    <Compile Include="Convert.cs" />
     <Compile Include="karambaConnectInfo.cs" />
     <Compile Include="S2K\CrossSection.cs" />
     <Compile Include="S2K\Element.cs" />

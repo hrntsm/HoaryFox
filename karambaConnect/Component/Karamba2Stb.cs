@@ -2,13 +2,18 @@
 using Grasshopper.Kernel;
 using Karamba.GHopper.Models;
 using Karamba.Models;
-using STBDotNet;
 using STBDotNet.Elements;
+using STBDotNet.Elements.StbCommon;
+using STBDotNet.Serialization;
 
 namespace karambaConnect.Component
 {
     public class Karamba2Stb:GH_Component
     {
+        private readonly string defaultOutPath =
+            Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\model.stb";
+
+
         public Karamba2Stb()
           : base("Karamba to Stb", "K2S", "Convert Karamba model to ST-Bridge data and output.", "HoaryFox", "IO")
         {
@@ -21,9 +26,9 @@ namespace karambaConnect.Component
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new Param_Model(), "Model", "Model", "Karamba model data", GH_ParamAccess.item);
-            pManager.AddTextParameter("Path", "Path", "Output path", GH_ParamAccess.item);
-            pManager.AddBooleanParameter("Out", "Out", "If it is true, output stb file.", GH_ParamAccess.item, false);
+            pManager.AddGenericParameter("Model", "Model", "Karamba model data", GH_ParamAccess.item);
+            pManager.AddTextParameter("Path", "Path", "Output path", GH_ParamAccess.item, defaultOutPath);
+            pManager.AddBooleanParameter("Out?", "Out?", "If it is true, output stb file.", GH_ParamAccess.item, false);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -32,26 +37,50 @@ namespace karambaConnect.Component
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var model = new Model();
             var path = string.Empty;
             var isOutput = false;
-            var obj = new object();
+            var modelIn = new object();
             
-            if (!DA.GetData(0, ref obj)) { return; }
+            if (!DA.GetData(0, ref modelIn)) { return; }
             if (!DA.GetData(1, ref path)) { return; }
             if (!DA.GetData(2, ref isOutput)) { return; }
 
+            var ghKModel = modelIn as GH_Model;
+            if (ghKModel == null)
+            {
+                throw new ArgumentException("The input is not of type model!");
+            }
+            Model model = ghKModel.Value;
+            
             if (isOutput)
             {
                 StbElements elements = GetStbData(model);
-                var sr = new STBDotNet.Serialization.Serializer();
+                var sr = new Serializer();
                 sr.Serialize(elements, path);
             }
         }
 
         private StbElements GetStbData(Model model)
         {
-            return new StbElements();
+            var elem = new StbElements
+            {
+                Version = "1.4.00",
+                Common = SetCommon(),
+                Model = {Nodes = model.nodes.ToStb()}
+            };
+            return elem;
+        }
+
+        private static Common SetCommon()
+        {
+            var common = new Common
+            {
+                AppName = "HoaryFox Stb Converter",
+                ProjectName = "Grasshopper Karamba model",
+                Guid = Guid.NewGuid().ToString("D")
+            };
+
+            return common;
         }
 
         // protected override Bitmap Icon => karambaConnect.Properties.Resource.ToKaramba;
