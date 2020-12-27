@@ -63,6 +63,7 @@
     <Compile Include="Component\Stb2Karamba.cs" />
     <Compile Include="Convert.cs" />
     <Compile Include="K2S\StbCommon.cs" />
+    <Compile Include="K2S\StbElement.cs" />
     <Compile Include="K2S\StbModel.cs" />
     <Compile Include="karambaConnectInfo.cs" />
     <Compile Include="S2K\CrossSection.cs" />
