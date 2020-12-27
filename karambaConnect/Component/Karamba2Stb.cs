@@ -1,7 +1,7 @@
 ﻿using System;
 using Grasshopper.Kernel;
-using Karamba.GHopper.Models;
 using Karamba.Models;
+using Karamba.GHopper.Models;
 using STBDotNet.Elements;
 using STBDotNet.Serialization;
 
@@ -25,7 +25,7 @@ namespace karambaConnect.Component
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Model", "Model", "Karamba model data", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_Model(), "Model", "Model", "Karamba model data", GH_ParamAccess.item);
             pManager.AddTextParameter("Path", "Path", "Output path", GH_ParamAccess.item, defaultOutPath);
             pManager.AddBooleanParameter("Out?", "Out?", "If it is true, output stb file.", GH_ParamAccess.item, false);
         }
