@@ -22,7 +22,7 @@ namespace karambaConnect
             {
                 var sNode = new STBDotNet.Elements.StbModel.Node()
                 {
-                    Id = kNode.ind,
+                    Id = kNode.ind + 1,
                     X = kNode.pos.X * 1000,
                     Y = kNode.pos.Y * 1000,
                     Z = kNode.pos.Z * 1000
