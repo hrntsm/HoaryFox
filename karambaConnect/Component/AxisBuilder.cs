@@ -28,7 +28,7 @@ namespace karambaConnect.Component
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var count = 0;
+            var count = 1;
             var nodes = new List<Node>();
             var intervals = new List<Interval>();
             var names = new List<string>();
@@ -49,13 +49,13 @@ namespace karambaConnect.Component
             foreach (Interval interval in intervals)
             {
                 var nodeIds = new List<NodeId>();
-                switch (dir[count])
+                switch (dir[count - 1])
                 {
                     case 0:
                         var xAxis = new XAxis
                         {
                             Id = count,
-                            Name = names[count++],
+                            Name = names[count++ - 1],
                             Distance = interval.Mid
                         };
                         foreach (Node node in nodes)
@@ -76,7 +76,7 @@ namespace karambaConnect.Component
                         var yAxis = new YAxis
                         {
                             Id = count,
-                            Name = names[count++],
+                            Name = names[count++ - 1],
                             Distance = interval.Mid
                         };
                         foreach (Node node in nodes)

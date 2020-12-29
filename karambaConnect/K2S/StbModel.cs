@@ -56,12 +56,12 @@ namespace karambaConnect.K2S
                 {
                     var brace = new Brace
                     {
-                        Id = elem.ind,
+                        Id = elem.ind + 1,
                         Name = elem.id,
-                        IdNodeStart = elem.node_inds[0],
-                        IdNodeEnd = elem.node_inds[1],
+                        IdNodeStart = elem.node_inds[0] + 1,
+                        IdNodeEnd = elem.node_inds[1] + 1,
                         Rotate = 0d,
-                        IdSection = croSecId,
+                        IdSection = croSecId + 1,
                         Kind = elem.crosec.material.family == "Steel" ? "S" : "RC"
                     };
                     members.Braces.Add(brace);
@@ -70,7 +70,7 @@ namespace karambaConnect.K2S
                     {
                         var sec = new BraceS
                         {
-                            Id = croSecId,
+                            Id = croSecId + 1,
                             Name = "V" + vNum++,
                             SteelBrace = new[]
                             {
@@ -156,12 +156,12 @@ namespace karambaConnect.K2S
                 {
                     var column = new Column
                     {
-                        Id = elem.ind,
+                        Id = elem.ind + 1,
                         Name = elem.id,
-                        IdNodeStart = elem.node_inds[0],
-                        IdNodeEnd = elem.node_inds[1],
+                        IdNodeStart = elem.node_inds[0] + 1,
+                        IdNodeEnd = elem.node_inds[1] + 1,
                         Rotate = 0d,
-                        IdSection = croSecId,
+                        IdSection = croSecId + 1,
                         Kind = elem.crosec.material.family == "Steel" ? "S" : "RC"
                     };
                     members.Columns.Add(column);
@@ -173,7 +173,7 @@ namespace karambaConnect.K2S
                             case "S":
                                 var colS = new ColumnS
                                 {
-                                    Id = croSecId,
+                                    Id = croSecId + 1,
                                     Name = "C" + cNum++,
                                     SteelColumn = new[]
                                     {
@@ -258,7 +258,7 @@ namespace karambaConnect.K2S
                                     case KCroSec.CroSec_Trapezoid trapezoid:
                                         var colTrape = new ColumnRc
                                         {
-                                            Id = croSecId,
+                                            Id = croSecId + 1,
                                             Name = "C" + cNum++,
                                             DBarMain = "D22",
                                             DBarBand = "D10",
@@ -313,7 +313,7 @@ namespace karambaConnect.K2S
                                     default:
                                         var unsupported = new ColumnRc
                                         {
-                                            Id = croSecId,
+                                            Id = croSecId + 1,
                                             Name = "C" + cNum++,
                                             DBarMain = "D22",
                                             DBarBand = "D10",
@@ -352,12 +352,12 @@ namespace karambaConnect.K2S
                 {
                     var beam = new Girder
                     {
-                        Id = elem.ind,
+                        Id = elem.ind + 1,
                         Name = elem.id,
-                        IdNodeStart = elem.node_inds[0],
-                        IdNodeEnd = elem.node_inds[1],
+                        IdNodeStart = elem.node_inds[0] + 1,
+                        IdNodeEnd = elem.node_inds[1] + 1,
                         Rotate = 0d,
-                        IdSection = croSecId,
+                        IdSection = croSecId + 1,
                         IsFoundation = "false",
                         Kind = elem.crosec.material.family == "Steel" ? "S" : "RC"
                     };
@@ -370,7 +370,7 @@ namespace karambaConnect.K2S
                             case "S":
                                 var beamS = new BeamS
                                 {
-                                    Id = croSecId,
+                                    Id = croSecId + 1,
                                     Name = "G" + gNum++,
                                     SteelBeams = new[]
                                     {
@@ -391,7 +391,7 @@ namespace karambaConnect.K2S
                                     case KCroSec.CroSec_Trapezoid trapezoid:
                                         var beamTrape = new BeamRc
                                         {
-                                            Id = croSecId,
+                                            Id = croSecId + 1,
                                             Name = "G" + gNum++,
                                             DBarMain = "D22",
                                             DStirrup = "D10",
@@ -419,7 +419,7 @@ namespace karambaConnect.K2S
                                     default:
                                         var unsupported = new BeamRc
                                         {
-                                            Id = croSecId,
+                                            Id = croSecId + 1,
                                             Name = "G" + gNum++,
                                             DBarMain = "D22",
                                             DStirrup = "D10",

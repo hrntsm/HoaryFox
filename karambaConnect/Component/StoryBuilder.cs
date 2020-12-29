@@ -28,7 +28,7 @@ namespace karambaConnect.Component
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var count = 0;
+            var count = 1;
             var nodes = new List<Node>();
             var intervals = new List<Interval>();
             var names = new List<string>();
@@ -49,7 +49,7 @@ namespace karambaConnect.Component
                 var story = new Story
                 {
                     Id = count,
-                    Name = names[count++],
+                    Name = names[count++ - 1],
                     Height = interval.Mid,
                     Kind = "GENERAL"
                 };
