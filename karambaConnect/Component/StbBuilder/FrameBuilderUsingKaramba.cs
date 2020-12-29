@@ -6,10 +6,10 @@ using karambaConnect.K2S;
 
 namespace karambaConnect.Component.StbBuilder
 {
-    public class Karamba2Stb:GH_Component
+    public class FrameBuilderUsingKaramba:GH_Component
     {
-        public Karamba2Stb()
-          : base("Karamba to Stb", "K2S", "Convert Karamba model to ST-Bridge data.", "HoaryFox", "StbBuilder")
+        public FrameBuilderUsingKaramba()
+          : base("FrameBuilder uisng Karamba", "FrameBuilder", "Convert Karamba model to ST-Bridge data.", "HoaryFox", "StbBuilder")
         {
         }
 

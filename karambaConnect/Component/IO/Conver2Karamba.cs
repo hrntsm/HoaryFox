@@ -12,14 +12,14 @@ using STBReader;
 
 namespace karambaConnect.Component.IO
 {
-    public class Stb2Karamba:GH_Component
+    public class Conver2Karamba:GH_Component
     {
         private StbData _stbData;
         private List<GH_Element> _k3ElemBe = new List<GH_Element>();
         private readonly List<GH_Element> _k3ElemSh = new List<GH_Element>();
 
-        public Stb2Karamba()
-          : base("Stb to Karamba", "S2K", "Convert ST-Bridge file to Karamba.", "HoaryFox", "IO")
+        public Conver2Karamba()
+          : base("Convert to Karamba", "S2K", "Convert ST-Bridge file to Karamba.", "HoaryFox", "IO")
         {
         }
 
