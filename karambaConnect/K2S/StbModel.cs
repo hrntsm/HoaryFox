@@ -33,6 +33,7 @@ namespace karambaConnect.K2S
             var rollHs = new List<RollH>();
             var rollBoxes = new List<RollBox>();
             var pipes = new List<Pipe>();
+            var flatBars = new List<FlatBar>();
 
             foreach (ModelElement elem in kModel.elems)
             {
@@ -90,6 +91,15 @@ namespace karambaConnect.K2S
                         {
                             switch (kModel.crosecs[croSecId])
                             {
+                                case KCroSec.CroSec_Trapezoid secTrapezoid:
+                                    var trapezoid = new FlatBar
+                                    {
+                                        Name = secTrapezoid.name,
+                                        B = secTrapezoid._height * 1000,
+                                        T = secTrapezoid.uf_width * 1000
+                                    };
+                                    flatBars.Add(trapezoid);
+                                    break;
                                 case KCroSec.CroSec_Box secBox:
                                     double[] thickness = { secBox.w_thick, secBox.uf_thick, secBox.lf_thick};
                                     var box = new RollBox
@@ -384,6 +394,70 @@ namespace karambaConnect.K2S
                                     }
                                 };
                                 sections.Add(beamS);
+
+                                if (registeredCrosecName.IndexOf(kModel.crosecs[croSecId].name) < 0)
+                                {
+                                    switch (kModel.crosecs[croSecId])
+                                    {
+                                        case KCroSec.CroSec_Box secBox:
+                                            var box = new RollBox
+                                            {
+                                                Name = secBox.name,
+                                                A = secBox._height * 1000,
+                                                B = secBox.maxWidth() * 1000,
+                                                R = secBox.fillet_r * 1000,
+                                                T = secBox.w_thick * 1000,
+                                                Type = "ELSE"
+                                            };
+                                            rollBoxes.Add(box);
+                                            break;
+                                        case KCroSec.CroSec_T secT:
+                                            var tShape = new RollT
+                                            {
+                                                Name = secT.name,
+                                                A = secT._height * 1000,
+                                                B = secT.maxWidth() * 1000,
+                                                R = secT.fillet_r * 1000,
+                                                T1 = secT.w_thick * 1000,
+                                                T2 = secT.uf_thick * 1000,
+                                                Type = "T"
+                                            };
+                                            rollTs.Add(tShape);
+                                            break;
+                                        case KCroSec.CroSec_I secH:
+                                            var hShape = new RollH
+                                            {
+                                                Name = secH.name,
+                                                A = secH._height * 1000,
+                                                B = secH.maxWidth() * 1000,
+                                                R = secH.fillet_r * 1000,
+                                                T1 = secH.w_thick * 1000,
+                                                T2 = secH.uf_thick * 1000,
+                                                Type = "H"
+                                            };
+                                            rollHs.Add(hShape);
+                                            break;
+                                        case KCroSec.CroSec_Circle secCircle:
+                                            var pipe = new Pipe
+                                            {
+                                                Name = secCircle.name,
+                                                D = secCircle.getHeight() * 1000,
+                                                T = secCircle.thick * 1000
+                                            };
+                                            pipes.Add(pipe);
+                                            break;
+                                        default:
+                                            var unsupported = new Pipe
+                                            {
+                                                Name = kModel.crosecs[croSecId].name,
+                                                D = 10,
+                                                T = 1
+                                            };
+                                            pipes.Add(unsupported);
+                                            break;
+                                    }
+                                    registeredCrosecName.Add(kModel.crosecs[croSecId].name);
+                                }
                                 break;
                             case "RC":
                                 switch (kModel.crosecs[croSecId])
@@ -450,70 +524,6 @@ namespace karambaConnect.K2S
                                 throw new ArgumentException("No supported type");
                         }
                         registeredCrosecId.Add(croSecId);
-
-                        if (registeredCrosecName.IndexOf(kModel.crosecs[croSecId].name) < 0)
-                        {
-                            switch (kModel.crosecs[croSecId])
-                            {
-                                case KCroSec.CroSec_Box secBox:
-                                    var box = new RollBox
-                                    {
-                                        Name = secBox.name,
-                                        A = secBox._height * 1000,
-                                        B = secBox.maxWidth() * 1000,
-                                        R = secBox.fillet_r * 1000,
-                                        T = secBox.w_thick * 1000,
-                                        Type = "ELSE"
-                                    };
-                                    rollBoxes.Add(box);
-                                    break;
-                                case KCroSec.CroSec_T secT:
-                                    var tShape = new RollT
-                                    {
-                                        Name = secT.name,
-                                        A = secT._height * 1000,
-                                        B = secT.maxWidth() * 1000,
-                                        R = secT.fillet_r * 1000,
-                                        T1 = secT.w_thick * 1000,
-                                        T2 = secT.uf_thick * 1000,
-                                        Type = "T"
-                                    };
-                                    rollTs.Add(tShape);
-                                    break;
-                                case KCroSec.CroSec_I secH:
-                                    var hShape = new RollH
-                                    {
-                                        Name = secH.name,
-                                        A = secH._height * 1000,
-                                        B = secH.maxWidth() * 1000,
-                                        R = secH.fillet_r * 1000,
-                                        T1 = secH.w_thick * 1000,
-                                        T2 = secH.uf_thick * 1000,
-                                        Type = "H"
-                                    };
-                                    rollHs.Add(hShape);
-                                    break;
-                                case KCroSec.CroSec_Circle secCircle:
-                                    var pipe = new Pipe
-                                    {
-                                        Name = secCircle.name,
-                                        D = secCircle.getHeight() * 1000,
-                                        T = secCircle.thick * 1000
-                                    };
-                                    pipes.Add(pipe);
-                                    break;
-                                default:
-                                    var unsupported = new Pipe
-                                    {
-                                        Name = kModel.crosecs[croSecId].name,
-                                        D = 10,
-                                        T = 1
-                                    };
-                                    pipes.Add(unsupported);
-                                    break;
-                            }
-                            registeredCrosecName.Add(kModel.crosecs[croSecId].name);
-                        }
                     }
                 }
             }
@@ -532,9 +542,15 @@ namespace karambaConnect.K2S
             {
                 steelSec.RollBox = rollBoxes;
             }
+
             if (pipes.Count > 0)
             {
                 steelSec.Pipe = pipes;
+            }
+
+            if (flatBars.Count > 0)
+            {
+                steelSec.FlatBar = flatBars;
             }
             sections.Add(steelSec);
 
