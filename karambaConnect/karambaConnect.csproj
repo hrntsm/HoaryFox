@@ -62,8 +62,8 @@
     <Compile Include="Component\StbBuilder\AxisBuilder.cs" />
     <Compile Include="Component\StbBuilder\StoryBuilder.cs" />
     <Compile Include="Component\IO\Export.cs" />
-    <Compile Include="Component\StbBuilder\Karamba2Stb.cs" />
-    <Compile Include="Component\IO\Stb2Karamba.cs" />
+    <Compile Include="Component\StbBuilder\FrameBuilderUsingKaramba.cs" />
+    <Compile Include="Component\IO\Conver2Karamba.cs" />
     <Compile Include="Convert.cs" />
     <Compile Include="K2S\StbCommon.cs" />
     <Compile Include="K2S\StbModel.cs" />

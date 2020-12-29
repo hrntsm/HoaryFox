@@ -16,7 +16,8 @@ namespace karambaConnect.Component.StbBuilder
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Node", "Node", "StbNode data", GH_ParamAccess.list);
-            pManager.AddIntervalParameter("Distance", "Dist", "Range of the target node coordinates[mm].", GH_ParamAccess.list);
+            pManager.AddNumberParameter("Distance", "Dist", "Axis coordinates[mm] from origin.", GH_ParamAccess.list);
+            pManager.AddNumberParameter("Range", "Range", "The range of nodes to include in the axis. (Dist±Range)", GH_ParamAccess.list);
             pManager.AddTextParameter("Name", "Name", "Axis Name", GH_ParamAccess.list);
             pManager.AddIntegerParameter("Direction", "Dir", "0: X Axis, 1: Y Axis", GH_ParamAccess.list);
         }
@@ -28,39 +29,42 @@ namespace karambaConnect.Component.StbBuilder
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var count = 1;
+            var count = 0;
             var nodes = new List<Node>();
-            var intervals = new List<Interval>();
+            var distance = new List<double>();
+            var range = new List<double>();
             var names = new List<string>();
             var dir = new List<int>();
 
             if (!DA.GetDataList(0, nodes)) { return; }
-            if (!DA.GetDataList(1, intervals)) { return; }
-            if (!DA.GetDataList(2, names)) { return; }
-            if (!DA.GetDataList(3, dir)) { return; }
+            if (!DA.GetDataList(1, distance)) { return; }
+            if (!DA.GetDataList(2, range)) { return; }
+            if (!DA.GetDataList(3, names)) { return; }
+            if (!DA.GetDataList(4, dir)) { return; }
 
             var axes = new List<Axis>();
 
-            if (intervals.Count != names.Count || intervals.Count != dir.Count || names.Count != dir.Count)
+            if (distance.Count != names.Count || distance.Count != range.Count || distance.Count != dir.Count ||
+                range.Count != names.Count || range.Count != dir.Count || names.Count != dir.Count)
             {
                 throw new ArgumentOutOfRangeException("The number of items does not match.");
             }
 
-            foreach (Interval interval in intervals)
+            foreach (double dist in distance)
             {
                 var nodeIds = new List<NodeId>();
-                switch (dir[count - 1])
+                switch (dir[count])
                 {
                     case 0:
                         var xAxis = new XAxis
                         {
-                            Id = count,
-                            Name = names[count++ - 1],
-                            Distance = interval.Mid
+                            Id = count + 1,
+                            Name = names[count],
+                            Distance = dist
                         };
                         foreach (Node node in nodes)
                         {
-                            if (node.X > interval.Min & node.X < interval.Max)
+                            if (node.X > dist - range[count] & node.X < dist + range[count])
                             {
                                 nodeIds.Add(new NodeId(node.Id));
                             }
@@ -75,13 +79,13 @@ namespace karambaConnect.Component.StbBuilder
                     case 1:
                         var yAxis = new YAxis
                         {
-                            Id = count,
-                            Name = names[count++ - 1],
-                            Distance = interval.Mid
+                            Id = count + 1,
+                            Name = names[count],
+                            Distance = dist
                         };
                         foreach (Node node in nodes)
                         {
-                            if (node.Y > interval.Min & node.Y < interval.Max)
+                            if (node.Y > dist - range[count] & node.Y < dist + range[count])
                             {
                                 nodeIds.Add(new NodeId(node.Id));
                             }
@@ -94,6 +98,7 @@ namespace karambaConnect.Component.StbBuilder
                         axes.Add(yAxis);
                         break;
                 }
+                count++;
             }
 
             DA.SetDataList(0, axes);

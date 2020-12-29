@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using STBDotNet.Elements.StbModel;
@@ -16,7 +17,8 @@ namespace karambaConnect.Component.StbBuilder
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Node", "Node", "StbNode data", GH_ParamAccess.list);
-            pManager.AddIntervalParameter("Height", "Height", "Range of the target node Z coordinates[mm].", GH_ParamAccess.list);
+            pManager.AddNumberParameter("Height", "Height", "Story height[mm] from origin.", GH_ParamAccess.list);
+            pManager.AddNumberParameter("Range", "Range", "The range of nodes to include in the axis. (height±Range)", GH_ParamAccess.list);
             pManager.AddTextParameter("Name", "Name", "Story Name", GH_ParamAccess.list);
         }
 
@@ -27,35 +29,37 @@ namespace karambaConnect.Component.StbBuilder
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var count = 1;
+            var count = 0;
             var nodes = new List<Node>();
-            var intervals = new List<Interval>();
+            var height = new List<double>();
+            var range = new List<double>();
             var names = new List<string>();
 
             if (!DA.GetDataList(0, nodes)) { return; }
-            if (!DA.GetDataList(1, intervals)) { return; }
-            if (!DA.GetDataList(2, names)) { return; }
+            if (!DA.GetDataList(1, height)) { return; }
+            if (!DA.GetDataList(2, range)) { return; }
+            if (!DA.GetDataList(3, names)) { return; }
 
             var stories = new List<Story>();
 
-            if (intervals.Count != names.Count)
+            if (height.Count != range.Count || height.Count != names.Count || range.Count != names.Count)
             {
-                throw new ArgumentOutOfRangeException("The number of floor heights does not match the number of floor names.");
+                throw new ArgumentOutOfRangeException("The number of items does not match.");
             }
 
-            foreach (Interval interval in intervals)
+            foreach (double h in height)
             {
                 var story = new Story
                 {
-                    Id = count,
-                    Name = names[count++ - 1],
-                    Height = interval.Mid,
+                    Id = count + 1,
+                    Name = names[count],
+                    Height = h,
                     Kind = "GENERAL"
                 };
                 var nodeIds = new List<NodeId>();
                 foreach (Node node in nodes)
                 {
-                    if (node.Z > interval.Min & node.Z < interval.Max)
+                    if (node.Z > h - range[count] & node.Z < h + range[count])
                     {
                         nodeIds.Add(new NodeId(node.Id));
                     }
@@ -68,6 +72,7 @@ namespace karambaConnect.Component.StbBuilder
 
                 story.NodeIdList = nodeIds;
                 stories.Add(story);
+                count++;
             }
 
             DA.SetDataList(0, stories);
