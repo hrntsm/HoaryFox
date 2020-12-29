@@ -10,7 +10,7 @@ using Karamba.GHopper.Elements;
 using karambaConnect.S2K;
 using STBReader;
 
-namespace karambaConnect.Component
+namespace karambaConnect.Component.IO
 {
     public class Stb2Karamba:GH_Component
     {

@@ -4,12 +4,12 @@ using Grasshopper.Kernel;
 using Rhino.Geometry;
 using STBDotNet.Elements.StbModel;
 
-namespace karambaConnect.Component
+namespace karambaConnect.Component.StbBuilder
 {
     public class AxisBuilder:GH_Component
     {
         public AxisBuilder()
-          : base("AxisBuilder", "Axis", "Builder StbAxes data", "HoaryFox", "Export")
+          : base("AxisBuilder", "Axis", "Builder StbAxes data", "HoaryFox", "StbBuilder")
         {
         }
 

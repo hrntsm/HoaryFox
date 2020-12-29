@@ -1,15 +1,15 @@
 ﻿using System;
 using Grasshopper.Kernel;
-using Karamba.Models;
 using Karamba.GHopper.Models;
+using Karamba.Models;
 using karambaConnect.K2S;
 
-namespace karambaConnect.Component
+namespace karambaConnect.Component.StbBuilder
 {
     public class Karamba2Stb:GH_Component
     {
         public Karamba2Stb()
-          : base("Karamba to Stb", "K2S", "Convert Karamba model to ST-Bridge data.", "HoaryFox", "Export")
+          : base("Karamba to Stb", "K2S", "Convert Karamba model to ST-Bridge data.", "HoaryFox", "StbBuilder")
         {
         }
 

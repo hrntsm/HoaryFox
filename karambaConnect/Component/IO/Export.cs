@@ -8,7 +8,7 @@ using STBDotNet.Elements.StbModel.StbMember;
 using STBDotNet.Elements.StbModel.StbSection;
 using STBDotNet.Serialization;
 
-namespace karambaConnect.Component
+namespace karambaConnect.Component.IO
 {
     public class Export:GH_Component
     {
@@ -16,7 +16,7 @@ namespace karambaConnect.Component
             Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\model.stb";
         
         public Export()
-          : base("Export Stb file", "Export", "Export ST-Bridge data.", "HoaryFox", "Export")
+          : base("Export Stb file", "Export", "Export ST-Bridge data.", "HoaryFox", "IO")
         {
         }
 

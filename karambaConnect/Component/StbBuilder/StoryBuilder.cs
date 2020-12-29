@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
-using karambaConnect.K2S;
 using Rhino.Geometry;
 using STBDotNet.Elements.StbModel;
 
-namespace karambaConnect.Component
+namespace karambaConnect.Component.StbBuilder
 {
     public class StoryBuilder:GH_Component
     {
         public StoryBuilder()
-          : base("StoryBuilder", "Story", "Builder StbStory data", "HoaryFox", "Export")
+          : base("StoryBuilder", "Story", "Builder StbStory data", "HoaryFox", "StbBuilder")
         {
         }
 
