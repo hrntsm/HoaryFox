@@ -3,58 +3,45 @@ using Grasshopper.Kernel;
 using Karamba.Models;
 using Karamba.GHopper.Models;
 using karambaConnect.K2S;
-using STBDotNet.Elements;
-using STBDotNet.Serialization;
 
 namespace karambaConnect.Component
 {
     public class Karamba2Stb:GH_Component
     {
-        private readonly string _defaultOutPath =
-            Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\model.stb";
-        
         public Karamba2Stb()
-          : base("Karamba to Stb", "K2S", "Convert Karamba model to ST-Bridge data and output.", "HoaryFox", "IO")
+          : base("Karamba to Stb", "K2S", "Convert Karamba model to ST-Bridge data.", "HoaryFox", "Export")
         {
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddParameter(new Param_Model(), "Model", "Model", "Karamba model data", GH_ParamAccess.item);
-            pManager.AddTextParameter("Path", "Path", "Output path", GH_ParamAccess.item, _defaultOutPath);
-            pManager.AddBooleanParameter("Out?", "Out?", "If it is true, output stb file.", GH_ParamAccess.item, false);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Stb", "Stb", "StbModel Data", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Node", "Nd", "StbNode Data", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Member", "Mem", "StbMember data", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Section", "Sec", "StbSection data", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var path = string.Empty;
-            var isOutput = false;
             var modelIn = new object();
             
             if (!DA.GetData(0, ref modelIn)) { return; }
-            if (!DA.GetData(1, ref path)) { return; }
-            if (!DA.GetData(2, ref isOutput)) { return; }
 
             var ghKModel = modelIn as GH_Model;
             if (ghKModel == null)
             {
                 throw new ArgumentException("The input is not of type model!");
             }
-            Model model = ghKModel.Value;
-            StbElements elements = StbElement.GetData(model);
-
-            if (isOutput)
-            {
-                var sr = new Serializer();
-                sr.Serialize(elements, path);
-            }
+            Model kModel = ghKModel.Value;
+            STBDotNet.Elements.StbModel.Model sModel = StbModel.Set(kModel);
             
-            DA.SetData(0, elements);
+            DA.SetDataList(0, sModel.Nodes);
+            DA.SetData(1, sModel.Members);
+            DA.SetDataList(2, sModel.Sections);
         }
 
         // protected override Bitmap Icon => karambaConnect.Properties.Resource.ToKaramba;
