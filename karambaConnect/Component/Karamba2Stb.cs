@@ -20,7 +20,7 @@ namespace karambaConnect.Component
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Node", "Nd", "StbNode Data", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Node", "Node", "StbNode Data", GH_ParamAccess.list);
             pManager.AddGenericParameter("Member", "Mem", "StbMember data", GH_ParamAccess.item);
             pManager.AddGenericParameter("Section", "Sec", "StbSection data", GH_ParamAccess.list);
         }

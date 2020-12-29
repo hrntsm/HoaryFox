@@ -22,9 +22,9 @@ namespace karambaConnect.Component
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Node", "Nd", "StbNode data", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Axis", "Axs", "StbAxes data", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Story", "Sty", "StbStory data", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Node", "Node", "StbNode data", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Axis", "Axis", "StbAxes data", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Story", "Story", "StbStory data", GH_ParamAccess.list);
             pManager.AddGenericParameter("Member", "Mem","StbMember data", GH_ParamAccess.item);
             pManager.AddGenericParameter("Section", "Sec", "StbSection data", GH_ParamAccess.list);
             pManager.AddTextParameter("Path", "Path", "Output path", GH_ParamAccess.item, _defaultOutPath);
