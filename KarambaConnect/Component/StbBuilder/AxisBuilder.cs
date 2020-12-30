@@ -71,7 +71,7 @@ namespace KarambaConnect.Component.StbBuilder
 
                     if (nodeIds.Count == 0)
                     {
-                        throw new ArgumentException("There are no nodes in the target height range.");
+                        throw new ArgumentException("There are no nodes in the target distance range.");
                     }
 
                     xAxis.NodeIdList = nodeIds;
