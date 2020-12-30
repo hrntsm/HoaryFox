@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using STBDotNet.Elements.StbModel;
 
-namespace KarambaConnect.Component.StbBuilder
+namespace karambaConnect.Component.StbBuilder
 {
     public class AxisBuilder:GH_Component
     {

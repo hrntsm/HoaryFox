@@ -3,9 +3,9 @@ using System.Drawing;
 using Grasshopper.Kernel;
 using Karamba.GHopper.Models;
 using Karamba.Models;
-using KarambaConnect.K2S;
+using karambaConnect.K2S;
 
-namespace KarambaConnect.Component.StbBuilder
+namespace karambaConnect.Component.StbBuilder
 {
     public class FrameBuilderUsingKaramba:GH_Component
     {

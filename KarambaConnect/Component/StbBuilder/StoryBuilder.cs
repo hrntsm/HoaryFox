@@ -4,7 +4,7 @@ using System.Drawing;
 using Grasshopper.Kernel;
 using STBDotNet.Elements.StbModel;
 
-namespace KarambaConnect.Component.StbBuilder
+namespace karambaConnect.Component.StbBuilder
 {
     public class StoryBuilder:GH_Component
     {

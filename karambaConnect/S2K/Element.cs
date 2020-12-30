@@ -7,7 +7,7 @@ using STBReader;
 using STBReader.Member;
 using STBReader.Model;
 
-namespace KarambaConnect.S2K
+namespace karambaConnect.S2K
 {
     public static class Element
     {

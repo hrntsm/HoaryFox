@@ -8,8 +8,8 @@
     <ProjectGuid>{CD5D3228-2B3E-4112-9B42-C82615673DFE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KarambaConnect</RootNamespace>
-    <AssemblyName>KarambaConnect</AssemblyName>
+    <RootNamespace>karambaConnect</RootNamespace>
+    <AssemblyName>karambaConnect</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -35,13 +35,11 @@
   <ItemGroup>
     <Reference Include="karambaCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Library\karamba133\karambaCommon.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>Library\karamba132\karambaCommon.dll</HintPath>
     </Reference>
     <Reference Include="karambaGH, Version=1.15.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Library\karamba133\karambaGH.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>Library\karamba132\karambaGH.dll</HintPath>
     </Reference>
     <Reference Include="STBReader">
       <HintPath>Library\STBReader.dll</HintPath>
@@ -60,7 +58,7 @@
     <Compile Include="Component\StbBuilder\StoryBuilder.cs" />
     <Compile Include="Component\IO\Export.cs" />
     <Compile Include="Component\StbBuilder\FrameBuilderUsingKaramba.cs" />
-    <Compile Include="Component\IO\Conver2Karamba.cs" />
+    <Compile Include="Component\IO\Convert2Karamba.cs" />
     <Compile Include="Convert.cs" />
     <Compile Include="K2S\StbCommon.cs" />
     <Compile Include="K2S\StbModel.cs" />
