@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 
-namespace KarambaConnect
+namespace karambaConnect
 {
     public class KarambaConnectInfo : GH_AssemblyInfo
     {

@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Grasshopper.Kernel;
-using KarambaConnect.K2S;
-using KarambaConnect.Properties;
+using karambaConnect.K2S;
+using karambaConnect.Properties;
 using STBDotNet.Elements;
 using STBDotNet.Elements.StbModel;
 using STBDotNet.Elements.StbModel.StbMember;
 using STBDotNet.Elements.StbModel.StbSection;
 using STBDotNet.Serialization;
 
-namespace KarambaConnect.Component.IO
+namespace karambaConnect.Component.IO
 {
     public class Export:GH_Component
     {
