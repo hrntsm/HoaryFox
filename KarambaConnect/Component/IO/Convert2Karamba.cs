@@ -13,13 +13,13 @@ using STBReader;
 
 namespace KarambaConnect.Component.IO
 {
-    public class Conver2Karamba:GH_Component
+    public class Convert2Karamba:GH_Component
     {
         private StbData _stbData;
         private List<GH_Element> _k3ElemBe = new List<GH_Element>();
         private readonly List<GH_Element> _k3ElemSh = new List<GH_Element>();
 
-        public Conver2Karamba()
+        public Convert2Karamba()
           : base("Convert to Karamba", "S2K", "Convert ST-Bridge file to Karamba.", "HoaryFox", "IO")
         {
         }
