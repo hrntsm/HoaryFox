@@ -20,7 +20,7 @@ namespace KarambaConnect
 
             foreach (Karamba.Nodes.Node kNode in kNodes)
             {
-                var sNode = new STBDotNet.Elements.StbModel.Node()
+                var sNode = new STBDotNet.Elements.StbModel.Node
                 {
                     Id = kNode.ind + 1,
                     X = kNode.pos.X * 1000,

@@ -53,51 +53,55 @@ namespace KarambaConnect.Component.StbBuilder
             foreach (double dist in distance)
             {
                 var nodeIds = new List<NodeId>();
-                switch (dir[count])
+                if (dir[count] == 0)
                 {
-                    case 0:
-                        var xAxis = new XAxis
+                    var xAxis = new XAxis
+                    {
+                        Id = count + 1,
+                        Name = names[count],
+                        Distance = dist
+                    };
+                    foreach (Node node in nodes)
+                    {
+                        if (node.X > dist - range[count] && node.X < dist + range[count])
                         {
-                            Id = count + 1,
-                            Name = names[count],
-                            Distance = dist
-                        };
-                        foreach (Node node in nodes)
-                        {
-                            if (node.X > dist - range[count] & node.X < dist + range[count])
-                            {
-                                nodeIds.Add(new NodeId(node.Id));
-                            }
+                            nodeIds.Add(new NodeId(node.Id));
                         }
-                        if (nodeIds.Count == 0)
-                        {
-                            throw new ArgumentException("There are no nodes in the target height range.");
-                        }
-                        xAxis.NodeIdList = nodeIds;
-                        axes.Add(xAxis);
-                        break;
-                    case 1:
-                        var yAxis = new YAxis
-                        {
-                            Id = count + 1,
-                            Name = names[count],
-                            Distance = dist
-                        };
-                        foreach (Node node in nodes)
-                        {
-                            if (node.Y > dist - range[count] & node.Y < dist + range[count])
-                            {
-                                nodeIds.Add(new NodeId(node.Id));
-                            }
-                        }
-                        if (nodeIds.Count == 0)
-                        {
-                            throw new ArgumentException("There are no nodes in the target distance range.");
-                        }
-                        yAxis.NodeIdList = nodeIds;
-                        axes.Add(yAxis);
-                        break;
+                    }
+
+                    if (nodeIds.Count == 0)
+                    {
+                        throw new ArgumentException("There are no nodes in the target height range.");
+                    }
+
+                    xAxis.NodeIdList = nodeIds;
+                    axes.Add(xAxis);
                 }
+                else if (dir[count] == 1)
+                {
+                    var yAxis = new YAxis
+                    {
+                        Id = count + 1,
+                        Name = names[count],
+                        Distance = dist
+                    };
+                    foreach (Node node in nodes)
+                    {
+                        if (node.Y > dist - range[count] && node.Y < dist + range[count])
+                        {
+                            nodeIds.Add(new NodeId(node.Id));
+                        }
+                    }
+
+                    if (nodeIds.Count == 0)
+                    {
+                        throw new ArgumentException("There are no nodes in the target distance range.");
+                    }
+
+                    yAxis.NodeIdList = nodeIds;
+                    axes.Add(yAxis);
+                }
+
                 count++;
             }
 

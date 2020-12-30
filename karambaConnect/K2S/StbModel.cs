@@ -11,7 +11,7 @@ using Model = STBDotNet.Elements.StbModel.Model;
 
 namespace KarambaConnect.K2S
 {
-    public class StbModel
+    public static class StbModel
     {
         public static Model Set(Karamba.Models.Model kModel)
         {
@@ -162,7 +162,7 @@ namespace KarambaConnect.K2S
                         }
                     }
                 }
-                else if (angle < Math.PI / 4d & angle > - Math.PI / 4d)
+                else if (angle < Math.PI / 4d && angle > - Math.PI / 4d)
                 {
                     var column = new Column
                     {
@@ -304,14 +304,14 @@ namespace KarambaConnect.K2S
                                             DBarBand = "D10",
                                             Figure = new RcColumnSecFigure
                                             {
-                                                SecCircle = new RcColumnSecFigure.Circle()
+                                                SecCircle = new RcColumnSecFigure.Circle
                                                 {
                                                     D = circle.getHeight() * 1000
                                                 }
                                             },
                                             BarArrangement = new RcColumnSecBarArrangement
                                             {
-                                                CircleSameSection = new RcColumnSecBarArrangement.CircleSame()
+                                                CircleSameSection = new RcColumnSecBarArrangement.CircleSame
                                                 {
                                                     CountMain = 6,
                                                     PitchBand = 100
@@ -460,65 +460,65 @@ namespace KarambaConnect.K2S
                                 }
                                 break;
                             case "RC":
-                                switch (kModel.crosecs[croSecId])
+                                if (kModel.crosecs[croSecId] is KCroSec.CroSec_Trapezoid trapezoid)
                                 {
-                                    case KCroSec.CroSec_Trapezoid trapezoid:
-                                        var beamTrape = new BeamRc
+                                    var beamTrapezoid = new BeamRc
+                                    {
+                                        Id = croSecId + 1,
+                                        Name = "G" + gNum++,
+                                        DBarMain = "D22",
+                                        DStirrup = "D10",
+                                        Figure = new RcBeamSecFigure
                                         {
-                                            Id = croSecId + 1,
-                                            Name = "G" + gNum++,
-                                            DBarMain = "D22",
-                                            DStirrup = "D10",
-                                            Figure = new RcBeamSecFigure
+                                            SecStraight = new RcBeamSecFigure.Straight
                                             {
-                                                SecStraight = new RcBeamSecFigure.Straight
-                                                {
-                                                    Depth = trapezoid._height * 1000,
-                                                    Width = trapezoid.maxWidth() * 1000
-                                                }
-                                            },
-                                            BarArrangement = new RcBeamSecBarArrangement
-                                            {
-                                                SameSection = new RcBeamSecBarArrangement.Same
-                                                {
-                                                    CountMainTop1st = 3,
-                                                    CountMainBottom1st = 3,
-                                                    CountStirrup = 2,
-                                                    PitchStirrup = 100
-                                                }
+                                                Depth = trapezoid._height * 1000,
+                                                Width = trapezoid.maxWidth() * 1000
                                             }
-                                        };
-                                        sections.Add(beamTrape);
-                                        break;
-                                    default:
-                                        var unsupported = new BeamRc
+                                        },
+                                        BarArrangement = new RcBeamSecBarArrangement
                                         {
-                                            Id = croSecId + 1,
-                                            Name = "G" + gNum++,
-                                            DBarMain = "D22",
-                                            DStirrup = "D10",
-                                            Figure = new RcBeamSecFigure
+                                            SameSection = new RcBeamSecBarArrangement.Same
                                             {
-                                                SecStraight = new RcBeamSecFigure.Straight
-                                                {
-                                                    Depth = 10,
-                                                    Width = 10
-                                                }
-                                            },
-                                            BarArrangement = new RcBeamSecBarArrangement
-                                            {
-                                                SameSection = new RcBeamSecBarArrangement.Same
-                                                {
-                                                    CountMainTop1st = 2,
-                                                    CountMainBottom1st = 3,
-                                                    CountStirrup = 2,
-                                                    PitchStirrup = 100
-                                                }
+                                                CountMainTop1st = 3,
+                                                CountMainBottom1st = 3,
+                                                CountStirrup = 2,
+                                                PitchStirrup = 100
                                             }
-                                        };
-                                        sections.Add(unsupported);
-                                        break;
+                                        }
+                                    };
+                                    sections.Add(beamTrapezoid);
                                 }
+                                else
+                                {
+                                    var unsupported = new BeamRc
+                                    {
+                                        Id = croSecId + 1,
+                                        Name = "G" + gNum++,
+                                        DBarMain = "D22",
+                                        DStirrup = "D10",
+                                        Figure = new RcBeamSecFigure
+                                        {
+                                            SecStraight = new RcBeamSecFigure.Straight
+                                            {
+                                                Depth = 10,
+                                                Width = 10
+                                            }
+                                        },
+                                        BarArrangement = new RcBeamSecBarArrangement
+                                        {
+                                            SameSection = new RcBeamSecBarArrangement.Same
+                                            {
+                                                CountMainTop1st = 2,
+                                                CountMainBottom1st = 3,
+                                                CountStirrup = 2,
+                                                PitchStirrup = 100
+                                            }
+                                        }
+                                    };
+                                    sections.Add(unsupported);
+                                }
+
                                 break;
                             default:
                                 throw new ArgumentException("No supported type");

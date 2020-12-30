@@ -58,7 +58,7 @@ namespace KarambaConnect.Component.StbBuilder
                 var nodeIds = new List<NodeId>();
                 foreach (Node node in nodes)
                 {
-                    if (node.Z > h - range[count] & node.Z < h + range[count])
+                    if (node.Z > h - range[count] && node.Z < h + range[count])
                     {
                         nodeIds.Add(new NodeId(node.Id));
                     }
