@@ -64,7 +64,7 @@
     <Compile Include="Convert.cs" />
     <Compile Include="K2S\StbCommon.cs" />
     <Compile Include="K2S\StbModel.cs" />
-    <Compile Include="karambaConnectInfo.cs" />
+    <Compile Include="KarambaConnectInfo.cs" />
     <Compile Include="S2K\CrossSection.cs" />
     <Compile Include="S2K\Element.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,6 +81,10 @@
     <Content Include="Library\karamba132\karambaGH.dll" />
     <Content Include="Library\karamba133\karambaCommon.dll" />
     <Content Include="Library\karamba133\karambaGH.dll" />
+    <Content Include="Resources\AxisBuilder.png" />
+    <Content Include="Resources\FrameBuilder.png" />
+    <None Include="Resources\ExportStb.png" />
+    <None Include="Resources\StoryBuilder.png" />
     <None Include="Resources\ToKaramba.png" />
   </ItemGroup>
   <ItemGroup>

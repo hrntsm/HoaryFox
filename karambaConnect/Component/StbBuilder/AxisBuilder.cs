@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
-using Rhino.Geometry;
 using STBDotNet.Elements.StbModel;
 
-namespace karambaConnect.Component.StbBuilder
+namespace KarambaConnect.Component.StbBuilder
 {
     public class AxisBuilder:GH_Component
     {
@@ -104,7 +104,7 @@ namespace karambaConnect.Component.StbBuilder
             DA.SetDataList(0, axes);
         }
 
-        // protected override Bitmap Icon => karambaConnect.Properties.Resource.ToKaramba;
+        protected override Bitmap Icon => Properties.Resource.AxisBuilder;
         public override Guid ComponentGuid => new Guid("A09E1BF4-90FD-436D-8142-092894CE5D86");
     }
 }

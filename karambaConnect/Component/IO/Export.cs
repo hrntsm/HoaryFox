@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Grasshopper.Kernel;
-using karambaConnect.K2S;
+using KarambaConnect.K2S;
+using KarambaConnect.Properties;
 using STBDotNet.Elements;
 using STBDotNet.Elements.StbModel;
 using STBDotNet.Elements.StbModel.StbMember;
 using STBDotNet.Elements.StbModel.StbSection;
 using STBDotNet.Serialization;
 
-namespace karambaConnect.Component.IO
+namespace KarambaConnect.Component.IO
 {
     public class Export:GH_Component
     {
@@ -16,7 +18,7 @@ namespace karambaConnect.Component.IO
             Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\model.stb";
         
         public Export()
-          : base("Export Stb file", "Export", "Export ST-Bridge data.", "HoaryFox", "IO")
+          : base("Export STB file", "Export", "Export ST-Bridge data.", "HoaryFox", "IO")
         {
         }
 
@@ -79,7 +81,7 @@ namespace karambaConnect.Component.IO
             DA.SetData(0, elements);
         }
 
-        // protected override Bitmap Icon => karambaConnect.Properties.Resource.ToKaramba;
+        protected override Bitmap Icon => Resource.ExportStb;
         public override Guid ComponentGuid => new Guid("41401A49-3552-4741-B8F9-4C8E0C689323");
     }
 }

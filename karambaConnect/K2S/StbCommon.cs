@@ -1,7 +1,7 @@
 ﻿using System;
 using STBDotNet.Elements.StbCommon;
 
-namespace karambaConnect.K2S
+namespace KarambaConnect.K2S
 {
     public static class StbCommon
     {

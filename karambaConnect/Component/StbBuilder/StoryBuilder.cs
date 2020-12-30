@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.Drawing;
 using Grasshopper.Kernel;
-using Rhino.Geometry;
 using STBDotNet.Elements.StbModel;
 
-namespace karambaConnect.Component.StbBuilder
+namespace KarambaConnect.Component.StbBuilder
 {
     public class StoryBuilder:GH_Component
     {
@@ -78,7 +77,7 @@ namespace karambaConnect.Component.StbBuilder
             DA.SetDataList(0, stories);
         }
 
-        // protected override Bitmap Icon => karambaConnect.Properties.Resource.ToKaramba;
+        protected override Bitmap Icon => Properties.Resource.StoryBuilder;
         public override Guid ComponentGuid => new Guid("438FB2A2-5EA8-474C-8897-5244AD00A188");
     }
 }

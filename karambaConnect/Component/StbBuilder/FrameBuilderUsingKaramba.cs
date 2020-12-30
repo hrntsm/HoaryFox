@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Drawing;
 using Grasshopper.Kernel;
 using Karamba.GHopper.Models;
 using Karamba.Models;
-using karambaConnect.K2S;
+using KarambaConnect.K2S;
 
-namespace karambaConnect.Component.StbBuilder
+namespace KarambaConnect.Component.StbBuilder
 {
     public class FrameBuilderUsingKaramba:GH_Component
     {
         public FrameBuilderUsingKaramba()
-          : base("FrameBuilder uisng Karamba", "FrameBuilder", "Convert Karamba model to ST-Bridge data.", "HoaryFox", "StbBuilder")
+          : base("FrameBuilder using Karamba", "FrameBuilder", "Convert Karamba model to ST-Bridge data.", "HoaryFox", "StbBuilder")
         {
         }
 
@@ -44,7 +45,7 @@ namespace karambaConnect.Component.StbBuilder
             DA.SetDataList(2, sModel.Sections);
         }
 
-        // protected override Bitmap Icon => karambaConnect.Properties.Resource.ToKaramba;
+        protected override Bitmap Icon => Properties.Resource.FrameBuilder;
         public override Guid ComponentGuid => new Guid("38296D06-E47A-403F-BFE8-00E873A99CF8");
     }
 }

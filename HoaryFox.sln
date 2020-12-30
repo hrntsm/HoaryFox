@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoaryFox", "HoaryFox\HoaryFox.csproj", "{9637855D-D144-4448-9F56-A391A3575DAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "karambaConnect", "karambaConnect\karambaConnect.csproj", "{CD5D3228-2B3E-4112-9B42-C82615673DFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarambaConnect", "karambaConnect\KarambaConnect.csproj", "{CD5D3228-2B3E-4112-9B42-C82615673DFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

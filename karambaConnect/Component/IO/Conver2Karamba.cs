@@ -7,10 +7,11 @@ using Karamba.CrossSections;
 using Karamba.Elements;
 using Karamba.GHopper.CrossSections;
 using Karamba.GHopper.Elements;
-using karambaConnect.S2K;
+using KarambaConnect.Properties;
+using KarambaConnect.S2K;
 using STBReader;
 
-namespace karambaConnect.Component.IO
+namespace KarambaConnect.Component.IO
 {
     public class Conver2Karamba:GH_Component
     {
@@ -55,7 +56,7 @@ namespace karambaConnect.Component.IO
             DA.SetDataList(1, k3CroSec);
         }
 
-        protected override Bitmap Icon => karambaConnect.Properties.Resource.ToKaramba;
+        protected override Bitmap Icon => Resource.ToKaramba;
         public override Guid ComponentGuid => new Guid("C57461DA-E79B-49A0-B44B-71CF32057709");
     }
 }
