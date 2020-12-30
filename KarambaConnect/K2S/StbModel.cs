@@ -9,7 +9,7 @@ using STBDotNet.Elements.StbModel.StbMember;
 using STBDotNet.Elements.StbModel.StbSection;
 using Model = STBDotNet.Elements.StbModel.Model;
 
-namespace karambaConnect.K2S
+namespace KarambaConnect.K2S
 {
     public static class StbModel
     {

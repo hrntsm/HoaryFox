@@ -7,11 +7,11 @@ using Karamba.CrossSections;
 using Karamba.Elements;
 using Karamba.GHopper.CrossSections;
 using Karamba.GHopper.Elements;
-using karambaConnect.Properties;
-using karambaConnect.S2K;
+using KarambaConnect.Properties;
+using KarambaConnect.S2K;
 using STBReader;
 
-namespace karambaConnect.Component.IO
+namespace KarambaConnect.Component.IO
 {
     public class Convert2Karamba:GH_Component
     {

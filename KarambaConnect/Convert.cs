@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace karambaConnect
+namespace KarambaConnect
 {
     public static class Convert
     {

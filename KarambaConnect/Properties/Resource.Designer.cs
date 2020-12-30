@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace karambaConnect.Properties {
+namespace KarambaConnect.Properties {
     using System;
     
     
