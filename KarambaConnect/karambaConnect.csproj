@@ -75,12 +75,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Library\karamba132full\karambaCommon.dll" />
-    <Content Include="Library\karamba132full\kConnect.dll" />
     <Content Include="Library\karamba132\karambaCommon.dll" />
     <Content Include="Library\karamba132\karambaGH.dll" />
-    <Content Include="Library\karamba133\karambaCommon.dll" />
-    <Content Include="Library\karamba133\karambaGH.dll" />
     <Content Include="Resources\AxisBuilder.png" />
     <Content Include="Resources\FrameBuilder.png" />
     <None Include="Resources\ExportStb.png" />
