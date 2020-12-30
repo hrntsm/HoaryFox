@@ -44,7 +44,9 @@ jobs:
           
       - name: Copy karambaConnect to /HoaryFox/bin dir
         shell: powershell
-        run: cp ./karambaConnect/bin/karambaConnect.gha ./HoaryFox/bin/karambaConnect.gha
+        run: |
+          cp ./KarambaConnect/bin/KarambaConnect.gha ./HoaryFox/bin/KarambaConnect.gha
+          cp ./KarambaConnect/bin/STBDotNet.dll ./HoaryFox/bin/STBDotNet.dll
           
       - name: Upload release build of plugin as artefact
         if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
@@ -53,7 +55,8 @@ jobs:
           name: HoaryFox
           path: |
              ./HoaryFox/bin/HoaryFox.gha
+             ./HoaryFox/bin/KarambaConnect.gha
              ./HoaryFox/bin/STBReader.dll
-             ./HoaryFox/bin/karambaConnect.gha
+             ./HoaryFox/bin/STBDotNet.dll
              
              

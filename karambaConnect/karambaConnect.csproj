@@ -8,8 +8,8 @@
     <ProjectGuid>{CD5D3228-2B3E-4112-9B42-C82615673DFE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>karambaConnect</RootNamespace>
-    <AssemblyName>karambaConnect</AssemblyName>
+    <RootNamespace>KarambaConnect</RootNamespace>
+    <AssemblyName>KarambaConnect</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
