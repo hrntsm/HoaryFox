@@ -2,9 +2,9 @@
 using System;
 using System.Drawing;
 
-namespace karambaConnect
+namespace KarambaConnect
 {
-    public class karambaConnectInfo : GH_AssemblyInfo
+    public class KarambaConnectInfo : GH_AssemblyInfo
     {
         public override string Name => "HoaryFox(karambaConnect)";
 

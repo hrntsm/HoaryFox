@@ -21,7 +21,7 @@ namespace HoaryFox.Component.Base
         private List<Point3d> _tagPos = new List<Point3d>();
 
         protected SecTagBase(string name, string nickname, string description, FrameType frameType)
-            :base(name, nickname, description, category: "HoaryFox", subCategory: "Section")
+            :base(name, nickname, description, category: "HoaryFox", subCategory: "SectionTag")
         {
             _frameType = frameType;
         }

@@ -7,7 +7,7 @@ using STBReader;
 using STBReader.Member;
 using STBReader.Model;
 
-namespace HoaryFox.KarambaConnect
+namespace KarambaConnect.S2K
 {
     public static class Element
     {

@@ -11,7 +11,7 @@ namespace HoaryFox.Component.IO
         private readonly double _angleTolerance = DocumentAngleTolerance();
             
         public StbLoader()
-          : base("Load stb data", "Loader", "Read ST-Bridge file and display", "HoaryFox", "IO")
+          : base("Load STB file", "Loader", "Read ST-Bridge file and display", "HoaryFox", "IO")
         {
         }
 

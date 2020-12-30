@@ -21,7 +21,7 @@ namespace HoaryFox.Component.Base
         public override bool IsPreviewCapable => true;
 
         protected NameTagBase(string name, string nickname, string description, FrameType frameType)
-            :base(name, nickname, description, category: "HoaryFox", subCategory: "Name")
+            :base(name, nickname, description, category: "HoaryFox", subCategory: "NameTag")
         {
             _frameType = frameType;
         }
