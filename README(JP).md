@@ -11,26 +11,35 @@ HoaryFox は 建築構造架構の可視化ツールです。
 ST-Bridge file(.stb) を読み込んで、表示をします。  
 対応するデータの形式を一貫構造計算ソフトから出力されてるstbデータとすることで、使用しているソフトに限らずモデルの生成ができ、かつ可視化用に別途モデリングする必要がないことが特徴です。  
 Rhinoを使わないスタンドアロンのビューアが必要な場合は [STEVIA](https://github.com/hrntsm/STEVIA-Stb2U/wiki) を使ってみてください。  
-試験的な機能としてモデルをKarambaへ変換する機能を追加しました。梁要素、断面情報がKarambaのモデルとしてst-bridgeデータから変換されます。
+試験的な機能としてモデルをKarambaへ変換する機能、およびKarambaのモデルをST-Bridgeデータとして出力する機能を追加しました。
 
 ## Install
 
-1. Grasshopper内で, File > Special Folders > Components folderを選択し、gha fileをそこに保存します。
-   + 上記にかかわらず、Karambaへのコンバートを使う場合は、Karamba.ghaと同じフォルダに保存することを推奨します
+1. Grasshopper内で, File > Special Folders > Components folderを選択し、HoaryFoxのフォルダをそこに保存します。
+   + Karambaとの連携機能を使う場合は、Karamba.ghaのデータも上記フォルダに保存することを推奨します。
 2. コンポーネントを右クリックし プロパティの中で、ブロックしない に設定する
 3. Rhinoを再起動する。
 
 ## Usage
 
-STB Loaderコンポーネントにst-bridgeデータのパスを入力することデータをGrasshopper向けに変換し、それを各コンポーネント渡すことでコンポーネントに応じた図化がされます。  
-HoaryFox ver1.1 より ST-bridge ver2.0 に対応しました。  
+STB LoaderコンポーネントにST-Bridgeデータのパスを入力することデータをGrasshopper向けに変換し、それを各コンポーネント渡すことでコンポーネントに応じた図化がされます。  
+HoaryFox ver1.1 より ST-Bridge ver2.0 に対応しました。  
 詳しくは Samples のフォルダ内の参考データを参照してください。
 
-## Convert to karamba
+## Karamba Integration
 
-Karambaへのデータのコンバートは、梁要素のみ対応です。床や壁などの面材は非対応です。  
+### karambaへの入力
+
+ST-BridgeデータのKarambaへのコンバートは、梁要素のみ対応です。床や壁などの面材は非対応です。  
 L型断面、C型断面はKarambaが非対応な断面形状なため、等価な軸断面積の矩形断面に置換しています。
-Karambaへのコンバートを使う場合は、Karamba.ghaと同じフォルダにHoaryFox.ghaに保存してください。
+
+### karambaモデルのST-Bridgeデータ化
+
+部材の配置および断面情報をKarambaのデータを使用して作成します。
+上記と合わせて軸、階の情報を入力することで、ST-Bridgeデータの作成し出力を行います。
+手元のモデルでは以下のソフトで読み込めることを確認しています。（読み込みには各社が開発している専用のアドインが必要になります。）
+- ARCHICAD
+- REVIT
 
 ## About ST-Bridge
 

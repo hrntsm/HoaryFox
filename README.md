@@ -16,7 +16,7 @@ As a experimental function, it creates an analytical model of Karamba from st-br
 
 1. Download HoaryFox.gha file from [food4rhino](https://www.food4rhino.com/app/hoaryfox) or [release page](https://github.com/hrntsm/HoaryFox/releases)
 2. In Grasshopper, choose File > Special Folders > Components folder. Save the gha file there.  
-   + If you want to use Karamba convert, it is super recommended to save the file in the same directory as Karamba.gha
+   + If you want to use Karamba convert, it is super recommended to save the HoaryFox directory in the same directory as Karamba.gha
 3. Right-click the file > Properties > make sure there is no "blocked" text
 4. Restart Rhino and Grasshopper
 
@@ -29,12 +29,12 @@ If you need more information, send direct message to my twitter account.
 
 Please refer to Samples directory files.
 
-## Convert to karamba
+## Karamba Integration
 
 Conversion of data into Karamba supports only beam elements.  
 Mesh elements such as floor and wall are not supported.  
 L-type and C-type cross-sections are replaced by rectangular cross-sections with equivalent axial cross-sections because Karamba does not support them.
-If you want to use Karamba convert, it is super recommended to save the file in the same directory as Karamba.gha
+Output is STB1.4, STB2.0 is not supported yet.
 
 ## What is ST-Bridge
 
