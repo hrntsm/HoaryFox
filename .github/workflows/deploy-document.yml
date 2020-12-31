@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: git config
       run: |
-        git config --global user.email "contact@hrntsm"
+        git config --global user.email "contact@hrntsm.com"
         git config --global user.name "hrntsm"
     - run: yarn install
     - run: yarn deploy
