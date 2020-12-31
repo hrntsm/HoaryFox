@@ -33,14 +33,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="karamba">
+      <HintPath>Library\karamba132\karamba.gha</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="karambaCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Library\karamba132\karambaCommon.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="karambaGH, Version=1.15.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Library\karamba132\karambaGH.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="STBReader">
@@ -75,12 +74,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Library\karamba132full\karambaCommon.dll" />
-    <Content Include="Library\karamba132full\kConnect.dll" />
+    <None Include="Library\karamba132\karamba.gha" />
     <Content Include="Library\karamba132\karambaCommon.dll" />
-    <Content Include="Library\karamba132\karambaGH.dll" />
-    <Content Include="Library\karamba133\karambaCommon.dll" />
-    <Content Include="Library\karamba133\karambaGH.dll" />
     <Content Include="Resources\AxisBuilder.png" />
     <Content Include="Resources\FrameBuilder.png" />
     <None Include="Resources\ExportStb.png" />
