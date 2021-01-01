@@ -1,6 +1,15 @@
 module.exports = {
   someSidebar: {
-    Docusaurus: ['doc1', 'doc2', 'doc3'],
-    Features: ['mdx'],
+    Component: [
+      'Component/Geometry',
+      'Component/IO', 
+      'Component/NameTag', 
+      'Component/SectionTag', 
+      'Component/StbBuilder'],
+    Usage: [
+      'Usage/HowToInstall', 
+      'Usage/ShowSTBModel', 
+      'Usage/ConvertToKaramba', 
+      'Usage/ExportSTB'],
   },
 };

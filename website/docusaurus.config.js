@@ -1,6 +1,6 @@
 module.exports = {
-  title: 'My Site',
-  tagline: 'The tagline of my site',
+  title: 'HoaryFox',
+  tagline: 'Grasshopper component for handling ST-Bridge data',
   url: 'https://hrntsm.github.io',
   baseUrl: '/HoaryFox/',
   onBrokenLinks: 'throw',
@@ -10,7 +10,7 @@ module.exports = {
   projectName: 'HoaryFox', // Usually your repo name.
   themeConfig: {
     navbar: {
-      title: 'My Site',
+      title: 'HoaryFox',
       logo: {
         alt: 'My Site Logo',
         src: 'img/logo.svg',
@@ -24,7 +24,7 @@ module.exports = {
         },
         {to: 'blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/hrntsm/HoaryFox/',
           label: 'GitHub',
           position: 'right',
         },
@@ -37,12 +37,12 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Style Guide',
-              to: 'docs/',
+              label: 'Component',
+              to: 'Component/Geometry',
             },
             {
-              label: 'Second Doc',
-              to: 'docs/doc2/',
+              label: 'Usage',
+              to: 'Usage/ShowSTBModel',
             },
           ],
         },
@@ -50,16 +50,12 @@ module.exports = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              label: 'Food4Rhino',
+              href: 'https://www.food4rhino.com/app/hoaryfox',
             },
             {
               label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
+              href: 'https://twitter.com/hiron_rgkr',
             },
           ],
         },
@@ -72,12 +68,12 @@ module.exports = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/hrntsm/HoaryFox/',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} hrntsm, Inc. Built with Docusaurus.`,
     },
   },
   presets: [
