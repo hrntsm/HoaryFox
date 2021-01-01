@@ -17,8 +17,8 @@ module.exports = {
       },
       items: [
         {
-          to: 'docs/',
-          activeBasePath: 'docs',
+          to: 'docs/Usage/HowToInstall',
+          activeBasePath: 'docs/Usage/HowToInstall',
           label: 'Docs',
           position: 'left',
         },
@@ -38,11 +38,11 @@ module.exports = {
           items: [
             {
               label: 'Component',
-              to: 'Component/Geometry',
+              to: 'docs/Component/Geometry',
             },
             {
               label: 'Usage',
-              to: 'Usage/ShowSTBModel',
+              to: 'docs/Usage/ShowSTBModel',
             },
           ],
         },
