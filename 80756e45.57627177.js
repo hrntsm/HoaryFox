@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[17],{86:function(e){e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Release ver1.2.1","permalink":"/HoaryFox/blog/release-v121"},{"title":"Welcome","permalink":"/HoaryFox/blog/welcome"}]}')}}]);

@@ -4,14 +4,14 @@
         <title>HoaryFox Blog</title>
         <link>https://hrntsm.github.io/blog</link>
         <description>HoaryFox Blog</description>
-        <lastBuildDate>Fri, 01 Jan 2021 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 02 Jan 2021 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <item>
             <title><![CDATA[Release ver1.2.1]]></title>
             <link>https://hrntsm.github.io/HoaryFox/blog/release-v121</link>
             <guid>release-v121</guid>
-            <pubDate>Fri, 01 Jan 2021 00:00:00 GMT</pubDate>
+            <pubDate>Sat, 02 Jan 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[HoaryFox をバージョン1.2.1にアップデートしました。]]></description>
         </item>
         <item>
