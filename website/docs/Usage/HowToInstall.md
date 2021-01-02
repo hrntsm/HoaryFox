@@ -16,4 +16,6 @@ HoaryFox のインストール方法について紹介します。
 
 Karamba との連携機能を使う場合は Karamba のフォルダを管理者権限のないフォルダに移動してください。Karamba のフォルダは通常 Program flies > Rhino > Plug-ins にあります。
 
-連携が必要ない場合は、HoaryFoxのフォルダ内にある karambaConnect.gha ファイルを削除してください。
+:::note
+連携が必要ない場合は、HoaryFoxのフォルダ内にある karambaConnect.gha ファイルを削除するとコンポーネントの読み込みエラーを回避できます。
+:::
