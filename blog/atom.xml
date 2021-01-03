@@ -6,7 +6,7 @@
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://hrntsm.github.io/blog"/>
     <subtitle>HoaryFox Blog</subtitle>
-    <icon>https://hrntsm.github.io/img/favicon.ico</icon>
+    <icon>https://hrntsm.github.io/img/HFicon.png</icon>
     <entry>
         <title type="html"><![CDATA[Release ver1.2.1]]></title>
         <id>release-v121</id>
