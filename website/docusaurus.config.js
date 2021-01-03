@@ -5,7 +5,7 @@ module.exports = {
   baseUrl: '/HoaryFox/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/HFicon.png',
   organizationName: 'hrntsm', // Usually your GitHub org/user name.
   projectName: 'HoaryFox', // Usually your repo name.
   themeConfig: {
@@ -13,7 +13,7 @@ module.exports = {
       title: 'HoaryFox',
       logo: {
         alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        src: 'img/HFicon.png',
       },
       items: [
         {
