@@ -12,28 +12,25 @@ const features = [
     imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        HoaryFox は簡単に構造 BIM データ"ST-Bridge" を Grasshopper で扱えるように設計しています。
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Focus on improvement of efficiency',
     imageUrl: 'img/undraw_docusaurus_tree.svg',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Grasshopper の可視化や形状最適化機能を使った構造設計の効率化を目指しています。
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Enhance Karamba3d',
     imageUrl: 'img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Grasshopper の構造解析ツール Karamba への ST-Bridge データの入出力をサポートします。
       </>
     ),
   },
