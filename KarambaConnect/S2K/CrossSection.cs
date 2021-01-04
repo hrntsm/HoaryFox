@@ -36,7 +36,7 @@ namespace KarambaConnect.S2K
             var k3CroSec = new List<CroSec>();
 
             var fc21 = new FemMaterial_Isotrop("Concrete", "Fc21", 2186_0000, 911_0000, 911_0000, 24, 14_0000, 1.00E-05, Color.Gray);
-            var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20600_0000, 8076_0000, 8076_0000, 78.5, 235_0000, 1.20E-05, Color.Brown);
+            var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20500_0000, 8076_0000, 8076_0000, 78.5, 235_0000, 1.20E-05, Color.Brown);
 
             k3CroSec.AddRange(ColumnRc(stbData, fc21));
             k3CroSec.AddRange(BeamRc(stbData, fc21));
@@ -139,7 +139,7 @@ namespace KarambaConnect.S2K
                             p1, p2, p2);
                         break;
                     case ShapeTypes.BOX:
-                        break;
+                        throw new ArgumentOutOfRangeException();
                     case ShapeTypes.Bar:
                         // TODO: Karambaは中実円断面ないため、PIPEに置換してる。任意断面設定できるはずなので、そっちの方がいい気がする。
                         croSec = new CroSec_Circle("HoaryFox", name, null, null, material,
