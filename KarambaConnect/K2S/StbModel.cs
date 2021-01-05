@@ -63,8 +63,9 @@ namespace KarambaConnect.K2S
                         IdNodeEnd = elem.node_inds[1] + 1,
                         Rotate = 0d,
                         IdSection = croSecId + 1,
-                        Kind = elem.crosec.material.family == "Steel" ? "S" : "RC"
+                        Kind =  "Steel"
                     };
+
                     members.Braces.Add(brace);
 
                     if (registeredCrosecId.IndexOf(croSecId) < 0)
@@ -172,8 +173,19 @@ namespace KarambaConnect.K2S
                         IdNodeEnd = elem.node_inds[1] + 1,
                         Rotate = 0d,
                         IdSection = croSecId + 1,
-                        Kind = elem.crosec.material.family == "Steel" ? "S" : "RC"
                     };
+                    switch (elem.crosec.material.family)
+                    {
+                        case "Steel":
+                            column.Kind = "Steel";
+                            break;
+                        case "Concrete":
+                            column.Kind = "RC";
+                            break;
+                        default:
+                            column.Kind = "";
+                            break;
+                    }
                     members.Columns.Add(column);
                     
                     if (registeredCrosecId.IndexOf(croSecId) < 0)
@@ -353,7 +365,7 @@ namespace KarambaConnect.K2S
                                 }
                                 break;
                             default:
-                                throw new ArgumentException("No supported type");
+                                throw new ArgumentException("Make sure that the family name of the material is \"Concrete\" or \"Steel\".");
                         }
                         registeredCrosecId.Add(croSecId);
                     }
@@ -369,8 +381,19 @@ namespace KarambaConnect.K2S
                         Rotate = 0d,
                         IdSection = croSecId + 1,
                         IsFoundation = "false",
-                        Kind = elem.crosec.material.family == "Steel" ? "S" : "RC"
                     };
+                    switch (elem.crosec.material.family)
+                    {
+                        case "Steel":
+                            beam.Kind = "Steel";
+                            break;
+                        case "Concrete":
+                            beam.Kind = "RC";
+                            break;
+                        default:
+                            beam.Kind = "";
+                            break;
+                    }
                     members.Girders.Add(beam);
 
                     if (registeredCrosecId.IndexOf(croSecId) < 0)
@@ -521,7 +544,7 @@ namespace KarambaConnect.K2S
 
                                 break;
                             default:
-                                throw new ArgumentException("No supported type");
+                                throw new ArgumentException("Make sure that the family name of the material is \"Concrete\" or \"Steel\".");
                         }
                         registeredCrosecId.Add(croSecId);
                     }
