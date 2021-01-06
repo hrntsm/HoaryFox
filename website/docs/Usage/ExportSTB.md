@@ -15,7 +15,7 @@ Karamba で作成したモデルから以下を作成します。
 
 以下のように Karamba の AssmebleModel コンポーネントなどから出力される Model のデータを FrameBuilder using Karamba コンポーネントに入力することでデータを変換します。
 
-![](../../images/exportstb/framebuilder.png)
+![](../../images/ExportSTB/FrameBuilder.png)
 
 :::note
 Karamba からの出力に際して、モデル化の注意点についてはこのページの下部の変換仕様を確認してください
@@ -38,7 +38,7 @@ AxisBuilder コンポーネントで軸（StbAxes）のデータを作成しま�
 - Direction: 軸の方向を指定します。
   - 0 は X 方向、1 は Y 方向の軸として処理します。
 
-![](../../images/exportstb/AxisBuilder.png)
+![](../../images/ExportStb/AxisBuilder.png)
 
 ## 階情報の作成
 
@@ -51,7 +51,7 @@ StoryBuilder コンポーネントで階（StbStories）のデータを作成し
 - Range: Height で指定した階に対して節点を所属させる幅を指定します。
 - Name: 階の名前になります。
 
-![](../../images/exportstb/StoryBuilder.png)
+![](../../images/ExportStb/StoryBuilder.png)
 
 ## データの出力
 
@@ -59,7 +59,7 @@ StoryBuilder コンポーネントで階（StbStories）のデータを作成し
 Path で指定したパスに STB ファイルを出力します。指定しない場合、デスクトップに model.stb というファイルで出力されます。  
 Out? の値を True にするとファイルが出力されます。出力を確認することでデータの変換状況の概略を確認することができます。
 
-![](../../images/exportstb/export.png)
+![](../../images/ExportStb/Export.png)
 
 ---
 
