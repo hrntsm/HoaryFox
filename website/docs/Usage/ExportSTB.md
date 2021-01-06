@@ -15,7 +15,7 @@ Karamba で作成したモデルから以下を作成します。
 
 以下のように Karamba の AssmebleModel コンポーネントなどから出力される Model のデータを FrameBuilder using Karamba コンポーネントに入力することでデータを変換します。
 
-![](../../images/ExportSTB/FrameBuilder.png)
+![](../../images/ExportStb/FrameBuilder.png)
 
 :::note
 Karamba からの出力に際して、モデル化の注意点についてはこのページの下部の変換仕様を確認してください
