@@ -59,7 +59,7 @@ StoryBuilder コンポーネントで階（StbStories）のデータを作成し
 Path で指定したパスに STB ファイルを出力します。指定しない場合、デスクトップに model.stb というファイルで出力されます。  
 Out? の値を True にするとファイルが出力されます。出力を確認することでデータの変換状況の概略を確認することができます。
 
-![](../../images/ExportStb/Export.png)
+![](../../images/ExportStb/ExportStbfile.png)
 
 ---
 
