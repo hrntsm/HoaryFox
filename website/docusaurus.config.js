@@ -72,8 +72,8 @@ module.exports = {
               to: 'blog',
             },
             {
-              label: 'GitHub',
-              href: 'https://github.com/hrntsm/HoaryFox/',
+              label: 'Donation',
+              to: 'docs/donation',
             },
           ],
         },
