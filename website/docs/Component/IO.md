@@ -5,13 +5,19 @@ title: IO
 
 データのIOを行うコンポーネントのカテゴリ
 
+---
+
 ## Load STB file
 
 STB データの読み込み
 
+---
+
 ## Export STB file
 
 STB データの書き出し
+
+---
 
 ## Convert to karamba
 

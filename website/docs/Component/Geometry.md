@@ -5,6 +5,8 @@ title: Geometry
 
 読み込んだ STB データから部材を可視化するコンポーネントのカテゴリ
 
+---
+
 ## Stb to Line
 
 ![](../../images/Component/StbToLine.png)
@@ -23,6 +25,8 @@ title: Geometry
 |Posts| 間柱の Line のリストを出力|
 |Beams| 小梁の Line のリストを出力|
 |Braces| ブレースの Line のリストを出力|
+
+---
 
 ## Stb to Brep
 
