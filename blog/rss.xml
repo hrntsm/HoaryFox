@@ -4,9 +4,16 @@
         <title>HoaryFox Blog</title>
         <link>https://hrntsm.github.io/blog</link>
         <description>HoaryFox Blog</description>
-        <lastBuildDate>Wed, 06 Jan 2021 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 12 Jan 2021 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
+        <item>
+            <title><![CDATA[Thanks for 300 downloads!]]></title>
+            <link>https://hrntsm.github.io/HoaryFox/blog/thanks-300dl</link>
+            <guid>thanks-300dl</guid>
+            <pubDate>Tue, 12 Jan 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[なんとダウンロード数が 300、Voteに6人も入れていただき評価が4.7 になりました。]]></description>
+        </item>
         <item>
             <title><![CDATA[Release document]]></title>
             <link>https://hrntsm.github.io/HoaryFox/blog/release-doc</link>
