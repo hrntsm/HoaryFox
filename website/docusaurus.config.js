@@ -22,11 +22,20 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
-        {to: 'blog', label: 'Blog', position: 'left'},
+        {
+          to: 'blog',
+          label: 'Blog',
+          position: 'left'
+        },
         {
           href: 'https://github.com/hrntsm/HoaryFox/',
           label: 'GitHub',
           position: 'right',
+        },
+        {
+          href: 'https://hrntsm.github.io/',
+          label: 'AboutMe',
+          position: 'right'
         },
         {
           to: 'docs/contact',
