@@ -12,7 +12,7 @@ const features = [
     imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        HoaryFox は簡単に構造 BIM データ"ST-Bridge" を Grasshopper で簡単に扱えるように設計しています。
+        HoaryFox は簡単に建築構造向け BIM データ "ST-Bridge" を Grasshopper で扱えるように設計しています。
       </>
     ),
   },
