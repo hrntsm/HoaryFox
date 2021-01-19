@@ -9,6 +9,7 @@ module.exports = {
   organizationName: 'hrntsm', // Usually your GitHub org/user name.
   projectName: 'HoaryFox', // Usually your repo name.
   themeConfig: {
+    image: `img/HFicon.png`,
     metadates:[
       {
         name: `twitter:card`,
