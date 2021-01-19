@@ -8,7 +8,7 @@ import styles from './styles.module.css';
 
 const features = [
   {
-    title: 'Easy to Use',
+    title: 'Easy to use',
     imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
       <>
@@ -26,11 +26,11 @@ const features = [
     ),
   },
   {
-    title: 'Enhance Karamba3d',
+    title: 'Enhance Karamba3D',
     imageUrl: 'img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Grasshopper の構造解析ツール Karamba への ST-Bridge データの入出力をサポートします。
+        Grasshopper の構造解析ツール Karamba3D への ST-Bridge データの入出力をサポートします。
       </>
     ),
   },
@@ -57,7 +57,7 @@ function Home() {
   return (
     <Layout
       title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      description="HoaryFoxは、ST-Bridgeモデルの可視化やKaramba3DへのST-Bridgeファイルの入出力をサポートします。">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <h1 className="hero__title">{siteConfig.title}</h1>

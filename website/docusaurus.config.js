@@ -1,7 +1,7 @@
 module.exports = {
   title: 'HoaryFox',
   tagline: 'Grasshopper component for handling ST-Bridge data',
-  url: 'https://hrntsm.github.io',
+  url: 'https://hiron.dev',
   baseUrl: '/HoaryFox/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -9,6 +9,8 @@ module.exports = {
   organizationName: 'hrntsm', // Usually your GitHub org/user name.
   projectName: 'HoaryFox', // Usually your repo name.
   themeConfig: {
+    twitterImage: "img/HFicon.png",
+    ogImage: "img/HFicon.png",
     navbar: {
       title: 'HoaryFox',
       logo: {
@@ -33,7 +35,7 @@ module.exports = {
           position: 'right',
         },
         {
-          href: 'https://hrntsm.github.io/',
+          href: 'https://hiron.dev',
           label: 'AboutMe',
           position: 'right'
         },
