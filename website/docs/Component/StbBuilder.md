@@ -15,11 +15,11 @@ STB 書き出しのための情報を作成するコンポーネントのカテ�
 
 ![](../../images/Component/FrameBuilder.png)
 
-架構情報を Karamba のモデルから作成する
+架構情報を Karamba3D のモデルから作成する
 
 |入力|説明|
 |---|:---:|
-|Model|Karamba の Model 出力を入力|
+|Model|Karamba3D の Model 出力を入力|
 
 |出力|説明|
 |---|:---:|

@@ -51,7 +51,7 @@ STB データの書き出し
 
 ![](../../images/Component/ConvertToKaramba.png)
 
-読み込んだ STB データを 構造解析を行うコンポーネント [Karamba](https://www.karamba3d.com/) のデータに変換
+読み込んだ STB データを 構造解析を行うコンポーネント [Karamba3D](https://www.karamba3d.com/) のデータに変換
 
 |入力|説明|
 |---|:---:|
@@ -59,7 +59,7 @@ STB データの書き出し
 
 |出力|説明|
 |---|:---:|
-|ElementBeam|Karamba の梁要素|
-|CrossSection|Karamba の断面情報|
+|ElementBeam|Karamba3D の梁要素|
+|CrossSection|Karamba3D の断面情報|
 
-こちらのコンポーネントの細かいの使い方・変換仕様は、Usage の [Convert to Karamba](../Usage/ConvertToKaramba) の記事も参照してください。
+こちらのコンポーネントの細かいの使い方・変換仕様は、Usage の [Convert to Karamba3D](../Usage/ConvertToKaramba) の記事も参照してください。

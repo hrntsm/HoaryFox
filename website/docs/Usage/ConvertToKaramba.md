@@ -1,9 +1,9 @@
 ---
 id: ConvertToKaramba
-title: Convert to Karamba
+title: Convert to Karamba3D
 ---
 
-STB のデータを使って Karamba のモデルを作成する方法を説明します。こちらの内容は Samples フォルダーの Convert_to_Karamba.gh のモデルを参照してください。
+STB のデータを使って Karamba3D のモデルを作成する方法を説明します。こちらの内容は Samples フォルダーの Convert_to_Karamba.gh のモデルを参照してください。
 
 ## データの変換
 
@@ -17,7 +17,7 @@ STB のデータを使って Karamba のモデルを作成する方法を説明�
 
 ## 変換の仕様
 
-以下の仕様により STB から Karamba にデータを変換しています。
+以下の仕様により STB から Karamba3D にデータを変換しています。
 
 ### 変換対象
 
@@ -33,7 +33,7 @@ STB のデータを使って Karamba のモデルを作成する方法を説明�
 - 複数断面やテーパーをもつ部材でも中央断面のみを持つ部材としてで変換します。
 - RC 柱
   - 矩形断面: Trapezoid として変換
-  - 円形断面: Karamba に円形の中実断面はないため、〇-Section で軸断面積を合わせる形で変換
+  - 円形断面: Karamba3D に円形の中実断面はないため、〇-Section で軸断面積を合わせる形で変換
 - RC 梁
   - 全て Trapezoid として変換
 - S 部材
@@ -41,7 +41,7 @@ STB のデータを使って Karamba のモデルを作成する方法を説明�
   - T 断面: I-Section として変換
   - フラットバー: Trapezoid として変換
   - 箱型断面: []-Section として変換
-  - L 断面, C断面, 丸鋼: Karamba に対応断面がないこと、かつ基本的にはブレースとして仕様される部材と思われるので、軸断面積を合わせる形で正方形の Trapezoid として変換
+  - L 断面, C断面, 丸鋼: Karamba3D に対応断面がないこと、かつ基本的にはブレースとして仕様される部材と思われるので、軸断面積を合わせる形で正方形の Trapezoid として変換
     - 背中合わせや2丁づかいには対応していないため、STB 上でそのように設定されていても単独の断面として変換されます。
 
 ### 材料

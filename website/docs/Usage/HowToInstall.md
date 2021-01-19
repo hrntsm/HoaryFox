@@ -12,9 +12,9 @@ HoaryFox のインストール方法について紹介します。
 1. Grasshopper を起動して File > Special Folders > Components folder を選択することで表示されるフォルダに、1. でダウンロードしたファイルの中にある 「HoaryFox」 という名前のフォルダを入れる
 1. Rhino を再起動する
 
-## Karamba との連携
+## Karamba3D との連携
 
-Karamba との連携機能を使う場合は Karamba のフォルダを管理者権限のないフォルダに移動してください。Karamba のフォルダは通常 Program flies > Rhino > Plug-ins にあります。
+Karamba3D との連携機能を使う場合は Karamba.gha を管理者権限のないフォルダに移動してください。Karamba3D のフォルダは通常 Program flies > Rhino > Plug-ins にあります。
 
 :::note
 連携が必要ない場合は、HoaryFoxのフォルダ内にある karambaConnect.gha ファイルを削除するとコンポーネントの読み込みエラーを回避できます。

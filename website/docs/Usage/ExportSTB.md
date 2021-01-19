@@ -3,22 +3,22 @@ id: ExportSTB
 title: Export ST-Bridge file
 ---
 
-Karamba のデータから ST-Bridge のデータを作成する方法を説明します。こちらの内容は Samples フォルダーの ExportSTB.gh のモデルを参照してください。  
+Karamba3D のデータから ST-Bridge のデータを作成する方法を説明します。こちらの内容は Samples フォルダーの ExportSTB.gh のモデルを参照してください。  
 ST-Bridge の version 1.4 の形式で出力を行います。
 
-## Karamba モデルの変換
+## Karamba3D モデルの変換
 
-Karamba で作成したモデルから以下を作成します。
+Karamba3D で作成したモデルから以下を作成します。
 - 節点（StbNodes）
 - 部材情報（StbMembers）
 - 断面情報（StbSections）
 
-以下のように Karamba の AssmebleModel コンポーネントなどから出力される Model のデータを FrameBuilder using Karamba コンポーネントに入力することでデータを変換します。
+以下のように Karamba3D の AssmebleModel コンポーネントなどから出力される Model のデータを FrameBuilder using Karamba コンポーネントに入力することでデータを変換します。
 
 ![](../../images/ExportStb/FrameBuilder.png)
 
 :::note
-Karamba からの出力に際して、モデル化の注意点についてはこのページの下部の変換仕様を確認してください
+Karamba3D からの出力に際して、モデル化の注意点についてはこのページの下部の変換仕様を確認してください
 :::
 
 ## 軸情報の作成
@@ -95,12 +95,12 @@ ST-Bridge version 2 の形式での出力には今後対応予定です。
 
 ### 部材名称
 
-- Karamba 内での名称は使用しません
-- Karamba が内部的に持っている部材の順番で、柱ならば C、梁ならば G、ブレースならば V と数字の組み合わせで名称を付けます。（C1, G1 など）
+- Karamba3D 内での名称は使用しません
+- Karamba3D が内部的に持っている部材の順番で、柱ならば C、梁ならば G、ブレースならば V と数字の組み合わせで名称を付けます。（C1, G1 など）
 
 ### 断面名称
 
-- Karamba の Cross Section コンポーネントの Name で設定した名称で断面を作成します
+- Karamba3D の Cross Section コンポーネントの Name で設定した名称で断面を作成します
 
 :::important
 Name の設定ごとに STB ファイルに出力しているため、必ず Name を設定するようにしてください  
@@ -109,9 +109,9 @@ Name が重複している場合、HoaryFox のコンバーターでは同一断
 
 ### 断面形状
 
-- Karamba で設定した断面の形状に合わせてSTBに出力します
+- Karamba3D で設定した断面の形状に合わせてSTBに出力します
 - 変換にエラーがある時は、10mmの角材として出力します
-- RC 断面は Karamba では配筋情報を持たないため以下で出力します
+- RC 断面は Karamba3D では配筋情報を持たないため以下で出力します
   - 主筋: 梁ならば 上端も下端も 3-D22、柱ならば 8-D22
   - せん断補強筋: 2-D10@100
 - S 断面の場合、材質は フランジ、ウェブともに SN400 として出力します
