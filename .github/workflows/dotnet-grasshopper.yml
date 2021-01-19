@@ -2,7 +2,9 @@ name: Build Grasshopper Plugin
 
 on:
   push:
-    branches: [main, develop]
+    branches: [develop]
+    paths-ignore:
+      - "website/**"
   pull_request:
     branches: [main, develop]
     
