@@ -2,34 +2,41 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hrntsm.github.io/blog</id>
     <title>HoaryFox Blog</title>
-    <updated>2021-01-12T00:00:00.000Z</updated>
+    <updated>2021-01-20T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://hrntsm.github.io/blog"/>
     <subtitle>HoaryFox Blog</subtitle>
     <icon>https://hrntsm.github.io/img/HFicon.png</icon>
     <entry>
-        <title type="html"><![CDATA[Thanks for 300 downloads!]]></title>
+        <title type="html"><![CDATA[Karamba3D 公式サイトに掲載されました。]]></title>
+        <id>posted-on-karamba3d-website</id>
+        <link href="https://hrntsm.github.io/HoaryFox/blog/posted-on-karamba3d-website"/>
+        <updated>2021-01-20T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[HoaryFox が Karamba3D の公式サイトの THIRD PARTY PLUGINS の欄に掲載されました。]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[300 ダウンロードありがとうございます！]]></title>
         <id>thanks-300dl</id>
         <link href="https://hrntsm.github.io/HoaryFox/blog/thanks-300dl"/>
         <updated>2021-01-12T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[なんとダウンロード数が 300、Voteに6人も入れていただき評価が4.7 になりました。]]></summary>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Release document]]></title>
+        <title type="html"><![CDATA[ドキュメントページを公開しました]]></title>
         <id>release-doc</id>
         <link href="https://hrntsm.github.io/HoaryFox/blog/release-doc"/>
         <updated>2021-01-06T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[ドキュメントがおおむね完成したので公開しました。]]></summary>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Release ver1.2.1]]></title>
+        <title type="html"><![CDATA[Ver1.2.1 リリース情報]]></title>
         <id>release-v121</id>
         <link href="https://hrntsm.github.io/HoaryFox/blog/release-v121"/>
         <updated>2021-01-02T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[HoaryFox をバージョン1.2.1にアップデートしました。]]></summary>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Welcome]]></title>
+        <title type="html"><![CDATA[ようこそ！！]]></title>
         <id>welcome</id>
         <link href="https://hrntsm.github.io/HoaryFox/blog/welcome"/>
         <updated>2021-01-01T00:00:00.000Z</updated>

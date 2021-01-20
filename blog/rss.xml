@@ -4,32 +4,39 @@
         <title>HoaryFox Blog</title>
         <link>https://hrntsm.github.io/blog</link>
         <description>HoaryFox Blog</description>
-        <lastBuildDate>Tue, 12 Jan 2021 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 20 Jan 2021 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <item>
-            <title><![CDATA[Thanks for 300 downloads!]]></title>
+            <title><![CDATA[Karamba3D 公式サイトに掲載されました。]]></title>
+            <link>https://hrntsm.github.io/HoaryFox/blog/posted-on-karamba3d-website</link>
+            <guid>posted-on-karamba3d-website</guid>
+            <pubDate>Wed, 20 Jan 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[HoaryFox が Karamba3D の公式サイトの THIRD PARTY PLUGINS の欄に掲載されました。]]></description>
+        </item>
+        <item>
+            <title><![CDATA[300 ダウンロードありがとうございます！]]></title>
             <link>https://hrntsm.github.io/HoaryFox/blog/thanks-300dl</link>
             <guid>thanks-300dl</guid>
             <pubDate>Tue, 12 Jan 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[なんとダウンロード数が 300、Voteに6人も入れていただき評価が4.7 になりました。]]></description>
         </item>
         <item>
-            <title><![CDATA[Release document]]></title>
+            <title><![CDATA[ドキュメントページを公開しました]]></title>
             <link>https://hrntsm.github.io/HoaryFox/blog/release-doc</link>
             <guid>release-doc</guid>
             <pubDate>Wed, 06 Jan 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[ドキュメントがおおむね完成したので公開しました。]]></description>
         </item>
         <item>
-            <title><![CDATA[Release ver1.2.1]]></title>
+            <title><![CDATA[Ver1.2.1 リリース情報]]></title>
             <link>https://hrntsm.github.io/HoaryFox/blog/release-v121</link>
             <guid>release-v121</guid>
             <pubDate>Sat, 02 Jan 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[HoaryFox をバージョン1.2.1にアップデートしました。]]></description>
         </item>
         <item>
-            <title><![CDATA[Welcome]]></title>
+            <title><![CDATA[ようこそ！！]]></title>
             <link>https://hrntsm.github.io/HoaryFox/blog/welcome</link>
             <guid>welcome</guid>
             <pubDate>Fri, 01 Jan 2021 00:00:00 GMT</pubDate>
