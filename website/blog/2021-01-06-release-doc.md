@@ -1,6 +1,6 @@
 ---
 slug: release-doc
-title: Release document
+title: ドキュメントページを公開しました
 author: hiron
 author_title: HoaryFox Developper
 author_url: https://github.com/hrntsm
