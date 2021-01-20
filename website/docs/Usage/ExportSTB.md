@@ -13,7 +13,7 @@ Karamba3D で作成したモデルから以下を作成します。
 - 部材情報（StbMembers）
 - 断面情報（StbSections）
 
-以下のように Karamba3D の AssmebleModel コンポーネントなどから出力される Model のデータを FrameBuilder using Karamba コンポーネントに入力することでデータを変換します。
+以下のように Karamba3D の AssmebleModel コンポーネントなどから出力される Model のデータを FrameBuilder using Karamba3D コンポーネントに入力することでデータを変換します。
 
 ![](../../images/ExportStb/FrameBuilder.png)
 
@@ -78,15 +78,15 @@ ST-Bridge version 2 の形式での出力には今後対応予定です。
 
 ### 部材の判別
 
-- Karamba のモデルでは、柱梁ブレースの区別がないため以下の仕様で判定しています
-  - Karamba でトラス要素として扱っているものはブレースとして変換
+- Karamba3D のモデルでは、柱梁ブレースの区別がないため以下の仕様で判定しています
+  - Karamba3D でトラス要素として扱っているものはブレースとして変換
   - 全体座標系の Z 軸に対しての部材の角度が45度未満である部材は柱、45度以上の場合は梁として変換
 - 部材の判別は ST-Bridge における StbMember 内での各表現に対応します（例えば StbColumn など）
 - STB の梁部材には、部材が基礎部材かのフラグ（isFoundation）があるが全て False で出力します
 
 ### 材質の判別
 
-- Karamba の 材料を作成する際に設定する Family の名前が "Steel" の場合は S 部材、"Concrete" の場合は RC 部材とします
+- Karamba3D の 材料を作成する際に設定する Family の名前が "Steel" の場合は S 部材、"Concrete" の場合は RC 部材とします
 - 材質の判別は ST-Bridge における StbSections 内での各表現に対応します（例えば StbSecColumn_RC など）
 
 :::important
