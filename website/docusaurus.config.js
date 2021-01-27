@@ -1,7 +1,7 @@
 module.exports = {
   title: 'HoaryFox',
   tagline: 'Grasshopper component for handling ST-Bridge data',
-  url: 'https://hrntsm.github.io',
+  url: 'https://hiron.dev',
   baseUrl: '/HoaryFox/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
