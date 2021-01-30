@@ -19,8 +19,9 @@ namespace KarambaConnect.K2S
             var vNum = 1;
             var cNum = 1;
             var gNum = 1;
-            var registeredCrosecId = new List<int>();
-            var registeredCrosecName = new List<string>();
+            // 0: brace, 1:column, 2:girder
+            var registeredCroSecId = new List<List<int>> {new List<int>(), new List<int>(), new List<int>()};
+            var registeredCroSecName = new List<List<string>> {new List<string>(), new List<string>(), new List<string>()};
             var members = new Members
             {
                 Columns = new List<Column>(),
@@ -68,7 +69,7 @@ namespace KarambaConnect.K2S
 
                     members.Braces.Add(brace);
 
-                    if (registeredCrosecId.IndexOf(croSecId) < 0)
+                    if (registeredCroSecId[0].IndexOf(croSecId) < 0)
                     {
                         var sec = new BraceS
                         {
@@ -86,9 +87,9 @@ namespace KarambaConnect.K2S
                             }
                         };
                         sections.Add(sec);
-                        registeredCrosecId.Add(croSecId);
+                        registeredCroSecId[0].Add(croSecId);
 
-                        if (registeredCrosecName.IndexOf(kModel.crosecs[croSecId].name) < 0)
+                        if (registeredCroSecName[0].IndexOf(kModel.crosecs[croSecId].name) < 0)
                         {
                             switch (kModel.crosecs[croSecId])
                             {
@@ -159,7 +160,7 @@ namespace KarambaConnect.K2S
                                     pipes.Add(unsupported);
                                     break;
                             }
-                            registeredCrosecName.Add(kModel.crosecs[croSecId].name);
+                            registeredCroSecName[0].Add(kModel.crosecs[croSecId].name);
                         }
                     }
                 }
@@ -177,7 +178,7 @@ namespace KarambaConnect.K2S
                     switch (elem.crosec.material.family)
                     {
                         case "Steel":
-                            column.Kind = "Steel";
+                            column.Kind = "S";
                             break;
                         case "Concrete":
                             column.Kind = "RC";
@@ -188,7 +189,7 @@ namespace KarambaConnect.K2S
                     }
                     members.Columns.Add(column);
                     
-                    if (registeredCrosecId.IndexOf(croSecId) < 0)
+                    if (registeredCroSecId[1].IndexOf(croSecId) < 0)
                     {
                         switch (column.Kind)
                         {
@@ -210,7 +211,7 @@ namespace KarambaConnect.K2S
                                 };
                                 sections.Add(colS);
                                 
-                                if (registeredCrosecName.IndexOf(kModel.crosecs[croSecId].name) < 0)
+                                if (registeredCroSecName[1].IndexOf(kModel.crosecs[croSecId].name) < 0)
                                 {
                                     switch (kModel.crosecs[croSecId])
                                     {
@@ -271,7 +272,7 @@ namespace KarambaConnect.K2S
                                             pipes.Add(unsupported);
                                             break;
                                     }
-                                    registeredCrosecName.Add(kModel.crosecs[croSecId].name);
+                                    registeredCroSecName[1].Add(kModel.crosecs[croSecId].name);
                                 }
                                 break;
                             case "RC":
@@ -367,7 +368,7 @@ namespace KarambaConnect.K2S
                             default:
                                 throw new ArgumentException("Make sure that the family name of the material is \"Concrete\" or \"Steel\".");
                         }
-                        registeredCrosecId.Add(croSecId);
+                        registeredCroSecId[1].Add(croSecId);
                     }
                 }
                 else
@@ -385,7 +386,7 @@ namespace KarambaConnect.K2S
                     switch (elem.crosec.material.family)
                     {
                         case "Steel":
-                            beam.Kind = "Steel";
+                            beam.Kind = "S";
                             break;
                         case "Concrete":
                             beam.Kind = "RC";
@@ -396,7 +397,7 @@ namespace KarambaConnect.K2S
                     }
                     members.Girders.Add(beam);
 
-                    if (registeredCrosecId.IndexOf(croSecId) < 0)
+                    if (registeredCroSecId[2].IndexOf(croSecId) < 0)
                     {
                         switch (beam.Kind)
                         {
@@ -418,7 +419,7 @@ namespace KarambaConnect.K2S
                                 };
                                 sections.Add(beamS);
 
-                                if (registeredCrosecName.IndexOf(kModel.crosecs[croSecId].name) < 0)
+                                if (registeredCroSecName[2].IndexOf(kModel.crosecs[croSecId].name) < 0)
                                 {
                                     switch (kModel.crosecs[croSecId])
                                     {
@@ -479,7 +480,7 @@ namespace KarambaConnect.K2S
                                             pipes.Add(unsupported);
                                             break;
                                     }
-                                    registeredCrosecName.Add(kModel.crosecs[croSecId].name);
+                                    registeredCroSecName[2].Add(kModel.crosecs[croSecId].name);
                                 }
                                 break;
                             case "RC":
@@ -546,7 +547,7 @@ namespace KarambaConnect.K2S
                             default:
                                 throw new ArgumentException("Make sure that the family name of the material is \"Concrete\" or \"Steel\".");
                         }
-                        registeredCrosecId.Add(croSecId);
+                        registeredCroSecId[2].Add(croSecId);
                     }
                 }
             }
