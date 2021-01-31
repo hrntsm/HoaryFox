@@ -42,6 +42,10 @@
       <HintPath>Library\karamba132\karambaCommon.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="STBDotNet, Version=0.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\STBDotNet\STBDotNet\bin\Release\netstandard2.0\STBDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="STBReader">
       <HintPath>Library\STBReader.dll</HintPath>
       <Private>True</Private>
@@ -56,12 +60,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\StbBuilder\AxisBuilder.cs" />
+    <Compile Include="Component\StbBuilder\NodeBuilder.cs" />
     <Compile Include="Component\StbBuilder\StoryBuilder.cs" />
     <Compile Include="Component\IO\Export.cs" />
-    <Compile Include="Component\StbBuilder\FrameBuilderUsingKaramba.cs" />
+    <Compile Include="Component\StbBuilder\FrameBuilderByAngle.cs" />
     <Compile Include="Component\IO\Convert2Karamba.cs" />
     <Compile Include="Convert.cs" />
+    <Compile Include="K2S\StbSecSteel.cs" />
+    <Compile Include="K2S\StbSection.cs" />
     <Compile Include="K2S\StbCommon.cs" />
+    <Compile Include="K2S\StbMember.cs" />
     <Compile Include="K2S\StbModel.cs" />
     <Compile Include="KarambaConnectInfo.cs" />
     <Compile Include="S2K\CrossSection.cs" />
@@ -96,9 +104,6 @@
     <PackageReference Include="RhinoCommon">
       <Version>6.20.19322.20361</Version>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="STBDotNet">
-      <Version>0.1.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />
