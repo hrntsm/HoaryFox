@@ -62,10 +62,8 @@ namespace KarambaConnect.K2S
                 {
                     SameSection = new RcBeamSecBarArrangement.Same
                     {
-                        CountMainTop1st = 3,
-                        CountMainBottom1st = 3,
-                        CountStirrup = 2,
-                        PitchStirrup = 100
+                        CountMainTop1st = 3, CountMainBottom1st = 3,
+                        CountStirrup = 2, PitchStirrup = 100
                     }
                 }
             };
@@ -156,8 +154,7 @@ namespace KarambaConnect.K2S
                     RectSameSection = new RcColumnSecBarArrangement.RectSame
                     {
                         CountMainX1st = 2, CountMainY1st = 2, CountMainTotal = 4,
-                        PitchBand = 100,
-                        CountBandDirX = 2, CountBandDirY = 2,
+                        PitchBand = 100, CountBandDirX = 2, CountBandDirY = 2,
                     }
                 }
             };
