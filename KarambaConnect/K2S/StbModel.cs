@@ -21,13 +21,17 @@ namespace KarambaConnect.K2S
             var cNum = 1;
             var gNum = 1;
             // 0:column, 1:girder, 2:brace
-            var registeredCroSecId = new List<List<int>> {new List<int>(), new List<int>(), new List<int>()};
-            var registeredCroSecName = new List<List<string>> {new List<string>(), new List<string>(), new List<string>()};
+            var registeredCroSecId = new List<List<int>>
+            {
+                new List<int>(), new List<int>(), new List<int>()
+            };
+            var registeredCroSecName = new List<List<string>>
+            {
+                new List<string>(), new List<string>(), new List<string>()
+            };
             var members = new Members
             {
-                Columns = new List<Column>(),
-                Girders = new List<Girder>(),
-                Braces = new List<Brace>()
+                Columns = new List<Column>(), Girders = new List<Girder>(), Braces = new List<Brace>()
             };
             var sections = new List<Section>();
             var secSteel = new Steel();
@@ -52,13 +56,7 @@ namespace KarambaConnect.K2S
                 switch (elem)
                 {
                     case ModelBeam modelBeam:
-                        string kind;
-                        switch (elem.crosec.material.family)
-                        {
-                            case "Steel": kind = "S"; break;
-                            case "Concrete": kind = "RC"; break;
-                            default: kind = ""; break;
-                        }
+                        string kind = GetElementKind(elem.crosec.material.family);
                         if (angle <= colMaxAngle && angle >= -1d * colMaxAngle)
                         {
                             members.Columns.Add(StbMember.CreateColumn(modelBeam, croSecId, kind));
@@ -144,6 +142,19 @@ namespace KarambaConnect.K2S
             };
 
             return sModel;
+        }
+
+        private static string GetElementKind(string materialFamily)
+        {
+            switch (materialFamily)
+            {
+                case "Steel":
+                    return "S";
+                case "Concrete":
+                    return "RC";
+                default:
+                    return string.Empty;
+            }
         }
     }
 }
