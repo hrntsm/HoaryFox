@@ -60,7 +60,7 @@ namespace KarambaConnect.K2S
                         AddModelTruss(modelTruss);
                         break;
                     default:
-                        break;
+                        throw new ArgumentException("Karamba3D model parse error.");
                 }
             }
 
