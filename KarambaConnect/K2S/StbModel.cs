@@ -23,59 +23,41 @@ namespace KarambaConnect.K2S
         {
             new List<string>(), new List<string>(), new List<string>()
         };
-
+        private readonly Members _members = new Members
+        {
+            Columns = new List<Column>(), Girders = new List<Girder>(), Braces = new List<Brace>()
+        };
         private readonly List<Section> _sections = new List<Section>();
         private Steel _secSteel = new Steel();
+
+        private readonly int[] _tagNum = { 1, 1, 1 };
+        private readonly List<string> _croSecNames = new List<string>();
         private readonly Karamba.Models.Model _kModel;
 
         public StbModel(Karamba.Models.Model kModel)
         {
             _kModel = kModel;
+            _croSecNames = _kModel.crosecs.Select(sec => sec.name).ToList();
         }
 
         public Model SetByAngle(double colMaxAngle)
         {
-            List<string> croSec = _kModel.crosecs.Select(sec => sec.name).ToList();
-            int[] tagNum = {1, 1, 1};
-            var members = new Members { Columns = new List<Column>(), Girders = new List<Girder>(), Braces = new List<Brace>()};
-
             foreach (ModelElement elem in _kModel.elems)
             {
                 if (!(elem is ModelElementStraightLine))
                 {
                     continue;
                 }
-                int croSecId = croSec.IndexOf(elem.crosec.name);
                 var elemLine = new Line(_kModel.nodes[elem.node_inds[0]].pos.Convert(), _kModel.nodes[elem.node_inds[1]].pos.Convert());
                 double angle = Vector3d.VectorAngle(elemLine.Direction, Vector3d.ZAxis);
 
                 switch (elem)
                 {
                     case ModelBeam modelBeam:
-                        string kind = GetElementKind(elem.crosec.material.family);
-                        if (angle <= colMaxAngle && angle >= -1d * colMaxAngle)
-                        {
-                            members.Columns.Add(StbMember.CreateColumn(modelBeam, croSecId, kind));
-                            if (_registeredCroSecId[0].IndexOf(croSecId) < 0)
-                            {
-                                AddColumnSection(kind, croSecId, tagNum[0]++);
-                            }
-                        }
-                        else
-                        {
-                            members.Girders.Add(StbMember.CreateGirder(modelBeam, croSecId, kind));
-                            if (_registeredCroSecId[1].IndexOf(croSecId) < 0)
-                            {
-                                AddBeamSection(kind, croSecId, tagNum[1]++);
-                            }
-                        }
+                        AddModelBeam(modelBeam, angle, colMaxAngle);
                         break;
                     case ModelTruss modelTruss:
-                        members.Braces.Add(StbMember.CreateBrace(modelTruss, croSecId));
-                        if (_registeredCroSecId[2].IndexOf(croSecId) < 0)
-                        {
-                            AddBraceSection(croSecId, tagNum[2]++);
-                        }
+                        AddModelTruss(modelTruss);
                         break;
                     default:
                         break;
@@ -83,7 +65,40 @@ namespace KarambaConnect.K2S
             }
 
             _sections.Add(_secSteel);
-            return new Model { Members = members, Sections = _sections };
+            return new Model { Members = _members, Sections = _sections };
+        }
+
+        private void AddModelBeam(ModelBeam modelBeam, double angle, double colMaxAngle)
+        {
+            int croSecId = _croSecNames.IndexOf(modelBeam.crosec.name);
+            string kind = GetElementKind(modelBeam.crosec.material.family);
+
+            if (angle <= colMaxAngle && angle >= -1d * colMaxAngle)
+            {
+                _members.Columns.Add(StbMember.CreateColumn(modelBeam, croSecId, kind));
+                if (_registeredCroSecId[0].IndexOf(croSecId) < 0)
+                {
+                    AddColumnSection(kind, croSecId, _tagNum[0]++);
+                }
+            }
+            else
+            {
+                _members.Girders.Add(StbMember.CreateGirder(modelBeam, croSecId, kind));
+                if (_registeredCroSecId[1].IndexOf(croSecId) < 0)
+                {
+                    AddBeamSection(kind, croSecId, _tagNum[1]++);
+                }
+            }
+        }
+
+        private void AddModelTruss(ModelTruss modelTruss)
+        {
+            int croSecId = _croSecNames.IndexOf(modelTruss.crosec.name);
+            _members.Braces.Add(StbMember.CreateBrace(modelTruss, croSecId));
+            if (_registeredCroSecId[2].IndexOf(croSecId) < 0)
+            {
+                AddBraceSection(croSecId, _tagNum[2]++);
+            }
         }
 
         private void AddBraceSection(int croSecId, int vNum)
