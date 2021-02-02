@@ -40,7 +40,8 @@ namespace KarambaConnect.Component.StbBuilder
                 throw new ArgumentException("The input is not Karamba3D model!");
             }
             Model kModel = ghKModel.Value;
-            STBDotNet.Elements.StbModel.Model sModel = StbModel.SetByAngle(kModel, colMaxAngle);
+            var stbModel = new StbModel(kModel);
+            STBDotNet.Elements.StbModel.Model sModel = stbModel.SetByAngle(colMaxAngle);
             
             DA.SetData(0, sModel.Members);
             DA.SetDataList(1, sModel.Sections);

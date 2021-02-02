@@ -26,21 +26,27 @@ namespace KarambaConnect.K2S
 
         private readonly List<Section> _sections = new List<Section>();
         private Steel _secSteel = new Steel();
+        private readonly Karamba.Models.Model _kModel;
 
-        public Model SetByAngle(Karamba.Models.Model kModel, double colMaxAngle)
+        public StbModel(Karamba.Models.Model kModel)
         {
-            List<string> croSec = kModel.crosecs.Select(sec => sec.name).ToList();
+            _kModel = kModel;
+        }
+
+        public Model SetByAngle(double colMaxAngle)
+        {
+            List<string> croSec = _kModel.crosecs.Select(sec => sec.name).ToList();
             int[] tagNum = {1, 1, 1};
             var members = new Members { Columns = new List<Column>(), Girders = new List<Girder>(), Braces = new List<Brace>()};
 
-            foreach (ModelElement elem in kModel.elems)
+            foreach (ModelElement elem in _kModel.elems)
             {
                 if (!(elem is ModelElementStraightLine))
                 {
                     continue;
                 }
                 int croSecId = croSec.IndexOf(elem.crosec.name);
-                var elemLine = new Line(kModel.nodes[elem.node_inds[0]].pos.Convert(), kModel.nodes[elem.node_inds[1]].pos.Convert());
+                var elemLine = new Line(_kModel.nodes[elem.node_inds[0]].pos.Convert(), _kModel.nodes[elem.node_inds[1]].pos.Convert());
                 double angle = Vector3d.VectorAngle(elemLine.Direction, Vector3d.ZAxis);
 
                 switch (elem)
@@ -52,7 +58,7 @@ namespace KarambaConnect.K2S
                             members.Columns.Add(StbMember.CreateColumn(modelBeam, croSecId, kind));
                             if (_registeredCroSecId[0].IndexOf(croSecId) < 0)
                             {
-                                AddColumnSection(kind, croSecId, tagNum[0]++, kModel);
+                                AddColumnSection(kind, croSecId, tagNum[0]++);
                             }
                         }
                         else
@@ -60,7 +66,7 @@ namespace KarambaConnect.K2S
                             members.Girders.Add(StbMember.CreateGirder(modelBeam, croSecId, kind));
                             if (_registeredCroSecId[1].IndexOf(croSecId) < 0)
                             {
-                                AddBeamSection(kind, croSecId, tagNum[1]++, kModel);
+                                AddBeamSection(kind, croSecId, tagNum[1]++);
                             }
                         }
                         break;
@@ -68,7 +74,7 @@ namespace KarambaConnect.K2S
                         members.Braces.Add(StbMember.CreateBrace(modelTruss, croSecId));
                         if (_registeredCroSecId[2].IndexOf(croSecId) < 0)
                         {
-                            AddBraceSection(croSecId, tagNum[2]++, kModel);
+                            AddBraceSection(croSecId, tagNum[2]++);
                         }
                         break;
                     default:
@@ -80,33 +86,33 @@ namespace KarambaConnect.K2S
             return new Model { Members = members, Sections = _sections };
         }
 
-        private void AddBraceSection(int croSecId, int vNum, Karamba.Models.Model kModel)
+        private void AddBraceSection(int croSecId, int vNum)
         {
-            _sections.Add(StbSection.GetBraceSt(croSecId, vNum, kModel));
+            _sections.Add(StbSection.GetBraceSt(croSecId, vNum, _kModel));
             _registeredCroSecId[2].Add(croSecId);
 
-            if (_registeredCroSecName[2].IndexOf(kModel.crosecs[croSecId].name) < 0)
+            if (_registeredCroSecName[2].IndexOf(_kModel.crosecs[croSecId].name) < 0)
             {
-                StbSecSteel.GetSection(ref _secSteel, kModel, croSecId);
-                _registeredCroSecName[2].Add(kModel.crosecs[croSecId].name);
+                StbSecSteel.GetSection(ref _secSteel, _kModel, croSecId);
+                _registeredCroSecName[2].Add(_kModel.crosecs[croSecId].name);
             }
         }
 
-        private void AddBeamSection(string kind, int croSecId, int gNum, Karamba.Models.Model kModel)
+        private void AddBeamSection(string kind, int croSecId, int gNum)
         {
             switch (kind)
             {
                 case "S":
-                    _sections.Add(StbSection.GetBeamSt(croSecId, gNum, kModel));
+                    _sections.Add(StbSection.GetBeamSt(croSecId, gNum, _kModel));
 
-                    if (_registeredCroSecName[1].IndexOf(kModel.crosecs[croSecId].name) < 0)
+                    if (_registeredCroSecName[1].IndexOf(_kModel.crosecs[croSecId].name) < 0)
                     {
-                        StbSecSteel.GetSection(ref _secSteel, kModel, croSecId);
-                        _registeredCroSecName[1].Add(kModel.crosecs[croSecId].name);
+                        StbSecSteel.GetSection(ref _secSteel, _kModel, croSecId);
+                        _registeredCroSecName[1].Add(_kModel.crosecs[croSecId].name);
                     }
                     break;
                 case "RC":
-                    _sections.Add(StbSection.GetBeamRc(croSecId, gNum, kModel));
+                    _sections.Add(StbSection.GetBeamRc(croSecId, gNum, _kModel));
                     break;
                 default:
                     throw new ArgumentException("Make sure that the family name of the material is \"Concrete\" or \"Steel\".");
@@ -114,21 +120,21 @@ namespace KarambaConnect.K2S
             _registeredCroSecId[1].Add(croSecId);
         }
 
-        private void AddColumnSection(string kind, int croSecId, int cNum, Karamba.Models.Model kModel)
+        private void AddColumnSection(string kind, int croSecId, int cNum)
         {
             switch (kind)
             {
                 case "S":
-                    _sections.Add(StbSection.GetColumnSt(croSecId, cNum, kModel));
+                    _sections.Add(StbSection.GetColumnSt(croSecId, cNum, _kModel));
 
-                    if (_registeredCroSecName[0].IndexOf(kModel.crosecs[croSecId].name) < 0)
+                    if (_registeredCroSecName[0].IndexOf(_kModel.crosecs[croSecId].name) < 0)
                     {
-                        StbSecSteel.GetSection(ref _secSteel, kModel, croSecId);
-                        _registeredCroSecName[0].Add(kModel.crosecs[croSecId].name);
+                        StbSecSteel.GetSection(ref _secSteel, _kModel, croSecId);
+                        _registeredCroSecName[0].Add(_kModel.crosecs[croSecId].name);
                     }
                     break;
                 case "RC":
-                    _sections.Add(StbSection.GetColumnRc(croSecId, cNum, kModel));
+                    _sections.Add(StbSection.GetColumnRc(croSecId, cNum, _kModel));
                     break;
                 default:
                     throw new ArgumentException("Make sure that the family name of the material is \"Concrete\" or \"Steel\".");
