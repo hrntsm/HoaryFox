@@ -8,6 +8,8 @@ namespace KarambaConnect.Component.StbBuilder
 {
     public class StoryBuilder:GH_Component
     {
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
+
         public StoryBuilder()
           : base("StoryBuilder", "Story", "Builder StbStory data", "HoaryFox", "StbBuilder")
         {

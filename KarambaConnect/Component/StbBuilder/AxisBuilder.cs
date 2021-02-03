@@ -8,6 +8,8 @@ namespace KarambaConnect.Component.StbBuilder
 {
     public class AxisBuilder:GH_Component
     {
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
+
         public AxisBuilder()
           : base("AxisBuilder", "Axis", "Builder StbAxes data", "HoaryFox", "StbBuilder")
         {

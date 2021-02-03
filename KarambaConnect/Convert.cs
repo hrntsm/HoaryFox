@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Rhino.Geometry;
 
 namespace KarambaConnect
 {
@@ -12,6 +13,11 @@ namespace KarambaConnect
         public static Karamba.Geometry.Point3 ToKaramba(this STBDotNet.Geometry.Point3 spt)
         {
             return new Karamba.Geometry.Point3(spt.X, spt.Y, spt.Z) * 1000;
+        }
+
+        public static Point3d ToRhino(this STBDotNet.Elements.StbModel.Node node)
+        {
+            return new Point3d(node.X, node.Y, node.Z) / 1000;
         }
 
         public static List<STBDotNet.Elements.StbModel.Node> ToStb(this List<Karamba.Nodes.Node> kNodes)
