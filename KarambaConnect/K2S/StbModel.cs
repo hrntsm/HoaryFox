@@ -49,12 +49,13 @@ namespace KarambaConnect.K2S
                     continue;
                 }
                 var elemLine = new Line(_kModel.nodes[elem.node_inds[0]].pos.Convert(), _kModel.nodes[elem.node_inds[1]].pos.Convert());
-                double angle = Vector3d.VectorAngle(elemLine.Direction, Vector3d.ZAxis);
+                double pAngle = Vector3d.VectorAngle(elemLine.Direction, Vector3d.ZAxis);
+                double nAngle = Vector3d.VectorAngle(elemLine.Direction, -Vector3d.ZAxis);
 
                 switch (elem)
                 {
                     case ModelBeam modelBeam:
-                        AddModelBeam(modelBeam, angle, colMaxAngle);
+                        AddModelBeam(modelBeam, pAngle, nAngle, colMaxAngle);
                         break;
                     case ModelTruss modelTruss:
                         AddModelTruss(modelTruss);
@@ -68,12 +69,14 @@ namespace KarambaConnect.K2S
             return new Model { Members = _members, Sections = _sections };
         }
 
-        private void AddModelBeam(ModelBeam modelBeam, double angle, double colMaxAngle)
+        private void AddModelBeam(ModelBeam modelBeam, double pAngle, double nAngle, double colMaxAngle)
         {
             int croSecId = _croSecNames.IndexOf(modelBeam.crosec.name);
             string kind = GetElementKind(modelBeam.crosec.material.family);
+            bool positive = pAngle <= colMaxAngle && pAngle >= -1d * colMaxAngle;
+            bool negative = nAngle <= colMaxAngle && nAngle >= -1d * colMaxAngle;
 
-            if (angle <= colMaxAngle && angle >= -1d * colMaxAngle)
+            if (positive || negative)
             {
                 _members.Columns.Add(StbMember.CreateColumn(modelBeam, croSecId, kind));
                 if (_registeredCroSecId[0].IndexOf(croSecId) < 0)
