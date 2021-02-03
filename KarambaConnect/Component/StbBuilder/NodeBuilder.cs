@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Grasshopper.Kernel;
 using Karamba.GHopper.Models;
 using Model = Karamba.Models.Model;
@@ -38,7 +39,7 @@ namespace KarambaConnect.Component.StbBuilder
             DA.SetDataList(0, kModel.nodes.ToStb());
         }
 
-        // protected override Bitmap Icon => Properties.Resource.FrameBuilder;
+        protected override Bitmap Icon => Properties.Resource.NodeBuilder;
         public override Guid ComponentGuid => new Guid("D3FCFB17-E6C4-47D4-852A-24D92EC1EFEE");
     }
 }

@@ -78,6 +78,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\NodeBuilder.png" />
     <None Include="Library\karamba132\karamba.gha" />
     <Content Include="Library\karamba132\karambaCommon.dll" />
     <Content Include="Resources\AxisBuilder.png" />
