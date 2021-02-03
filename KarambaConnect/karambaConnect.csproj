@@ -42,10 +42,6 @@
       <HintPath>Library\karamba132\karambaCommon.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="STBDotNet, Version=0.1.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\STBDotNet\STBDotNet\bin\Release\netstandard2.0\STBDotNet.dll</HintPath>
-    </Reference>
     <Reference Include="STBReader">
       <HintPath>Library\STBReader.dll</HintPath>
       <Private>True</Private>
@@ -104,6 +100,9 @@
     <PackageReference Include="RhinoCommon">
       <Version>6.20.19322.20361</Version>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="STBDotNet">
+      <Version>0.1.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />
