@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Drawing;
+
+using Rhino.Geometry;
 using Grasshopper.Kernel;
+
 using Karamba.GHopper.Models;
-using Karamba.Models;
 using KarambaConnect.K2S;
+using STBDotNet.Elements.StbModel.StbMember;
+using Model = Karamba.Models.Model;
 
 namespace KarambaConnect.Component.StbBuilder
 {
     public class FrameBuilderByAngle:GH_Component
     {
+        private STBDotNet.Elements.StbModel.Model _sModel;
+
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
         public FrameBuilderByAngle()
@@ -41,13 +47,43 @@ namespace KarambaConnect.Component.StbBuilder
             }
             Model kModel = ghKModel.Value;
             var stbModel = new StbModel(kModel);
-            STBDotNet.Elements.StbModel.Model sModel = stbModel.SetByAngle(colMaxAngle);
-            
-            DA.SetData(0, sModel.Members);
-            DA.SetDataList(1, sModel.Sections);
+            _sModel = stbModel.SetByAngle(colMaxAngle);
+            _sModel.Nodes = kModel.nodes.ToStb();
+
+            DA.SetData(0, _sModel.Members);
+            DA.SetDataList(1, _sModel.Sections);
         }
 
         protected override Bitmap Icon => Properties.Resource.FrameBuilder;
         public override Guid ComponentGuid => new Guid("38296D06-E47A-403F-BFE8-00E873A99CF8");
+
+        public override void DrawViewportWires(IGH_PreviewArgs args)
+        {
+            if (_sModel == null || _sModel.Nodes.Count < 1)
+            {
+                return;
+            }
+
+            foreach (Column column in _sModel.Members.Columns)
+            {
+                Point3d ptFrom = _sModel.Nodes[column.IdNodeStart - 1].ToRhino();
+                Point3d ptTo = _sModel.Nodes[column.IdNodeEnd - 1].ToRhino();
+                args.Display.Draw2dText("Column", Color.Brown, (ptFrom + ptTo) / 2, true, 12);
+            }
+
+            foreach (Girder girder in _sModel.Members.Girders)
+            {
+                Point3d ptFrom = _sModel.Nodes[girder.IdNodeStart - 1].ToRhino();
+                Point3d ptTo = _sModel.Nodes[girder.IdNodeEnd - 1].ToRhino();
+                args.Display.Draw2dText("Girder", Color.DarkGreen, (ptFrom + ptTo) / 2, true, 12);
+            }
+
+            foreach (Brace brace in _sModel.Members.Braces)
+            {
+                Point3d ptFrom = _sModel.Nodes[brace.IdNodeStart - 1].ToRhino();
+                Point3d ptTo = _sModel.Nodes[brace.IdNodeEnd - 1].ToRhino();
+                args.Display.Draw2dText("Brace", Color.Purple, (ptFrom + ptTo) / 2, true, 12);
+            }
+        }
     }
 }
