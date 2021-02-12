@@ -55,6 +55,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\IO\SetFamilyName.cs" />
     <Compile Include="Component\StbBuilder\AxisBuilder.cs" />
     <Compile Include="Component\StbBuilder\NodeBuilder.cs" />
     <Compile Include="Component\StbBuilder\StoryBuilder.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="K2S\StbMember.cs" />
     <Compile Include="K2S\StbModel.cs" />
     <Compile Include="KarambaConnectInfo.cs" />
+    <Compile Include="S2K\CroSecFamilyName.cs" />
     <Compile Include="S2K\CrossSection.cs" />
     <Compile Include="S2K\Element.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

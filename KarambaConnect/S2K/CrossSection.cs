@@ -30,7 +30,7 @@ namespace KarambaConnect.S2K
             return k3Ids;
         }
         
-        public static List<CroSec> GetCroSec(StbData stbData, string familyName)
+        public static List<CroSec> GetCroSec(StbData stbData, CroSecFamilyName familyName)
         {
             // TODO: 材軸の回転は未設定（どこで設定するかも謎）
             var k3CroSec = new List<CroSec>();
@@ -45,7 +45,7 @@ namespace KarambaConnect.S2K
             return k3CroSec;
         }
 
-        private static IEnumerable<CroSec> ColumnRc(StbData stbData, FemMaterial material, string familyName)
+        private static IEnumerable<CroSec> ColumnRc(StbData stbData, FemMaterial material, CroSecFamilyName familyName)
         {
             var k3CroSec = new List<CroSec>();
             
@@ -60,7 +60,7 @@ namespace KarambaConnect.S2K
                 if (shapeType == ShapeTypes.BOX)
                 {
                     // TODO:材料の設定は直す
-                    var croSec = new CroSec_Trapezoid(familyName, name, null, null, material,
+                    var croSec = new CroSec_Trapezoid(familyName.Box, name, null, null, material,
                         p1, p2, p2);
                     croSec.AddElemId(name);
                     k3CroSec.Add(croSec);
@@ -68,7 +68,7 @@ namespace KarambaConnect.S2K
                 else
                 {
                     // TODO: Karambaは中実円断面ないため、PIPEに置換してる。任意断面設定できるはずなので、そっちの方がいい気がする。
-                    var croSec = new CroSec_Circle(familyName, name, null, null, material,
+                    var croSec = new CroSec_Circle(familyName.Circle, name, null, null, material,
                         p2, p2/2);
                     croSec.AddElemId(name);
                     k3CroSec.Add(croSec);
@@ -78,7 +78,7 @@ namespace KarambaConnect.S2K
             return k3CroSec;
         }
         
-        private static IEnumerable<CroSec> BeamRc(StbData stbData, FemMaterial material, string familyName)
+        private static IEnumerable<CroSec> BeamRc(StbData stbData, FemMaterial material, CroSecFamilyName familyName)
         {
             var k3CroSec = new List<CroSec>();
             
@@ -88,7 +88,7 @@ namespace KarambaConnect.S2K
                 double p1 = stbData.SecBeamRc.Depth[i] / 10d;
                 double p2 = stbData.SecBeamRc.Width[i] / 10d;
                 
-                var croSec = new CroSec_Trapezoid(familyName, name, null, null, material,
+                var croSec = new CroSec_Trapezoid(familyName.Box, name, null, null, material,
                     p1, p2, p2);
                 croSec.AddElemId(name);
                 k3CroSec.Add(croSec);
@@ -97,7 +97,7 @@ namespace KarambaConnect.S2K
             return k3CroSec;
         }
 
-        private static IEnumerable<CroSec> Steel(StbData stbData, FemMaterial material, string familyName)
+        private static IEnumerable<CroSec> Steel(StbData stbData, FemMaterial material, CroSecFamilyName familyName)
         {
             var k3CroSec = new List<CroSec>();
             
@@ -115,46 +115,46 @@ namespace KarambaConnect.S2K
                 switch (shapeType)
                 {
                     case ShapeTypes.H:
-                        croSec = new CroSec_I(familyName, name, null, null, material,
+                        croSec = new CroSec_I(familyName.H, name, null, null, material,
                             p1, p2, p2, p4, p4, p3);
                         break;
                     case ShapeTypes.L:
                         // TODO:Karambaに対応断面形状がないため等価軸断面積置換
                         eLength = Math.Sqrt(p1 * p3 + p2 * p4 - p3 * p4);
-                        croSec = new CroSec_Trapezoid(familyName, name, null, null, material,
+                        croSec = new CroSec_Trapezoid(familyName.L, name, null, null, material,
                             eLength, eLength, eLength);
                         break;
                     case ShapeTypes.T:
-                        croSec = new CroSec_T(familyName, name, null, null, material,
+                        croSec = new CroSec_T(familyName.T, name, null, null, material,
                             p1, p2, p3, p4);
                         break;
                     case ShapeTypes.C:
                         // TODO:Karambaに対応断面形状がないため等価軸断面積置換
                         eLength = Math.Sqrt(p1 * p3 + p2 * p4 - 2 * p3 * p4);
-                        croSec = new CroSec_Trapezoid(familyName, name, null, null, material,
+                        croSec = new CroSec_Trapezoid(familyName.Other, name, null, null, material,
                             eLength, eLength, eLength);
                         break;
                     case ShapeTypes.FB:
-                        croSec = new CroSec_Trapezoid(familyName, name, null, null, material,
+                        croSec = new CroSec_Trapezoid(familyName.FB, name, null, null, material,
                             p1, p2, p2);
                         break;
                     case ShapeTypes.BOX:
                         throw new ArgumentOutOfRangeException();
                     case ShapeTypes.Bar:
                         // TODO: Karambaは中実円断面ないため、PIPEに置換してる。任意断面設定できるはずなので、そっちの方がいい気がする。
-                        croSec = new CroSec_Circle(familyName, name, null, null, material,
+                        croSec = new CroSec_Circle(familyName.Other, name, null, null, material,
                             p2, p2/2);
                         break;
                     case ShapeTypes.Pipe:
-                        croSec = new CroSec_Circle(familyName, name, null, null, material,
+                        croSec = new CroSec_Circle(familyName.Pipe, name, null, null, material,
                             p2, p1);
                         break;
                     case ShapeTypes.RollBOX:
-                        croSec = new CroSec_Box(familyName, name, null, null, material,
+                        croSec = new CroSec_Box(familyName.Box, name, null, null, material,
                             p1, p2, p2, p3, p3, p3, p4);
                         break;
                     case ShapeTypes.BuildBOX:
-                        croSec = new CroSec_Box(familyName, name, null, null, material,
+                        croSec = new CroSec_Box(familyName.Box, name, null, null, material,
                             p1, p2, p2, p3, p3, p4, 0);
                         break;
                     default:
