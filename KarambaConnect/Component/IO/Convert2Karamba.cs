@@ -33,7 +33,8 @@ namespace KarambaConnect.Component.IO
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Data", "D", "input ST-Bridge Data", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Data", "D", "Input ST-Bridge Data", GH_ParamAccess.item);
+            pManager.AddTextParameter("FamilyName", "Family", "CrossSection Family Name", GH_ParamAccess.item, "HoaryFox");
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -44,10 +45,12 @@ namespace KarambaConnect.Component.IO
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            if (!DA.GetData("Data", ref _stbData)) { return; }
+            var familyName = string.Empty;
+            if (!DA.GetData(0, ref _stbData)) { return; }
+            if (!DA.GetData(1, ref familyName)) { return; }
             
             List<string>[] k3Ids = CrossSection.GetIndex(_stbData);
-            List<CroSec> k3CroSec = CrossSection.GetCroSec(_stbData);
+            List<CroSec> k3CroSec = CrossSection.GetCroSec(_stbData, familyName);
             List<BuilderBeam> elems = Element.BuilderBeams(_stbData, k3Ids);
             List<GH_Element> ghElements = elems.Select(e => new GH_Element(e)).ToList();
             _k3ElemBe = ghElements;
