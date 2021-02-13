@@ -1,4 +1,4 @@
-name: Check code format using dotnet format
+name: Check Code Format
 on: pull_request
 
 jobs:
@@ -12,4 +12,4 @@ jobs:
     - name: Restore Tool
       run: dotnet tool restore
     - name: Lint
-      run: dotnet format --check --dry-run
+      run: dotnet format --check

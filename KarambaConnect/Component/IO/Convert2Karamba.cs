@@ -13,7 +13,7 @@ using STBReader;
 
 namespace KarambaConnect.Component.IO
 {
-    public class Convert2Karamba : GH_Component
+    public class Convert2Karamba :      GH_Component
     {
         private StbData _stbData;
         private List<GH_Element> _k3ElemBe = new List<GH_Element>();
