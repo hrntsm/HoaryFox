@@ -16,7 +16,8 @@ namespace KarambaConnect.Component.IO
     {
         private readonly string _defaultOutPath =
             Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\model.stb";
-        
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
+
         public Export()
           : base("Export STB file", "Export", "Export ST-Bridge data.", "HoaryFox", "IO")
         {

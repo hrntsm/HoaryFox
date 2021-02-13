@@ -19,6 +19,8 @@ namespace KarambaConnect.Component.IO
         private List<GH_Element> _k3ElemBe = new List<GH_Element>();
         private readonly List<GH_Element> _k3ElemSh = new List<GH_Element>();
 
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
+
         public Convert2Karamba()
           : base("Convert to Karamba", "S2K", "Convert ST-Bridge file to Karamba.", "HoaryFox", "IO")
         {
@@ -33,21 +35,29 @@ namespace KarambaConnect.Component.IO
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Data", "D", "input ST-Bridge Data", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Data", "D", "Input ST-Bridge Data", GH_ParamAccess.item);
+            pManager.AddGenericParameter("FamilyName", "Family", "Each CrossSection Family Name", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new Param_Element(), "ElementBeam", "ElemBe", "Karamba Line Element", GH_ParamAccess.list);
             pManager.AddParameter(new Param_CrossSection(), "CrossSection", "CroSec", "Karamba CrossSection", GH_ParamAccess.list);
+            pManager[1].Optional = true;
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            if (!DA.GetData("Data", ref _stbData)) { return; }
+            var familyName = new CroSecFamilyName();
+            if (!DA.GetData(0, ref _stbData)) { return; }
+            if (!DA.GetData(1, ref familyName))
+            {
+                familyName = CroSecFamilyName.Default();
+            }
+            
             
             List<string>[] k3Ids = CrossSection.GetIndex(_stbData);
-            List<CroSec> k3CroSec = CrossSection.GetCroSec(_stbData);
+            List<CroSec> k3CroSec = CrossSection.GetCroSec(_stbData, familyName);
             List<BuilderBeam> elems = Element.BuilderBeams(_stbData, k3Ids);
             List<GH_Element> ghElements = elems.Select(e => new GH_Element(e)).ToList();
             _k3ElemBe = ghElements;

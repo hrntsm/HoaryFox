@@ -9,7 +9,8 @@ namespace HoaryFox.Component.IO
         private string _path;
         private readonly double _lengthTolerance = DocumentTolerance();
         private readonly double _angleTolerance = DocumentAngleTolerance();
-            
+        public override GH_Exposure Exposure => GH_Exposure.primary;
+
         public StbLoader()
           : base("Load STB file", "Loader", "Read ST-Bridge file and display", "HoaryFox", "IO")
         {
