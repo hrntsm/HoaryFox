@@ -51,28 +51,26 @@ namespace KarambaConnect.S2K
             
             for (var i = 0; i < stbData.SecColumnRc.Id.Count; i++)
             {
-                string name = "Id" + stbData.SecColumnRc.Id[i];
                 double p1 = stbData.SecColumnRc.Height[i] / 10d;
                 double p2 = stbData.SecColumnRc.Width[i] / 10d;
+                var name = $"CD-{p2*10}x{p1 * 10}";
 
                 ShapeTypes shapeType = stbData.SecColumnRc.Height[i] <= 0 ? ShapeTypes.Pipe : ShapeTypes.BOX;
-                
+                CroSec_Beam croSec;
                 if (shapeType == ShapeTypes.BOX)
                 {
                     // TODO:材料の設定は直す
-                    var croSec = new CroSec_Trapezoid(familyName.Box, name, null, null, material,
+                    croSec = new CroSec_Trapezoid(familyName.Box, name, null, null, material,
                         p1, p2, p2);
-                    croSec.AddElemId(name);
-                    k3CroSec.Add(croSec);
                 }
                 else
                 {
                     // TODO: Karambaは中実円断面ないため、PIPEに置換してる。任意断面設定できるはずなので、そっちの方がいい気がする。
-                    var croSec = new CroSec_Circle(familyName.Circle, name, null, null, material,
+                    croSec = new CroSec_Circle(familyName.Circle, name, null, null, material,
                         p2, p2/2);
-                    croSec.AddElemId(name);
-                    k3CroSec.Add(croSec);
                 }
+                croSec.AddElemId("Id" + stbData.SecColumnRc.Id[i]);
+                k3CroSec.Add(croSec);
             }
 
             return k3CroSec;
@@ -84,13 +82,13 @@ namespace KarambaConnect.S2K
             
             for (var i = 0; i < stbData.SecBeamRc.Id.Count; i++)
             {
-                string name = "Id" + stbData.SecBeamRc.Id[i];
                 double p1 = stbData.SecBeamRc.Depth[i] / 10d;
                 double p2 = stbData.SecBeamRc.Width[i] / 10d;
-                
+                var name = $"BD-{p2 * 10}x{p1 * 10}";
+
                 var croSec = new CroSec_Trapezoid(familyName.Box, name, null, null, material,
                     p1, p2, p2);
-                croSec.AddElemId(name);
+                croSec.AddElemId("Id" + stbData.SecBeamRc.Id[i]);
                 k3CroSec.Add(croSec);
             }
 
@@ -110,7 +108,7 @@ namespace KarambaConnect.S2K
                 double p4 = stbData.SecSteel.P4.Count < i + 1 ? 0 : stbData.SecSteel.P4[i] / 10d;
                 ShapeTypes shapeType = stbData.SecSteel.ShapeType[i];
 
-                CroSec croSec = null;
+                CroSec croSec;
                 double eLength;
                 switch (shapeType)
                 {
