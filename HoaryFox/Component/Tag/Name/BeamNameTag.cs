@@ -5,7 +5,7 @@ using STBReader.Member;
 
 namespace HoaryFox.Component.Tag.Name
 {
-    public class BeamNameTag:NameTagBase
+    public class BeamNameTag : NameTagBase
     {
         public BeamNameTag()
             : base(name: "Beam Name Tag", nickname: "BeamTag", description: "Display Beam Name Tag", frameType: FrameType.Beam)

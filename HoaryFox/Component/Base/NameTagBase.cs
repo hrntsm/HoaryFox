@@ -9,7 +9,7 @@ using STBReader.Model;
 
 namespace HoaryFox.Component.Base
 {
-    public class NameTagBase:GH_Component
+    public class NameTagBase : GH_Component
     {
         private StbData _stbData;
         private int _size;
@@ -21,7 +21,7 @@ namespace HoaryFox.Component.Base
         public override bool IsPreviewCapable => true;
 
         protected NameTagBase(string name, string nickname, string description, FrameType frameType)
-            :base(name, nickname, description, category: "HoaryFox", subCategory: "NameTag")
+            : base(name, nickname, description, category: "HoaryFox", subCategory: "NameTag")
         {
             _frameType = frameType;
         }
@@ -65,7 +65,7 @@ namespace HoaryFox.Component.Base
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             for (var i = 0; i < frame.Id.Count; i++)
             {
                 int idNodeStart = nodes.Id.IndexOf(frame.IdNodeStart[i]);

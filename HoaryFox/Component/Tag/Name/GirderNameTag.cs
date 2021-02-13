@@ -5,7 +5,7 @@ using STBReader.Member;
 
 namespace HoaryFox.Component.Tag.Name
 {
-    public class GirderNameTag:NameTagBase
+    public class GirderNameTag : NameTagBase
     {
         public GirderNameTag()
           : base(name: "Girder Name Tag", nickname: "GirderTag", description: "Display girder Name Tag ", frameType: FrameType.Girder)

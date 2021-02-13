@@ -20,7 +20,7 @@
 //        private static StbPosts _posts;
 //        private static StbGirders _girders;
 //        private static StbBeams _beams;
-        
+
 //        public static StbSecColRC SecColumnRc;
 //        public static StbSecBeamRC SecBeamRc;
 
@@ -130,7 +130,7 @@
 //            var stbFrames = new List<StbFrame>() {
 //                _columns, _girders, _posts, _beams
 //            };
-            
+
 //            var breps = new CreateBar(_nodes);
 
 //            foreach (var frame in stbFrames)

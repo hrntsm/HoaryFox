@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Rhino.Geometry;
 using STBReader;
@@ -109,16 +109,16 @@ namespace HoaryFox.Member
         {
             Brep brep;
             double tol = stbData.ToleLength;
-            
+
             try
             {
-                brep =  CreatePlaneBreps(pts, tol);
+                brep = CreatePlaneBreps(pts, tol);
             }
-            catch(NullReferenceException)
+            catch (NullReferenceException)
             {
                 brep = null;
             }
-            
+
             Brep planeWithOpens = ApplyOpens(brep, pts, open, tol);
 
             return planeWithOpens;
@@ -131,10 +131,10 @@ namespace HoaryFox.Member
             {
                 return planeWithOpens;
             }
-            
+
             Surface surface = brep.Surfaces[0];
             var trimSurf = new List<Brep>();
-            
+
             try
             {
                 for (var i = 0; i < open.Id.Count; i++)
@@ -143,7 +143,7 @@ namespace HoaryFox.Member
                     var intervalY = new Interval(open.PositionY[i], open.PositionY[i] + open.LengthY[i]);
                     trimSurf.Add(surface.Trim(intervalX, intervalY).ToBrep());
                 }
-                planeWithOpens = Brep.CreateBooleanDifference(new[]{ brep }, trimSurf, tol)[0];
+                planeWithOpens = Brep.CreateBooleanDifference(new[] { brep }, trimSurf, tol)[0];
             }
             catch (NullReferenceException)
             {

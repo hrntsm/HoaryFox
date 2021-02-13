@@ -51,7 +51,7 @@ namespace KarambaConnect
                     is_visible = true,
                     pos = sNode.Position.ToKaramba()
                 };
-                
+
                 kNodes.Add(kNode);
             }
 

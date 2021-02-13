@@ -13,7 +13,7 @@ using STBReader;
 
 namespace KarambaConnect.Component.IO
 {
-    public class Convert2Karamba:GH_Component
+    public class Convert2Karamba : GH_Component
     {
         private StbData _stbData;
         private List<GH_Element> _k3ElemBe = new List<GH_Element>();
@@ -54,8 +54,8 @@ namespace KarambaConnect.Component.IO
             {
                 familyName = CroSecFamilyName.Default();
             }
-            
-            
+
+
             List<string>[] k3Ids = CrossSection.GetIndex(_stbData);
             List<CroSec> k3CroSec = CrossSection.GetCroSec(_stbData, familyName);
             List<BuilderBeam> elems = Element.BuilderBeams(_stbData, k3Ids);

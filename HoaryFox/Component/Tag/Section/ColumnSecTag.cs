@@ -5,9 +5,10 @@ using STBReader.Member;
 
 namespace HoaryFox.Component.Tag.Section
 {
-    public class ColumnSecTag:SecTagBase
-    { public ColumnSecTag()
-          : base(name: "Column Section Tag", nickname: "ColumnSec", description: "Display Column Section Tag", frameType: FrameType.Column)
+    public class ColumnSecTag : SecTagBase
+    {
+        public ColumnSecTag()
+            : base(name: "Column Section Tag", nickname: "ColumnSec", description: "Display Column Section Tag", frameType: FrameType.Column)
         {
         }
         protected override Bitmap Icon => Properties.Resource.ColumnSection;

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using Grasshopper.Kernel;
 using HoaryFox.Member;
-using STBReader;
 using Rhino.Geometry;
+using STBReader;
 
 
 namespace HoaryFox.Component.Geometry
 {
-    public class Stb2Line:GH_Component
+    public class Stb2Line : GH_Component
     {
         private StbData _stbData;
         private List<Point3d> _nodes = new List<Point3d>();
