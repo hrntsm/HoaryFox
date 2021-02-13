@@ -1,0 +1,15 @@
+name: Check code format using dotnet format
+on: pull_request
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+    - name: Restore Tool
+      run: dotnet tool restore
+    - name: Lint
+      run: dotnet format --check --dry-run
