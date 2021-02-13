@@ -32,16 +32,7 @@ namespace KarambaConnect.K2S
                         Width = 10
                     }
                 },
-                BarArrangement = new RcBeamSecBarArrangement
-                {
-                    SameSection = new RcBeamSecBarArrangement.Same
-                    {
-                        CountMainTop1st = 2,
-                        CountMainBottom1st = 3,
-                        CountStirrup = 2,
-                        PitchStirrup = 100
-                    }
-                }
+                BarArrangement = UndefinedBeamArrangement()
             };
         }
 
@@ -61,18 +52,24 @@ namespace KarambaConnect.K2S
                         Width = trapezoid.maxWidth() * 1000
                     }
                 },
-                BarArrangement = new RcBeamSecBarArrangement
+                BarArrangement = UndefinedBeamArrangement()
+            };
+        }
+
+        private static RcBeamSecBarArrangement UndefinedBeamArrangement()
+        {
+            return new RcBeamSecBarArrangement
+            {
+                SameSection = new RcBeamSecBarArrangement.Same
                 {
-                    SameSection = new RcBeamSecBarArrangement.Same
-                    {
-                        CountMainTop1st = 3,
-                        CountMainBottom1st = 3,
-                        CountStirrup = 2,
-                        PitchStirrup = 100
-                    }
+                    CountMainTop1st = 3,
+                    CountMainBottom1st = 3,
+                    CountStirrup = 2,
+                    PitchStirrup = 100
                 }
             };
         }
+
         internal static Section GetColumnRc(int croSecId, int cNum, Model kModel)
         {
             switch (kModel.crosecs[croSecId])
@@ -102,17 +99,22 @@ namespace KarambaConnect.K2S
                         DY = 10
                     }
                 },
-                BarArrangement = new RcColumnSecBarArrangement
+                BarArrangement = UndefinedColumnArrangement()
+            };
+        }
+
+        private static RcColumnSecBarArrangement UndefinedColumnArrangement()
+        {
+            return new RcColumnSecBarArrangement
+            {
+                RectSameSection = new RcColumnSecBarArrangement.RectSame
                 {
-                    RectSameSection = new RcColumnSecBarArrangement.RectSame
-                    {
-                        CountMainX1st = 2,
-                        CountMainY1st = 2,
-                        CountMainTotal = 4,
-                        PitchBand = 100,
-                        CountBandDirX = 2,
-                        CountBandDirY = 2,
-                    }
+                    CountMainX1st = 2,
+                    CountMainY1st = 2,
+                    CountMainTotal = 4,
+                    PitchBand = 100,
+                    CountBandDirX = 2,
+                    CountBandDirY = 2,
                 }
             };
         }
@@ -159,18 +161,7 @@ namespace KarambaConnect.K2S
                         DY = trapezoid._height * 1000
                     }
                 },
-                BarArrangement = new RcColumnSecBarArrangement
-                {
-                    RectSameSection = new RcColumnSecBarArrangement.RectSame
-                    {
-                        CountMainX1st = 2,
-                        CountMainY1st = 2,
-                        CountMainTotal = 4,
-                        PitchBand = 100,
-                        CountBandDirX = 2,
-                        CountBandDirY = 2,
-                    }
-                }
+                BarArrangement = UndefinedColumnArrangement()
             };
         }
 
