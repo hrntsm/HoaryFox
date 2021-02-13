@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Rhino.Geometry;
-
 using Karamba.Elements;
 using Karamba.GHopper.Geometry;
-
+using Rhino.Geometry;
 using STBDotNet.Elements.StbModel.StbMember;
 using STBDotNet.Elements.StbModel.StbSection;
 using Model = STBDotNet.Elements.StbModel.Model;
@@ -25,7 +23,9 @@ namespace KarambaConnect.K2S
         };
         private readonly Members _members = new Members
         {
-            Columns = new List<Column>(), Girders = new List<Girder>(), Braces = new List<Brace>()
+            Columns = new List<Column>(),
+            Girders = new List<Girder>(),
+            Braces = new List<Brace>()
         };
         private readonly List<Section> _sections = new List<Section>();
         private Steel _secSteel = new Steel();

@@ -4,7 +4,7 @@ using Grasshopper.Kernel;
 
 namespace HoaryFox
 {
-    public class HoaryFoxInfo:GH_AssemblyInfo
+    public class HoaryFoxInfo : GH_AssemblyInfo
     {
         public override string Name => "HoaryFox";
 

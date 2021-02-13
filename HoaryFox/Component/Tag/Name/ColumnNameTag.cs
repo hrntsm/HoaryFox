@@ -5,7 +5,7 @@ using STBReader.Member;
 
 namespace HoaryFox.Component.Tag.Name
 {
-    public class ColumnNameTag:NameTagBase
+    public class ColumnNameTag : NameTagBase
     {
         public ColumnNameTag()
           : base(name: "Column Name Tag", nickname: "ColumnTag", description: "Display Column Name Tag", frameType: FrameType.Column)

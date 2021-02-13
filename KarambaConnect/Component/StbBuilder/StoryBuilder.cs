@@ -6,7 +6,7 @@ using STBDotNet.Elements.StbModel;
 
 namespace KarambaConnect.Component.StbBuilder
 {
-    public class StoryBuilder:GH_Component
+    public class StoryBuilder : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 

@@ -98,7 +98,7 @@
 //        private List<Brep> Column(int index, Point3d nodeStart, Point3d nodeEnd, double width, double height, int eNum)
 //        {
 //            var brep = new List<Brep>();
-            
+
 //            // かぶり、鉄筋径はとりあえずで設定
 //            const double kaburi = 50;
 //            const double bandD = 10;
@@ -118,7 +118,7 @@
 
 //            return brep;
 //        }
-        
+
 //        /// <summary>
 //        /// かぶりを考慮した部材の角のポジションを返す。
 //        /// [0, n]はスタート側、[1, n]はエンド側
@@ -174,10 +174,10 @@
 //            Curve crv = new LineCurve(cornerPos[0, 0], cornerPos[1, 0]);
 //            double distance = crv.GetLength();
 //            List<Point3d> pts = new List<Point3d>();
-            
+
 //            // 中子も含めたpointを求める。
 //            Point3d[,] hoopPos = GetBandPos(cornerPos, dirXNum, dirYNum);
-        
+
 //            for (int i = 0; i < dirXNum + dirYNum; i++)
 //            {
 //                var rail = new LineCurve(hoopPos[0, 2*i], hoopPos[0, 2*i+1]);
@@ -204,7 +204,7 @@
 //            //        brep.AddRange(Brep.CreatePipe(rail, bandD / 2.0, true, PipeCapMode.Flat, true, Stb2Bar.LengthTolerance, Stb2Bar.AngleTolerance));
 //            //    }
 //            //}
-            
+
 //            return brep;
 //        }
 
@@ -212,7 +212,7 @@
 //            Point3d[,] bandPos = new Point3d[2, 2 * (dirXNum + dirYNum)];
 //            Point3d[] pts1;
 //            Point3d[] pts2;
-                
+
 //            // dir_X
 //            for (int j = 0; j < 2; j++) {
 //                var crv1 = new  LineCurve(cornerPos[j, 1], cornerPos[j, 4]);
@@ -241,14 +241,14 @@
 //                    bandPos[j, 2 * i + 1] = pts2[i - dirXNum];
 //                }
 //            }
-            
+
 //            return (bandPos);
 //        }
 
 //        private static List<Brep> ColumnMainBar(Point3d[,] main1Pos, Point3d[,] mainX2Pos, Point3d[,] mainY2Pos, double barSpace, double mainD)
 //        {
 //            var brep = new List<Brep>();
-            
+
 //            return brep;
 //        }
 //    }

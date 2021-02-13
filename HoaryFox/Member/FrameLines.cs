@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using STBReader;
-using STBReader.Model;
 using Rhino.Geometry;
+using STBReader;
 using STBReader.Member;
+using STBReader.Model;
 
 namespace HoaryFox.Member
 {
@@ -11,7 +11,7 @@ namespace HoaryFox.Member
     {
         private readonly StbData _stbData;
         private readonly StbNodes _nodes;
-        
+
         public FrameLines(StbData stbData)
         {
             _stbData = stbData;

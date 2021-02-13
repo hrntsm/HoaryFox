@@ -28,15 +28,18 @@ namespace KarambaConnect.K2S
                 {
                     SecStraight = new RcBeamSecFigure.Straight
                     {
-                        Depth = 10, Width = 10
+                        Depth = 10,
+                        Width = 10
                     }
                 },
                 BarArrangement = new RcBeamSecBarArrangement
                 {
                     SameSection = new RcBeamSecBarArrangement.Same
                     {
-                        CountMainTop1st = 2, CountMainBottom1st = 3,
-                        CountStirrup = 2, PitchStirrup = 100
+                        CountMainTop1st = 2,
+                        CountMainBottom1st = 3,
+                        CountStirrup = 2,
+                        PitchStirrup = 100
                     }
                 }
             };
@@ -62,8 +65,10 @@ namespace KarambaConnect.K2S
                 {
                     SameSection = new RcBeamSecBarArrangement.Same
                     {
-                        CountMainTop1st = 3, CountMainBottom1st = 3,
-                        CountStirrup = 2, PitchStirrup = 100
+                        CountMainTop1st = 3,
+                        CountMainBottom1st = 3,
+                        CountStirrup = 2,
+                        PitchStirrup = 100
                     }
                 }
             };
@@ -93,16 +98,20 @@ namespace KarambaConnect.K2S
                 {
                     SecRect = new RcColumnSecFigure.Rectangle
                     {
-                        DX = 10, DY = 10
+                        DX = 10,
+                        DY = 10
                     }
                 },
                 BarArrangement = new RcColumnSecBarArrangement
                 {
                     RectSameSection = new RcColumnSecBarArrangement.RectSame
                     {
-                        CountMainX1st = 2, CountMainY1st = 2, CountMainTotal = 4,
+                        CountMainX1st = 2,
+                        CountMainY1st = 2,
+                        CountMainTotal = 4,
                         PitchBand = 100,
-                        CountBandDirX = 2, CountBandDirY = 2,
+                        CountBandDirX = 2,
+                        CountBandDirY = 2,
                     }
                 }
             };
@@ -127,7 +136,8 @@ namespace KarambaConnect.K2S
                 {
                     CircleSameSection = new RcColumnSecBarArrangement.CircleSame
                     {
-                        CountMain = 6, PitchBand = 100
+                        CountMain = 6,
+                        PitchBand = 100
                     }
                 }
             };
@@ -153,8 +163,12 @@ namespace KarambaConnect.K2S
                 {
                     RectSameSection = new RcColumnSecBarArrangement.RectSame
                     {
-                        CountMainX1st = 2, CountMainY1st = 2, CountMainTotal = 4,
-                        PitchBand = 100, CountBandDirX = 2, CountBandDirY = 2,
+                        CountMainX1st = 2,
+                        CountMainY1st = 2,
+                        CountMainTotal = 4,
+                        PitchBand = 100,
+                        CountBandDirX = 2,
+                        CountBandDirY = 2,
                     }
                 }
             };

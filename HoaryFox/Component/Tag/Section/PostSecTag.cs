@@ -5,7 +5,7 @@ using STBReader.Member;
 
 namespace HoaryFox.Component.Tag.Section
 {
-    public class PostSecTag:SecTagBase
+    public class PostSecTag : SecTagBase
     {
         public PostSecTag()
           : base(name: "Post Section Tag", nickname: "PostSec", description: "Display Post Section Tag", frameType: FrameType.Post)

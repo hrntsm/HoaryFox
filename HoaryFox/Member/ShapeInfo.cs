@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Rhino.Geometry;
 
 namespace HoaryFox.Member
@@ -10,7 +10,7 @@ namespace HoaryFox.Member
         public double Height { get; }
         public double Width { get; }
         public double Rotate { get; }
-        
+
         public ShapeInfo(Point3d nodeStart, Point3d nodeEnd, double height, double width, double rotate)
         {
             NodeStart = nodeStart;

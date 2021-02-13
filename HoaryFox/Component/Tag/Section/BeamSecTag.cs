@@ -5,7 +5,7 @@ using STBReader.Member;
 
 namespace HoaryFox.Component.Tag.Section
 {
-    public class BeamSecTag:SecTagBase
+    public class BeamSecTag : SecTagBase
     {
         public BeamSecTag()
           : base(name: "Beam Section Tag", nickname: "BeamSec", description: "Display Beam Section Tag", frameType: FrameType.Beam)

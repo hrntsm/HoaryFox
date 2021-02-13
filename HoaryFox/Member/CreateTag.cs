@@ -4,11 +4,11 @@ using System.Globalization;
 using Grasshopper.GUI;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+using Rhino.Geometry;
 using STBReader;
 using STBReader.Member;
 using STBReader.Model;
 using STBReader.Section;
-using Rhino.Geometry;
 
 namespace HoaryFox.Member
 {
@@ -42,7 +42,7 @@ namespace HoaryFox.Member
             {
                 TagInfo tagInfo;
                 int idSection = frameData.IdSection[eNum];
-                var ghPath = new GH_Path(new[]{eNum});
+                var ghPath = new GH_Path(new[] { eNum });
                 KindsStructure kind = frameData.KindStructure[eNum];
                 SetTagPosition(frameData, eNum);
 
@@ -63,7 +63,7 @@ namespace HoaryFox.Member
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                        
+
                 ghSecStrings.Append(new GH_String(tagInfo.Name), ghPath);
                 ghSecStrings.Append(new GH_String(tagInfo.ShapeTypes.ToString()), ghPath);
                 ghSecStrings.Append(new GH_String(tagInfo.P1.ToString(CultureInfo.InvariantCulture)), ghPath);
@@ -71,7 +71,7 @@ namespace HoaryFox.Member
                 ghSecStrings.Append(new GH_String(tagInfo.P3.ToString(CultureInfo.InvariantCulture)), ghPath);
                 ghSecStrings.Append(new GH_String(tagInfo.P4.ToString(CultureInfo.InvariantCulture)), ghPath);
             }
-        
+
             return ghSecStrings;
         }
 
@@ -158,7 +158,7 @@ namespace HoaryFox.Member
     public class TagInfo
     {
         public string Name { get; set; }
-        public ShapeTypes ShapeTypes { get;  set; }
+        public ShapeTypes ShapeTypes { get; set; }
         public double P1 { get; set; }
         public double P2 { get; set; }
         public double P3 { get; set; }

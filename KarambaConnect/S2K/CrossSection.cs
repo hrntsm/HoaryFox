@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Karamba.CrossSections;
@@ -29,7 +29,7 @@ namespace KarambaConnect.S2K
 
             return k3Ids;
         }
-        
+
         public static List<CroSec> GetCroSec(StbData stbData, CroSecFamilyName familyName)
         {
             // TODO: 材軸の回転は未設定（どこで設定するかも謎）
@@ -41,19 +41,19 @@ namespace KarambaConnect.S2K
             k3CroSec.AddRange(ColumnRc(stbData, fc21, familyName));
             k3CroSec.AddRange(BeamRc(stbData, fc21, familyName));
             k3CroSec.AddRange(Steel(stbData, sn400, familyName));
-            
+
             return k3CroSec;
         }
 
         private static IEnumerable<CroSec> ColumnRc(StbData stbData, FemMaterial material, CroSecFamilyName familyName)
         {
             var k3CroSec = new List<CroSec>();
-            
+
             for (var i = 0; i < stbData.SecColumnRc.Id.Count; i++)
             {
                 double p1 = stbData.SecColumnRc.Height[i] / 10d;
                 double p2 = stbData.SecColumnRc.Width[i] / 10d;
-                var name = $"CD-{p2*10}x{p1 * 10}";
+                var name = $"CD-{p2 * 10}x{p1 * 10}";
 
                 ShapeTypes shapeType = stbData.SecColumnRc.Height[i] <= 0 ? ShapeTypes.Pipe : ShapeTypes.BOX;
                 CroSec_Beam croSec;
@@ -67,7 +67,7 @@ namespace KarambaConnect.S2K
                 {
                     // TODO: Karambaは中実円断面ないため、PIPEに置換してる。任意断面設定できるはずなので、そっちの方がいい気がする。
                     croSec = new CroSec_Circle(familyName.Circle, name, null, null, material,
-                        p2, p2/2);
+                        p2, p2 / 2);
                 }
                 croSec.AddElemId("Id" + stbData.SecColumnRc.Id[i]);
                 k3CroSec.Add(croSec);
@@ -75,11 +75,11 @@ namespace KarambaConnect.S2K
 
             return k3CroSec;
         }
-        
+
         private static IEnumerable<CroSec> BeamRc(StbData stbData, FemMaterial material, CroSecFamilyName familyName)
         {
             var k3CroSec = new List<CroSec>();
-            
+
             for (var i = 0; i < stbData.SecBeamRc.Id.Count; i++)
             {
                 double p1 = stbData.SecBeamRc.Depth[i] / 10d;
@@ -98,7 +98,7 @@ namespace KarambaConnect.S2K
         private static IEnumerable<CroSec> Steel(StbData stbData, FemMaterial material, CroSecFamilyName familyName)
         {
             var k3CroSec = new List<CroSec>();
-            
+
             for (var i = 0; i < stbData.SecSteel.Name.Count; i++)
             {
                 string name = stbData.SecSteel.Name[i];
@@ -141,7 +141,7 @@ namespace KarambaConnect.S2K
                     case ShapeTypes.Bar:
                         // TODO: Karambaは中実円断面ないため、PIPEに置換してる。任意断面設定できるはずなので、そっちの方がいい気がする。
                         croSec = new CroSec_Circle(familyName.Other, name, null, null, material,
-                            p2, p2/2);
+                            p2, p2 / 2);
                         break;
                     case ShapeTypes.Pipe:
                         croSec = new CroSec_Circle(familyName.Pipe, name, null, null, material,

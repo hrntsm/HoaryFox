@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
 using Grasshopper.Kernel;
 using STBDotNet.Elements.StbModel;
 
 namespace KarambaConnect.Component.StbBuilder
 {
-    public class AxisBuilder:GH_Component
+    public class AxisBuilder : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 

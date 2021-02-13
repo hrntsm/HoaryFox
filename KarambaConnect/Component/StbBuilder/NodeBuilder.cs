@@ -6,7 +6,7 @@ using Model = Karamba.Models.Model;
 
 namespace KarambaConnect.Component.StbBuilder
 {
-    public class NodeBuilder:GH_Component
+    public class NodeBuilder : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
@@ -35,7 +35,7 @@ namespace KarambaConnect.Component.StbBuilder
                 throw new ArgumentException("The input is not Karamba3D model!");
             }
             Model kModel = ghKModel.Value;
-            
+
             DA.SetDataList(0, kModel.nodes.ToStb());
         }
 

@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Drawing;
-
-using Rhino.Geometry;
 using Grasshopper.Kernel;
-
 using Karamba.GHopper.Models;
 using KarambaConnect.K2S;
+using Rhino.Geometry;
 using STBDotNet.Elements.StbModel.StbMember;
 using Model = Karamba.Models.Model;
 
 namespace KarambaConnect.Component.StbBuilder
 {
-    public class FrameBuilderByAngle:GH_Component
+    public class FrameBuilderByAngle : GH_Component
     {
         private STBDotNet.Elements.StbModel.Model _sModel;
 
