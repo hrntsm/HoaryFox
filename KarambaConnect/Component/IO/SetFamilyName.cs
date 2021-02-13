@@ -35,14 +35,10 @@ namespace KarambaConnect.Component.IO
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var name = new string[8];
-            if (!DA.GetData(0, ref name[0])) { return; }
-            if (!DA.GetData(1, ref name[1])) { return; }
-            if (!DA.GetData(2, ref name[2])) { return; }
-            if (!DA.GetData(3, ref name[3])) { return; }
-            if (!DA.GetData(4, ref name[4])) { return; }
-            if (!DA.GetData(5, ref name[5])) { return; }
-            if (!DA.GetData(6, ref name[6])) { return; }
-            if (!DA.GetData(7, ref name[7])) { return; }
+            for (var i = 0; i < name.Length; i++)
+            {
+                if (!DA.GetData(i, ref name[i])) { return; }
+            }
 
             var familyName = new CroSecFamilyName
             {
