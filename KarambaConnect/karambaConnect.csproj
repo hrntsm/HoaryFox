@@ -80,6 +80,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\SetFamilyName.png" />
     <None Include="Resources\NodeBuilder.png" />
     <None Include="Library\karamba132\karamba.gha" />
     <Content Include="Library\karamba132\karambaCommon.dll" />

@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using Grasshopper.Kernel;
-using Karamba.CrossSections;
-using Karamba.Elements;
-using Karamba.GHopper.CrossSections;
-using Karamba.GHopper.Elements;
 using KarambaConnect.Properties;
 using KarambaConnect.S2K;
-using STBReader;
 
 namespace KarambaConnect.Component.IO
 {
@@ -59,7 +52,7 @@ namespace KarambaConnect.Component.IO
             DA.SetData(0, familyName);
         }
 
-        // protected override Bitmap Icon => Resource.ToKaramba;
+        protected override Bitmap Icon => Resource.SetFamilyName;
         public override Guid ComponentGuid => new Guid("6479593D-DC0A-4362-BE28-515E6AC0E342");
     }
 }
