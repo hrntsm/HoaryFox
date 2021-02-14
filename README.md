@@ -48,8 +48,7 @@ Quote from [building SMART Japan Structural Design Subcommittee](https://en.buil
 ## Contact information
 
 [![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)](https://twitter.com/hiron_rgkr)
-+ HP : [https://hrntsm.github.io/](https://hrntsm.github.io/)
-+ Blog : [https://rgkr-memo.blogspot.com/](https://rgkr-memo.blogspot.com/)
++ HP : [https://hiron.dev/](https://hrntsm.github.io/)
 + Mail : support(at)hrntsm.com
   + change (at) to @
 
@@ -63,4 +62,4 @@ If you like this software, please donation.
 ## License
 
 HoaryFox is licensed under the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  
-Copyright© 2019-2020, hrntsm
+Copyright© 2019-2021, hrntsm
