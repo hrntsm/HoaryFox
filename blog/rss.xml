@@ -4,9 +4,16 @@
         <title>HoaryFox Blog</title>
         <link>https://hiron.dev/blog</link>
         <description>HoaryFox Blog</description>
-        <lastBuildDate>Wed, 20 Jan 2021 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 14 Feb 2021 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
+        <item>
+            <title><![CDATA[HoaryFox を使って構造図をお手軽に書く試み]]></title>
+            <link>https://hiron.dev/HoaryFox/blog/structural-drawing-with-hoaryfox</link>
+            <guid>structural-drawing-with-hoaryfox</guid>
+            <pubDate>Sun, 14 Feb 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[モチベーション]]></description>
+        </item>
         <item>
             <title><![CDATA[Karamba3D 公式サイトに掲載されました。]]></title>
             <link>https://hiron.dev/HoaryFox/blog/posted-on-karamba3d-website</link>
