@@ -16,11 +16,13 @@ As a experimental function, it creates an analytical model of Karamba from st-br
 
 1. Download HoaryFox.gha file from [food4rhino](https://www.food4rhino.com/app/hoaryfox) or [release page](https://github.com/hrntsm/HoaryFox/releases)
 2. In Grasshopper, choose File > Special Folders > Components folder. Save the gha file there.  
-   + If you want to use Karamba convert, it is super recommended to save the HoaryFox directory in the same directory as Karamba.gha
+   + If you want to use Karamba3D convert, it is super recommended to save the HoaryFox directory in the same directory as Karamba.gha
 3. Right-click the file > Properties > make sure there is no "blocked" text
 4. Restart Rhino and Grasshopper
 
 ## Usage
+
+Please see [the documentation site](https://hiron.dev/HoaryFox/) for detailed instructions.
 
 Input st-bridge file path, output some its tag data(StbColumn, StbGirder, StbPost, StbBeam, StbBrace, StbSlab).
 
@@ -29,12 +31,12 @@ If you need more information, send direct message to my twitter account.
 
 Please refer to Samples directory files.
 
-## Karamba Integration
+## Karamba3D Integration
 
-Conversion of data into Karamba supports only beam elements.  
+Conversion of data into Karamba3D supports only beam elements.  
 Mesh elements such as floor and wall are not supported.  
-L-type and C-type cross-sections are replaced by rectangular cross-sections with equivalent axial cross-sections because Karamba does not support them.
-Output is STB1.4, STB2.0 is not supported yet.
+L-type and C-type cross-sections are replaced by rectangular cross-sections with equivalent axial cross-sections because Karamba3D does not support them.
+Output is STB1.4 only, STB2.0 is not supported yet.
 
 ## What is ST-Bridge
 
@@ -48,7 +50,7 @@ Quote from [building SMART Japan Structural Design Subcommittee](https://en.buil
 ## Contact information
 
 [![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)](https://twitter.com/hiron_rgkr)
-+ HP : [https://hiron.dev/](https://hrntsm.github.io/)
++ HP : [https://hiron.dev/](https://hiron.dev/)
 + Mail : support(at)hrntsm.com
   + change (at) to @
 
