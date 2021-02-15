@@ -7,10 +7,13 @@ STB のデータを使って Karamba3D のモデルを作成する方法を説�
 
 ## データの変換
 
-はじめに、[Show ST-Bridge model](./ShowSTBModel) で説明したように STB のデータを Grasshopper で読み込めるようにしてください。  
+[Show ST-Bridge model](./ShowSTBModel) で説明したように STB のデータを Grasshopper で読み込めるようにしてください。  
 読み込んだ結果を以下のように Convert to Karamba コンポーネントに入力することでデータの変換が行われます。  
+
 要素と断面が変換対象です。変換したものはそのまま Karamba の Assmeble Model(Karamba3D) コンポーネントの入力にすることができるため、後は Load と Support の設定を行うだけで Karamba で解析が実行可能です。  
 材料(Material) の情報は CrossSection の出力に含まれているため、別途設定する必要はありません。
+
+断面のファミリー名は以下のように形状ごとに SetFamilyName コンポーネントで任意に設定できます。設定しない場合は "HF-Box" のように "HF-" から始まるファミリー名になります。
 
 
 ![](../../images/ConvertToKaramba/gh.png)

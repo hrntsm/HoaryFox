@@ -11,11 +11,30 @@ STB 書き出しのための情報を作成するコンポーネントのカテ�
 
 ---
 
-## Frame Builder using Karamba
+## Frame Builder by angle
 
 ![](../../images/Component/FrameBuilder.png)
 
-架構情報を Karamba3D のモデルから作成する
+架構情報を Karamba3D のモデルから作成する。  
+柱と梁の区分は グローバル座標の Z 軸に対する角度を Angle に入力し、その角度以内であれば柱として判定。
+
+|入力|説明|
+|---|:---:|
+|Model|Karamba3D の Model 出力を入力|
+|Angle|柱と梁を判定する際に使う角度（rad）|
+
+|出力|説明|
+|---|:---:|
+|Member|部材情報（StbMembers）|
+|Section|断面情報（StbSections）|
+
+---
+
+## Node Builder
+
+![](../../images/Component/NodeBuilder.png)
+
+節点情報を Karamba3D のモデルから作成する。  
 
 |入力|説明|
 |---|:---:|
@@ -24,8 +43,6 @@ STB 書き出しのための情報を作成するコンポーネントのカテ�
 |出力|説明|
 |---|:---:|
 |Node|節点情報（StbNodes）|
-|Member|部材情報（StbMembers）|
-|Section|断面情報（StbSections）|
 
 ---
 
