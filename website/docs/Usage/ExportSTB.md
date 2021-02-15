@@ -13,7 +13,8 @@ Karamba3D で作成したモデルから以下を作成します。
 - 部材情報（StbMembers）
 - 断面情報（StbSections）
 
-以下のように Karamba3D の AssmebleModel コンポーネントなどから出力される Model のデータを FrameBuilder using Karamba3D コンポーネントに入力することでデータを変換します。
+以下のように Karamba3D の AssmebleModel コンポーネントなどから出力される Model のデータを FrameBuilder by angle コンポーネントと NodeBuilder に入力することでデータを変換します。  
+変換された部材が、柱・梁・ブレースのどれに変換されたかがテキストで Rhino のビューポートに表示されます。柱と梁は部材の角度で分類しているため、想定の区分でなかった場合は Angle の入力に適切な角度を入力してください。
 
 ![](../../images/ExportStb/FrameBuilder.png)
 
@@ -28,7 +29,7 @@ AxisBuilder コンポーネントで軸（StbAxes）のデータを作成しま�
 コンポーネントの出力を見ることで、軸の方向、原点からの距離、所属節点数の確認をすることができます。
 
 入力の仕様は以下です。わかりづらいので今後改良予定です。リストで入力し、同一のインデックスでの入力をマッチさせて変換します。
-- Node: 節点情報です。FrameBuilder の出力の Node を入れてください
+- Node: 節点情報です。NodeBuilder の出力の Node を入れてください
 - Distance: 原点からの軸の距離を指定してください。
   - 軸の方向は全体座標系での X 軸または Y 軸に平行になります。
   - 指定した Distance が X 方向か Y 方向かについては Direction の入力で指定します
@@ -46,7 +47,7 @@ StoryBuilder コンポーネントで階（StbStories）のデータを作成し
 基本的な挙動は AxisBuilder コンポーネントと同様です。  
 コンポーネントの出力を見ることで、階名、階高、所属節点数の確認をすることができます。
 
-- Node: 節点情報です。FrameBuilder の出力の Node を入れてください。
+- Node: 節点情報です。NodeBuilder の出力の Node を入れてください。
 - Height: 階高の情報です。原点からの高さを入力してください。
 - Range: Height で指定した階に対して節点を所属させる幅を指定します。
 - Name: 階の名前になります。
@@ -80,7 +81,7 @@ ST-Bridge version 2 の形式での出力には今後対応予定です。
 
 - Karamba3D のモデルでは、柱梁ブレースの区別がないため以下の仕様で判定しています
   - Karamba3D でトラス要素として扱っているものはブレースとして変換
-  - 全体座標系の Z 軸に対しての部材の角度が45度未満である部材は柱、45度以上の場合は梁として変換
+  - 全体座標系の Z 軸に対しての FrameBuilder の Angle に入力された部材の角度未満である部材は柱、それ以上の場合は梁として変換
 - 部材の判別は ST-Bridge における StbMember 内での各表現に対応します（例えば StbColumn など）
 - STB の梁部材には、部材が基礎部材かのフラグ（isFoundation）があるが全て False で出力します
 
