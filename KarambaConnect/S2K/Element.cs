@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Karamba.CrossSections;
 using Karamba.Elements;
 using Karamba.Geometry;
@@ -16,14 +16,14 @@ namespace KarambaConnect.S2K
             var k3d = new KarambaCommon.Toolkit();
             var elems = new List<BuilderBeam>();
             StbNodes nodes = stbData.Nodes;
-            
-            var k3Elems = new[]{ new List<Line3>() , new List<Line3>() };
 
-            foreach (StbFrame frame in new List<StbFrame>{ stbData.Columns, stbData.Girders, stbData.Braces} )
+            var k3Elems = new[] { new List<Line3>(), new List<Line3>() };
+
+            foreach (StbFrame frame in new List<StbFrame> { stbData.Columns, stbData.Girders, stbData.Braces })
             {
                 int elemIndex = frame is StbBraces ? 1 : 0;
                 bool bending = !(frame is StbBraces);
-                    
+
                 for (var i = 0; i < frame.Id.Count; i++)
                 {
                     int idNodeStart = nodes.Id.IndexOf(frame.IdNodeStart[i]);

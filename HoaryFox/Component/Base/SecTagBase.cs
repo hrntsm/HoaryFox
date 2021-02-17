@@ -11,7 +11,7 @@ using STBReader.Member;
 
 namespace HoaryFox.Component.Base
 {
-    public class SecTagBase:GH_Component
+    public class SecTagBase : GH_Component
     {
         private StbData _stbData;
         private int _size;
@@ -21,7 +21,7 @@ namespace HoaryFox.Component.Base
         private List<Point3d> _tagPos = new List<Point3d>();
 
         protected SecTagBase(string name, string nickname, string description, FrameType frameType)
-            :base(name, nickname, description, category: "HoaryFox", subCategory: "SectionTag")
+            : base(name, nickname, description, category: "HoaryFox", subCategory: "SectionTag")
         {
             _frameType = frameType;
         }
@@ -32,7 +32,7 @@ namespace HoaryFox.Component.Base
             _frameTags.Clear();
             _tagPos.Clear();
         }
-        
+
         public override bool IsPreviewCapable => true;
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -50,7 +50,7 @@ namespace HoaryFox.Component.Base
         {
             if (!DA.GetData("Data", ref _stbData)) { return; }
             if (!DA.GetData("Size", ref _size)) { return; }
-            
+
             StbFrame frame;
             switch (_frameType)
             {
@@ -81,7 +81,7 @@ namespace HoaryFox.Component.Base
             for (var i = 0; i < _frameTags.PathCount; i++)
             {
                 List<GH_String> tags = _frameTags.Branches[i];
-                string tag = tags[0].ToString() + "\n" + tags[1].ToString() + "\n" + tags[2].ToString() + "\n" + 
+                string tag = tags[0].ToString() + "\n" + tags[1].ToString() + "\n" + tags[2].ToString() + "\n" +
                              tags[3].ToString() + "\n" + tags[4].ToString() + "\n" + tags[5].ToString();
                 args.Display.Draw2dText(tag, Color.Black, _tagPos[i], false, _size);
             }

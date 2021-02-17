@@ -5,7 +5,7 @@ using STBReader.Member;
 
 namespace HoaryFox.Component.Tag.Name
 {
-    public class PostNameTag:NameTagBase
+    public class PostNameTag : NameTagBase
     {
         public PostNameTag()
           : base(name: "Post Name Tag", nickname: "PostTag", description: "Display Post Name Tag", frameType: FrameType.Post)

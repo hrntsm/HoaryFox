@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Rhino.Geometry;
 using Grasshopper.Kernel;
 using HoaryFox.Member;
+using Rhino.Geometry;
 using STBReader;
 using STBReader.Member;
 
 namespace HoaryFox.Component.Geometry
 {
-    public class Stb2Brep:GH_Component
+    public class Stb2Brep : GH_Component
     {
         private StbData _stbData;
 
@@ -67,7 +67,7 @@ namespace HoaryFox.Component.Geometry
             {
                 _stbData.Columns, _stbData.Girders, _stbData.Posts, _stbData.Beams, _stbData.Braces
             };
-            
+
             var breps = new FrameBreps(_stbData);
 
             _slabBreps = breps.Slab(_stbData.Slabs);

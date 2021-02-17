@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Rhino.Geometry;
 
@@ -20,7 +20,7 @@ namespace HoaryFox.Member
                 new Point3d(node.X, node.Y - height / 2, node.Z),
                 new Point3d(node.X + width / 2 * Math.Sin(angle), node.Y + height / 2, node.Z + width / 2 * Math.Cos(angle))
             };
-            
+
             return points;
         }
 

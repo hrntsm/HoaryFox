@@ -93,6 +93,26 @@ namespace KarambaConnect.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
+        internal static System.Drawing.Bitmap NodeBuilder {
+            get {
+                object obj = ResourceManager.GetObject("NodeBuilder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap SetFamilyName {
+            get {
+                object obj = ResourceManager.GetObject("SetFamilyName", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
         internal static System.Drawing.Bitmap StoryBuilder {
             get {
                 object obj = ResourceManager.GetObject("StoryBuilder", resourceCulture);

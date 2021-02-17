@@ -4,12 +4,13 @@ using STBReader;
 
 namespace HoaryFox.Component.IO
 {
-    public class StbLoader:GH_Component
+    public class StbLoader : GH_Component
     {
         private string _path;
         private readonly double _lengthTolerance = DocumentTolerance();
         private readonly double _angleTolerance = DocumentAngleTolerance();
-            
+        public override GH_Exposure Exposure => GH_Exposure.primary;
+
         public StbLoader()
           : base("Load STB file", "Loader", "Read ST-Bridge file and display", "HoaryFox", "IO")
         {
@@ -29,9 +30,9 @@ namespace HoaryFox.Component.IO
         {
             // 対象の stb の pathを取得
             if (!DA.GetData("path", ref _path)) { return; }
-            
+
             var stbData = new StbData(_path, _lengthTolerance, _angleTolerance);
-            
+
             DA.SetData(0, stbData);
         }
 

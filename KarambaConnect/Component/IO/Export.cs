@@ -12,11 +12,12 @@ using STBDotNet.Serialization;
 
 namespace KarambaConnect.Component.IO
 {
-    public class Export:GH_Component
+    public class Export : GH_Component
     {
         private readonly string _defaultOutPath =
             Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\model.stb";
-        
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
+
         public Export()
           : base("Export STB file", "Export", "Export ST-Bridge data.", "HoaryFox", "IO")
         {
@@ -27,7 +28,7 @@ namespace KarambaConnect.Component.IO
             pManager.AddGenericParameter("Node", "Node", "StbNode data", GH_ParamAccess.list);
             pManager.AddGenericParameter("Axis", "Axis", "StbAxes data", GH_ParamAccess.list);
             pManager.AddGenericParameter("Story", "Story", "StbStory data", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Member", "Mem","StbMember data", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Member", "Mem", "StbMember data", GH_ParamAccess.item);
             pManager.AddGenericParameter("Section", "Sec", "StbSection data", GH_ParamAccess.list);
             pManager.AddTextParameter("Path", "Path", "Output path", GH_ParamAccess.item, _defaultOutPath);
             pManager.AddBooleanParameter("Out?", "Out?", "If it is true, output stb file.", GH_ParamAccess.item, false);
@@ -48,7 +49,7 @@ namespace KarambaConnect.Component.IO
             var story = new List<Story>();
             var members = new Members();
             var sections = new List<Section>();
-            
+
             if (!DA.GetDataList(0, node)) { return; }
             if (!DA.GetDataList(1, axis)) { return; }
             if (!DA.GetDataList(2, story)) { return; }

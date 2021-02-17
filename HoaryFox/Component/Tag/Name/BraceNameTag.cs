@@ -5,7 +5,7 @@ using STBReader.Member;
 
 namespace HoaryFox.Component.Tag.Name
 {
-    public class BraceNameTag:NameTagBase
+    public class BraceNameTag : NameTagBase
     {
         public BraceNameTag()
           : base(name: "Brace Name Tag", nickname: "BraceTag", description: "Display Brace Name Tag", frameType: FrameType.Brace)

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Rhino.Geometry;
 using STBReader;
 
@@ -16,7 +16,7 @@ namespace HoaryFox.Member
             _pointStart = origins[0];
             _pointEnd = origins[1];
         }
-        
+
         public List<Brep> CShape()
         {
             var brep = new List<Brep>
@@ -73,7 +73,7 @@ namespace HoaryFox.Member
 
         public List<Brep> PipeShape(ShapeInfo shapeInfo)
         {
-            var brep = new List<Brep>();            
+            var brep = new List<Brep>();
             brep.AddRange(Brep.CreatePipe(new LineCurve(shapeInfo.NodeStart, shapeInfo.NodeEnd), shapeInfo.Width / 2, true, PipeCapMode.Flat, true, _stbData.ToleLength, _stbData.ToleAngle));
             return brep;
         }

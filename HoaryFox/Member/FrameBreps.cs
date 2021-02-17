@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Rhino.Geometry;
 using STBReader;
 using STBReader.Member;
 using STBReader.Model;
 using STBReader.Section;
-using Rhino.Geometry;
 
 namespace HoaryFox.Member
 {
@@ -16,7 +16,7 @@ namespace HoaryFox.Member
         {
             _stbData = stbData;
         }
-        
+
         public List<Brep> Slab(StbSlabs slabs)
         {
             var brep = new List<Brep>();
@@ -33,7 +33,7 @@ namespace HoaryFox.Member
                     index[i] = _stbData.Nodes.Id.IndexOf(nodeIds[i]);
                     pts[i] = new Point3d(_stbData.Nodes.X[index[i]], _stbData.Nodes.Y[index[i]], _stbData.Nodes.Z[index[i]] + offset);
                 }
-                
+
                 brep.Add(CreateBreps.PlaneWithOpens(_stbData, pts, null));
                 count++;
             }
@@ -115,38 +115,38 @@ namespace HoaryFox.Member
                         shapeType = height <= 0 ? ShapeTypes.Pipe : ShapeTypes.BOX;
                         break;
                     case KindsStructure.S:
-                    {
-                        int idShape;
-                        switch (frameData.FrameType)
                         {
-                            case FrameType.Column:
-                            case FrameType.Post:
-                                idShape = _stbData.SecColumnS.Id.IndexOf(idSection);
-                                shape = _stbData.SecColumnS.Shape[idShape];
-                                break;
-                            case FrameType.Girder:
-                            case FrameType.Beam:
-                                idShape = _stbData.SecBeamS.Id.IndexOf(idSection);
-                                shape = _stbData.SecBeamS.Shape[idShape];
-                                break;
-                            case FrameType.Brace:
-                                idShape = _stbData.SecBraceS.Id.IndexOf(idSection);
-                                shape = _stbData.SecBraceS.Shape[idShape];
-                                break;
-                            case FrameType.Slab:
-                            case FrameType.Wall:
-                            case FrameType.Any:
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
+                            int idShape;
+                            switch (frameData.FrameType)
+                            {
+                                case FrameType.Column:
+                                case FrameType.Post:
+                                    idShape = _stbData.SecColumnS.Id.IndexOf(idSection);
+                                    shape = _stbData.SecColumnS.Shape[idShape];
+                                    break;
+                                case FrameType.Girder:
+                                case FrameType.Beam:
+                                    idShape = _stbData.SecBeamS.Id.IndexOf(idSection);
+                                    shape = _stbData.SecBeamS.Shape[idShape];
+                                    break;
+                                case FrameType.Brace:
+                                    idShape = _stbData.SecBraceS.Id.IndexOf(idSection);
+                                    shape = _stbData.SecBraceS.Shape[idShape];
+                                    break;
+                                case FrameType.Slab:
+                                case FrameType.Wall:
+                                case FrameType.Any:
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
 
-                        secIndex = _stbData.SecSteel.Name.IndexOf(shape);
-                        height = _stbData.SecSteel.P1[secIndex];
-                        width = _stbData.SecSteel.P2[secIndex];
-                        shapeType = _stbData.SecSteel.ShapeType[secIndex];
-                        break;
-                    }
+                            secIndex = _stbData.SecSteel.Name.IndexOf(shape);
+                            height = _stbData.SecSteel.P1[secIndex];
+                            width = _stbData.SecSteel.P2[secIndex];
+                            shapeType = _stbData.SecSteel.ShapeType[secIndex];
+                            break;
+                        }
                     case KindsStructure.Src:
                     case KindsStructure.Cft:
                     case KindsStructure.Deck:
@@ -156,7 +156,7 @@ namespace HoaryFox.Member
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                
+
                 var shapeInfo = new ShapeInfo(nodeStart, nodeEnd, height, width, rotate);
                 brep.AddRange(CreateBreps.FromEndPoint(_stbData, shapeInfo, shapeType, frameData.FrameType));
             }

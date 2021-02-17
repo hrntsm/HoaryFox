@@ -5,7 +5,7 @@ using STBReader.Member;
 
 namespace HoaryFox.Component.Tag.Section
 {
-    public class BraceSecTag:SecTagBase
+    public class BraceSecTag : SecTagBase
     {
         public BraceSecTag()
           : base(name: "Brace Section Tag", nickname: "BraceSec", description: "Display Beam Section Tag", frameType: FrameType.Brace)

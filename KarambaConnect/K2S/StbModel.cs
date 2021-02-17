@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Karamba.Elements;
 using Karamba.GHopper.Geometry;
-using KCroSec = Karamba.CrossSections;
 using Rhino.Geometry;
 using STBDotNet.Elements.StbModel.StbMember;
 using STBDotNet.Elements.StbModel.StbSection;
@@ -11,557 +10,167 @@ using Model = STBDotNet.Elements.StbModel.Model;
 
 namespace KarambaConnect.K2S
 {
-    public static class StbModel
+    public class StbModel
     {
-        public static Model Set(Karamba.Models.Model kModel)
+        // 0:column, 1:girder, 2:brace
+        private readonly List<List<int>> _registeredCroSecId = new List<List<int>>
         {
-            List<string> croSec = kModel.crosecs.Select(sec => sec.name).ToList();
-            var vNum = 1;
-            var cNum = 1;
-            var gNum = 1;
-            var registeredCrosecId = new List<int>();
-            var registeredCrosecName = new List<string>();
-            var members = new Members
-            {
-                Columns = new List<Column>(),
-                Girders = new List<Girder>(),
-                Braces = new List<Brace>()
-            };
-            var sections = new List<Section>();
-            var steelSec = new Steel();
-            var rollTs = new List<RollT>();
-            var rollHs = new List<RollH>();
-            var rollBoxes = new List<RollBox>();
-            var pipes = new List<Pipe>();
-            var flatBars = new List<FlatBar>();
+            new List<int>(), new List<int>(), new List<int>()
+        };
+        private readonly List<List<string>> _registeredCroSecName = new List<List<string>>
+        {
+            new List<string>(), new List<string>(), new List<string>()
+        };
+        private readonly Members _members = new Members
+        {
+            Columns = new List<Column>(),
+            Girders = new List<Girder>(),
+            Braces = new List<Brace>()
+        };
+        private readonly List<Section> _sections = new List<Section>();
+        private Steel _secSteel = new Steel();
 
-            foreach (ModelElement elem in kModel.elems)
+        private readonly int[] _tagNum = { 1, 1, 1 };
+        private readonly List<string> _croSecNames = new List<string>();
+        private readonly Karamba.Models.Model _kModel;
+
+        public StbModel(Karamba.Models.Model kModel)
+        {
+            _kModel = kModel;
+            _croSecNames = _kModel.crosecs.Select(sec => sec.name).ToList();
+        }
+
+        public Model SetByAngle(double colMaxAngle)
+        {
+            foreach (ModelElement elem in _kModel.elems)
             {
-                if (elem.node_inds.Count != 2)
+                if (!(elem is ModelElementStraightLine))
                 {
                     continue;
                 }
+                var elemLine = new Line(_kModel.nodes[elem.node_inds[0]].pos.Convert(), _kModel.nodes[elem.node_inds[1]].pos.Convert());
+                double pAngle = Vector3d.VectorAngle(elemLine.Direction, Vector3d.ZAxis);
+                double nAngle = Vector3d.VectorAngle(elemLine.Direction, -Vector3d.ZAxis);
 
-                Karamba.Nodes.Node[] node =
+                switch (elem)
                 {
-                    kModel.nodes[elem.node_inds[0]],
-                    kModel.nodes[elem.node_inds[1]]
-                };
-
-                int croSecId = croSec.IndexOf(elem.crosec.name);
-
-                var orientation = new Vector3d(node[1].pos.Convert() - node[0].pos.Convert());
-                double angle = Vector3d.VectorAngle(orientation, Vector3d.ZAxis);
-
-                if (typeof(ModelTruss) == elem.GetType())
-                {
-                    var brace = new Brace
-                    {
-                        Id = elem.ind + 1,
-                        Name = elem.id,
-                        IdNodeStart = elem.node_inds[0] + 1,
-                        IdNodeEnd = elem.node_inds[1] + 1,
-                        Rotate = 0d,
-                        IdSection = croSecId + 1,
-                        Kind = elem.crosec.material.family == "Steel" ? "S" : "RC"
-                    };
-                    members.Braces.Add(brace);
-
-                    if (registeredCrosecId.IndexOf(croSecId) < 0)
-                    {
-                        var sec = new BraceS
-                        {
-                            Id = croSecId + 1,
-                            Name = "V" + vNum++,
-                            SteelBrace = new[]
-                            {
-                                new SecSteel
-                                {
-                                    Position = "ALL",
-                                    Shape = kModel.crosecs[croSecId].name,
-                                    StrengthMain = "SN400",
-                                    StrengthWeb = "SN400"
-                                }
-                            }
-                        };
-                        sections.Add(sec);
-                        registeredCrosecId.Add(croSecId);
-
-                        if (registeredCrosecName.IndexOf(kModel.crosecs[croSecId].name) < 0)
-                        {
-                            switch (kModel.crosecs[croSecId])
-                            {
-                                case KCroSec.CroSec_Trapezoid secTrapezoid:
-                                    var trapezoid = new FlatBar
-                                    {
-                                        Name = secTrapezoid.name,
-                                        B = secTrapezoid._height * 1000,
-                                        T = secTrapezoid.uf_width * 1000
-                                    };
-                                    flatBars.Add(trapezoid);
-                                    break;
-                                case KCroSec.CroSec_Box secBox:
-                                    double[] thickness = { secBox.w_thick, secBox.uf_thick, secBox.lf_thick};
-                                    var box = new RollBox
-                                    {
-                                        Name = secBox.name,
-                                        A = secBox._height * 1000,
-                                        B = secBox.maxWidth() * 1000,
-                                        R = secBox.fillet_r * 1000,
-                                        T = thickness.Max() * 1000,
-                                        Type = "ELSE"
-                                    };
-                                    rollBoxes.Add(box);
-                                    break;
-                                case KCroSec.CroSec_T secT:
-                                    var tShape = new RollT
-                                    {
-                                        Name = secT.name,
-                                        A = secT._height * 1000,
-                                        B = secT.maxWidth() * 1000,
-                                        R = secT.fillet_r * 1000,
-                                        T1 = secT.w_thick * 1000,
-                                        T2 = secT.uf_thick * 1000,
-                                        Type = "T"
-                                    };
-                                    rollTs.Add(tShape);
-                                    break;
-                                case KCroSec.CroSec_I secH:
-                                    var hShape = new RollH
-                                    {
-                                        Name = secH.name,
-                                        A = secH._height * 1000,
-                                        B = secH.maxWidth() * 1000,
-                                        R = secH.fillet_r * 1000,
-                                        T1 = secH.w_thick * 1000,
-                                        T2 = secH.uf_thick * 1000,
-                                        Type = "H"
-                                    };
-                                    rollHs.Add(hShape);
-                                    break;
-                                case KCroSec.CroSec_Circle secCircle:
-                                    var pipe = new Pipe
-                                    {
-                                        Name = secCircle.name,
-                                        D = secCircle.getHeight() * 1000,
-                                        T = secCircle.thick * 1000
-                                    };
-                                    pipes.Add(pipe);
-                                    break;
-                                default:
-                                    var unsupported = new Pipe
-                                    {
-                                        Name = kModel.crosecs[croSecId].name,
-                                        D = 10,
-                                        T = 1
-                                    };
-                                    pipes.Add(unsupported);
-                                    break;
-                            }
-                            registeredCrosecName.Add(kModel.crosecs[croSecId].name);
-                        }
-                    }
-                }
-                else if (angle < Math.PI / 4d && angle > - Math.PI / 4d)
-                {
-                    var column = new Column
-                    {
-                        Id = elem.ind + 1,
-                        Name = elem.id,
-                        IdNodeStart = elem.node_inds[0] + 1,
-                        IdNodeEnd = elem.node_inds[1] + 1,
-                        Rotate = 0d,
-                        IdSection = croSecId + 1,
-                        Kind = elem.crosec.material.family == "Steel" ? "S" : "RC"
-                    };
-                    members.Columns.Add(column);
-                    
-                    if (registeredCrosecId.IndexOf(croSecId) < 0)
-                    {
-                        switch (column.Kind)
-                        {
-                            case "S":
-                                var colS = new ColumnS
-                                {
-                                    Id = croSecId + 1,
-                                    Name = "C" + cNum++,
-                                    SteelColumn = new[]
-                                    {
-                                        new SecSteel
-                                        {
-                                            Position = "ALL",
-                                            Shape = kModel.crosecs[croSecId].name,
-                                            StrengthMain = "SN400",
-                                            StrengthWeb = "SN400"
-                                        }
-                                    }
-                                };
-                                sections.Add(colS);
-                                
-                                if (registeredCrosecName.IndexOf(kModel.crosecs[croSecId].name) < 0)
-                                {
-                                    switch (kModel.crosecs[croSecId])
-                                    {
-                                        case KCroSec.CroSec_Box secBox:
-                                            var box = new RollBox
-                                            {
-                                                Name = secBox.name,
-                                                A = secBox._height * 1000,
-                                                B = secBox.maxWidth() * 1000,
-                                                R = secBox.fillet_r * 1000,
-                                                T = secBox.w_thick * 1000,
-                                                Type = "ELSE"
-                                            };
-                                            rollBoxes.Add(box);
-                                            break;
-                                        case KCroSec.CroSec_T secT:
-                                            var tShape = new RollT
-                                            {
-                                                Name = secT.name,
-                                                A = secT._height * 1000,
-                                                B = secT.maxWidth() * 1000,
-                                                R = secT.fillet_r * 1000,
-                                                T1 = secT.w_thick * 1000,
-                                                T2 = secT.uf_thick * 1000,
-                                                Type = "T"
-                                            };
-                                            rollTs.Add(tShape);
-                                            break;
-                                        case KCroSec.CroSec_I secH:
-                                            var hShape = new RollH
-                                            {
-                                                Name = secH.name,
-                                                A = secH._height * 1000,
-                                                B = secH.maxWidth() * 1000,
-                                                R = secH.fillet_r * 1000,
-                                                T1 = secH.w_thick * 1000,
-                                                T2 = secH.uf_thick * 1000,
-                                                Type = "H"
-                                            };
-                                            rollHs.Add(hShape);
-                                            break;
-                                        case KCroSec.CroSec_Circle secCircle:
-                                            var pipe = new Pipe
-                                            {
-                                                Name = secCircle.name,
-                                                D = secCircle.getHeight() * 1000,
-                                                T = secCircle.thick * 1000
-                                            };
-                                            pipes.Add(pipe);
-                                            break;
-                                        default:
-                                            var unsupported = new Pipe
-                                            {
-                                                Name = kModel.crosecs[croSecId].name,
-                                                D = 10,
-                                                T = 1
-                                            };
-                                            pipes.Add(unsupported);
-                                            break;
-                                    }
-                                    registeredCrosecName.Add(kModel.crosecs[croSecId].name);
-                                }
-                                break;
-                            case "RC":
-                                switch (kModel.crosecs[croSecId])
-                                {
-                                    case KCroSec.CroSec_Trapezoid trapezoid:
-                                        var colTrape = new ColumnRc
-                                        {
-                                            Id = croSecId + 1,
-                                            Name = "C" + cNum++,
-                                            DBarMain = "D22",
-                                            DBarBand = "D10",
-                                            Figure = new RcColumnSecFigure
-                                            {
-                                                SecRect = new RcColumnSecFigure.Rectangle
-                                                {
-                                                    DX = trapezoid.maxWidth() * 1000,
-                                                    DY = trapezoid._height * 1000
-                                                }
-                                            },
-                                            BarArrangement = new RcColumnSecBarArrangement
-                                            {
-                                                RectSameSection = new RcColumnSecBarArrangement.RectSame
-                                                {
-                                                    CountMainX1st = 2,
-                                                    CountMainY1st = 2,
-                                                    CountMainTotal = 4,
-                                                    PitchBand = 100,
-                                                    CountBandDirX = 2,
-                                                    CountBandDirY = 2,
-                                                }
-                                            }
-                                        };
-                                        sections.Add(colTrape);
-                                        break;
-                                    case KCroSec.CroSec_Circle circle:
-                                        var colCircle = new ColumnRc
-                                        {
-                                            Id = croSecId,
-                                            Name = "C" + cNum++,
-                                            DBarMain = "D22",
-                                            DBarBand = "D10",
-                                            Figure = new RcColumnSecFigure
-                                            {
-                                                SecCircle = new RcColumnSecFigure.Circle
-                                                {
-                                                    D = circle.getHeight() * 1000
-                                                }
-                                            },
-                                            BarArrangement = new RcColumnSecBarArrangement
-                                            {
-                                                CircleSameSection = new RcColumnSecBarArrangement.CircleSame
-                                                {
-                                                    CountMain = 6,
-                                                    PitchBand = 100
-                                                }
-                                            }
-                                        };
-                                        sections.Add(colCircle);
-                                        break;
-                                    default:
-                                        var unsupported = new ColumnRc
-                                        {
-                                            Id = croSecId + 1,
-                                            Name = "C" + cNum++,
-                                            DBarMain = "D22",
-                                            DBarBand = "D10",
-                                            Figure = new RcColumnSecFigure
-                                            {
-                                                SecRect = new RcColumnSecFigure.Rectangle
-                                                {
-                                                    DX = 10,
-                                                    DY = 10
-                                                }
-                                            },
-                                            BarArrangement = new RcColumnSecBarArrangement
-                                            {
-                                                RectSameSection = new RcColumnSecBarArrangement.RectSame
-                                                {
-                                                    CountMainX1st = 2,
-                                                    CountMainY1st = 2,
-                                                    CountMainTotal = 4,
-                                                    PitchBand = 100,
-                                                    CountBandDirX = 2,
-                                                    CountBandDirY = 2,
-                                                }
-                                            }
-                                        };
-                                        sections.Add(unsupported);
-                                        break;
-                                }
-                                break;
-                            default:
-                                throw new ArgumentException("No supported type");
-                        }
-                        registeredCrosecId.Add(croSecId);
-                    }
-                }
-                else
-                {
-                    var beam = new Girder
-                    {
-                        Id = elem.ind + 1,
-                        Name = elem.id,
-                        IdNodeStart = elem.node_inds[0] + 1,
-                        IdNodeEnd = elem.node_inds[1] + 1,
-                        Rotate = 0d,
-                        IdSection = croSecId + 1,
-                        IsFoundation = "false",
-                        Kind = elem.crosec.material.family == "Steel" ? "S" : "RC"
-                    };
-                    members.Girders.Add(beam);
-
-                    if (registeredCrosecId.IndexOf(croSecId) < 0)
-                    {
-                        switch (beam.Kind)
-                        {
-                            case "S":
-                                var beamS = new BeamS
-                                {
-                                    Id = croSecId + 1,
-                                    Name = "G" + gNum++,
-                                    SteelBeams = new[]
-                                    {
-                                        new SecSteel
-                                        {
-                                            Position = "ALL",
-                                            Shape = kModel.crosecs[croSecId].name,
-                                            StrengthMain = "SN400",
-                                            StrengthWeb = "SN400"
-                                        }
-                                    }
-                                };
-                                sections.Add(beamS);
-
-                                if (registeredCrosecName.IndexOf(kModel.crosecs[croSecId].name) < 0)
-                                {
-                                    switch (kModel.crosecs[croSecId])
-                                    {
-                                        case KCroSec.CroSec_Box secBox:
-                                            var box = new RollBox
-                                            {
-                                                Name = secBox.name,
-                                                A = secBox._height * 1000,
-                                                B = secBox.maxWidth() * 1000,
-                                                R = secBox.fillet_r * 1000,
-                                                T = secBox.w_thick * 1000,
-                                                Type = "ELSE"
-                                            };
-                                            rollBoxes.Add(box);
-                                            break;
-                                        case KCroSec.CroSec_T secT:
-                                            var tShape = new RollT
-                                            {
-                                                Name = secT.name,
-                                                A = secT._height * 1000,
-                                                B = secT.maxWidth() * 1000,
-                                                R = secT.fillet_r * 1000,
-                                                T1 = secT.w_thick * 1000,
-                                                T2 = secT.uf_thick * 1000,
-                                                Type = "T"
-                                            };
-                                            rollTs.Add(tShape);
-                                            break;
-                                        case KCroSec.CroSec_I secH:
-                                            var hShape = new RollH
-                                            {
-                                                Name = secH.name,
-                                                A = secH._height * 1000,
-                                                B = secH.maxWidth() * 1000,
-                                                R = secH.fillet_r * 1000,
-                                                T1 = secH.w_thick * 1000,
-                                                T2 = secH.uf_thick * 1000,
-                                                Type = "H"
-                                            };
-                                            rollHs.Add(hShape);
-                                            break;
-                                        case KCroSec.CroSec_Circle secCircle:
-                                            var pipe = new Pipe
-                                            {
-                                                Name = secCircle.name,
-                                                D = secCircle.getHeight() * 1000,
-                                                T = secCircle.thick * 1000
-                                            };
-                                            pipes.Add(pipe);
-                                            break;
-                                        default:
-                                            var unsupported = new Pipe
-                                            {
-                                                Name = kModel.crosecs[croSecId].name,
-                                                D = 10,
-                                                T = 1
-                                            };
-                                            pipes.Add(unsupported);
-                                            break;
-                                    }
-                                    registeredCrosecName.Add(kModel.crosecs[croSecId].name);
-                                }
-                                break;
-                            case "RC":
-                                if (kModel.crosecs[croSecId] is KCroSec.CroSec_Trapezoid trapezoid)
-                                {
-                                    var beamTrapezoid = new BeamRc
-                                    {
-                                        Id = croSecId + 1,
-                                        Name = "G" + gNum++,
-                                        DBarMain = "D22",
-                                        DStirrup = "D10",
-                                        Figure = new RcBeamSecFigure
-                                        {
-                                            SecStraight = new RcBeamSecFigure.Straight
-                                            {
-                                                Depth = trapezoid._height * 1000,
-                                                Width = trapezoid.maxWidth() * 1000
-                                            }
-                                        },
-                                        BarArrangement = new RcBeamSecBarArrangement
-                                        {
-                                            SameSection = new RcBeamSecBarArrangement.Same
-                                            {
-                                                CountMainTop1st = 3,
-                                                CountMainBottom1st = 3,
-                                                CountStirrup = 2,
-                                                PitchStirrup = 100
-                                            }
-                                        }
-                                    };
-                                    sections.Add(beamTrapezoid);
-                                }
-                                else
-                                {
-                                    var unsupported = new BeamRc
-                                    {
-                                        Id = croSecId + 1,
-                                        Name = "G" + gNum++,
-                                        DBarMain = "D22",
-                                        DStirrup = "D10",
-                                        Figure = new RcBeamSecFigure
-                                        {
-                                            SecStraight = new RcBeamSecFigure.Straight
-                                            {
-                                                Depth = 10,
-                                                Width = 10
-                                            }
-                                        },
-                                        BarArrangement = new RcBeamSecBarArrangement
-                                        {
-                                            SameSection = new RcBeamSecBarArrangement.Same
-                                            {
-                                                CountMainTop1st = 2,
-                                                CountMainBottom1st = 3,
-                                                CountStirrup = 2,
-                                                PitchStirrup = 100
-                                            }
-                                        }
-                                    };
-                                    sections.Add(unsupported);
-                                }
-
-                                break;
-                            default:
-                                throw new ArgumentException("No supported type");
-                        }
-                        registeredCrosecId.Add(croSecId);
-                    }
+                    case ModelBeam modelBeam:
+                        AddModelBeam(modelBeam, pAngle, nAngle, colMaxAngle);
+                        break;
+                    case ModelTruss modelTruss:
+                        AddModelTruss(modelTruss);
+                        break;
+                    default:
+                        throw new ArgumentException("Karamba3D model parse error.");
                 }
             }
 
-            if (rollTs.Count > 0)
+            _sections.Add(_secSteel);
+            return new Model { Members = _members, Sections = _sections };
+        }
+
+        private void AddModelBeam(ModelBeam modelBeam, double pAngle, double nAngle, double colMaxAngle)
+        {
+            int croSecId = _croSecNames.IndexOf(modelBeam.crosec.name);
+            string kind = GetElementKind(modelBeam.crosec.material.family);
+            bool positive = pAngle <= colMaxAngle && pAngle >= -1d * colMaxAngle;
+            bool negative = nAngle <= colMaxAngle && nAngle >= -1d * colMaxAngle;
+
+            if (positive || negative)
             {
-                steelSec.RollT = rollTs;
+                _members.Columns.Add(StbMember.CreateColumn(modelBeam, croSecId, kind));
+                if (_registeredCroSecId[0].IndexOf(croSecId) < 0)
+                {
+                    AddColumnSection(kind, croSecId, _tagNum[0]++);
+                }
             }
-
-            if (rollHs.Count > 0)
+            else
             {
-                steelSec.RollH = rollHs;
+                _members.Girders.Add(StbMember.CreateGirder(modelBeam, croSecId, kind));
+                if (_registeredCroSecId[1].IndexOf(croSecId) < 0)
+                {
+                    AddBeamSection(kind, croSecId, _tagNum[1]++);
+                }
             }
+        }
 
-            if (rollBoxes.Count > 0)
+        private void AddModelTruss(ModelTruss modelTruss)
+        {
+            int croSecId = _croSecNames.IndexOf(modelTruss.crosec.name);
+            _members.Braces.Add(StbMember.CreateBrace(modelTruss, croSecId));
+            if (_registeredCroSecId[2].IndexOf(croSecId) < 0)
             {
-                steelSec.RollBox = rollBoxes;
+                AddBraceSection(croSecId, _tagNum[2]++);
             }
+        }
 
-            if (pipes.Count > 0)
+        private void AddBraceSection(int croSecId, int vNum)
+        {
+            _sections.Add(StbSection.GetBraceSt(croSecId, vNum, _kModel));
+            _registeredCroSecId[2].Add(croSecId);
+
+            if (_registeredCroSecName[2].IndexOf(_kModel.crosecs[croSecId].name) < 0)
             {
-                steelSec.Pipe = pipes;
+                StbSecSteel.GetSection(ref _secSteel, _kModel, croSecId);
+                _registeredCroSecName[2].Add(_kModel.crosecs[croSecId].name);
             }
+        }
 
-            if (flatBars.Count > 0)
+        private void AddBeamSection(string kind, int croSecId, int gNum)
+        {
+            switch (kind)
             {
-                steelSec.FlatBar = flatBars;
+                case "S":
+                    _sections.Add(StbSection.GetBeamSt(croSecId, gNum, _kModel));
+
+                    if (_registeredCroSecName[1].IndexOf(_kModel.crosecs[croSecId].name) < 0)
+                    {
+                        StbSecSteel.GetSection(ref _secSteel, _kModel, croSecId);
+                        _registeredCroSecName[1].Add(_kModel.crosecs[croSecId].name);
+                    }
+                    break;
+                case "RC":
+                    _sections.Add(StbSection.GetBeamRc(croSecId, gNum, _kModel));
+                    break;
+                default:
+                    throw new ArgumentException("Make sure that the family name of the material is \"Concrete\" or \"Steel\".");
             }
-            sections.Add(steelSec);
+            _registeredCroSecId[1].Add(croSecId);
+        }
 
-            var sModel = new Model
+        private void AddColumnSection(string kind, int croSecId, int cNum)
+        {
+            switch (kind)
             {
-                Nodes = kModel.nodes.ToStb(),
-                Members = members,
-                Sections = sections
-            };
+                case "S":
+                    _sections.Add(StbSection.GetColumnSt(croSecId, cNum, _kModel));
 
-            return sModel;
+                    if (_registeredCroSecName[0].IndexOf(_kModel.crosecs[croSecId].name) < 0)
+                    {
+                        StbSecSteel.GetSection(ref _secSteel, _kModel, croSecId);
+                        _registeredCroSecName[0].Add(_kModel.crosecs[croSecId].name);
+                    }
+                    break;
+                case "RC":
+                    _sections.Add(StbSection.GetColumnRc(croSecId, cNum, _kModel));
+                    break;
+                default:
+                    throw new ArgumentException("Make sure that the family name of the material is \"Concrete\" or \"Steel\".");
+            }
+            _registeredCroSecId[0].Add(croSecId);
+        }
+
+        private static string GetElementKind(string materialFamily)
+        {
+            switch (materialFamily)
+            {
+                case "Steel":
+                    return "S";
+                case "Concrete":
+                    return "RC";
+                default:
+                    return string.Empty;
+            }
         }
     }
 }
