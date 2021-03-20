@@ -95,7 +95,7 @@ namespace HoaryFox.Component.Geometry
             List<List<List<string>>> tagList = stbFrames.Select(stbFrame => GetTag(stbFrame)).ToList();
 
             foreach ((List<Brep> frameBreps, int index) in _frameBreps.Select((frameBrep, index) => (frameBrep, index)))
-            { 
+            {
                 Layer parentLayer = activeDoc.Layers.FindName(parentLayerNames[index]);
                 int parentIndex = parentLayer.Index;
                 Guid parentId = parentLayer.Id;
