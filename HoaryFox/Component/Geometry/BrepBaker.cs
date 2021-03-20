@@ -5,6 +5,7 @@ using System.Linq;
 using Grasshopper.Kernel;
 using HoaryFox.Member;
 using Rhino;
+using Rhino.DocObjects;
 using Rhino.Geometry;
 using STBReader;
 using STBReader.Member;
@@ -77,36 +78,77 @@ namespace HoaryFox.Component.Geometry
             _frameBreps.Add(_wallBreps);
 
             RhinoDoc activeDoc = RhinoDoc.ActiveDoc;
-            var layerNames = new[]
+            var parentLayerNames = new[]
             {
-                "Column", "Girder", "Posts", "Beams",
-                "Braces", "Slabs", "Walls"
+                "Column", "Girder", "Post", "Beam", "Brace",
+                "Slab", "Wall"
             };
             Color[] layerColors =
             {
-                Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral,
-                Color.MediumPurple, Color.DarkGray, Color.CornflowerBlue
+                Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple,
+                Color.DarkGray, Color.CornflowerBlue
             };
 
+            MakeParentLayers(activeDoc, parentLayerNames, layerColors);
+
+            //TODO: このネストは直す
+            List<List<List<string>>> tagList = stbFrames.Select(stbFrame => GetTag(stbFrame)).ToList();
 
             foreach ((List<Brep> frameBreps, int index) in _frameBreps.Select((frameBrep, index) => (frameBrep, index)))
-            {
-                var layer = new Rhino.DocObjects.Layer { Name = layerNames[index], Color = layerColors[index] };
-                int layerIndex = activeDoc.Layers.Add(layer);
-                if (layerIndex == -1)
+            { 
+                Layer parentLayer = activeDoc.Layers.FindName(parentLayerNames[index]);
+                int parentIndex = parentLayer.Index;
+                Guid parentId = parentLayer.Id;
+
+                foreach ((Brep brep, int bIndex) in frameBreps.Select((brep, bIndex) => (brep, bIndex)))
                 {
-                    layer = activeDoc.Layers.FindName(layerNames[index]);
-                    layerIndex = layer.Index;
-                }
+                    var objAttr = new Rhino.DocObjects.ObjectAttributes();
+                    objAttr.SetUserString("Type", parentLayerNames[index]);
 
-                var objAttr = new Rhino.DocObjects.ObjectAttributes { LayerIndex = layerIndex };
+                    if (index < 5)
+                    {
+                        List<List<string>> tags = tagList[index];
+                        List<string> tag = tags[bIndex];
+                        objAttr.SetUserString("Tag", tag[0]);
+                        objAttr.SetUserString("ShapeType", tag[1]);
+                        objAttr.SetUserString("Height", tag[2]);
+                        objAttr.SetUserString("Width", tag[3]);
+                        objAttr.SetUserString("t1", tag[4]);
+                        objAttr.SetUserString("t2", tag[5]);
 
+                        var layer = new Rhino.DocObjects.Layer { Name = tag[0], ParentLayerId = parentId, Color = layerColors[index] };
+                        int layerIndex = activeDoc.Layers.Add(layer);
+                        if (layerIndex == -1)
+                        {
+                            layer = activeDoc.Layers.FindName(tag[0]);
+                            layerIndex = layer.Index;
+                        }
 
-                foreach (Brep brep in frameBreps)
-                {
+                        objAttr.LayerIndex = layerIndex;
+                    }
+                    else
+                    {
+                        objAttr.LayerIndex = parentIndex;
+                    }
+
                     activeDoc.Objects.AddBrep(brep, objAttr);
                 }
             }
+        }
+
+        private static void MakeParentLayers(RhinoDoc activeDoc, IEnumerable<string> parentLayerNames, IReadOnlyList<Color> layerColors)
+        {
+            foreach ((string name, int index) in parentLayerNames.Select((name, index) => (name, index)))
+            {
+                var parentLayer = new Rhino.DocObjects.Layer { Name = name, Color = layerColors[index] };
+                activeDoc.Layers.Add(parentLayer);
+            }
+        }
+
+        private List<List<string>> GetTag(StbFrame stbFrame)
+        {
+            var tags = new CreateTag(_stbData.Nodes, _stbData.SecColumnRc, _stbData.SecColumnS, _stbData.SecBeamRc, _stbData.SecBeamS, _stbData.SecBraceS, _stbData.SecSteel);
+            return tags.FrameList(stbFrame);
         }
     }
 }

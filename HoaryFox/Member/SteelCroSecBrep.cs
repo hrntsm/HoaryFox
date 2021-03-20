@@ -140,12 +140,14 @@ namespace HoaryFox.Member
 
         public List<Brep> LShape()
         {
-            var brep = new List<Brep>
+            var breps = new List<Brep>
             {
                 Brep.CreateFromCornerPoints(_pointStart[0], _pointStart[2], _pointEnd[2], _pointEnd[0], _tol),
                 Brep.CreateFromCornerPoints(_pointStart[5], _pointStart[2], _pointEnd[2], _pointEnd[5], _tol)
             };
-            return brep;
+            List<Brep> joinedBrep = Brep.JoinBreps(breps, _tol).ToList();
+
+            return joinedBrep;
         }
 
         public List<Brep> PipeShape(ShapeInfo shapeInfo)
