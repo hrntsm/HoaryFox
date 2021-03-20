@@ -20,11 +20,11 @@ namespace HoaryFox.Member
 
             List<List<Point3d>> origins = GetOriginPoints(frameType, shapeInfo, angles);
             List<Brep> breps = GetSecBrep(stbData, shapeType, origins, shapeInfo);
-            List<Brep> brepRot = ApplyRotation(breps, shapeInfo.Rotate, frameType, origins);
+            IEnumerable<Brep> brepRot = ApplyRotation(breps, shapeInfo.Rotate, frameType, origins);
             return brepRot;
         }
 
-        private static List<Brep> ApplyRotation(List<Brep> breps, double rotate, FrameType frameType, List<List<Point3d>> origins)
+        private static IEnumerable<Brep> ApplyRotation(IReadOnlyCollection<Brep> breps, double rotate, FrameType frameType, IReadOnlyList<List<Point3d>> origins)
         {
             double rotateAngle = rotate * Math.PI / 180d;
             var rotationCenter = new Point3d[2];
@@ -47,11 +47,10 @@ namespace HoaryFox.Member
             {
                 b.Rotate(rotateAngle, rotationAxis, rotationCenter[0]);
             }
-
             return breps;
         }
 
-        private static List<Brep> GetSecBrep(StbData stbData, ShapeTypes shapeType, List<List<Point3d>> origins, ShapeInfo shapeInfo)
+        private static List<Brep> GetSecBrep(StbData stbData, ShapeTypes shapeType, IReadOnlyList<List<Point3d>> origins, ShapeInfo shapeInfo)
         {
             var secBrep = new SteelCroSecBrep(stbData, origins);
             switch (shapeType)
