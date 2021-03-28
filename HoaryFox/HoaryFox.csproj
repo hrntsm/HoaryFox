@@ -37,7 +37,6 @@
   <ItemGroup>
     <Compile Include="Component\Base\NameTagBase.cs" />
     <Compile Include="Component\Base\SecTagBase.cs" />
-    <Compile Include="Component\Geometry\BrepBaker.cs" />
     <Compile Include="Component\IO\StbLoader.cs" />
     <Compile Include="Component\Bar\Stb2Bar.cs" />
     <Compile Include="Component\Geometry\Stb2Line.cs" />

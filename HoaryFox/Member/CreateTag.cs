@@ -111,6 +111,7 @@ namespace HoaryFox.Member
                 tag.Add(tagInfo.P2.ToString());
                 tag.Add(tagInfo.P3.ToString());
                 tag.Add(tagInfo.P4.ToString());
+                tag.Add(kind.ToString());
                 tags.Add(tag);
             }
 
