@@ -25,13 +25,13 @@ namespace HoaryFox.Member
         {
             var breps = new List<Brep>
             {
-                Brep.CreateFromCornerPoints(_pointStart[3], _pointStart[4], _pointEnd[5], _pointEnd[4], _tol),
-                Brep.CreateFromCornerPoints(_pointStart[0], _pointStart[1], _pointEnd[1], _pointEnd[0], _tol),
-                Brep.CreateFromCornerPoints(_pointStart[4], _pointStart[1], _pointEnd[1], _pointEnd[4], _tol)
+                Brep.CreateFromCornerPoints(_pointStart[2], _pointStart[1], _pointEnd[1], _pointEnd[2], _tol),
+                Brep.CreateFromCornerPoints(_pointStart[1], _pointStart[4], _pointEnd[4], _pointEnd[1], _tol),
+                Brep.CreateFromCornerPoints(_pointStart[4], _pointStart[5], _pointEnd[5], _pointEnd[4], _tol)
             };
             List<Brep> joinedBrep = Brep.JoinBreps(breps, _tol).ToList();
 
-            return joinedBrep.Select(b => b.CapPlanarHoles(_tol)).ToList();
+            return joinedBrep;
         }
 
         public List<Brep> TShape()

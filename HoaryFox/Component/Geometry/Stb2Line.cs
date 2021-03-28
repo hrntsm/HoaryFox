@@ -17,7 +17,7 @@ namespace HoaryFox.Component.Geometry
     {
         private StbData _stbData;
         private List<Point3d> _nodes = new List<Point3d>();
-        private List<List<Line>> _lineList = new List<List<Line>>();
+        private readonly List<List<Line>> _lineList = new List<List<Line>>();
 
         public Stb2Line()
           : base(name: "Stb to Line", nickname: "S2L", description: "Read ST-Bridge file and display", category: "HoaryFox", subCategory: "Geometry")
@@ -79,34 +79,20 @@ namespace HoaryFox.Component.Geometry
         private void BakeLines()
         {
             RhinoDoc activeDoc = RhinoDoc.ActiveDoc;
-            var parentLayerNames = new[]
-            {
-                "Column", "Girder", "Post", "Beam", "Brace",
-                "Slab", "Wall"
-            };
-            Color[] layerColors =
-            {
-                Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple,
-                Color.DarkGray, Color.CornflowerBlue
-            };
 
-            MakeParentLayers(activeDoc, parentLayerNames, layerColors);
-
-
-            var stbFrames = new List<StbFrame>
-            {
-                _stbData.Columns, _stbData.Girders, _stbData.Posts, _stbData.Beams, _stbData.Braces
-            };
+            var parentLayerNames = new[] { "Column", "Girder", "Post", "Beam", "Brace", "Slab", "Wall" };
+            Color[] layerColors = { Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple, Color.DarkGray, Color.CornflowerBlue };
+            Misc.MakeParentLayers(activeDoc, parentLayerNames, layerColors);
+            var stbFrames = new List<StbFrame> { _stbData.Columns, _stbData.Girders, _stbData.Posts, _stbData.Beams, _stbData.Braces };
 
             //TODO: このネストは直す
-            List<List<List<string>>> tagList = stbFrames.Select(stbFrame => GetTag(stbFrame)).ToList();
+            List<List<List<string>>> tagList = stbFrames.Select(stbFrame => Misc.GetTag(_stbData, stbFrame)).ToList();
 
             foreach ((List<Line> lines, int index) in _lineList.Select((frameBrep, index) => (frameBrep, index)))
             {
                 Layer parentLayer = activeDoc.Layers.FindName(parentLayerNames[index]);
                 int parentIndex = parentLayer.Index;
                 Guid parentId = parentLayer.Id;
-
                 foreach ((Line line, int bIndex) in lines.Select((brep, bIndex) => (brep, bIndex)))
                 {
                     var objAttr = new ObjectAttributes();
@@ -116,13 +102,7 @@ namespace HoaryFox.Component.Geometry
                     {
                         List<List<string>> tags = tagList[index];
                         List<string> tag = tags[bIndex];
-                        objAttr.SetUserString("Tag", tag[0]);
-                        objAttr.SetUserString("ShapeType", tag[1]);
-                        objAttr.SetUserString("Height", tag[2]);
-                        objAttr.SetUserString("Width", tag[3]);
-                        objAttr.SetUserString("t1", tag[4]);
-                        objAttr.SetUserString("t2", tag[5]);
-                        objAttr.SetUserString("Kind", tag[6]);
+                        Misc.SetFrameUserString(ref objAttr, tag);
 
                         var layer = new Layer { Name = tag[0], ParentLayerId = parentId, Color = layerColors[index] };
                         int layerIndex = activeDoc.Layers.Add(layer);
@@ -131,7 +111,6 @@ namespace HoaryFox.Component.Geometry
                             layer = activeDoc.Layers.FindName(tag[0]);
                             layerIndex = layer.Index;
                         }
-
                         objAttr.LayerIndex = layerIndex;
                     }
                     else
@@ -144,22 +123,7 @@ namespace HoaryFox.Component.Geometry
             }
         }
 
-        private static void MakeParentLayers(RhinoDoc activeDoc, IEnumerable<string> parentLayerNames, IReadOnlyList<Color> layerColors)
-        {
-            foreach ((string name, int index) in parentLayerNames.Select((name, index) => (name, index)))
-            {
-                var parentLayer = new Rhino.DocObjects.Layer { Name = name, Color = layerColors[index] };
-                activeDoc.Layers.Add(parentLayer);
-            }
-        }
-
-        private List<List<string>> GetTag(StbFrame stbFrame)
-        {
-            var tags = new CreateTag(_stbData.Nodes, _stbData.SecColumnRc, _stbData.SecColumnS, _stbData.SecBeamRc, _stbData.SecBeamS, _stbData.SecBraceS, _stbData.SecSteel);
-            return tags.FrameList(stbFrame);
-        }
-
-        protected override System.Drawing.Bitmap Icon => Properties.Resource.Line;
+        protected override Bitmap Icon => Properties.Resource.Line;
         public override Guid ComponentGuid => new Guid("7d2f0c4e-4888-4607-8548-592104f6f06d");
     }
 }
