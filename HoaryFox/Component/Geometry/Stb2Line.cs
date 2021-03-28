@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using Grasshopper.Kernel;
 using HoaryFox.Member;
+using Rhino;
+using Rhino.DocObjects;
 using Rhino.Geometry;
 using STBReader;
+using STBReader.Member;
 
 
 namespace HoaryFox.Component.Geometry
@@ -12,11 +17,7 @@ namespace HoaryFox.Component.Geometry
     {
         private StbData _stbData;
         private List<Point3d> _nodes = new List<Point3d>();
-        private List<Line> _columns = new List<Line>();
-        private List<Line> _girders = new List<Line>();
-        private List<Line> _posts = new List<Line>();
-        private List<Line> _beams = new List<Line>();
-        private List<Line> _braces = new List<Line>();
+        private readonly List<List<Line>> _lineList = new List<List<Line>>();
 
         public Stb2Line()
           : base(name: "Stb to Line", nickname: "S2L", description: "Read ST-Bridge file and display", category: "HoaryFox", subCategory: "Geometry")
@@ -26,17 +27,13 @@ namespace HoaryFox.Component.Geometry
         public override void ClearData()
         {
             base.ClearData();
-            _nodes.Clear();
-            _columns.Clear();
-            _girders.Clear();
-            _posts.Clear();
-            _beams.Clear();
-            _braces.Clear();
+            _lineList.Clear();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Data", "D", "input ST-Bridge Data", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Bake", "Bake", "If it true, bake geometry.", GH_ParamAccess.item, false);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -51,30 +48,82 @@ namespace HoaryFox.Component.Geometry
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            var isBake = false;
             if (!DA.GetData("Data", ref _stbData)) { return; }
+            if (!DA.GetData("Bake", ref isBake)) { return; }
 
-            MakeLine();
-
+            MakeLine(isBake);
             DA.SetDataList(0, _nodes);
-            DA.SetDataList(1, _columns);
-            DA.SetDataList(2, _girders);
-            DA.SetDataList(3, _posts);
-            DA.SetDataList(4, _beams);
-            DA.SetDataList(5, _braces);
+            foreach ((List<Line> geometry, int i) in _lineList.Select((geo, index) => (geo, index + 1)))
+            {
+                DA.SetDataList(i, geometry);
+            }
         }
 
-        private void MakeLine()
+        private void MakeLine(bool isBake)
         {
             var createLines = new FrameLines(_stbData);
             _nodes = createLines.Nodes();
-            _columns = createLines.Columns();
-            _girders = createLines.Girders();
-            _posts = createLines.Posts();
-            _beams = createLines.Beams();
-            _braces = createLines.Braces();
+            _lineList.Add(createLines.Columns());
+            _lineList.Add(createLines.Girders());
+            _lineList.Add(createLines.Posts());
+            _lineList.Add(createLines.Beams());
+            _lineList.Add(createLines.Braces());
+
+            if (isBake)
+            {
+                this.BakeLines();
+            }
         }
 
-        protected override System.Drawing.Bitmap Icon => Properties.Resource.Line;
+        private void BakeLines()
+        {
+            RhinoDoc activeDoc = RhinoDoc.ActiveDoc;
+
+            var parentLayerNames = new[] { "Column", "Girder", "Post", "Beam", "Brace", "Slab", "Wall" };
+            Color[] layerColors = { Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple, Color.DarkGray, Color.CornflowerBlue };
+            Misc.MakeParentLayers(activeDoc, parentLayerNames, layerColors);
+            var stbFrames = new List<StbFrame> { _stbData.Columns, _stbData.Girders, _stbData.Posts, _stbData.Beams, _stbData.Braces };
+
+            //TODO: このネストは直す
+            List<List<List<string>>> tagList = stbFrames.Select(stbFrame => Misc.GetTag(_stbData, stbFrame)).ToList();
+
+            foreach ((List<Line> lines, int index) in _lineList.Select((frameBrep, index) => (frameBrep, index)))
+            {
+                Layer parentLayer = activeDoc.Layers.FindName(parentLayerNames[index]);
+                int parentIndex = parentLayer.Index;
+                Guid parentId = parentLayer.Id;
+                foreach ((Line line, int bIndex) in lines.Select((brep, bIndex) => (brep, bIndex)))
+                {
+                    var objAttr = new ObjectAttributes();
+                    objAttr.SetUserString("Type", parentLayerNames[index]);
+
+                    if (index < 5)
+                    {
+                        List<List<string>> tags = tagList[index];
+                        List<string> tag = tags[bIndex];
+                        Misc.SetFrameUserString(ref objAttr, tag);
+
+                        var layer = new Layer { Name = tag[0], ParentLayerId = parentId, Color = layerColors[index] };
+                        int layerIndex = activeDoc.Layers.Add(layer);
+                        if (layerIndex == -1)
+                        {
+                            layer = activeDoc.Layers.FindName(tag[0]);
+                            layerIndex = layer.Index;
+                        }
+                        objAttr.LayerIndex = layerIndex;
+                    }
+                    else
+                    {
+                        objAttr.LayerIndex = parentIndex;
+                    }
+
+                    activeDoc.Objects.AddLine(line, objAttr);
+                }
+            }
+        }
+
+        protected override Bitmap Icon => Properties.Resource.Line;
         public override Guid ComponentGuid => new Guid("7d2f0c4e-4888-4607-8548-592104f6f06d");
     }
 }

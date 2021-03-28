@@ -34,7 +34,7 @@ namespace HoaryFox.Member
             _colRc = colRc;
         }
 
-        public GH_Structure<GH_String> Frame(StbFrame frameData)
+        public GH_Structure<GH_String> FrameGHStructure(StbFrame frameData)
         {
             var ghSecStrings = new GH_Structure<GH_String>();
 
@@ -73,6 +73,49 @@ namespace HoaryFox.Member
             }
 
             return ghSecStrings;
+        }
+
+        public List<List<string>> FrameList(StbFrame frameData)
+        {
+            var tags = new List<List<string>>();
+
+            for (var eNum = 0; eNum < frameData.Id.Count; eNum++)
+            {
+                TagInfo tagInfo;
+                var tag = new List<string>();
+                int idSection = frameData.IdSection[eNum];
+                KindsStructure kind = frameData.KindStructure[eNum];
+                SetTagPosition(frameData, eNum);
+
+                switch (kind)
+                {
+                    case KindsStructure.Rc:
+                        tagInfo = TagRc(frameData, idSection);
+                        break;
+                    case KindsStructure.S:
+                        tagInfo = TagSteel(frameData, idSection);
+                        break;
+                    case KindsStructure.Src:
+                    case KindsStructure.Cft:
+                    case KindsStructure.Deck:
+                    case KindsStructure.Precast:
+                    case KindsStructure.Other:
+                        throw new ArgumentException("Wrong kind structure");
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                tag.Add(tagInfo.Name);
+                tag.Add(tagInfo.ShapeTypes.ToString());
+                tag.Add(tagInfo.P1.ToString());
+                tag.Add(tagInfo.P2.ToString());
+                tag.Add(tagInfo.P3.ToString());
+                tag.Add(tagInfo.P4.ToString());
+                tag.Add(kind.ToString());
+                tags.Add(tag);
+            }
+
+            return tags;
         }
 
         private void SetTagPosition(StbFrame frame, int eNum)
