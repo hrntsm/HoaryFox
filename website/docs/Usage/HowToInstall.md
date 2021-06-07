@@ -19,3 +19,11 @@ Karamba3D との連携機能を使う場合は Karamba.gha を管理者権限の
 :::note
 連携が必要ない場合は、HoaryFoxのフォルダ内にある karambaConnect.gha ファイルを削除するとコンポーネントの読み込みエラーを回避できます。
 :::
+
+## 各ソフトとの連携の概要
+
+HoaryFox は下図のように ST-Bridge を介して Rhinoceros/Grasshopper/Karamba3D と BIM ソフト、一貫構造計算との連携を行うことができます。
+
+詳細は各コンポーネントの紹介ページを参照してください。
+
+![](../../images/HowToInstall/relation.png)
