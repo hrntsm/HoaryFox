@@ -3,16 +3,16 @@ id: contact
 title: contact
 ---
 
-お気軽にお問い合わせください。
+Please feel free to contact us.
 
 ## Discussions
 
-質問、要望などは以下のディスカッションサイトの確認、利用をお願いします。  
+Please check and use the following discussion sites for questions and requests.  
 https://github.com/hrntsm/HoaryFox/discussions
 
 ## Mail
 
-メールによる問い合わせも対応していますが、  
-公開可能なものは、情報の蓄積のため上記サイトへ投稿するようにお願いしています。  
+We do respond to e-mail inquiries, but  
+If you have any questions or requests, please check the following discussion sites.
 
-contact(a)hrntsm.com　(a) を @ に変えてください。
+contact(a)hrntsm.com (change "a" to @)
