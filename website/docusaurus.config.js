@@ -8,9 +8,21 @@ module.exports = {
   favicon: 'img/HFicon.png',
   organizationName: 'hrntsm', // Usually your GitHub org/user name.
   projectName: 'HoaryFox', // Usually your repo name.
+  i18n: {
+    defaultLocale: 'ja',
+    locales: ['ja', 'en'],
+    localeConfigs: {
+      ja: {
+        label: '日本語',
+      },
+      en: {
+        label: 'English',
+      }
+    }
+  },
   themeConfig: {
     image: `img/HFicon.png`,
-    metadates:[
+    metadates: [
       {
         name: `twitter:card`,
         content: `summary`
@@ -52,6 +64,10 @@ module.exports = {
           to: 'docs/contact',
           label: 'Contact',
           position: 'right'
+        },
+        {
+          type: 'localeDropdown',
+          position: 'right',
         }
       ],
     },
