@@ -1,0 +1,1 @@
+(self.webpackChunkwebsite=self.webpackChunkwebsite||[]).push([[899],{5293:function(e){"use strict";e.exports=JSON.parse('{"allTagsPath":"/HoaryFox/en/blog/tags","slug":"update-info","name":"updateinfo","count":3,"permalink":"/HoaryFox/en/blog/tags/update-info"}')}}]);
