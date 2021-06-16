@@ -1,0 +1,42 @@
+{
+  "link.title.Docs": {
+    "message": "Docs",
+    "description": "The title of the footer links column with title=Docs in the footer"
+  },
+  "link.title.Community": {
+    "message": "Community",
+    "description": "The title of the footer links column with title=Community in the footer"
+  },
+  "link.title.More": {
+    "message": "More",
+    "description": "The title of the footer links column with title=More in the footer"
+  },
+  "link.item.label.Component": {
+    "message": "Component",
+    "description": "The label of footer link with label=Component linking to docs/Component/Geometry"
+  },
+  "link.item.label.Usage": {
+    "message": "Usage",
+    "description": "The label of footer link with label=Usage linking to docs/Usage/ShowSTBModel"
+  },
+  "link.item.label.Food4Rhino": {
+    "message": "Food4Rhino",
+    "description": "The label of footer link with label=Food4Rhino linking to https://www.food4rhino.com/app/hoaryfox"
+  },
+  "link.item.label.Twitter": {
+    "message": "Twitter",
+    "description": "The label of footer link with label=Twitter linking to https://twitter.com/hiron_rgkr"
+  },
+  "link.item.label.Blog": {
+    "message": "Blog",
+    "description": "The label of footer link with label=Blog linking to blog"
+  },
+  "link.item.label.Donation": {
+    "message": "Donation",
+    "description": "The label of footer link with label=Donation linking to docs/donation"
+  },
+  "copyright": {
+    "message": "Copyright © 2021 hrntsm, Inc. Built with Docusaurus.",
+    "description": "The footer copyright"
+  }
+}

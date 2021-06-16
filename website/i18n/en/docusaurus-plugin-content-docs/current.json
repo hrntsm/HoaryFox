@@ -1,0 +1,14 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.someSidebar.category.Component": {
+    "message": "Component",
+    "description": "The label for category Component in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Usage": {
+    "message": "Usage",
+    "description": "The label for category Usage in sidebar someSidebar"
+  }
+}
