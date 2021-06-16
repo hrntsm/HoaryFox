@@ -3,10 +3,10 @@ id: StbBuilder
 title: StbBuilder
 ---
 
-STB 書き出しのための情報を作成するコンポーネントのカテゴリ
+Categories of components that create information for STB export
 
 :::note
-このコンポーネントの使用方法や注意点は [Export ST-Bridge file](../Usage/ExportSTB) にも詳しく書いていますので、そちらも参照してください。
+The usage and notes for this component are also described in [Export ST-Bridge file](./Usage/ExportSTB) for more details.
 :::
 
 ---
@@ -15,18 +15,18 @@ STB 書き出しのための情報を作成するコンポーネントのカテ�
 
 ![](../../images/Component/FrameBuilder.png)
 
-架構情報を Karamba3D のモデルから作成する。  
-柱と梁の区分は グローバル座標の Z 軸に対する角度を Angle に入力し、その角度以内であれば柱として判定。
+Create the frame information from the Karamba3D model.  
+To classify columns and beams, enter the angle of the global coordinate with respect to the Z-axis in Angle, and if the angle is within that range, the column is determined to be a column.
 
-|入力|説明|
-|---|:---:|
-|Model|Karamba3D の Model 出力を入力|
-|Angle|柱と梁を判定する際に使う角度（rad）|
+| Input |                           description                           |
+| ----- | :-------------------------------------------------------------: |
+| Model |               Input the Model output of Karamba3D               |
+| Angle | Angle (rad) to be used when determining between column and beam |
 
-|出力|説明|
-|---|:---:|
-|Member|部材情報（StbMembers）|
-|Section|断面情報（StbSections）|
+| output  |            description            |
+| ------- | :-------------------------------: |
+| Member  |  Member information (StbMembers)  |
+| Section | Section information (StbSections) |
 
 ---
 
@@ -34,35 +34,33 @@ STB 書き出しのための情報を作成するコンポーネントのカテ�
 
 ![](../../images/Component/NodeBuilder.png)
 
-節点情報を Karamba3D のモデルから作成する。  
+Create the nodal information from the Karamba3D model.
 
-|入力|説明|
-|---|:---:|
-|Model|Karamba3D の Model 出力を入力|
+| Input |          Explanation           |
+| ----- | :----------------------------: |
+| Model | Input Karamba3D's Model output |
 
-|出力|説明|
-|---|:---:|
-|Node|節点情報（StbNodes）|
-
----
+| output |         description          |
+| ------ | :--------------------------: |
+| Node   | Nodal information (StbNodes) |
 
 ## Axis Builder
 
 ![](../../images/Component/AxisBuilder.png)
 
-軸情報を作成する
+Create the axis information
 
-|入力|説明|
-|---|:---:|
-|Node|節点情報、FrameBuilder の Node 出力を入力|
-|Distance|原点からの軸の距離（mm）|
-|Range|軸の幅（mm）|
-|Name|軸の名前|
-|Direcrion|軸の方向|
+| Input     |                       Description                        |
+| --------- | :------------------------------------------------------: |
+| Node      | Nodal information, input the Node output of FrameBuilder |
+| Distance  |        distance of the axis from the origin (mm)         |
+| Range     |                    width of axis (mm)                    |
+| Name      |                       name of axis                       |
+| Direction |                  direction of the axis                   |
 
-|出力|説明|
-|---|:---:|
-|Axis|軸情報（StbAxes）|
+| Output |         Description         |
+| ------ | :-------------------------: |
+| Axis   | axis information (StbAxes)} |
 
 ---
 
@@ -70,15 +68,15 @@ STB 書き出しのための情報を作成するコンポーネントのカテ�
 
 ![](../../images/Component/StoryBuilder.png)
 
-階情報を作成する
+Create the floor information
 
-|入力|説明|
-|---|:---:|
-|Node|節点情報、FrameBuilder の Node 出力を入力|
-|Height|原点からの階の高さ（mm）|
-|Range|階の幅（mm）|
-|Name|階の名前|
+| input  |                       description                        |
+| ------ | :------------------------------------------------------: |
+| Node   | Nodal information, input the Node output of FrameBuilder |
+| Height |         height of the floor from the origin (mm)         |
+| Range  |                 width of the floor (mm)                  |
+| Name   |                    Name of the floor                     |
 
-|出力|説明|
-|---|:---:|
-|Story|階情報（StbStories）|
+| Output |          Description           |
+| ------ | :----------------------------: |
+| Story  | Story information (StbStories) |

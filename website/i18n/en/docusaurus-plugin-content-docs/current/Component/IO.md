@@ -3,7 +3,7 @@ id: IO
 title: IO
 ---
 
-データの入力出力を行うコンポーネントのカテゴリ
+Categories of components that perform data input and output
 
 ---
 
@@ -11,39 +11,37 @@ title: IO
 
 ![](../../images/Component/LoadStbFile.png)
 
-STB データの読み込み
+Load STB data
 
-|入力|説明|
-|---|:---:|
-|Path|ST-Bridge ファイルのパス|
+| Input |      Explanation       |
+| ----- | :--------------------: |
+| Path  | path of ST-Bridge file |
 
-|出力|説明|
-|---|:---:|
-|Data|読み取った ST-Bridge ファイルのデータ|
-
----
+| Output |           Description           |
+| ------ | :-----------------------------: |
+| Data   | Data of the read ST-Bridge file |
 
 ## Export STB file
 
 ![](../../images/Component/ExportStbFile.png)
 
-STB データの書き出し
+Exporting STB data
 
-|入力|説明|
-|---|:---:|
-|Node|節点情報, FrameBuilder コンポーネントの Node 出力を入力|
-|Axis|軸情報, AxisBuilder コンポーネントの Axis 出力を入力|
-|Story|階情報, StoryBuilder コンポーネントの Story 出力を入力|
-|Member|部材情報, FrameBuilder コンポーネントの Member 出力を入力|
-|Section|断面情報, FrameBuilder コンポーネントの Section 出力を入力|
-|Path|作成した ST-Bridge データの出力先を指定。デフォルト値はデスクトップです|
-|Out?|出力を行うかのブール値。True にすると出力します|
+| Input   |                                       Description                                       |
+| ------- | :-------------------------------------------------------------------------------------: |
+| Node    |             Nodal information, input Node output of FrameBuilder component              |
+| Axis    |             axis information, input Axis output from AxisBuilder component              |
+| Story   |         Story information, enter the Story output of the StoryBuilder component         |
+| Member  |        Member information, enter the Member output of the FrameBuilder component        |
+| Section |       Section information, enter the Section output of the FrameBuilder component       |
+| Path    | Specify the output destination for the created ST-Bridge data. Default value is desktop |
+| Out?    |             Boolean value for whether to output; if true, output will occur             |
 
-|出力|説明|
-|---|:---:|
-|Stb|作成した ST-Bridge データ|
+| Output |      Description       |
+| ------ | :--------------------: |
+| Stb    | Created ST-Bridge data |
 
-こちらのコンポーネントの細かいの使い方・変換仕様は、Usage の [Export ST-Bridge file](../Usage/ExportSTB) の記事も参照してください。
+The detailed usage and conversion specification of this component can be found in [Export ST-Bridge file](./Usage/ExportSTB) article.
 
 ---
 
@@ -51,17 +49,17 @@ STB データの書き出し
 
 ![](../../images/Component/ConvertToKaramba.png)
 
-読み込んだ STB データを 構造解析を行うコンポーネント [Karamba3D](https://www.karamba3d.com/) のデータに変換
+Convert the read STB data to the data of the component [Karamba3D](https://www.karamba3d.com/) for structural analysis
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|FamilyName|断面のファミリー名の指定。入力しない場合、SetCroSecFamilyName コンポーネントのデフォルト値が入る|
+| Input      |                                                                  Explanation                                                                  |
+| ---------- | :-------------------------------------------------------------------------------------------------------------------------------------------: |
+| Data       |                                               Load STB file Input data output of the component                                                |
+| FamilyName | Specification of the family name of the cross section.<br/> If not entered, the default value of the SetCroSecFamilyName component is entered |
 
-|出力|説明|
-|---|:---:|
-|ElementBeam|Karamba3D の梁要素|
-|CrossSection|Karamba3D の断面情報|
+| Output       |               Description               |
+| ------------ | :-------------------------------------: |
+| ElementBeam  |         Karamba3D beam element          |
+| CrossSection | Cross section information for Karamba3D |
 
 ---
 
@@ -69,21 +67,21 @@ STB データの書き出し
 
 ![](../../images/Component/SetCroSecFamilyName.png)
 
-Karamba3D 内の断面につけるファミリー名の設定を行うコンポーネント。
+A component that sets the family name for the cross section in Karamba3D.
 
-|入力|説明|
-|---|:---:|
-|Box| 箱型断面のファミリー名。デフォルトは HF-Box|
-|H| H型断面のファミリー名。デフォルトは HF-H|
-|Circle| 円形中実断面ファミリー名。デフォルトは HF-Circle|
-|Pipe| 円形中空断面の断面ファミリー名。デフォルトは HF-Pipe|
-|FB| フラットバーの断面ファミリー名。デフォルトは HF-FB|
-|L| L 型断面の断面ファミリー名。デフォルトは HF-L|
-|T| T 型断面の断面ファミリー名。デフォルトは HF-T|
-|Other| 上記以外の断面ファミリー名。デフォルトは HF-Other|
+| Input  |                               Description                               |
+| ------ | :---------------------------------------------------------------------: |
+| Box    |       Family name for box-shaped cross section. Default is HF-Box       |
+| H      |        Family name for H-shaped cross sections. Defaults to HF-H        |
+| Circle |  Family name for circular solid cross sections. Defaults to HF-Circle   |
+| Pipe   |   Family name for circular hollow cross sections. Defaults to HF-Pipe   |
+| FB     |       Cross section family name for flat bars. Defaults to HF-FB        |
+| L      | Cross section family name for L-shaped cross sections. Default is HF-L  |
+| T      | Cross section family name for T-shaped cross sections. Defaults to HF-T |
+| Other  |          Other cross section family names. Default is HF-Other          |
 
-|出力|説明|
-|---|:---:|
-|FamilyName|Karamba3D での断面のファミリー名の設定|
+| Output     |                        Description                         |
+| ---------- | :--------------------------------------------------------: |
+| FamilyName | Setting the family name of the cross section in Karamba3D. |
 
-こちらのコンポーネントの細かいの使い方・変換仕様は、Usage の [Convert to Karamba3D](../Usage/ConvertToKaramba) の記事も参照してください。
+The detailed usage and conversion specification of this component can be found in the [Convert to Karamba3D](./Usage/ConvertToKaramba) article.

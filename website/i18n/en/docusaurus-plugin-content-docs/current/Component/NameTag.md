@@ -3,7 +3,7 @@ id: NameTag
 title: NameTag
 ---
 
-部材符号の表示を行うコンポーネントのカテゴリ
+Category of components that display name tags.
 
 ---
 
@@ -11,16 +11,16 @@ title: NameTag
 
 ![](../../images/Component/ColumnNameTag.png)
 
-柱の部材符号表示
+Display the member tags of a column
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+| Input |                         Explanation                          |
+| ----- | :----------------------------------------------------------: |
+| Data  |     Load STB file Input the Data output of the component     |
+| Size  | Character size to display in Rhino's viewport. Default is 12 |
 
-|出力|説明|
-|---|:---:|
-|NameTag|符号のリスト|
+| Output  | Description  |
+| ------- | :----------: |
+| NameTag | List of tags |
 
 ---
 
@@ -28,16 +28,16 @@ title: NameTag
 
 ![](../../images/Component/PostNameTag.png)
 
-間柱の部材符号表示
+Display the tags of a member of a column
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+| Input |                         Explanation                          |
+| ----- | :----------------------------------------------------------: |
+| Data  |       Load STB file Input Data output of the component       |
+| Size  | Character size to display in Rhino's viewport. Default is 12 |
 
-|出力|説明|
-|---|:---:|
-|NameTag|符号のリスト|
+| Output  | Description  |
+| ------- | :----------: |
+| NameTag | List of tags |
 
 ---
 
@@ -45,16 +45,16 @@ title: NameTag
 
 ![](../../images/Component/GirderNameTag.png)
 
-大梁の部材符号表示
+Display the member tags of a large beam
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+| Input |                         Explanation                          |
+| ----- | :----------------------------------------------------------: |
+| Data  |     Load STB file Input the Data output of the component     |
+| Size  | Character size to display in Rhino's viewport. Default is 12 |
 
-|出力|説明|
-|---|:---:|
-|NameTag|符号のリスト|
+| Output  | Description  |
+| ------- | :----------: |
+| NameTag | List of tags |
 
 ---
 
@@ -62,16 +62,16 @@ title: NameTag
 
 ![](../../images/Component/BeamNameTag.png)
 
-小梁の部材符号表示
+Display the tags of a small beam component
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+| Input |                         Explanation                          |
+| ----- | :----------------------------------------------------------: |
+| Data  |     Load STB file Input the Data output of the component     |
+| Size  | Character size to display in Rhino's viewport. Default is 12 |
 
-|出力|説明|
-|---|:---:|
-|NameTag|符号のリスト|
+| Output  | Description  |
+| ------- | :----------: |
+| NameTag | List of tags |
 
 ---
 
@@ -79,13 +79,13 @@ title: NameTag
 
 ![](../../images/Component/BraceNameTag.png)
 
-ブレースの部材符号表示
+Display the brace's member tags.
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+| Input |                         Explanation                          |
+| ----- | :----------------------------------------------------------: |
+| Data  |     Load STB file Input the Data output of the component     |
+| Size  | Character size to display in Rhino's viewport. Default is 12 |
 
-|出力|説明|
-|---|:---:|
-|NameTag|符号のリスト|
+| Output  | Description  |
+| ------- | :----------: |
+| NameTag | list of tags |

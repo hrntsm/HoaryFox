@@ -3,7 +3,7 @@ id: SectionTag
 title: SectionTag
 ---
 
-断面情報の表示を行うコンポーネントのカテゴリ
+Category of components that display cross-sectional information.
 
 ---
 
@@ -11,16 +11,16 @@ title: SectionTag
 
 ![](../../images/Component/ColumnSectionTag.png)
 
-柱の断面情報表示
+Display column section information
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+| Input |                         Explanation                          |
+| ----- | :----------------------------------------------------------: |
+| Data  |     Load STB file Input the Data output of the component     |
+| Size  | Character size to display in Rhino's viewport. Default is 12 |
 
-|出力|説明|
-|---|:---:|
-|SecTag|符号のリスト|
+| Output | Description  |
+| ------ | :----------: |
+| SecTag | list of tags |
 
 ---
 
@@ -28,16 +28,16 @@ title: SectionTag
 
 ![](../../images/Component/PostSectionTag.png)
 
-間柱の断面情報表示
+Display cross-sectional information for columns
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+| Input |                         Explanation                          |
+| ----- | :----------------------------------------------------------: |
+| Data  |     Load STB file Input the Data output of the component     |
+| Size  | Character size to display in Rhino's viewport. Default is 12 |
 
-|出力|説明|
-|---|:---:|
-|SecTag|符号のリスト|
+| Output | Description  |
+| ------ | :----------: |
+| SecTag | list of tags |
 
 ---
 
@@ -45,16 +45,16 @@ title: SectionTag
 
 ![](../../images/Component/GirderSectionTag.png)
 
-大梁の断面情報表示
+Display cross-section information for large beams
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+| Input |                         Explanation                          |
+| ----- | :----------------------------------------------------------: |
+| Data  |     Load STB file Input the Data output of the component     |
+| Size  | Character size to display in Rhino's viewport. Default is 12 |
 
-|出力|説明|
-|---|:---:|
-|SecTag|符号のリスト|
+| Output | Description  |
+| ------ | :----------: |
+| SecTag | list of tags |
 
 ---
 
@@ -62,16 +62,16 @@ title: SectionTag
 
 ![](../../images/Component/BeamSectionTag.png)
 
-小梁の断面情報表示
+Display cross section information for small beams
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+| Input |                         Explanation                          |
+| ----- | :----------------------------------------------------------: |
+| Data  |     Load STB file Input the Data output of the component     |
+| Size  | Character size to display in Rhino's viewport. Default is 12 |
 
-|出力|説明|
-|---|:---:|
-|SecTag|符号のリスト|
+| Output | Description  |
+| ------ | :----------: |
+| SecTag | list of tags |
 
 ---
 
@@ -79,13 +79,13 @@ title: SectionTag
 
 ![](../../images/Component/BraceSectionTag.png)
 
-ブレースの断面情報表示
+Display brace section information.
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+| Input |                         Explanation                          |
+| ----- | :----------------------------------------------------------: |
+| Data  |     Load STB file Input the Data output of the component     |
+| Size  | Character size to display in Rhino's viewport. Default is 12 |
 
-|出力|説明|
-|---|:---:|
-|SecTag|符号のリスト|
+| Output | Description  |
+| ------ | :----------: |
+| SecTag | list of tags |

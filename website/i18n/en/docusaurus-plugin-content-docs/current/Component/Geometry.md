@@ -3,7 +3,7 @@ id: Geometry
 title: Geometry
 ---
 
-読み込んだ STB データから部材を可視化、Bake するコンポーネントのカテゴリ
+Category of components to be visualized and baked from loaded STB data
 
 ---
 
@@ -11,46 +11,43 @@ title: Geometry
 
 ![](../../images/Component/StbToLine.png)
 
-部材を Line で表示する
+Display a part as a Line
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Bake|各 Line を断面符号ごとにレイヤー分けして Bake する|
+| Input |                             Explanation                             |
+| ----- | :-----------------------------------------------------------------: |
+| Data  |        Load STB file Input the Data output of the component         |
+| Bake  | Layers each Line according to its cross-sectional sign and bakes it |
 
-|出力|説明|
-|---|:---:|
-|Nodes| 節点の Point3d のリストを出力|
-|Columns| 柱の Line のリストを出力|
-|Girders| 大梁の Line のリストを出力|
-|Posts| 間柱の Line のリストを出力|
-|Beams| 小梁の Line のリストを出力|
-|Braces| ブレースの Line のリストを出力|
-
----
+| Output  |           Explanation            |
+| ------- | :------------------------------: |
+| Nodes   | Output the Point3d list of nodes |
+| Columns |   Output list of column lines    |
+| Posts   | output list of intercolumn lines |
+| Beams   | Output list of small beam lines  |
+| Braces  |   output list of braces lines    |
 
 ## Stb to Brep
 
 ![](../../images/Component/StbToBrep.png)
 
-部材を Brep で表示する
+Display a component in Brep.
 
-|入力|説明|
-|---|:---:|
-|Data|Load STB file コンポーネントの Data 出力を入力|
-|Bake|各 Brep を断面符号ごとにレイヤー分けして Bake する|
+| Input |                     Explanation                      |
+| ----- | :--------------------------------------------------: |
+| Data  | Load STB file Input the Data output of the component |
+| Bake  |    Bake each Brep layered by cross-sectional code    |
 
-|出力|説明|
-|---|:---:|
-|Columns| 柱形状を表す Brep のリストを出力|
-|Girders| 大梁形状を表す Brep のリストを出力|
-|Posts| 間柱形状を表す Brep のリストを出力|
-|Beams| 小梁形状を表す Brep のリストを出力|
-|Braces| ブレース形状を表す Brep のリストを出力|
-|Slabs| スラブ形状を表す Brep のリストを出力|
-|Walls| 壁形状を表す Brep のリストを出力|
+| Output  |                   Explanation                    |
+| ------- | :----------------------------------------------: |
+| Columns | Output list of Brep's representing column shapes |
+| Girders |          Output list of breps for beams          |
+| Posts   |         Output list of Brep for columns          |
+| Beams   |    Output list of Brep for small beam shapes     |
+| Braces  |         output list of breps for braces          |
+| Slabs   |       output list of Brep for slab shapes        |
+| Walls   |      output a list of Brep for wall shapes       |
 
-### 表示仕様
+### Display specification
 
-- 壁は開口を含めて出力します
-- スラブは凹形状の場合うまく出力されないことがあります
+- Walls should include openings.
+- Slabs may not output properly if they are concave
