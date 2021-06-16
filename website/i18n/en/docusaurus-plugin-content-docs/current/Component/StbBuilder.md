@@ -6,7 +6,7 @@ title: StbBuilder
 Categories of components that create information for STB export
 
 :::note
-The usage and notes for this component are also described in [Export ST-Bridge file](./Usage/ExportSTB) for more details.
+The usage and notes for this component are also described in [Export ST-Bridge file](../Usage/ExportSTB) for more details.
 :::
 
 ---

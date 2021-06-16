@@ -41,7 +41,7 @@ Exporting STB data
 | ------ | :--------------------: |
 | Stb    | Created ST-Bridge data |
 
-The detailed usage and conversion specification of this component can be found in [Export ST-Bridge file](./Usage/ExportSTB) article.
+The detailed usage and conversion specification of this component can be found in [Export ST-Bridge file](../Usage/ExportSTB) article.
 
 ---
 
@@ -84,4 +84,4 @@ A component that sets the family name for the cross section in Karamba3D.
 | ---------- | :--------------------------------------------------------: |
 | FamilyName | Setting the family name of the cross section in Karamba3D. |
 
-The detailed usage and conversion specification of this component can be found in the [Convert to Karamba3D](./Usage/ConvertToKaramba) article.
+The detailed usage and conversion specification of this component can be found in the [Convert to Karamba3D](../Usage/ConvertToKaramba) article.
