@@ -35,10 +35,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Component_v2\Tag\Name\PostNameTag.cs" />
+    <Compile Include="Component_v2\Tag\Name\GirderNameTag.cs" />
+    <Compile Include="Component_v2\Tag\Name\BraceNameTag.cs" />
+    <Compile Include="Component_v2\Tag\Name\BeamNameTag.cs" />
+    <Compile Include="Component_v2\Tag\Name\ColumnNameTag.cs" />
+    <Compile Include="Component_v2\Tag\Name\util.cs" />
     <Compile Include="Component\Base\NameTagBase.cs" />
     <Compile Include="Component\Base\SecTagBase.cs" />
     <Compile Include="Component\IO\StbLoader.cs" />
-    <Compile Include="Component\Bar\Stb2Bar.cs" />
     <Compile Include="Component\Geometry\Stb2Line.cs" />
     <Compile Include="Component\Geometry\Stb2Brep.cs" />
     <Compile Include="Component\Tag\Name\BeamNameTag.cs" />
@@ -69,6 +74,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="STBDotNet">
+      <HintPath>..\..\STBDotNet\STBDotNet\bin\Debug\net5.0\STBDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="STBReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Library\STBReader.dll</HintPath>
