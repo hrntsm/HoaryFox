@@ -16,9 +16,10 @@ namespace HoaryFox.Component_v2.Tag.Name
         private readonly List<Point3d> _framePos = new List<Point3d>();
 
         public override bool IsPreviewCapable => true;
-
-        protected ColumnNameTag()
-          : base(name: "Column Name Tag", nickname: "ColumnTag", description: "Display Column Name Tag", "HoaryFox", "NameTag_v2")
+        public ColumnNameTag()
+          : base("Column Name Tag", "ColumnTag",
+              "Display Column Name Tag",
+              "HoaryFox2", "NameTag")
         {
         }
 
@@ -66,7 +67,8 @@ namespace HoaryFox.Component_v2.Tag.Name
             }
         }
 
-        protected override Bitmap Icon => Properties.Resource.ColumnName;
-        public override Guid ComponentGuid => new Guid("A21D711E-8AFB-4B72-8EEA-D8DBABA72462");
+        protected override System.Drawing.Bitmap Icon => Properties.Resource.ColumnName;
+
+        public override Guid ComponentGuid => new Guid("AB439AE1-A56F-4764-BC36-F3752D30461A");
     }
 }

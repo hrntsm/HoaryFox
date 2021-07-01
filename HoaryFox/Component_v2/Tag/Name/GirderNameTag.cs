@@ -16,9 +16,10 @@ namespace HoaryFox.Component_v2.Tag.Name
         private readonly List<Point3d> _framePos = new List<Point3d>();
 
         public override bool IsPreviewCapable => true;
-
-        protected GirderNameTag()
-          : base(name: "Girder Name Tag", nickname: "GirderTag", description: "Display Girder Name Tag", "HoaryFox", "NameTag_v2")
+        public GirderNameTag()
+          : base("Girder Name Tag", "GirderTag",
+              "Display Girder Name Tag",
+              "HoaryFox2", "NameTag")
         {
         }
 
@@ -66,7 +67,8 @@ namespace HoaryFox.Component_v2.Tag.Name
             }
         }
 
-        protected override Bitmap Icon => Properties.Resource.GirderName;
+        protected override System.Drawing.Bitmap Icon => Properties.Resource.GirderName;
+
         public override Guid ComponentGuid => new Guid("31664B98-E1F0-4635-A718-18C8FDE14A14");
     }
 }

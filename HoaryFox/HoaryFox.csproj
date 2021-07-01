@@ -37,9 +37,9 @@
   <ItemGroup>
     <Compile Include="Component_v2\Tag\Name\PostNameTag.cs" />
     <Compile Include="Component_v2\Tag\Name\GirderNameTag.cs" />
+    <Compile Include="Component_v2\Tag\Name\ColumnNameTag.cs" />
     <Compile Include="Component_v2\Tag\Name\BraceNameTag.cs" />
     <Compile Include="Component_v2\Tag\Name\BeamNameTag.cs" />
-    <Compile Include="Component_v2\Tag\Name\ColumnNameTag.cs" />
     <Compile Include="Component_v2\Tag\Name\util.cs" />
     <Compile Include="Component\Base\NameTagBase.cs" />
     <Compile Include="Component\Base\SecTagBase.cs" />

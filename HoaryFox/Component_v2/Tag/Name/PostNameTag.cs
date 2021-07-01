@@ -16,9 +16,10 @@ namespace HoaryFox.Component_v2.Tag.Name
         private readonly List<Point3d> _framePos = new List<Point3d>();
 
         public override bool IsPreviewCapable => true;
-
-        protected PostNameTag()
-          : base(name: "Post Name Tag", nickname: "PostTag", description: "Display Post Name Tag", "HoaryFox", "NameTag_v2")
+        public PostNameTag()
+          : base("Post Name Tag", "PostTag",
+              "Display Post Name Tag",
+              "HoaryFox2", "NameTag")
         {
         }
 
@@ -67,6 +68,7 @@ namespace HoaryFox.Component_v2.Tag.Name
         }
 
         protected override Bitmap Icon => Properties.Resource.PostName;
+
         public override Guid ComponentGuid => new Guid("AD517629-4CD1-4109-B071-653D80DC6B70");
     }
 }

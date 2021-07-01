@@ -16,9 +16,10 @@ namespace HoaryFox.Component_v2.Tag.Name
         private readonly List<Point3d> _framePos = new List<Point3d>();
 
         public override bool IsPreviewCapable => true;
-
-        protected BraceNameTag()
-          : base(name: "Brace Name Tag", nickname: "BraceTag", description: "Display Brace Name Tag", "HoaryFox", "NameTag_v2")
+        public BraceNameTag()
+          : base("Brace Name Tag", "BraceTag",
+              "Display Brace Name Tag",
+              "HoaryFox2", "NameTag")
         {
         }
 
@@ -66,7 +67,8 @@ namespace HoaryFox.Component_v2.Tag.Name
             }
         }
 
-        protected override Bitmap Icon => Properties.Resource.BraceName;
+        protected override System.Drawing.Bitmap Icon => Properties.Resource.BraceName;
+
         public override Guid ComponentGuid => new Guid("21F7885E-6321-4C0D-8974-BC40769AAEAE");
     }
 }

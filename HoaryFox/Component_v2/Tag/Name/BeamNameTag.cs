@@ -16,9 +16,10 @@ namespace HoaryFox.Component_v2.Tag.Name
         private readonly List<Point3d> _framePos = new List<Point3d>();
 
         public override bool IsPreviewCapable => true;
-
-        protected BeamNameTag()
-          : base(name: "Beam Name Tag", nickname: "BeamTag", description: "Display Beam Name Tag", "HoaryFox", "NameTag_v2")
+        public BeamNameTag()
+          : base("Beam Name Tag", "BeamTag",
+              "Display Beam Name Tag",
+              "HoaryFox2", "NameTag")
         {
         }
 
@@ -66,7 +67,8 @@ namespace HoaryFox.Component_v2.Tag.Name
             }
         }
 
-        protected override Bitmap Icon => Properties.Resource.BeamName;
-        public override Guid ComponentGuid => new Guid("CD6A5143-0574-46E1-A4DE-1177A5922713");
+        protected override System.Drawing.Bitmap Icon => Properties.Resource.BeamName;
+
+        public override Guid ComponentGuid => new Guid("FDC62C6D-7C03-412D-8FF8-B76439197730");
     }
 }
