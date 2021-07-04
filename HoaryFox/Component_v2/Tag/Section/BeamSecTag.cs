@@ -20,7 +20,7 @@ namespace HoaryFox.Component_v2.Tag.Section
 
         public BeamSecTag()
           : base("Beam Section Tag", "BeamSec",
-              "Description",
+              "Display Beam Section Tag",
               "HoaryFox2", "Section")
         {
         }
