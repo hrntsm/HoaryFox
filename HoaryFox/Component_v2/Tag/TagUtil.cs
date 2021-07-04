@@ -46,13 +46,13 @@ namespace HoaryFox.Component_v2.Tag
             switch (steelFigure)
             {
                 case StbSecSteelBeam_S_Haunch figure:
-                    ghSecStrings.Append(new GH_String(figure.pos_name + ": " + figure.shape + "(" + figure.strength_main + ")"));
+                    ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
                     break;
                 case StbSecSteelBeam_S_FiveTypes figure:
-                    ghSecStrings.Append(new GH_String(figure.pos_name + ": " + figure.shape + "(" + figure.strength_main + ")"));
+                    ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
                     break;
                 case StbSecSteelBeam_S_Taper figure:
-                    ghSecStrings.Append(new GH_String(figure.pos_name + ": " + figure.shape + "(" + figure.strength_main + ")"));
+                    ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
                     break;
                 case StbSecSteelBeam_S_Straight figure:
                     ghSecStrings.Append(new GH_String(figure.shape + "(" + figure.strength_main + ")"));
