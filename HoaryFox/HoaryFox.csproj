@@ -41,6 +41,7 @@
     <Compile Include="Component_v2\Tag\Name\ColumnNameTag.cs" />
     <Compile Include="Component_v2\Tag\Name\BraceNameTag.cs" />
     <Compile Include="Component_v2\Tag\Name\BeamNameTag.cs" />
+    <Compile Include="Component_v2\Tag\Section\BraceSecTag.cs" />
     <Compile Include="Component_v2\Tag\Section\PostSecTag.cs" />
     <Compile Include="Component_v2\Tag\Section\ColumnSecTag.cs" />
     <Compile Include="Component_v2\Tag\Section\GirderSecTag.cs" />

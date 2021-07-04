@@ -78,6 +78,25 @@ namespace HoaryFox.Component_v2.Tag
             return ghSecStrings;
         }
 
+        internal static IEnumerable<GH_String> GetBraceSSection(object steelFigure)
+        {
+            var ghSecStrings = new GH_Structure<GH_String>();
+            switch (steelFigure)
+            {
+                case StbSecSteelBrace_S_Same figure:
+                    ghSecStrings.Append(new GH_String(figure.shape + "(" + figure.strength_main + ")"));
+                    break;
+                case StbSecSteelBrace_S_NotSame figure:
+                    ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
+                    break;
+                case StbSecSteelBrace_S_ThreeTypes figure:
+                    ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
+                    break;
+            }
+
+            return ghSecStrings;
+        }
+
         internal static IEnumerable<GH_String> GetColumnSSection(object steelFigure)
         {
             var ghSecStrings = new GH_Structure<GH_String>();
