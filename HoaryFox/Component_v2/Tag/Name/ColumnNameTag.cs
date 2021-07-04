@@ -54,7 +54,7 @@ namespace HoaryFox.Component_v2.Tag.Name
 
                 string idNodeStart = column.id_node_bottom;
                 string idNodeEnd = column.id_node_top;
-                _framePos.Add(Util.GetFramePosition(idNodeStart, idNodeEnd, nodes));
+                _framePos.Add(TagUtil.GetTagPosition(idNodeStart, idNodeEnd, nodes));
             }
             DA.SetDataList(0, _frameName);
         }
