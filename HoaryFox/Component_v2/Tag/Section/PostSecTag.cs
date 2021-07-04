@@ -11,16 +11,16 @@ using STBDotNet.v202;
 
 namespace HoaryFox.Component_v2.Tag.Section
 {
-    public class ColumnSecTag : GH_Component
+    public class PostSecTag : GH_Component
     {
         private ST_BRIDGE _stBridge;
         private int _size;
         private GH_Structure<GH_String> _frameTags = new GH_Structure<GH_String>();
         private List<Point3d> _tagPos = new List<Point3d>();
 
-        public ColumnSecTag()
-          : base("Column Section Tag", "ColumnSec",
-              "Display Column Section Tag",
+        public PostSecTag()
+          : base("Post Section Tag", "PostSec",
+              "Display Post Section Tag",
               "HoaryFox2", "Section")
         {
         }
@@ -50,16 +50,16 @@ namespace HoaryFox.Component_v2.Tag.Section
             if (!DA.GetData("Data", ref _stBridge)) { return; }
             if (!DA.GetData("Size", ref _size)) { return; }
 
-            _frameTags = GetTagStrings(_stBridge.StbModel.StbMembers.StbColumns, _stBridge.StbModel.StbSections);
-            _tagPos = GetTagPosition(_stBridge.StbModel.StbMembers.StbColumns, _stBridge.StbModel.StbNodes);
+            _frameTags = GetTagStrings(_stBridge.StbModel.StbMembers.StbPosts, _stBridge.StbModel.StbSections);
+            _tagPos = GetTagPosition(_stBridge.StbModel.StbMembers.StbPosts, _stBridge.StbModel.StbNodes);
 
             DA.SetDataTree(0, _frameTags);
         }
-        private static GH_Structure<GH_String> GetTagStrings(IEnumerable<StbColumn> columns, StbSections sections)
+        private static GH_Structure<GH_String> GetTagStrings(IEnumerable<StbPost> columns, StbSections sections)
         {
             var ghSecStrings = new GH_Structure<GH_String>();
 
-            foreach (var item in columns.Select((column, index) => new { column, index }))
+            foreach (var item in columns.Select((column, index) => new {column, index }))
             {
                 string secId = item.column.id_section;
                 var ghPath = new GH_Path(0, item.index);
@@ -97,7 +97,7 @@ namespace HoaryFox.Component_v2.Tag.Section
             return ghSecStrings;
         }
 
-        private static List<Point3d> GetTagPosition(IEnumerable<StbColumn> columns, IEnumerable<StbNode> nodes)
+        private static List<Point3d> GetTagPosition(IEnumerable<StbPost> columns, IEnumerable<StbNode> nodes)
         {
             return columns.Select(beam => TagUtil.GetTagPosition(beam.id_node_bottom, beam.id_node_top, nodes)).ToList();
         }
@@ -117,8 +117,8 @@ namespace HoaryFox.Component_v2.Tag.Section
             }
         }
 
-        protected override Bitmap Icon => Resource.ColumnSection;
-        public override Guid ComponentGuid => new Guid("BCF4A288-DA26-4F28-A919-CB9FD1FCF3B1");
+        protected override Bitmap Icon => Resource.PostSection;
+        public override Guid ComponentGuid => new Guid("B0C5FFF4-B510-4A0F-B441-C0B3144BF757");
 
     }
 }
