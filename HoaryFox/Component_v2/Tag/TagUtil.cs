@@ -21,7 +21,7 @@ namespace HoaryFox.Component_v2.Tag
             );
         }
 
-        internal static IEnumerable<GH_String> GetRcSection(object rcFigure, string strength)
+        internal static IEnumerable<GH_String> GetBeamRcSection(object rcFigure, string strength)
         {
             var ghSecStrings = new GH_Structure<GH_String>();
             switch (rcFigure)
@@ -40,7 +40,23 @@ namespace HoaryFox.Component_v2.Tag
             return ghSecStrings;
         }
 
-        internal static IEnumerable<GH_String> GetSteelSection(object steelFigure)
+        internal static IEnumerable<GH_String> GetColumnRcSection(object rcFigure, string strength)
+        {
+            var ghSecStrings = new GH_Structure<GH_String>();
+            switch (rcFigure)
+            {
+                case StbSecColumn_RC_Rect figure:
+                    ghSecStrings.Append(new GH_String("CD-" + figure.width_X + "x" + figure.width_Y + "(" + strength + ")"));
+                    break;
+                case StbSecColumn_RC_Circle figure:
+                    ghSecStrings.Append(new GH_String("P-" + figure.D + "(" + strength + ")"));
+                    break;
+            }
+
+            return ghSecStrings;
+        }
+
+        internal static IEnumerable<GH_String> GetBeamSSection(object steelFigure)
         {
             var ghSecStrings = new GH_Structure<GH_String>();
             switch (steelFigure)
@@ -56,6 +72,25 @@ namespace HoaryFox.Component_v2.Tag
                     break;
                 case StbSecSteelBeam_S_Straight figure:
                     ghSecStrings.Append(new GH_String(figure.shape + "(" + figure.strength_main + ")"));
+                    break;
+            }
+
+            return ghSecStrings;
+        }
+
+        internal static IEnumerable<GH_String> GetColumnSSection(object steelFigure)
+        {
+            var ghSecStrings = new GH_Structure<GH_String>();
+            switch (steelFigure)
+            {
+                case StbSecSteelColumn_S_Same figure:
+                    ghSecStrings.Append(new GH_String(figure.shape + "(" + figure.strength_main + ")"));
+                    break;
+                case StbSecSteelColumn_S_NotSame figure:
+                    ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
+                    break;
+                case StbSecSteelColumn_S_ThreeTypes figure:
+                    ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
                     break;
             }
 

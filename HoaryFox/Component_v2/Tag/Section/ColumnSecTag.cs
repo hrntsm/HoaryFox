@@ -11,16 +11,16 @@ using STBDotNet.v202;
 
 namespace HoaryFox.Component_v2.Tag.Section
 {
-    public class GirderSecTag : GH_Component
+    public class ColumnSecTag : GH_Component
     {
         private ST_BRIDGE _stBridge;
         private int _size;
         private GH_Structure<GH_String> _frameTags = new GH_Structure<GH_String>();
         private List<Point3d> _tagPos = new List<Point3d>();
 
-        public GirderSecTag()
-          : base("Girder Section Tag", "GirderSec",
-              "Display Girder Section Tag",
+        public ColumnSecTag()
+          : base("Column Section Tag", "ColumnSec",
+              "Display Column Section Tag",
               "HoaryFox2", "Section")
         {
         }
@@ -50,50 +50,45 @@ namespace HoaryFox.Component_v2.Tag.Section
             if (!DA.GetData("Data", ref _stBridge)) { return; }
             if (!DA.GetData("Size", ref _size)) { return; }
 
-            _frameTags = GetTagStrings(_stBridge.StbModel.StbMembers.StbGirders, _stBridge.StbModel.StbSections);
-            _tagPos = GetTagPosition(_stBridge.StbModel.StbMembers.StbGirders, _stBridge.StbModel.StbNodes);
+            _frameTags = GetTagStrings(_stBridge.StbModel.StbMembers.StbColumns, _stBridge.StbModel.StbSections);
+            _tagPos = GetTagPosition(_stBridge.StbModel.StbMembers.StbColumns, _stBridge.StbModel.StbNodes);
 
             DA.SetDataTree(0, _frameTags);
         }
-        private static GH_Structure<GH_String> GetTagStrings(IEnumerable<StbGirder> beams, StbSections sections)
+        private static GH_Structure<GH_String> GetTagStrings(IEnumerable<StbColumn> columns, StbSections sections)
         {
             var ghSecStrings = new GH_Structure<GH_String>();
 
-            foreach (var item in beams.Select((beam, index) => new { beam, index }))
+            foreach (var item in columns.Select((beam, index) => new { column = beam, index }))
             {
-                string secId = item.beam.id_section;
+                string secId = item.column.id_section;
                 var ghPath = new GH_Path(0, item.index);
-                StbGirderKind_structure kindStruct = item.beam.kind_structure;
+                StbColumnKind_structure kindStruct = item.column.kind_structure;
 
                 switch (kindStruct)
                 {
-                    case StbGirderKind_structure.RC:
-                        StbSecBeam_RC secRc = sections.StbSecBeam_RC.First(i => i.id == secId);
-                        foreach (object figureObj in secRc.StbSecFigureBeam_RC.Items)
+                    case StbColumnKind_structure.RC:
+                        StbSecColumn_RC secRc = sections.StbSecColumn_RC.First(i => i.id == secId);
+                        ghSecStrings.AppendRange(TagUtil.GetColumnRcSection(secRc.StbSecFigureColumn_RC.Item, secRc.strength_concrete), ghPath);
+                        break;
+                    case StbColumnKind_structure.S:
+                        StbSecColumn_S secS = sections.StbSecColumn_S.First(i => i.id == secId);
+                        foreach (object figureObj in secS.StbSecSteelFigureColumn_S.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetBeamRcSection(figureObj, secRc.strength_concrete), ghPath);
+                            ghSecStrings.AppendRange(TagUtil.GetColumnSSection(figureObj), ghPath);
                         }
                         break;
-                    case StbGirderKind_structure.S:
-                        StbSecBeam_S secS = sections.StbSecBeam_S.First(i => i.id == secId);
-                        foreach (object figureObj in secS.StbSecSteelFigureBeam_S.Items)
+                    case StbColumnKind_structure.SRC:
+                        StbSecColumn_SRC secSrc = sections.StbSecColumn_SRC.First(i => i.id == secId);
+                        ghSecStrings.AppendRange(TagUtil.GetColumnRcSection(secSrc.StbSecFigureColumn_SRC.Item, secSrc.strength_concrete), ghPath);
+                        foreach (object figureObj in secSrc.StbSecSteelFigureColumn_SRC.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetBeamSSection(figureObj), ghPath);
+                            ghSecStrings.AppendRange(TagUtil.GetColumnSSection(figureObj), ghPath);
                         }
                         break;
-                    case StbGirderKind_structure.SRC:
-                        StbSecBeam_SRC secSrc = sections.StbSecBeam_SRC.First(i => i.id == secId);
-                        foreach (object figureObj in secSrc.StbSecFigureBeam_SRC.Items)
-                        {
-                            ghSecStrings.AppendRange(TagUtil.GetBeamRcSection(figureObj, secSrc.strength_concrete), ghPath);
-                        }
-                        foreach (object figureObj in secSrc.StbSecSteelFigureBeam_SRC.Items)
-                        {
-                            ghSecStrings.AppendRange(TagUtil.GetBeamSSection(figureObj), ghPath);
-                        }
-                        break;
-                    case StbGirderKind_structure.UNDEFINED:
-                        break;
+                    case StbColumnKind_structure.CFT:
+                    case StbColumnKind_structure.UNDEFINED:
+                        throw new ArgumentException("Unsupported section type.");
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -102,9 +97,9 @@ namespace HoaryFox.Component_v2.Tag.Section
             return ghSecStrings;
         }
 
-        private static List<Point3d> GetTagPosition(IEnumerable<StbGirder> girders, IEnumerable<StbNode> nodes)
+        private static List<Point3d> GetTagPosition(IEnumerable<StbColumn> columns, IEnumerable<StbNode> nodes)
         {
-            return girders.Select(girder => TagUtil.GetTagPosition(girder.id_node_start, girder.id_node_end, nodes)).ToList();
+            return columns.Select(beam => TagUtil.GetTagPosition(beam.id_node_bottom, beam.id_node_top, nodes)).ToList();
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
@@ -122,8 +117,8 @@ namespace HoaryFox.Component_v2.Tag.Section
             }
         }
 
-        protected override Bitmap Icon => Resource.GirderSection;
-        public override Guid ComponentGuid => new Guid("6E1E7529-826B-4214-9C63-B77AF0715009");
+        protected override Bitmap Icon => Resource.ColumnSection;
+        public override Guid ComponentGuid => new Guid("BCF4A288-DA26-4F28-A919-CB9FD1FCF3B1");
 
     }
 }

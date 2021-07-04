@@ -71,25 +71,25 @@ namespace HoaryFox.Component_v2.Tag.Section
                         StbSecBeam_RC secRc = sections.StbSecBeam_RC.First(i => i.id == secId);
                         foreach (object figureObj in secRc.StbSecFigureBeam_RC.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetRcSection(figureObj, secRc.strength_concrete), ghPath);
+                            ghSecStrings.AppendRange(TagUtil.GetBeamRcSection(figureObj, secRc.strength_concrete), ghPath);
                         }
                         break;
                     case StbGirderKind_structure.S:
                         StbSecBeam_S secS = sections.StbSecBeam_S.First(i => i.id == secId);
                         foreach (object figureObj in secS.StbSecSteelFigureBeam_S.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetSteelSection(figureObj), ghPath);
+                            ghSecStrings.AppendRange(TagUtil.GetBeamSSection(figureObj), ghPath);
                         }
                         break;
                     case StbGirderKind_structure.SRC:
                         StbSecBeam_SRC secSrc = sections.StbSecBeam_SRC.First(i => i.id == secId);
                         foreach (object figureObj in secSrc.StbSecFigureBeam_SRC.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetRcSection(figureObj, secSrc.strength_concrete), ghPath);
+                            ghSecStrings.AppendRange(TagUtil.GetBeamRcSection(figureObj, secSrc.strength_concrete), ghPath);
                         }
                         foreach (object figureObj in secSrc.StbSecSteelFigureBeam_SRC.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetSteelSection(figureObj), ghPath);
+                            ghSecStrings.AppendRange(TagUtil.GetBeamSSection(figureObj), ghPath);
                         }
                         break;
                     case StbGirderKind_structure.UNDEFINED:
