@@ -35,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Component_v2\IO\StbLoader.cs" />
     <Compile Include="Component_v2\Tag\Name\PostNameTag.cs" />
     <Compile Include="Component_v2\Tag\Name\GirderNameTag.cs" />
     <Compile Include="Component_v2\Tag\Name\ColumnNameTag.cs" />
@@ -74,8 +75,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="STBDotNet">
-      <HintPath>..\..\STBDotNet\STBDotNet\bin\Debug\net5.0\STBDotNet.dll</HintPath>
+    <Reference Include="STBDotNet, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\STBDotNet\STBDotNet\bin\Debug\netstandard2.0\STBDotNet.dll</HintPath>
     </Reference>
     <Reference Include="STBReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
