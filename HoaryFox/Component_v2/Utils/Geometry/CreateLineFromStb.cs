@@ -24,6 +24,10 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         public List<Line> Columns()
         {
             var lines = new List<Line>();
+            if (_stBridge.StbModel.StbMembers.StbColumns == null)
+            {
+                return lines;
+            }
 
             foreach (StbColumn column in _stBridge.StbModel.StbMembers.StbColumns)
             {
@@ -39,6 +43,10 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         public List<Line> Girders()
         {
             var lines = new List<Line>();
+            if (_stBridge.StbModel.StbMembers.StbGirders == null)
+            {
+                return lines;
+            }
 
             foreach (StbGirder girder in _stBridge.StbModel.StbMembers.StbGirders)
             {
@@ -54,6 +62,10 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         public List<Line> Posts()
         {
             var lines = new List<Line>();
+            if (_stBridge.StbModel.StbMembers.StbPosts == null)
+            {
+                return lines;
+            }
 
             foreach (StbPost post in _stBridge.StbModel.StbMembers.StbPosts)
             {
@@ -69,6 +81,10 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         public List<Line> Beams()
         {
             var lines = new List<Line>();
+            if (_stBridge.StbModel.StbMembers.StbBeams == null)
+            {
+                return lines;
+            }
 
             foreach (StbBeam beam in _stBridge.StbModel.StbMembers.StbBeams)
             {
@@ -84,6 +100,10 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         public List<Line> Braces()
         {
             var lines = new List<Line>();
+            if (_stBridge.StbModel.StbMembers.StbBraces == null)
+            {
+                return lines;
+            }
 
             foreach (StbBrace brace in _stBridge.StbModel.StbMembers.StbBraces)
             {

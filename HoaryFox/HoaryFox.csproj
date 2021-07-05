@@ -47,7 +47,7 @@
     <Compile Include="Component_v2\Tag\Section\PostSecTag.cs" />
     <Compile Include="Component_v2\Tag\Section\ColumnSecTag.cs" />
     <Compile Include="Component_v2\Tag\Section\GirderSecTag.cs" />
-    <Compile Include="Component_v2\Tag\TagUtil.cs" />
+    <Compile Include="Component_v2\Utils\TagUtils.cs" />
     <Compile Include="Component\Base\NameTagBase.cs" />
     <Compile Include="Component\Base\SecTagBase.cs" />
     <Compile Include="Component\IO\StbLoader.cs" />

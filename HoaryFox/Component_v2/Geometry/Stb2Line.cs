@@ -80,6 +80,6 @@ namespace HoaryFox.Component_v2.Geometry
         }
 
         protected override Bitmap Icon => Properties.Resource.Line;
-        public override Guid ComponentGuid => new Guid("FDC62C6D-7C03-412D-8FF8-B76439197730");
+        public override Guid ComponentGuid => new Guid("D1E6793B-F75C-4AEE-9A9F-B9DD08D6EB77");
     }
 }
