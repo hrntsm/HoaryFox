@@ -5,6 +5,7 @@ using System.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+using HoaryFox.Component_v2.Utils;
 using HoaryFox.Properties;
 using Rhino.Geometry;
 using STBDotNet.v202;
@@ -59,7 +60,7 @@ namespace HoaryFox.Component_v2.Tag.Section
         {
             var ghSecStrings = new GH_Structure<GH_String>();
 
-            foreach (var item in beams.Select((brace, index) => new {brace, index }))
+            foreach (var item in beams.Select((brace, index) => new { brace, index }))
             {
                 string secId = item.brace.id_section;
                 var ghPath = new GH_Path(0, item.index);
@@ -71,7 +72,7 @@ namespace HoaryFox.Component_v2.Tag.Section
                         StbSecBrace_S secS = sections.StbSecBrace_S.First(i => i.id == secId);
                         foreach (object figureObj in secS.StbSecSteelFigureBrace_S.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetBraceSSection(figureObj), ghPath);
+                            ghSecStrings.AppendRange(TagUtils.GetBraceSSection(figureObj), ghPath);
                         }
                         break;
                     case StbBraceKind_structure.RC:
@@ -87,7 +88,7 @@ namespace HoaryFox.Component_v2.Tag.Section
 
         private static List<Point3d> GetTagPosition(IEnumerable<StbBrace> beams, IEnumerable<StbNode> nodes)
         {
-            return beams.Select(beam => TagUtil.GetTagPosition(beam.id_node_start, beam.id_node_end, nodes)).ToList();
+            return beams.Select(beam => TagUtils.GetTagPosition(beam.id_node_start, beam.id_node_end, nodes)).ToList();
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)

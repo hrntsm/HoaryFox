@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Grasshopper.Kernel;
+using HoaryFox.Component_v2.Utils;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
@@ -54,7 +55,7 @@ namespace HoaryFox.Component_v2.Tag.Name
 
                 string idNodeStart = column.id_node_bottom;
                 string idNodeEnd = column.id_node_top;
-                _framePos.Add(TagUtil.GetTagPosition(idNodeStart, idNodeEnd, nodes));
+                _framePos.Add(TagUtils.GetTagPosition(idNodeStart, idNodeEnd, nodes));
             }
             DA.SetDataList(0, _frameName);
         }
