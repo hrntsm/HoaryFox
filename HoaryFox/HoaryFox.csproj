@@ -35,6 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Component_v2\Utils\Geometry\CreateLineFromStb.cs" />
+    <Compile Include="Component_v2\Geometry\Stb2Line.cs" />
     <Compile Include="Component_v2\IO\StbLoader.cs" />
     <Compile Include="Component_v2\Tag\Name\PostNameTag.cs" />
     <Compile Include="Component_v2\Tag\Name\GirderNameTag.cs" />
