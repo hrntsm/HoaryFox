@@ -59,7 +59,7 @@ namespace HoaryFox.Component_v2.Tag.Section
         {
             var ghSecStrings = new GH_Structure<GH_String>();
 
-            foreach (var item in columns.Select((column, index) => new {column, index }))
+            foreach (var item in columns.Select((column, index) => new { column, index }))
             {
                 string secId = item.column.id_section;
                 var ghPath = new GH_Path(0, item.index);

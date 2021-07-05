@@ -59,7 +59,7 @@ namespace HoaryFox.Component_v2.Tag.Section
         {
             var ghSecStrings = new GH_Structure<GH_String>();
 
-            foreach (var item in beams.Select((brace, index) => new {brace, index }))
+            foreach (var item in beams.Select((brace, index) => new { brace, index }))
             {
                 string secId = item.brace.id_section;
                 var ghPath = new GH_Path(0, item.index);
