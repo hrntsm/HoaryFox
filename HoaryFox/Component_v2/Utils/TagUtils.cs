@@ -5,9 +5,9 @@ using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
-namespace HoaryFox.Component_v2.Tag
+namespace HoaryFox.Component_v2.Utils
 {
-    internal static class TagUtil
+    internal static class TagUtils
     {
         internal static Point3d GetTagPosition(string idStart, string idEnd, IEnumerable<StbNode> nodes)
         {

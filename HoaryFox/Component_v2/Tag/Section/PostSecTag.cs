@@ -5,6 +5,7 @@ using System.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+using HoaryFox.Component_v2.Utils;
 using HoaryFox.Properties;
 using Rhino.Geometry;
 using STBDotNet.v202;
@@ -69,21 +70,21 @@ namespace HoaryFox.Component_v2.Tag.Section
                 {
                     case StbColumnKind_structure.RC:
                         StbSecColumn_RC secRc = sections.StbSecColumn_RC.First(i => i.id == secId);
-                        ghSecStrings.AppendRange(TagUtil.GetColumnRcSection(secRc.StbSecFigureColumn_RC.Item, secRc.strength_concrete), ghPath);
+                        ghSecStrings.AppendRange(TagUtils.GetColumnRcSection(secRc.StbSecFigureColumn_RC.Item, secRc.strength_concrete), ghPath);
                         break;
                     case StbColumnKind_structure.S:
                         StbSecColumn_S secS = sections.StbSecColumn_S.First(i => i.id == secId);
                         foreach (object figureObj in secS.StbSecSteelFigureColumn_S.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetColumnSSection(figureObj), ghPath);
+                            ghSecStrings.AppendRange(TagUtils.GetColumnSSection(figureObj), ghPath);
                         }
                         break;
                     case StbColumnKind_structure.SRC:
                         StbSecColumn_SRC secSrc = sections.StbSecColumn_SRC.First(i => i.id == secId);
-                        ghSecStrings.AppendRange(TagUtil.GetColumnRcSection(secSrc.StbSecFigureColumn_SRC.Item, secSrc.strength_concrete), ghPath);
+                        ghSecStrings.AppendRange(TagUtils.GetColumnRcSection(secSrc.StbSecFigureColumn_SRC.Item, secSrc.strength_concrete), ghPath);
                         foreach (object figureObj in secSrc.StbSecSteelFigureColumn_SRC.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetColumnSSection(figureObj), ghPath);
+                            ghSecStrings.AppendRange(TagUtils.GetColumnSSection(figureObj), ghPath);
                         }
                         break;
                     case StbColumnKind_structure.CFT:
@@ -99,7 +100,7 @@ namespace HoaryFox.Component_v2.Tag.Section
 
         private static List<Point3d> GetTagPosition(IEnumerable<StbPost> columns, IEnumerable<StbNode> nodes)
         {
-            return columns.Select(beam => TagUtil.GetTagPosition(beam.id_node_bottom, beam.id_node_top, nodes)).ToList();
+            return columns.Select(beam => TagUtils.GetTagPosition(beam.id_node_bottom, beam.id_node_top, nodes)).ToList();
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)

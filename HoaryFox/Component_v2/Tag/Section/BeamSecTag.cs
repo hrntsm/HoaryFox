@@ -5,6 +5,7 @@ using System.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+using HoaryFox.Component_v2.Utils;
 using HoaryFox.Properties;
 using Rhino.Geometry;
 using STBDotNet.v202;
@@ -71,25 +72,25 @@ namespace HoaryFox.Component_v2.Tag.Section
                         StbSecBeam_RC secRc = sections.StbSecBeam_RC.First(i => i.id == secId);
                         foreach (object figureObj in secRc.StbSecFigureBeam_RC.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetBeamRcSection(figureObj, secRc.strength_concrete), ghPath);
+                            ghSecStrings.AppendRange(TagUtils.GetBeamRcSection(figureObj, secRc.strength_concrete), ghPath);
                         }
                         break;
                     case StbGirderKind_structure.S:
                         StbSecBeam_S secS = sections.StbSecBeam_S.First(i => i.id == secId);
                         foreach (object figureObj in secS.StbSecSteelFigureBeam_S.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetBeamSSection(figureObj), ghPath);
+                            ghSecStrings.AppendRange(TagUtils.GetBeamSSection(figureObj), ghPath);
                         }
                         break;
                     case StbGirderKind_structure.SRC:
                         StbSecBeam_SRC secSrc = sections.StbSecBeam_SRC.First(i => i.id == secId);
                         foreach (object figureObj in secSrc.StbSecFigureBeam_SRC.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetBeamRcSection(figureObj, secSrc.strength_concrete), ghPath);
+                            ghSecStrings.AppendRange(TagUtils.GetBeamRcSection(figureObj, secSrc.strength_concrete), ghPath);
                         }
                         foreach (object figureObj in secSrc.StbSecSteelFigureBeam_SRC.Items)
                         {
-                            ghSecStrings.AppendRange(TagUtil.GetBeamSSection(figureObj), ghPath);
+                            ghSecStrings.AppendRange(TagUtils.GetBeamSSection(figureObj), ghPath);
                         }
                         break;
                     case StbGirderKind_structure.UNDEFINED:
@@ -104,7 +105,7 @@ namespace HoaryFox.Component_v2.Tag.Section
 
         private static List<Point3d> GetTagPosition(IEnumerable<StbBeam> beams, IEnumerable<StbNode> nodes)
         {
-            return beams.Select(beam => TagUtil.GetTagPosition(beam.id_node_start, beam.id_node_end, nodes)).ToList();
+            return beams.Select(beam => TagUtils.GetTagPosition(beam.id_node_start, beam.id_node_end, nodes)).ToList();
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
