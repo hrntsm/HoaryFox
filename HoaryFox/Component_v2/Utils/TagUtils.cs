@@ -119,7 +119,7 @@ namespace HoaryFox.Component_v2.Utils
             return ghSecStrings;
         }
 
-        public static Dictionary<string, string>[][] GetAllSectionInfoDictionary(StbMembers members)
+        public static Dictionary<string, string>[][] GetAllSectionInfoArray(StbMembers members)
         {
             var allTagList = new Dictionary<string, string>[5][];
 
@@ -127,27 +127,27 @@ namespace HoaryFox.Component_v2.Utils
             allTagList[0] = members.StbColumns != null
                 ? members.StbColumns
                     .Select(column => column.name)
-                    .Select(s => new Dictionary<string, string> { { "name", s } }).ToArray()
+                    .Select(s => new Dictionary<string, string> { { "name", s }, { "StbElementName", "StbColumn" } }).ToArray()
                 : new Dictionary<string, string>[] { };
             allTagList[1] = members.StbGirders != null
                 ? members.StbGirders
                     .Select(column => column.name)
-                    .Select(s => new Dictionary<string, string> { { "name", s } }).ToArray()
+                    .Select(s => new Dictionary<string, string> { { "name", s }, { "StbElementName", "StbGirder" } }).ToArray()
                 : new Dictionary<string, string>[] { };
             allTagList[2] = members.StbPosts != null
                 ? members.StbPosts
                     .Select(column => column.name)
-                    .Select(s => new Dictionary<string, string> { { "name", s } }).ToArray()
+                    .Select(s => new Dictionary<string, string> { { "name", s }, { "StbElementName", "StbPost" } }).ToArray()
                 : new Dictionary<string, string>[] { };
             allTagList[3] = members.StbBeams != null
                 ? members.StbBeams
                     .Select(column => column.name)
-                    .Select(s => new Dictionary<string, string> { { "name", s } }).ToArray()
+                    .Select(s => new Dictionary<string, string> { { "name", s }, { "StbElementName", "StbBeam" } }).ToArray()
                 : new Dictionary<string, string>[] { };
             allTagList[4] = members.StbBraces != null
                 ? members.StbBraces
                     .Select(column => column.name)
-                    .Select(s => new Dictionary<string, string> { { "name", s } }).ToArray()
+                    .Select(s => new Dictionary<string, string> { { "name", s }, { "StbElementName", "StbBrace" } }).ToArray()
                 : new Dictionary<string, string>[] { };
 
             return allTagList;

@@ -73,7 +73,7 @@ namespace HoaryFox.Component_v2.Geometry
             Color[] layerColors = { Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple, Color.DarkGray, Color.CornflowerBlue };
             GeometryBaker.MakeParentLayers(activeDoc, parentLayerNames, layerColors);
 
-            Dictionary<string, string>[][] sectionInfo = Utils.TagUtils.GetAllSectionInfoDictionary(_stBridge.StbModel.StbMembers);
+            Dictionary<string, string>[][] infoArray = Utils.TagUtils.GetAllSectionInfoArray(_stBridge.StbModel.StbMembers);
 
             foreach ((List<Line> lines, int index) in _lineList.Select((frameBrep, index) => (frameBrep, index)))
             {
@@ -87,16 +87,19 @@ namespace HoaryFox.Component_v2.Geometry
 
                     if (index < 5)
                     {
-                        Dictionary<string, string>[] tags = sectionInfo[index];
-                        Dictionary<string, string> tag = tags[bIndex];
+                        Dictionary<string, string>[] infos = infoArray[index];
+                        Dictionary<string, string> info = infos[bIndex];
                         // Misc.SetFrameUserString(ref objAttr, tag);
-                        objAttr.SetUserString("Tag", tag["name"]);
+                        foreach (KeyValuePair<string, string> pair in info)
+                        {
+                            objAttr.SetUserString(pair.Key, pair.Value);
+                        }
 
-                        var layer = new Layer { Name = tag["name"], ParentLayerId = parentId, Color = layerColors[index] };
+                        var layer = new Layer { Name = info["name"], ParentLayerId = parentId, Color = layerColors[index] };
                         int layerIndex = activeDoc.Layers.Add(layer);
                         if (layerIndex == -1)
                         {
-                            layer = activeDoc.Layers.FindName(tag["name"]);
+                            layer = activeDoc.Layers.FindName(info["name"]);
                             layerIndex = layer.Index;
                         }
                         objAttr.LayerIndex = layerIndex;
