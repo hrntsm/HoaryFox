@@ -4,6 +4,9 @@ using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel;
 using HoaryFox.Component_v2.Utils.Geometry;
+using HoaryFox.Properties;
+using Rhino;
+using Rhino.DocObjects;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
@@ -65,7 +68,48 @@ namespace HoaryFox.Component_v2.Geometry
 
         private void BakeLine()
         {
-            throw new NotImplementedException();
+            RhinoDoc activeDoc = RhinoDoc.ActiveDoc;
+            var parentLayerNames = new[] { "Column", "Girder", "Post", "Beam", "Brace", "Slab", "Wall" };
+            Color[] layerColors = { Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple, Color.DarkGray, Color.CornflowerBlue };
+            GeometryBaker.MakeParentLayers(activeDoc, parentLayerNames, layerColors);
+
+            Dictionary<string, string>[][] sectionInfo = Utils.TagUtils.GetAllSectionInfoDictionary(_stBridge.StbModel.StbMembers);
+
+            foreach ((List<Line> lines, int index) in _lineList.Select((frameBrep, index) => (frameBrep, index)))
+            {
+                Layer parentLayer = activeDoc.Layers.FindName(parentLayerNames[index]);
+                int parentIndex = parentLayer.Index;
+                Guid parentId = parentLayer.Id;
+                foreach ((Line line, int bIndex) in lines.Select((brep, bIndex) => (brep, bIndex)))
+                {
+                    var objAttr = new ObjectAttributes();
+                    objAttr.SetUserString("Type", parentLayerNames[index]);
+
+                    if (index < 5)
+                    {
+                        Dictionary<string, string>[] tags = sectionInfo[index];
+                        Dictionary<string, string> tag = tags[bIndex];
+                        // Misc.SetFrameUserString(ref objAttr, tag);
+                        objAttr.SetUserString("Tag", tag["name"]);
+
+                        var layer = new Layer { Name = tag["name"], ParentLayerId = parentId, Color = layerColors[index] };
+                        int layerIndex = activeDoc.Layers.Add(layer);
+                        if (layerIndex == -1)
+                        {
+                            layer = activeDoc.Layers.FindName(tag["name"]);
+                            layerIndex = layer.Index;
+                        }
+                        objAttr.LayerIndex = layerIndex;
+                    }
+                    else
+                    {
+                        objAttr.LayerIndex = parentIndex;
+                    }
+
+                    activeDoc.Objects.AddLine(line, objAttr);
+                }
+            }
+
         }
 
         private void CreateLine()
@@ -79,7 +123,7 @@ namespace HoaryFox.Component_v2.Geometry
             _lineList.Add(createLines.Braces());
         }
 
-        protected override Bitmap Icon => Properties.Resource.Line;
+        protected override Bitmap Icon => Resource.Line;
         public override Guid ComponentGuid => new Guid("D1E6793B-F75C-4AEE-9A9F-B9DD08D6EB77");
     }
 }

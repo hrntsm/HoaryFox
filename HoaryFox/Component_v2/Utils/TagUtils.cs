@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Xml;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
@@ -114,6 +117,40 @@ namespace HoaryFox.Component_v2.Utils
             }
 
             return ghSecStrings;
+        }
+
+        public static Dictionary<string, string>[][] GetAllSectionInfoDictionary(StbMembers members)
+        {
+            var allTagList = new Dictionary<string, string>[5][];
+
+            // TODO: 必要な中身をDictionaryで返すようにする
+            allTagList[0] = members.StbColumns != null
+                ? members.StbColumns
+                    .Select(column => column.name)
+                    .Select(s => new Dictionary<string, string> { { "name", s } }).ToArray()
+                : new Dictionary<string, string>[] { };
+            allTagList[1] = members.StbGirders != null
+                ? members.StbGirders
+                    .Select(column => column.name)
+                    .Select(s => new Dictionary<string, string> { { "name", s } }).ToArray()
+                : new Dictionary<string, string>[] { };
+            allTagList[2] = members.StbPosts != null
+                ? members.StbPosts
+                    .Select(column => column.name)
+                    .Select(s => new Dictionary<string, string> { { "name", s } }).ToArray()
+                : new Dictionary<string, string>[] { };
+            allTagList[3] = members.StbBeams != null
+                ? members.StbBeams
+                    .Select(column => column.name)
+                    .Select(s => new Dictionary<string, string> { { "name", s } }).ToArray()
+                : new Dictionary<string, string>[] { };
+            allTagList[4] = members.StbBraces != null
+                ? members.StbBraces
+                    .Select(column => column.name)
+                    .Select(s => new Dictionary<string, string> { { "name", s } }).ToArray()
+                : new Dictionary<string, string>[] { };
+
+            return allTagList;
         }
     }
 }
