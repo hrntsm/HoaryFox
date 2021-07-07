@@ -83,13 +83,12 @@ namespace HoaryFox.Component_v2.Geometry
                 foreach ((Line line, int bIndex) in lines.Select((brep, bIndex) => (brep, bIndex)))
                 {
                     var objAttr = new ObjectAttributes();
-                    objAttr.SetUserString("Type", parentLayerNames[index]);
 
                     if (index < 5)
                     {
                         Dictionary<string, string>[] infos = infoArray[index];
                         Dictionary<string, string> info = infos[bIndex];
-                        // Misc.SetFrameUserString(ref objAttr, tag);
+
                         foreach (KeyValuePair<string, string> pair in info)
                         {
                             objAttr.SetUserString(pair.Key, pair.Value);
@@ -112,7 +111,6 @@ namespace HoaryFox.Component_v2.Geometry
                     activeDoc.Objects.AddLine(line, objAttr);
                 }
             }
-
         }
 
         private void CreateLine()

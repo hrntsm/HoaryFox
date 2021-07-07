@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
-using Newtonsoft.Json;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
@@ -124,57 +123,51 @@ namespace HoaryFox.Component_v2.Utils
         {
             var allTagList = new Dictionary<string, string>[5][];
 
-            // TODO: 必要な中身をDictionaryで返すようにする
-            allTagList[0] = members.StbColumns != null
-                ? AllStbColumnToDictArray(members)
-                : new Dictionary<string, string>[] { };
-            allTagList[1] = members.StbGirders != null
-                ? members.StbGirders
-                    .Select(column => column.name)
-                    .Select(s => new Dictionary<string, string> { { "name", s }, { "StbElementName", "StbGirder" } }).ToArray()
-                : new Dictionary<string, string>[] { };
-            allTagList[2] = members.StbPosts != null
-                ? members.StbPosts
-                    .Select(column => column.name)
-                    .Select(s => new Dictionary<string, string> { { "name", s }, { "StbElementName", "StbPost" } }).ToArray()
-                : new Dictionary<string, string>[] { };
-            allTagList[3] = members.StbBeams != null
-                ? members.StbBeams
-                    .Select(column => column.name)
-                    .Select(s => new Dictionary<string, string> { { "name", s }, { "StbElementName", "StbBeam" } }).ToArray()
-                : new Dictionary<string, string>[] { };
-            allTagList[4] = members.StbBraces != null
-                ? members.StbBraces
-                    .Select(column => column.name)
-                    .Select(s => new Dictionary<string, string> { { "name", s }, { "StbElementName", "StbBrace" } }).ToArray()
-                : new Dictionary<string, string>[] { };
+            var memberArray = new object[][] { members.StbColumns, members.StbGirders, members.StbPosts, members.StbBeams, members.StbBraces };
+            for (var i = 0; i < 5; i++)
+            {
+                allTagList[i] = memberArray[i] != null ? StbMembersToDictArray(memberArray[i]) : new Dictionary<string, string>[] { };
+            }
 
             return allTagList;
         }
 
-        private static Dictionary<string, string>[] AllStbColumnToDictArray(StbMembers members)
+        private static Dictionary<string, string>[] StbMembersToDictArray(IReadOnlyList<object> members)
         {
-            var propertiesArray = new Dictionary<string, string>[members.StbColumns.Length];
+            var propertiesArray = new Dictionary<string, string>[members.Count];
 
-            var item = members.StbColumns[0];
-
+            object item = members[0];
             Type t = item.GetType();
-            PropertyInfo[] props = t.GetProperties();
 
-            foreach ((StbColumn column, int index) in members.StbColumns.Select((column, index) => (column, index)))
+            foreach ((object column, int index) in members.Select((column, index) => (column, index)))
             {
-                var instanceProps = new Dictionary<string, string>();
-                foreach (PropertyInfo prop in props)
-                {
-                    if (prop.PropertyType == typeof(string) & prop.GetValue(column) != null)
-                    {
-                        instanceProps.Add(prop.Name, prop.GetValue(column).ToString());
-                    }
-                }
-                propertiesArray[index] = instanceProps;
+                propertiesArray[index] = GetMemberInfoDictionary(t, column);
             }
 
             return propertiesArray;
+        }
+
+        private static Dictionary<string, string> GetMemberInfoDictionary(Type type, object member)
+        {
+            PropertyInfo[] props = type.GetProperties();
+            var instanceProps = new Dictionary<string, string> { { "stb_element_type", type.Name } };
+            foreach (PropertyInfo prop in props)
+            {
+                if (prop.GetValue(member) == null)
+                {
+                    continue;
+                }
+                try
+                {
+                    instanceProps.Add(prop.Name, prop.GetValue(member).ToString());
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
+            return instanceProps;
         }
     }
 }
