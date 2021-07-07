@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Xml;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+using Newtonsoft.Json;
 using Rhino.Geometry;
 using STBDotNet.v202;
+
 
 namespace HoaryFox.Component_v2.Utils
 {
@@ -125,9 +126,7 @@ namespace HoaryFox.Component_v2.Utils
 
             // TODO: 必要な中身をDictionaryで返すようにする
             allTagList[0] = members.StbColumns != null
-                ? members.StbColumns
-                    .Select(column => column.name)
-                    .Select(s => new Dictionary<string, string> { { "name", s }, { "StbElementName", "StbColumn" } }).ToArray()
+                ? AllStbColumnToDictArray(members)
                 : new Dictionary<string, string>[] { };
             allTagList[1] = members.StbGirders != null
                 ? members.StbGirders
@@ -151,6 +150,31 @@ namespace HoaryFox.Component_v2.Utils
                 : new Dictionary<string, string>[] { };
 
             return allTagList;
+        }
+
+        private static Dictionary<string, string>[] AllStbColumnToDictArray(StbMembers members)
+        {
+            var propertiesArray = new Dictionary<string, string>[members.StbColumns.Length];
+
+            var item = members.StbColumns[0];
+
+            Type t = item.GetType();
+            PropertyInfo[] props = t.GetProperties();
+
+            foreach ((StbColumn column, int index) in members.StbColumns.Select((column, index) => (column, index)))
+            {
+                var instanceProps = new Dictionary<string, string>();
+                foreach (PropertyInfo prop in props)
+                {
+                    if (prop.PropertyType == typeof(string) & prop.GetValue(column) != null)
+                    {
+                        instanceProps.Add(prop.Name, prop.GetValue(column).ToString());
+                    }
+                }
+                propertiesArray[index] = instanceProps;
+            }
+
+            return propertiesArray;
         }
     }
 }
