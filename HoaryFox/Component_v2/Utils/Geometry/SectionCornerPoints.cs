@@ -13,11 +13,11 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         {
             var points = new[]
             {
-                new Point3d(node.X - width / 2 , node.Y - height / 2, node.Z),
-                new Point3d(node.X + width / 2 , node.Y - height / 2, node.Z),
-                new Point3d(node.X + width / 2 , node.Y + height / 2, node.Z),
-                new Point3d(node.X - width / 2 , node.Y + height / 2, node.Z),
-                new Point3d(node.X - width / 2 , node.Y - height / 2, node.Z),
+                new Point3d(node.X - width / 2, node.Y - height / 2, node.Z),
+                new Point3d(node.X + width / 2, node.Y - height / 2, node.Z),
+                new Point3d(node.X + width / 2, node.Y + height / 2, node.Z),
+                new Point3d(node.X - width / 2, node.Y + height / 2, node.Z),
+                new Point3d(node.X - width / 2, node.Y - height / 2, node.Z),
             };
 
             return points;
