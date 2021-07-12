@@ -36,10 +36,13 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                 Point3d[] sectionPoints =
                 {
                     new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z),
-                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z + column.joint_bottom),
-                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z - column.joint_top),
+                    new Point3d(),
+                    new Point3d(),
                     new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z)
                 };
+                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
+                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * column.joint_bottom;
+                sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * column.joint_top;
 
                 var brep = new Brep();
                 var curveList = new List<Curve>();
@@ -67,7 +70,6 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                 brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                     .CapPlanarHoles(_tolerance[0]);
 
-                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
                 Vector3d rotateAxis = Vector3d.CrossProduct(Vector3d.ZAxis, memberAxis);
                 double angle = Vector3d.VectorAngle(Vector3d.ZAxis, memberAxis);
                 brep.Rotate(column.rotate, Vector3d.ZAxis, sectionPoints[0]); // 要素軸での回転
@@ -78,7 +80,7 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             return brepList;
         }
 
-        private List<Curve> SecRcColumnToCurves(object figure, IReadOnlyList<Point3d> sectionPoints)
+        private static List<Curve> SecRcColumnToCurves(object figure, IReadOnlyList<Point3d> sectionPoints)
         {
             var curveList = new List<Curve>();
 
@@ -146,7 +148,72 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             return curveList;
         }
 
-        private List<Curve> SecSteelBeamToCurves(object[] figures, IReadOnlyList<Point3d> sectionPoints)
+        public List<Brep> Girder(IEnumerable<StbGirder> girders)
+        {
+            var brepList = new List<Brep>();
+
+            foreach (StbGirder girder in girders)
+            {
+                StbGirderKind_structure kind = girder.kind_structure;
+
+                StbNode[] endNodes =
+                {
+                    _nodes.First(node => node.id == girder.id_node_start),
+                    _nodes.First(node => node.id == girder.id_node_end)
+                };
+
+                Point3d[] sectionPoints =
+                {
+                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z),
+                    new Point3d(),
+                    new Point3d(),
+                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z)
+                };
+                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
+                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * girder.joint_start;
+                sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * girder.joint_end;
+
+                var brep = new Brep();
+                var curveList = new List<Curve>();
+
+                switch (kind)
+                {
+                    case StbGirderKind_structure.RC:
+                        StbSecBeam_RC rcSec = _sections.StbSecBeam_RC.First(sec => sec.id == girder.id_section);
+                        object[] figure = rcSec.StbSecFigureBeam_RC.Items;
+                        curveList = SecRcBeamCurves(figure, sectionPoints);
+                        break;
+                    case StbGirderKind_structure.S:
+                        StbSecBeam_S sSec = _sections.StbSecBeam_S.First(sec => sec.id == girder.id_section);
+                        object[] figures = sSec.StbSecSteelFigureBeam_S.Items;
+                        curveList = SecSteelBeamToCurves(figures, sectionPoints);
+                        break;
+                    case StbGirderKind_structure.SRC:
+                    case StbGirderKind_structure.UNDEFINED:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+                    .CapPlanarHoles(_tolerance[0]);
+
+                Vector3d rotateAxis = Vector3d.CrossProduct(Vector3d.ZAxis, memberAxis);
+                double angle = Vector3d.VectorAngle(Vector3d.ZAxis, memberAxis);
+                brep.Rotate(girder.rotate, Vector3d.ZAxis, sectionPoints[0]); // 要素軸での回転
+                brep.Rotate(angle, rotateAxis, sectionPoints[0]); // デフォルトではZ方向を向いているので、正確な要素方向への回転
+                brepList.Add(brep);
+            }
+
+            return brepList;
+        }
+
+        private List<Curve> SecRcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
+        {
+            throw new NotImplementedException();
+        }
+
+        private List<Curve> SecSteelBeamToCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
             var curveList = new List<Curve>();
 
