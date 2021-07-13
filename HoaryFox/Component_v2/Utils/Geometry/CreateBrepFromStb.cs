@@ -44,7 +44,6 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                 sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * column.joint_bottom;
                 sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * column.joint_top;
 
-                var brep = new Brep();
                 var curveList = new List<Curve>();
 
                 switch (kind)
@@ -67,13 +66,10 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         throw new ArgumentOutOfRangeException();
                 }
 
-                brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+                RotateCurveList(memberAxis, curveList, column.rotate, sectionPoints, Vector3d.ZAxis);
+                Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                     .CapPlanarHoles(_tolerance[0]);
 
-                Vector3d rotateAxis = Vector3d.CrossProduct(Vector3d.ZAxis, memberAxis);
-                double angle = Vector3d.VectorAngle(Vector3d.ZAxis, memberAxis);
-                brep.Rotate(column.rotate, Vector3d.ZAxis, sectionPoints[0]); // 要素軸での回転
-                brep.Rotate(angle, rotateAxis, sectionPoints[0]); // デフォルトではZ方向を向いているので、正確な要素方向への回転
                 brepList.Add(brep);
             }
 
@@ -165,17 +161,15 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                 Point3d[] sectionPoints =
                 {
                     new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z),
-                    new Point3d(),
-                    new Point3d(),
+                    Point3d.Origin,
+                    Point3d.Origin,
                     new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z)
                 };
                 Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
                 sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * girder.joint_start;
                 sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * girder.joint_end;
 
-                var brep = new Brep();
                 var curveList = new List<Curve>();
-
                 switch (kind)
                 {
                     case StbGirderKind_structure.RC:
@@ -195,9 +189,8 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         throw new ArgumentOutOfRangeException();
                 }
 
-                double rotate = girder.rotate;
-                RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
-                brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+                RotateCurveList(memberAxis, curveList, girder.rotate, sectionPoints, Vector3d.XAxis);
+                Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                     .CapPlanarHoles(_tolerance[0]);
 
                 brepList.Add(brep);
@@ -206,20 +199,83 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             return brepList;
         }
 
-        private static void RotateCurveList(Vector3d memberAxis, IEnumerable<Curve> curveList, double rotate, IReadOnlyList<Point3d> sectionPoints)
+        private static void RotateCurveList(Vector3d memberAxis, IReadOnlyList<Curve> curveList, double rotate, IReadOnlyList<Point3d> sectionPoints, Vector3d secLocalAxis)
         {
-            Vector3d rotateAxis = Vector3d.CrossProduct(Vector3d.ZAxis, memberAxis);
-            double angle = Vector3d.VectorAngle(Vector3d.ZAxis, memberAxis);
-            foreach (Curve curve in curveList)
+            Vector3d rotateAxis = Vector3d.CrossProduct(secLocalAxis, memberAxis);
+            double angle = Vector3d.VectorAngle(secLocalAxis, memberAxis);
+            int len = curveList.Count;
+            switch (len)
             {
-                curve.Rotate(rotate, Vector3d.ZAxis, sectionPoints[0]); // 断面の回転
-                curve.Rotate(angle, rotateAxis, sectionPoints[0]); // 軸の回転 
+                case 2:
+                    curveList[0].Rotate(rotate, secLocalAxis, sectionPoints[0]); // 断面内の回転
+                    curveList[0].Rotate(angle, rotateAxis, sectionPoints[0]); // 断面外の回転 
+                    curveList[1].Rotate(rotate, secLocalAxis, sectionPoints[3]);
+                    curveList[1].Rotate(angle, rotateAxis, sectionPoints[3]);
+                    break;
+                case 3:
+                    curveList[0].Rotate(rotate, secLocalAxis, sectionPoints[0]);
+                    curveList[0].Rotate(angle, rotateAxis, sectionPoints[0]); 
+                    curveList[2].Rotate(rotate, secLocalAxis, sectionPoints[3]);
+                    curveList[2].Rotate(angle, rotateAxis, sectionPoints[3]);
+                    if (sectionPoints[1] == Point3d.Origin)
+                    {
+                        curveList[1].Rotate(rotate, secLocalAxis, sectionPoints[1]);
+                        curveList[1].Rotate(angle, rotateAxis, sectionPoints[1]);
+                    }
+                    else
+                    {
+                        curveList[1].Rotate(rotate, secLocalAxis, sectionPoints[2]);
+                        curveList[1].Rotate(angle, rotateAxis, sectionPoints[2]);
+                    }
+                    break;
+                case 4:
+                    for (var i = 0; i < 4; i++)
+                    {
+                        curveList[i].Rotate(rotate, secLocalAxis, sectionPoints[i]);
+                        curveList[i].Rotate(angle, rotateAxis, sectionPoints[i]);
+                    }
+                    break;
+                default:
+                    throw new ArgumentException();
             }
         }
 
         private List<Curve> SecRcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
-            throw new NotImplementedException();
+            var curveList = new List<Curve>();
+
+            switch (figures.Count)
+            {
+                case 1:
+                    var straight = figures[0] as StbSecBeam_RC_Straight;
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[0], straight.depth, straight.width)));
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[3], straight.depth, straight.width)));
+                    break;
+                case 2:
+                    var taper = new[] { figures[0] as StbSecBeam_RC_Taper, figures[1] as StbSecBeam_RC_Taper };
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[0], taper[0].depth, taper[0].width)));
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width)));
+                    break;
+                case 3:
+                    var haunches = new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch };
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[0], haunches[0].depth, haunches[0].width)));
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[1], haunches[1].depth, haunches[1].width)));
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[2], haunches[1].depth, haunches[1].width)));
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[3], haunches[2].depth, haunches[2].width)));
+                    break;
+                default:
+                    throw new Exception();
+            }
+
+            return curveList;
         }
 
         private List<Curve> SecSteelBeamToCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
