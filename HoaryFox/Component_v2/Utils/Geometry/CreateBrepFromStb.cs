@@ -195,17 +195,26 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         throw new ArgumentOutOfRangeException();
                 }
 
+                double rotate = girder.rotate;
+                RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
                 brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                     .CapPlanarHoles(_tolerance[0]);
 
-                Vector3d rotateAxis = Vector3d.CrossProduct(Vector3d.ZAxis, memberAxis);
-                double angle = Vector3d.VectorAngle(Vector3d.ZAxis, memberAxis);
-                brep.Rotate(girder.rotate, Vector3d.ZAxis, sectionPoints[0]); // 要素軸での回転
-                brep.Rotate(angle, rotateAxis, sectionPoints[0]); // デフォルトではZ方向を向いているので、正確な要素方向への回転
                 brepList.Add(brep);
             }
 
             return brepList;
+        }
+
+        private static void RotateCurveList(Vector3d memberAxis, IEnumerable<Curve> curveList, double rotate, IReadOnlyList<Point3d> sectionPoints)
+        {
+            Vector3d rotateAxis = Vector3d.CrossProduct(Vector3d.ZAxis, memberAxis);
+            double angle = Vector3d.VectorAngle(Vector3d.ZAxis, memberAxis);
+            foreach (Curve curve in curveList)
+            {
+                curve.Rotate(rotate, Vector3d.ZAxis, sectionPoints[0]); // 断面の回転
+                curve.Rotate(angle, rotateAxis, sectionPoints[0]); // 軸の回転 
+            }
         }
 
         private List<Curve> SecRcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
