@@ -103,39 +103,41 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         {
             var curveList = new List<Curve>();
 
+            string bottom, center, top;
             switch (figures.Count)
             {
                 case 1:
                     var same = figures[0] as StbSecSteelColumn_S_Same;
-                    curveList.Add(GetSteelSec(same.shape, sectionPoints[0], SectionType.Column));
-                    curveList.Add(GetSteelSec(same.shape, sectionPoints[3], SectionType.Column));
+                    center = same.shape;
+                    curveList.Add(GetSteelSec(center, sectionPoints[0], SectionType.Column));
+                    curveList.Add(GetSteelSec(center, sectionPoints[3], SectionType.Column));
                     break;
                 case 2:
                     var notSames = new[] { figures[0] as StbSecSteelColumn_S_NotSame, figures[1] as StbSecSteelColumn_S_NotSame };
-                    StbSecSteelColumn_S_NotSame nsBottom = notSames.First(item => item.pos == StbSecSteelColumn_S_NotSamePos.BOTTOM);
-                    StbSecSteelColumn_S_NotSame nsTop = notSames.First(item => item.pos == StbSecSteelColumn_S_NotSamePos.TOP);
-                    curveList.Add(GetSteelSec(nsBottom.shape, sectionPoints[0], SectionType.Column));
+                    bottom = notSames.First(item => item.pos == StbSecSteelColumn_S_NotSamePos.BOTTOM).shape;
+                    top = notSames.First(item => item.pos == StbSecSteelColumn_S_NotSamePos.TOP).shape;
+                    curveList.Add(GetSteelSec(bottom, sectionPoints[0], SectionType.Column));
                     if (sectionPoints[1].Z > sectionPoints[0].Z)
                     {
-                        curveList.Add(GetSteelSec(nsBottom.shape, sectionPoints[1], SectionType.Column));
-                        curveList.Add(GetSteelSec(nsTop.shape, sectionPoints[1], SectionType.Column));
+                        curveList.Add(GetSteelSec(bottom, sectionPoints[1], SectionType.Column));
+                        curveList.Add(GetSteelSec(top, sectionPoints[1], SectionType.Column));
                     }
                     else
                     {
-                        curveList.Add(GetSteelSec(nsBottom.shape, sectionPoints[2], SectionType.Column));
-                        curveList.Add(GetSteelSec(nsTop.shape, sectionPoints[2], SectionType.Column));
+                        curveList.Add(GetSteelSec(bottom, sectionPoints[2], SectionType.Column));
+                        curveList.Add(GetSteelSec(top, sectionPoints[2], SectionType.Column));
                     }
-                    curveList.Add(GetSteelSec(nsTop.shape, sectionPoints[3], SectionType.Column));
+                    curveList.Add(GetSteelSec(top, sectionPoints[3], SectionType.Column));
                     break;
                 case 3:
                     var three = new[] { figures[0] as StbSecSteelColumn_S_ThreeTypes, figures[1] as StbSecSteelColumn_S_ThreeTypes, figures[2] as StbSecSteelColumn_S_ThreeTypes };
-                    StbSecSteelColumn_S_ThreeTypes tBottom = three.First(item => item.pos == StbSecSteelColumn_S_ThreeTypesPos.BOTTOM);
-                    StbSecSteelColumn_S_ThreeTypes tCenter = three.First(item => item.pos == StbSecSteelColumn_S_ThreeTypesPos.CENTER);
-                    StbSecSteelColumn_S_ThreeTypes tTop = three.First(item => item.pos == StbSecSteelColumn_S_ThreeTypesPos.TOP);
-                    curveList.Add(GetSteelSec(tBottom.shape, sectionPoints[0], SectionType.Column));
-                    curveList.Add(GetSteelSec(tCenter.shape, sectionPoints[1], SectionType.Column));
-                    curveList.Add(GetSteelSec(tCenter.shape, sectionPoints[2], SectionType.Column));
-                    curveList.Add(GetSteelSec(tTop.shape, sectionPoints[3], SectionType.Column));
+                    bottom = three.First(item => item.pos == StbSecSteelColumn_S_ThreeTypesPos.BOTTOM).shape;
+                    center = three.First(item => item.pos == StbSecSteelColumn_S_ThreeTypesPos.CENTER).shape;
+                    top = three.First(item => item.pos == StbSecSteelColumn_S_ThreeTypesPos.TOP).shape;
+                    curveList.Add(GetSteelSec(bottom, sectionPoints[0], SectionType.Column));
+                    curveList.Add(GetSteelSec(center, sectionPoints[1], SectionType.Column));
+                    curveList.Add(GetSteelSec(center, sectionPoints[2], SectionType.Column));
+                    curveList.Add(GetSteelSec(top, sectionPoints[3], SectionType.Column));
                     break;
                 default:
                     throw new ArgumentException("Unmatched StbSecSteelColumn_S");
@@ -214,10 +216,10 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                     break;
                 case 3:
                     curveList[0].Rotate(rotate, secLocalAxis, sectionPoints[0]);
-                    curveList[0].Rotate(angle, rotateAxis, sectionPoints[0]); 
+                    curveList[0].Rotate(angle, rotateAxis, sectionPoints[0]);
                     curveList[2].Rotate(rotate, secLocalAxis, sectionPoints[3]);
                     curveList[2].Rotate(angle, rotateAxis, sectionPoints[3]);
-                    if (sectionPoints[1] == Point3d.Origin)
+                    if (sectionPoints[2] == sectionPoints[3])
                     {
                         curveList[1].Rotate(rotate, secLocalAxis, sectionPoints[1]);
                         curveList[1].Rotate(angle, rotateAxis, sectionPoints[1]);
@@ -261,15 +263,12 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width)));
                     break;
                 case 3:
-                    var haunches = new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch };
-                    curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[0], haunches[0].depth, haunches[0].width)));
-                    curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[1], haunches[1].depth, haunches[1].width)));
-                    curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[2], haunches[1].depth, haunches[1].width)));
-                    curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[3], haunches[2].depth, haunches[2].width)));
+                    var haunch4 = new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch, figures[3] as StbSecBeam_RC_Haunch };
+                    for (var i = 0; i < 4; i++)
+                    {
+                        curveList.Add(new PolylineCurve(
+                            SectionCornerPoints.BeamRect(sectionPoints[i], haunch4[i].depth, haunch4[i].width)));
+                    }
                     break;
                 default:
                     throw new Exception();
@@ -281,19 +280,45 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         private List<Curve> SecSteelBeamToCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
             var curveList = new List<Curve>();
+            string start, center, end;
 
-            switch (figures)
+            switch (figures.Count)
             {
-                case StbSecSteelBeam_S_Straight[] straights:
+                case 1:
+                    var straight = figures[0] as StbSecSteelBeam_S_Straight;
+                    center = straight.shape;
+                    curveList.Add(GetSteelSec(center, sectionPoints[0], SectionType.Beam));
+                    curveList.Add(GetSteelSec(center, sectionPoints[3], SectionType.Beam));
                     break;
-                case StbSecSteelBeam_S_Taper[] tapers:
+                case 2:
+                    var tapers = new[] { figures[0] as StbSecSteelBeam_S_Taper, figures[1] as StbSecSteelBeam_S_Taper };
+                    start = tapers.First(sec => sec.pos == StbSecSteelBeam_S_TaperPos.START).shape;
+                    end = tapers.First(sec => sec.pos == StbSecSteelBeam_S_TaperPos.END).shape;
+                    curveList.Add(GetSteelSec(start, sectionPoints[0], SectionType.Beam));
+                    curveList.Add(GetSteelSec(end, sectionPoints[3], SectionType.Beam));
                     break;
-                case StbSecSteelBeam_S_Joint[] joints:
+                case 3:
+                    if (figures[0] is StbSecSteelBeam_S_Haunch)
+                    {
+                        var haunch = new[] { figures[0] as StbSecSteelBeam_S_Haunch, figures[1] as StbSecSteelBeam_S_Haunch, figures[2] as StbSecSteelBeam_S_Haunch };
+                        start = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.START).shape;
+                        center = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.CENTER).shape;
+                        end = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.END).shape;
+                    }
+                    else
+                    {
+                        var joint = new[] { figures[0] as StbSecSteelBeam_S_Joint, figures[1] as StbSecSteelBeam_S_Joint, figures[2] as StbSecSteelBeam_S_Joint };
+                        start = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.START).shape;
+                        center = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.CENTER).shape;
+                        end = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.END).shape;
+                    }
+                    curveList.Add(GetSteelSec(start, sectionPoints[0], SectionType.Beam));
+                    curveList.Add(GetSteelSec(center, sectionPoints[1], SectionType.Beam));
+                    curveList.Add(GetSteelSec(center, sectionPoints[2], SectionType.Beam));
+                    curveList.Add(GetSteelSec(end, sectionPoints[3], SectionType.Beam));
                     break;
-                case StbSecSteelBeam_S_Haunch[] haunches:
-                    break;
-                case StbSecSteelBeam_S_FiveTypes[] five:
-                    break;
+                case 5:
+                    throw new ArgumentException("5 section steel is not supported");
                 default:
                     throw new ArgumentException("Unmatched StbSecSteelBeam_S");
             }
@@ -314,9 +339,11 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         switch (type)
                         {
                             case SectionType.Column:
-                                return new PolylineCurve(SectionCornerPoints.ColumnRect(point, box.B, box.A));
+                                return new PolylineCurve(
+                                    SectionCornerPoints.ColumnRect(point, box.B, box.A));
                             case SectionType.Beam:
-                                break;
+                                return new PolylineCurve(
+                                    SectionCornerPoints.BeamRect(point, box.B, box.A));
                             case SectionType.Brace:
                                 break;
                             default:
@@ -335,9 +362,11 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         switch (type)
                         {
                             case SectionType.Column:
-                                return new PolylineCurve(SectionCornerPoints.ColumnRect(point, box.B, box.A));
+                                return new PolylineCurve(
+                                    SectionCornerPoints.ColumnRect(point, box.B, box.A));
                             case SectionType.Beam:
-                                break;
+                                return new PolylineCurve(
+                                    SectionCornerPoints.BeamRect(point, box.B, box.A));
                             case SectionType.Brace:
                                 break;
                             default:
@@ -356,10 +385,11 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         switch (type)
                         {
                             case SectionType.Column:
-                                return new PolylineCurve(SectionCornerPoints.ColumnH(point, buildH.B, buildH.A,
-                                    buildH.t1, buildH.t2));
+                                return new PolylineCurve(
+                                    SectionCornerPoints.ColumnH(point, buildH.A, buildH.B, buildH.t1, buildH.t2));
                             case SectionType.Beam:
-                                break;
+                                return new PolylineCurve(
+                                    SectionCornerPoints.BeamH(point, buildH.A, buildH.B, buildH.t1, buildH.t2));
                             case SectionType.Brace:
                                 break;
                             default:
@@ -378,9 +408,11 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         switch (type)
                         {
                             case SectionType.Column:
-                                return new PolylineCurve(SectionCornerPoints.ColumnH(point, rollH.B, rollH.A, rollH.t1, rollH.t2));
+                                return new PolylineCurve(
+                                    SectionCornerPoints.ColumnH(point, rollH.A, rollH.B, rollH.t1, rollH.t2));
                             case SectionType.Beam:
-                                break;
+                                return new PolylineCurve(
+                                    SectionCornerPoints.BeamH(point, rollH.A, rollH.B, rollH.t1, rollH.t2));
                             case SectionType.Brace:
                                 break;
                             default:

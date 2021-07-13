@@ -66,5 +66,33 @@ namespace HoaryFox.Component_v2.Utils.Geometry
 
             return points;
         }
+
+        //           7 - - - - 6
+        //           8 - 9 4 - 5
+        //  Z            | |    
+        //  ^        11-10 3 - 2
+        //  o > Y    0 - - - - 1
+        public static Point3d[] BeamH(Point3d pt, double height, double width, double tw, double tf)
+        {
+            var points = new[]
+            {
+                new Point3d(pt.X, pt.Y - width / 2, pt.Z - height),
+                new Point3d(pt.X, pt.Y + width / 2, pt.Z - height),
+                new Point3d(pt.X, pt.Y + width / 2, pt.Z - height + tf),
+                new Point3d(pt.X, pt.Y + tw / 2, pt.Z - height + tf),
+                new Point3d(pt.X, pt.Y + tw / 2, pt.Z - tf),
+                new Point3d(pt.X, pt.Y + width / 2, pt.Z - tf),
+                new Point3d(pt.X, pt.Y + width / 2, pt.Z),
+                new Point3d(pt.X, pt.Y - width / 2, pt.Z),
+                new Point3d(pt.X, pt.Y - width / 2, pt.Z - tf),
+                new Point3d(pt.X, pt.Y - tw / 2, pt.Z - tf),
+                new Point3d(pt.X, pt.Y - tw / 2, pt.Z - height + tf),
+                new Point3d(pt.X, pt.Y - width / 2, pt.Z - height + tf),
+                new Point3d(pt.X, pt.Y - width / 2, pt.Z - height)
+            };
+
+            return points;
+        }
+
     }
 }
