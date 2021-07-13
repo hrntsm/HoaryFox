@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HoaryFox</RootNamespace>
     <AssemblyName>HoaryFox</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
@@ -35,6 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Component_v2\Geometry\Stb2Brep.cs" />
+    <Compile Include="Component_v2\Utils\Geometry\CreateBrepFromStb.cs" />
     <Compile Include="Component_v2\Utils\Geometry\GeometryBaker.cs" />
     <Compile Include="Component_v2\Utils\Geometry\CreateLineFromStb.cs" />
     <Compile Include="Component_v2\Geometry\Stb2Line.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="Member\CreateBar.cs" />
     <Compile Include="Member\FrameBreps.cs" />
     <Compile Include="Member\CreateTag.cs" />
+    <Compile Include="Component_v2\Utils\Geometry\SectionCornerPoints.cs" />
     <Compile Include="Member\FramePoints.cs" />
     <Compile Include="Member\ShapeInfo.cs" />
     <Compile Include="Member\SteelCroSecBrep.cs" />
