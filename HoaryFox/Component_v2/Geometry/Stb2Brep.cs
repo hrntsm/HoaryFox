@@ -62,11 +62,14 @@ namespace HoaryFox.Component_v2.Geometry
 
         private void MakeBrep()
         {
+            StbMembers member = _stBridge.StbModel.StbMembers;
             var brepFromStb = new CreateBrepFromStb(_stBridge.StbModel.StbSections, _stBridge.StbModel.StbNodes, new[] { DocumentTolerance(), DocumentAngleTolerance() });
-            _brepList.Add(brepFromStb.Column(_stBridge.StbModel.StbMembers.StbColumns));
-            _brepList.Add(brepFromStb.Girder(_stBridge.StbModel.StbMembers.StbGirders));
+            _brepList.Add(brepFromStb.Column(member.StbColumns));
+            _brepList.Add(brepFromStb.Girder(member.StbGirders));
+            _brepList.Add(brepFromStb.Post(member.StbPosts));
+            _brepList.Add(brepFromStb.Beam(member.StbBeams));
 
-            for (var i = 0; i < 6; i++)
+            for (var i = 0; i < 3; i++)
             {
                 _brepList.Add(new List<Brep>());
             }
