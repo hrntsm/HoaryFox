@@ -22,6 +22,10 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         public List<Brep> Column(IEnumerable<StbColumn> columns)
         {
             var brepList = new List<Brep>();
+            if (columns == null)
+            {
+                return brepList;
+            }
 
             foreach (StbColumn column in columns)
             {
@@ -44,36 +48,75 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                 sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * column.joint_bottom;
                 sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * column.joint_top;
 
-                var curveList = new List<Curve>();
-
-                switch (kind)
-                {
-                    case StbColumnKind_structure.RC:
-                        StbSecColumn_RC rcSec = _sections.StbSecColumn_RC.First(sec => sec.id == column.id_section);
-                        object figure = rcSec.StbSecFigureColumn_RC.Item;
-                        curveList = SecRcColumnToCurves(figure, sectionPoints);
-                        break;
-                    case StbColumnKind_structure.S:
-                        StbSecColumn_S sSec = _sections.StbSecColumn_S.First(sec => sec.id == column.id_section);
-                        object[] figures = sSec.StbSecSteelFigureColumn_S.Items;
-                        curveList = SecSteelColumnToCurves(figures, sectionPoints);
-                        break;
-                    case StbColumnKind_structure.SRC:
-                    case StbColumnKind_structure.CFT:
-                    case StbColumnKind_structure.UNDEFINED:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                RotateCurveList(memberAxis, curveList, column.rotate, sectionPoints, Vector3d.ZAxis);
-                Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
-                    .CapPlanarHoles(_tolerance[0]);
-
-                brepList.Add(brep);
+                brepList.Add(CreateColumnBrep(column.id_section, column.rotate, kind, sectionPoints, memberAxis));
             }
 
             return brepList;
+        }
+
+        public List<Brep> Post(IEnumerable<StbPost> posts)
+        {
+            var brepList = new List<Brep>();
+            if (posts == null)
+            {
+                return brepList;
+            }
+
+            foreach (StbPost post in posts)
+            {
+                StbColumnKind_structure kind = post.kind_structure;
+
+                StbNode[] endNodes =
+                {
+                    _nodes.First(node => node.id == post.id_node_bottom),
+                    _nodes.First(node => node.id == post.id_node_top)
+                };
+
+                Point3d[] sectionPoints =
+                {
+                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z),
+                    new Point3d(),
+                    new Point3d(),
+                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z)
+                };
+                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
+                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * post.joint_bottom;
+                sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * post.joint_top;
+
+                brepList.Add(CreateColumnBrep(post.id_section, post.rotate, kind, sectionPoints, memberAxis));
+            }
+
+            return brepList;
+        }
+
+        private Brep CreateColumnBrep(string idSection, double rotate, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
+        {
+            var curveList = new List<Curve>();
+
+            switch (kind)
+            {
+                case StbColumnKind_structure.RC:
+                    StbSecColumn_RC rcSec = _sections.StbSecColumn_RC.First(sec => sec.id == idSection);
+                    object figure = rcSec.StbSecFigureColumn_RC.Item;
+                    curveList = SecRcColumnToCurves(figure, sectionPoints);
+                    break;
+                case StbColumnKind_structure.S:
+                    StbSecColumn_S sSec = _sections.StbSecColumn_S.First(sec => sec.id == idSection);
+                    object[] figures = sSec.StbSecSteelFigureColumn_S.Items;
+                    curveList = SecSteelColumnToCurves(figures, sectionPoints);
+                    break;
+                case StbColumnKind_structure.SRC:
+                case StbColumnKind_structure.CFT:
+                case StbColumnKind_structure.UNDEFINED:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            RotateCurveList(memberAxis, curveList, rotate, sectionPoints, Vector3d.ZAxis);
+            Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+                .CapPlanarHoles(_tolerance[0]);
+            return brep;
         }
 
         private static List<Curve> SecRcColumnToCurves(object figure, IReadOnlyList<Point3d> sectionPoints)
@@ -149,6 +192,10 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         public List<Brep> Girder(IEnumerable<StbGirder> girders)
         {
             var brepList = new List<Brep>();
+            if (girders == null)
+            {
+                return brepList;
+            }
 
             foreach (StbGirder girder in girders)
             {
