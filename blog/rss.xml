@@ -2,7 +2,7 @@
 <rss version="2.0">
     <channel>
         <title>HoaryFox Blog</title>
-        <link>https://hiron.dev/blog</link>
+        <link>https://hiron.dev/HoaryFox/blog</link>
         <description>HoaryFox Blog</description>
         <lastBuildDate>Sun, 28 Mar 2021 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
