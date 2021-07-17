@@ -371,6 +371,109 @@ namespace HoaryFox.Component_v2.Utils.Geometry
 
             return curveList;
         }
+
+        public List<Brep> Brace(IEnumerable<StbBrace> braces)
+        {
+            var brepList = new List<Brep>();
+            if (braces == null)
+            {
+                return brepList;
+            }
+
+            foreach (StbBrace brace in braces)
+            {
+                StbBraceKind_structure kind = brace.kind_structure;
+
+                StbNode[] endNodes =
+                {
+                    _nodes.First(node => node.id == brace.id_node_start),
+                    _nodes.First(node => node.id == brace.id_node_end)
+                };
+
+                Point3d[] sectionPoints =
+                {
+                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z),
+                    Point3d.Origin,
+                    Point3d.Origin,
+                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z)
+                };
+                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
+                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * brace.joint_start;
+                sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * brace.joint_end;
+
+                brepList.Add(CreateBraceBrep(brace.id_section, brace.rotate, kind, sectionPoints, memberAxis));
+            }
+
+            return brepList;
+        }
+
+        private Brep CreateBraceBrep(string idSection, double rotate, StbBraceKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
+        {
+            var curveList = new List<Curve>();
+
+            switch (kind)
+            {
+                case StbBraceKind_structure.S:
+                    StbSecBrace_S sSec = _sections.StbSecBrace_S.First(sec => sec.id == idSection);
+                    object[] figures = sSec.StbSecSteelFigureBrace_S.Items;
+                    curveList = SecSteelBraceToCurves(figures, sectionPoints);
+                    break;
+                case StbBraceKind_structure.RC:
+                case StbBraceKind_structure.SRC:
+                    throw new ArgumentException("Unsupported brace structure type");
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            RotateCurveList(memberAxis, curveList, rotate, sectionPoints, Vector3d.ZAxis);
+            Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+                .CapPlanarHoles(_tolerance[0]);
+            return brep;
+        }
+
+        private List<Curve> SecSteelBraceToCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
+        {
+            var curveList = new List<Curve>();
+            string start, center, end;
+
+            switch (figures.Count)
+            {
+                case 1:
+                    var same = figures[0] as StbSecSteelBrace_S_Same;
+                    center = same.shape;
+                    curveList.Add(GetSteelSec(center, sectionPoints[0], SectionType.Brace));
+                    curveList.Add(GetSteelSec(center, sectionPoints[3], SectionType.Brace));
+                    break;
+                case 2:
+                    var notSames = new[] { figures[0] as StbSecSteelBrace_S_NotSame, figures[1] as StbSecSteelBrace_S_NotSame };
+                    start = notSames.First(sec => sec.pos == StbSecSteelBrace_S_NotSamePos.BOTTOM).shape;
+                    end = notSames.First(sec => sec.pos == StbSecSteelBrace_S_NotSamePos.TOP).shape;
+                    curveList.Add(GetSteelSec(start, sectionPoints[0], SectionType.Brace));
+                    curveList.Add(sectionPoints[0] == sectionPoints[1]
+                        ? GetSteelSec(start, sectionPoints[2], SectionType.Brace)
+                        : GetSteelSec(start, sectionPoints[1], SectionType.Brace));
+                    curveList.Add(sectionPoints[0] == sectionPoints[1]
+                        ? GetSteelSec(end, sectionPoints[2], SectionType.Brace)
+                        : GetSteelSec(end, sectionPoints[1], SectionType.Brace));
+                    curveList.Add(GetSteelSec(end, sectionPoints[3], SectionType.Brace));
+                    break;
+                case 3:
+                    var three = new[] { figures[0] as StbSecSteelBrace_S_ThreeTypes, figures[1] as StbSecSteelBrace_S_ThreeTypes, figures[2] as StbSecSteelBrace_S_ThreeTypes };
+                    start = three.First(sec => sec.pos == StbSecSteelBrace_S_ThreeTypesPos.BOTTOM).shape;
+                    center = three.First(sec => sec.pos == StbSecSteelBrace_S_ThreeTypesPos.CENTER).shape;
+                    end = three.First(sec => sec.pos == StbSecSteelBrace_S_ThreeTypesPos.TOP).shape;
+                    curveList.Add(GetSteelSec(start, sectionPoints[0], SectionType.Brace));
+                    curveList.Add(GetSteelSec(center, sectionPoints[1], SectionType.Brace));
+                    curveList.Add(GetSteelSec(center, sectionPoints[2], SectionType.Brace));
+                    curveList.Add(GetSteelSec(end, sectionPoints[3], SectionType.Brace));
+                    break;
+                default:
+                    throw new ArgumentException("Unmatched StbSecSteelBrace_S");
+            }
+
+            return curveList;
+        }
+
         private static void RotateCurveList(Vector3d memberAxis, IReadOnlyList<Curve> curveList, double rotate, IReadOnlyList<Point3d> sectionPoints, Vector3d secLocalAxis)
         {
             Vector3d rotateAxis = Vector3d.CrossProduct(secLocalAxis, memberAxis);
@@ -425,13 +528,12 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         switch (type)
                         {
                             case SectionType.Column:
+                            case SectionType.Brace:
                                 return new PolylineCurve(
                                     SectionCornerPoints.ColumnRect(point, box.B, box.A));
                             case SectionType.Beam:
                                 return new PolylineCurve(
                                     SectionCornerPoints.BeamRect(point, box.B, box.A));
-                            case SectionType.Brace:
-                                break;
                             default:
                                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
                         }
@@ -448,13 +550,12 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         switch (type)
                         {
                             case SectionType.Column:
+                            case SectionType.Brace:
                                 return new PolylineCurve(
                                     SectionCornerPoints.ColumnRect(point, box.B, box.A));
                             case SectionType.Beam:
                                 return new PolylineCurve(
                                     SectionCornerPoints.BeamRect(point, box.B, box.A));
-                            case SectionType.Brace:
-                                break;
                             default:
                                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
                         }
@@ -471,13 +572,12 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         switch (type)
                         {
                             case SectionType.Column:
+                            case SectionType.Brace:
                                 return new PolylineCurve(
                                     SectionCornerPoints.ColumnH(point, buildH.A, buildH.B, buildH.t1, buildH.t2));
                             case SectionType.Beam:
                                 return new PolylineCurve(
                                     SectionCornerPoints.BeamH(point, buildH.A, buildH.B, buildH.t1, buildH.t2));
-                            case SectionType.Brace:
-                                break;
                             default:
                                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
                         }
@@ -494,13 +594,34 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         switch (type)
                         {
                             case SectionType.Column:
+                            case SectionType.Brace:
                                 return new PolylineCurve(
                                     SectionCornerPoints.ColumnH(point, rollH.A, rollH.B, rollH.t1, rollH.t2));
                             case SectionType.Beam:
                                 return new PolylineCurve(
                                     SectionCornerPoints.BeamH(point, rollH.A, rollH.B, rollH.t1, rollH.t2));
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                        }
+                    }
+                }
+            }
+
+            if (secSteel.StbSecRollL != null)
+            {
+                foreach (StbSecRollL rollL in _sections.StbSecSteel.StbSecRollL)
+                {
+                    if (rollL.name == shape)
+                    {
+                        switch (type)
+                        {
+                            case SectionType.Column:
                             case SectionType.Brace:
-                                break;
+                                return new PolylineCurve(
+                                    SectionCornerPoints.ColumnL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
+                            case SectionType.Beam:
+                                return new PolylineCurve(
+                                    SectionCornerPoints.BeamL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
                             default:
                                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
                         }
