@@ -42,5 +42,15 @@ namespace HoaryFox.Member
                 return hashCode;
             }
         }
+
+        public static bool operator ==(ShapeInfo left, ShapeInfo right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ShapeInfo left, ShapeInfo right)
+        {
+            return !(left == right);
+        }
     }
 }

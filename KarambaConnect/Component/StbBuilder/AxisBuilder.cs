@@ -49,7 +49,7 @@ namespace KarambaConnect.Component.StbBuilder
             if (distance.Count != names.Count || distance.Count != range.Count || distance.Count != dir.Count ||
                 range.Count != names.Count || range.Count != dir.Count || names.Count != dir.Count)
             {
-                throw new ArgumentOutOfRangeException("The number of items does not match.");
+                throw new ArgumentException("The number of items does not match.");
             }
 
             foreach (double dist in distance)

@@ -45,7 +45,7 @@ namespace KarambaConnect.Component.StbBuilder
 
             if (height.Count != range.Count || height.Count != names.Count || range.Count != names.Count)
             {
-                throw new ArgumentOutOfRangeException("The number of items does not match.");
+                throw new ArgumentException("The number of items does not match.");
             }
 
             foreach (double h in height)

@@ -55,26 +55,6 @@ namespace HoaryFox.Member
             return joinedBrep.Select(b => b.CapPlanarHoles(_tol)).ToList();
         }
 
-        //           o3 -    - o4 -    - o5
-        //           |                    |
-        //  Y        i2 - i3        i4 - i5
-        //  ^              |        |
-        //  o >  X   o0 - i0 - o1 - i1 - o2
-        private static Point3d[] MakeTInnerPoint(IReadOnlyList<Point3d> outPoints)
-        {
-            var points = new Point3d[6];
-
-            points[0] = 0.55 * outPoints[0] + 0.45 * outPoints[2];
-            points[1] = 0.55 * outPoints[2] + 0.45 * outPoints[0];
-            points[2] = 0.95 * outPoints[3] + 0.05 * outPoints[0];
-            points[5] = 0.95 * outPoints[5] + 0.05 * outPoints[2];
-
-            points[3] = 0.55 * points[5] + 0.45 * points[2];
-            points[4] = 0.55 * points[2] + 0.45 * points[5];
-
-            return points;
-        }
-
         public List<Brep> HShape()
         {
             Point3d[] pointIs = MakeHInnerPoint(_pointStart);
