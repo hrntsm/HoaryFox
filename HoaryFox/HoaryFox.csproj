@@ -1,172 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9637855D-D144-4448-9F56-A391A3575DAC}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HoaryFox</RootNamespace>
-    <AssemblyName>HoaryFox</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>net48</TargetFramework>
+    <Version>1.0</Version>
+    <Title>HoaryFox</Title>
+    <Description>Description of HoaryFox</Description>
+    <TargetExt>.gha</TargetExt>
+    <Authors>hrntsm</Authors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+  
   <ItemGroup>
-    <Compile Include="Component_v2\Geometry\Stb2Brep.cs" />
-    <Compile Include="Component_v2\Utils\Geometry\CreateBrepFromStb.cs" />
-    <Compile Include="Component_v2\Utils\Geometry\GeometryBaker.cs" />
-    <Compile Include="Component_v2\Utils\Geometry\CreateLineFromStb.cs" />
-    <Compile Include="Component_v2\Geometry\Stb2Line.cs" />
-    <Compile Include="Component_v2\IO\StbLoader.cs" />
-    <Compile Include="Component_v2\Tag\Name\PostNameTag.cs" />
-    <Compile Include="Component_v2\Tag\Name\GirderNameTag.cs" />
-    <Compile Include="Component_v2\Tag\Name\ColumnNameTag.cs" />
-    <Compile Include="Component_v2\Tag\Name\BraceNameTag.cs" />
-    <Compile Include="Component_v2\Tag\Name\BeamNameTag.cs" />
-    <Compile Include="Component_v2\Tag\Section\BraceSecTag.cs" />
-    <Compile Include="Component_v2\Tag\Section\PostSecTag.cs" />
-    <Compile Include="Component_v2\Tag\Section\ColumnSecTag.cs" />
-    <Compile Include="Component_v2\Tag\Section\GirderSecTag.cs" />
-    <Compile Include="Component_v2\Utils\TagUtils.cs" />
-    <Compile Include="Component\Base\NameTagBase.cs" />
-    <Compile Include="Component\Base\SecTagBase.cs" />
-    <Compile Include="Component\IO\StbLoader.cs" />
-    <Compile Include="Component\Geometry\Stb2Line.cs" />
-    <Compile Include="Component\Geometry\Stb2Brep.cs" />
-    <Compile Include="Component\Tag\Name\BeamNameTag.cs" />
-    <Compile Include="Component\Tag\Name\BraceNameTag.cs" />
-    <Compile Include="Component\Tag\Name\ColumnNameTag.cs" />
-    <Compile Include="Component\Tag\Name\GirderNameTag.cs" />
-    <Compile Include="Component\Tag\Name\PostNameTag.cs" />
-    <Compile Include="Component\Tag\Section\BeamSecTag.cs" />
-    <Compile Include="Component\Tag\Section\BraceSecTag.cs" />
-    <Compile Include="Component\Tag\Section\ColumnSecTag.cs" />
-    <Compile Include="Component\Tag\Section\GirderSecTag.cs" />
-    <Compile Include="Component\Tag\Section\PostSecTag.cs" />
-    <Compile Include="Component_v2\Tag\Section\BeamSecTag.cs" />
-    <Compile Include="Member\CreateBreps.cs" />
-    <Compile Include="Member\FrameLines.cs" />
-    <Compile Include="Member\CreateBar.cs" />
-    <Compile Include="Member\FrameBreps.cs" />
-    <Compile Include="Member\CreateTag.cs" />
-    <Compile Include="Component_v2\Utils\Geometry\SectionCornerPoints.cs" />
-    <Compile Include="Member\FramePoints.cs" />
-    <Compile Include="Member\ShapeInfo.cs" />
-    <Compile Include="Member\SteelCroSecBrep.cs" />
-    <Compile Include="HoaryFoxInfo.cs" />
-    <Compile Include="Misc.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
+    <PackageReference Include="Grasshopper" Version="6.20.19322.20361" IncludeAssets="compile;build" />
   </ItemGroup>
+  
   <ItemGroup>
-    <Reference Include="STBDotNet, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="STBDotNet">
       <HintPath>..\..\STBDotNet\STBDotNet\bin\Debug\netstandard2.0\STBDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="STBReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="STBReader">
       <HintPath>Library\STBReader.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Brep.afdesign" />
-    <None Include="Resources\Brep.png" />
-    <None Include="Resources\ColumnName.png" />
-    <None Include="Resources\BraceName.png" />
-    <None Include="Resources\GirderName.png" />
-    <None Include="Resources\BeamName.png" />
-    <None Include="Resources\ColumnSection.png" />
-    <None Include="Resources\GirderSection.png" />
-    <None Include="Resources\BraceSection.png" />
-    <None Include="Resources\BeamSection.png" />
-    <None Include="Resources\InfoIcon.afdesign" />
-    <None Include="Resources\Line.afdesign" />
-    <None Include="Resources\Name.afdesign" />
-    <None Include="Resources\PostName.png" />
-    <None Include="Resources\PostSection.png" />
-    <None Include="Resources\Line.png" />
-    <None Include="Resources\Section.afdesign" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\InfoIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Library\STBReader.dll" />
-    <Content Include="Resources\InfoIcon_Info.txt" />
-    <None Include="Resources\LoadStb.png" />
-    <None Include="Resources\ToKaramba.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Grasshopper">
-      <Version>6.20.19322.20361</Version>
-      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="RhinoCommon">
-      <Version>6.20.19322.20361</Version>
-      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <PropertyGroup>
-    <PostBuildEvent>Copy "$(TargetPath)" "$(TargetDir)$(ProjectName).gha"
-Erase "$(TargetPath)"</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <FallbackCulture>en-US</FallbackCulture>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartProgram>C:\Program Files\Rhino 6\System\Rhino.exe</StartProgram>
-    <StartArguments>
-    </StartArguments>
+  
+  <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
+    <StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
+    <StartArguments></StartArguments>
     <StartAction>Program</StartAction>
   </PropertyGroup>
+
 </Project>
