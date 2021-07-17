@@ -44,10 +44,10 @@ namespace HoaryFox.Component.Base
             pManager.AddTextParameter("NameTag", "NTag", "output name tag", GH_ParamAccess.list);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            if (!DA.GetData("Data", ref _stbData)) { return; }
-            if (!DA.GetData("Size", ref _size)) { return; }
+            if (!dataAccess.GetData("Data", ref _stbData)) { return; }
+            if (!dataAccess.GetData("Size", ref _size)) { return; }
 
             StbNodes nodes = _stbData.Nodes;
             StbFrame frame;
@@ -78,7 +78,7 @@ namespace HoaryFox.Component.Base
                 );
             }
 
-            DA.SetDataList(0, _frameName);
+            dataAccess.SetDataList(0, _frameName);
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)

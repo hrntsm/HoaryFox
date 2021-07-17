@@ -46,15 +46,15 @@ namespace HoaryFox.Component_v2.Tag.Section
             pManager.AddTextParameter("SecTag", "STag", "output section tag", GH_ParamAccess.tree);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            if (!DA.GetData("Data", ref _stBridge)) { return; }
-            if (!DA.GetData("Size", ref _size)) { return; }
+            if (!dataAccess.GetData("Data", ref _stBridge)) { return; }
+            if (!dataAccess.GetData("Size", ref _size)) { return; }
 
             _frameTags = GetTagStrings(_stBridge.StbModel.StbMembers.StbGirders, _stBridge.StbModel.StbSections);
             _tagPos = GetTagPosition(_stBridge.StbModel.StbMembers.StbGirders, _stBridge.StbModel.StbNodes);
 
-            DA.SetDataTree(0, _frameTags);
+            dataAccess.SetDataTree(0, _frameTags);
         }
         private static GH_Structure<GH_String> GetTagStrings(IEnumerable<StbGirder> beams, StbSections sections)
         {

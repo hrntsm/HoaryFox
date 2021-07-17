@@ -25,10 +25,10 @@ namespace KarambaConnect.Component.StbBuilder
             pManager.AddGenericParameter("Node", "Node", "StbNode Data", GH_ParamAccess.list);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var modelIn = new object();
-            if (!DA.GetData(0, ref modelIn)) { return; }
+            if (!dataAccess.GetData(0, ref modelIn)) { return; }
 
             if (!(modelIn is GH_Model ghKModel))
             {
@@ -36,7 +36,7 @@ namespace KarambaConnect.Component.StbBuilder
             }
             Model kModel = ghKModel.Value;
 
-            DA.SetDataList(0, kModel.nodes.ToStb());
+            dataAccess.SetDataList(0, kModel.nodes.ToStb());
         }
 
         protected override Bitmap Icon => Properties.Resource.NodeBuilder;

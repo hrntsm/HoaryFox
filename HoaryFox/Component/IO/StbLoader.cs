@@ -26,14 +26,14 @@ namespace HoaryFox.Component.IO
             pManager.AddGenericParameter("Data", "D", "output StbData", GH_ParamAccess.item);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             // 対象の stb の pathを取得
-            if (!DA.GetData("path", ref _path)) { return; }
+            if (!dataAccess.GetData("path", ref _path)) { return; }
 
             var stbData = new StbData(_path, _lengthTolerance, _angleTolerance);
 
-            DA.SetData(0, stbData);
+            dataAccess.SetData(0, stbData);
         }
 
         protected override System.Drawing.Bitmap Icon => Properties.Resource.LoadStb;

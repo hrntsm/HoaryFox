@@ -46,11 +46,11 @@ namespace KarambaConnect.Component.IO
             pManager.AddParameter(new Param_CrossSection(), "CrossSection", "CroSec", "Karamba CrossSection", GH_ParamAccess.list);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var familyName = new CroSecFamilyName();
-            if (!DA.GetData(0, ref _stbData)) { return; }
-            if (!DA.GetData(1, ref familyName))
+            if (!dataAccess.GetData(0, ref _stbData)) { return; }
+            if (!dataAccess.GetData(1, ref familyName))
             {
                 familyName = CroSecFamilyName.Default();
             }
@@ -62,8 +62,8 @@ namespace KarambaConnect.Component.IO
             List<GH_Element> ghElements = elems.Select(e => new GH_Element(e)).ToList();
             _k3ElemBe = ghElements;
 
-            DA.SetDataList(0, _k3ElemBe);
-            DA.SetDataList(1, k3CroSec);
+            dataAccess.SetDataList(0, _k3ElemBe);
+            dataAccess.SetDataList(1, k3CroSec);
         }
 
         protected override Bitmap Icon => Resource.ToKaramba;

@@ -28,7 +28,7 @@ namespace KarambaConnect.Component.StbBuilder
             pManager.AddGenericParameter("Story", "Story", "StbStory Data", GH_ParamAccess.list);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var count = 0;
             var nodes = new List<Node>();
@@ -36,10 +36,10 @@ namespace KarambaConnect.Component.StbBuilder
             var range = new List<double>();
             var names = new List<string>();
 
-            if (!DA.GetDataList(0, nodes)) { return; }
-            if (!DA.GetDataList(1, height)) { return; }
-            if (!DA.GetDataList(2, range)) { return; }
-            if (!DA.GetDataList(3, names)) { return; }
+            if (!dataAccess.GetDataList(0, nodes)) { return; }
+            if (!dataAccess.GetDataList(1, height)) { return; }
+            if (!dataAccess.GetDataList(2, range)) { return; }
+            if (!dataAccess.GetDataList(3, names)) { return; }
 
             var stories = new List<Story>();
 
@@ -76,7 +76,7 @@ namespace KarambaConnect.Component.StbBuilder
                 count++;
             }
 
-            DA.SetDataList(0, stories);
+            dataAccess.SetDataList(0, stories);
         }
 
         protected override Bitmap Icon => Properties.Resource.StoryBuilder;
