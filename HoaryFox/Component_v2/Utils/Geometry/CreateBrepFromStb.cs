@@ -634,6 +634,92 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             throw new ArgumentException("There are no matching steel section");
         }
 
+        public List<Brep> Slab(IEnumerable<StbSlab> slabs)
+        {
+            var brepList = new List<Brep>();
+            if (slabs == null)
+            {
+                return brepList;
+            }
+
+            foreach (StbSlab slab in slabs)
+            {
+                StbSlabOffset[] offsets = slab.StbSlabOffsetList;
+                var curveList = new PolylineCurve[2];
+                double depth = GetSlabDepth(slab);
+                string[] nodeIds = slab.StbNodeIdOrder.Split(' ');
+                var topPts = new List<Point3d>();
+                foreach (string nodeId in nodeIds)
+                {
+                    var offsetVec = new Vector3d();
+                    if (offsets != null)
+                    {
+                        foreach (StbSlabOffset offset in offsets)
+                        {
+                            if (nodeId == offset.id_node)
+                            {
+                                offsetVec = new Vector3d(offset.offset_X, offset.offset_Y, offset.offset_Z);
+                            }
+                        }
+                    }
+
+                    StbNode node = _nodes.First(n => n.id == nodeId);
+                    topPts.Add(new Point3d(node.X, node.Y, node.Z) + offsetVec);
+                }
+
+                topPts.Add(topPts[0]);
+                curveList[0] = new PolylineCurve(topPts);
+                Vector3d slabNormal = Brep.CreatePlanarBreps(curveList[0], _tolerance[0])[0].Faces[0].NormalAt(0.5, 0.5);
+                curveList[1] = new PolylineCurve(topPts.Select(pt => pt - slabNormal * depth));
+                brepList.Add(Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+                    .CapPlanarHoles(_tolerance[0]));
+            }
+
+            return brepList;
+        }
+
+        private double GetSlabDepth(StbSlab slab)
+        {
+            double depth = 0;
+
+            switch (slab.kind_structure)
+            {
+                case StbSlabKind_structure.RC:
+                    object[] slabRc = _sections.StbSecSlab_RC.First(sec => sec.id == slab.id_section).StbSecFigureSlab_RC.Items;
+                    switch (slabRc.Length)
+                    {
+                        case 1:
+                            var straight = slabRc[0] as StbSecSlab_RC_Straight;
+                            depth = straight.depth;
+                            break;
+                        case 2:
+                            var tapers = new[] { slabRc[0] as StbSecSlab_RC_Taper, slabRc[1] as StbSecSlab_RC_Taper };
+                            depth = tapers.First(sec => sec.pos == StbSecSlab_RC_TaperPos.TIP).depth;
+                            break;
+                        case 3:
+                            var haunches = new[]
+                            {
+                                slabRc[0] as StbSecSlab_RC_Haunch, slabRc[1] as StbSecSlab_RC_Haunch,
+                                slabRc[2] as StbSecSlab_RC_Haunch
+                            };
+                            depth = haunches.First(sec => sec.pos == StbSecSlab_RC_HaunchPos.CENTER).depth;
+                            break;
+                    }
+
+                    break;
+                case StbSlabKind_structure.DECK:
+                // StbSecSlabDeck slabDeck = _sections.StbSecSlabDeck.FirstOrDefault(sec => sec.id == slab.id_section);
+                // break;
+                case StbSlabKind_structure.PRECAST:
+                // StbSecSlabPrecast slabPrecast = _sections.StbSecSlabPrecast.FirstOrDefault(sec => sec.id == slab.id_section);
+                // break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return depth;
+        }
+
         private enum SectionType
         {
             Column,
