@@ -29,7 +29,7 @@ namespace KarambaConnect.Component.StbBuilder
             pManager.AddGenericParameter("Axis", "Axis", "StbAxis Data", GH_ParamAccess.list);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var count = 0;
             var nodes = new List<Node>();
@@ -38,18 +38,18 @@ namespace KarambaConnect.Component.StbBuilder
             var names = new List<string>();
             var dir = new List<int>();
 
-            if (!DA.GetDataList(0, nodes)) { return; }
-            if (!DA.GetDataList(1, distance)) { return; }
-            if (!DA.GetDataList(2, range)) { return; }
-            if (!DA.GetDataList(3, names)) { return; }
-            if (!DA.GetDataList(4, dir)) { return; }
+            if (!dataAccess.GetDataList(0, nodes)) { return; }
+            if (!dataAccess.GetDataList(1, distance)) { return; }
+            if (!dataAccess.GetDataList(2, range)) { return; }
+            if (!dataAccess.GetDataList(3, names)) { return; }
+            if (!dataAccess.GetDataList(4, dir)) { return; }
 
             var axes = new List<Axis>();
 
             if (distance.Count != names.Count || distance.Count != range.Count || distance.Count != dir.Count ||
                 range.Count != names.Count || range.Count != dir.Count || names.Count != dir.Count)
             {
-                throw new ArgumentOutOfRangeException("The number of items does not match.");
+                throw new ArgumentException("The number of items does not match.");
             }
 
             foreach (double dist in distance)
@@ -107,7 +107,7 @@ namespace KarambaConnect.Component.StbBuilder
                 count++;
             }
 
-            DA.SetDataList(0, axes);
+            dataAccess.SetDataList(0, axes);
         }
 
         protected override Bitmap Icon => Properties.Resource.AxisBuilder;

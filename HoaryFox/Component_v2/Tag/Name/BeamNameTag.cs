@@ -42,10 +42,10 @@ namespace HoaryFox.Component_v2.Tag.Name
             pManager.AddTextParameter("NameTag", "NTag", "output name tag", GH_ParamAccess.list);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            if (!DA.GetData("Data", ref _stBridge)) { return; }
-            if (!DA.GetData("Size", ref _size)) { return; }
+            if (!dataAccess.GetData("Data", ref _stBridge)) { return; }
+            if (!dataAccess.GetData("Size", ref _size)) { return; }
 
             StbNode[] nodes = _stBridge.StbModel.StbNodes;
             StbBeam[] beams = _stBridge.StbModel.StbMembers.StbBeams;
@@ -57,7 +57,7 @@ namespace HoaryFox.Component_v2.Tag.Name
                 string idNodeEnd = beam.id_node_end;
                 _framePos.Add(TagUtils.GetTagPosition(idNodeStart, idNodeEnd, nodes));
             }
-            DA.SetDataList(0, _frameName);
+            dataAccess.SetDataList(0, _frameName);
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)

@@ -47,16 +47,16 @@ namespace HoaryFox.Component.Geometry
             pManager.AddBrepParameter("Walls", "Wl", "output StbWalls to Brep", GH_ParamAccess.list);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var isBake = false;
-            if (!DA.GetData("Data", ref _stbData)) { return; }
-            if (!DA.GetData("Bake", ref isBake)) { return; }
+            if (!dataAccess.GetData("Data", ref _stbData)) { return; }
+            if (!dataAccess.GetData("Bake", ref isBake)) { return; }
             this.MakeBrep(isBake);
 
             for (var i = 0; i < 7; i++)
             {
-                DA.SetDataList(i, _geometryBreps[i]);
+                dataAccess.SetDataList(i, _geometryBreps[i]);
             }
         }
 

@@ -40,7 +40,7 @@ namespace KarambaConnect.Component.IO
             pManager.AddGenericParameter("Stb", "Stb", "StbModel Data", GH_ParamAccess.item);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var path = string.Empty;
             var isOutput = false;
@@ -50,13 +50,13 @@ namespace KarambaConnect.Component.IO
             var members = new Members();
             var sections = new List<Section>();
 
-            if (!DA.GetDataList(0, node)) { return; }
-            if (!DA.GetDataList(1, axis)) { return; }
-            if (!DA.GetDataList(2, story)) { return; }
-            if (!DA.GetData(3, ref members)) { return; }
-            if (!DA.GetDataList(4, sections)) { return; }
-            if (!DA.GetData(5, ref path)) { return; }
-            if (!DA.GetData(6, ref isOutput)) { return; }
+            if (!dataAccess.GetDataList(0, node)) { return; }
+            if (!dataAccess.GetDataList(1, axis)) { return; }
+            if (!dataAccess.GetDataList(2, story)) { return; }
+            if (!dataAccess.GetData(3, ref members)) { return; }
+            if (!dataAccess.GetDataList(4, sections)) { return; }
+            if (!dataAccess.GetData(5, ref path)) { return; }
+            if (!dataAccess.GetData(6, ref isOutput)) { return; }
 
 
             var elements = new StbElements
@@ -79,7 +79,7 @@ namespace KarambaConnect.Component.IO
                 sr.Serialize(elements, path);
             }
 
-            DA.SetData(0, elements);
+            dataAccess.SetData(0, elements);
         }
 
         protected override Bitmap Icon => Resource.ExportStb;

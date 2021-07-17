@@ -32,12 +32,12 @@ namespace KarambaConnect.Component.StbBuilder
             pManager.AddGenericParameter("Section", "Sec", "StbSection data", GH_ParamAccess.list);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             double colMaxAngle = 0;
             var modelIn = new object();
-            if (!DA.GetData(0, ref modelIn)) { return; }
-            if (!DA.GetData(1, ref colMaxAngle)) { return; }
+            if (!dataAccess.GetData(0, ref modelIn)) { return; }
+            if (!dataAccess.GetData(1, ref colMaxAngle)) { return; }
 
             if (!(modelIn is GH_Model ghKModel))
             {
@@ -48,8 +48,8 @@ namespace KarambaConnect.Component.StbBuilder
             _sModel = stbModel.SetByAngle(colMaxAngle);
             _sModel.Nodes = kModel.nodes.ToStb();
 
-            DA.SetData(0, _sModel.Members);
-            DA.SetDataList(1, _sModel.Sections);
+            dataAccess.SetData(0, _sModel.Members);
+            dataAccess.SetDataList(1, _sModel.Sections);
         }
 
         protected override Bitmap Icon => Properties.Resource.FrameBuilder;

@@ -126,7 +126,7 @@ namespace HoaryFox.Component_v2.Utils
             var memberArray = new object[][] { members.StbColumns, members.StbGirders, members.StbPosts, members.StbBeams, members.StbBraces };
             for (var i = 0; i < 5; i++)
             {
-                allTagList[i] = memberArray[i] != null ? StbMembersToDictArray(memberArray[i]) : new Dictionary<string, string>[] { };
+                allTagList[i] = memberArray[i] != null ? StbMembersToDictArray(memberArray[i]) : Array.Empty<Dictionary<string, string>>();
             }
 
             return allTagList;

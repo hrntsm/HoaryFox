@@ -46,17 +46,17 @@ namespace HoaryFox.Component.Geometry
             pManager.AddLineParameter("Braces", "Brc", "output StbBraces to Line", GH_ParamAccess.list);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var isBake = false;
-            if (!DA.GetData("Data", ref _stbData)) { return; }
-            if (!DA.GetData("Bake", ref isBake)) { return; }
+            if (!dataAccess.GetData("Data", ref _stbData)) { return; }
+            if (!dataAccess.GetData("Bake", ref isBake)) { return; }
 
             MakeLine(isBake);
-            DA.SetDataList(0, _nodes);
+            dataAccess.SetDataList(0, _nodes);
             foreach ((List<Line> geometry, int i) in _lineList.Select((geo, index) => (geo, index + 1)))
             {
-                DA.SetDataList(i, geometry);
+                dataAccess.SetDataList(i, geometry);
             }
         }
 

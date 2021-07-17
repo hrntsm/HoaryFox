@@ -288,7 +288,7 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         }
 
 
-        private List<Curve> SecRcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
+        private static List<Curve> SecRcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
             var curveList = new List<Curve>();
 

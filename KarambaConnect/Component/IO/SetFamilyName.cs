@@ -32,12 +32,12 @@ namespace KarambaConnect.Component.IO
             pManager.AddGenericParameter("FamilyName", "Family", "Each CrossSection Family Name", GH_ParamAccess.item);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var name = new string[8];
             for (var i = 0; i < name.Length; i++)
             {
-                if (!DA.GetData(i, ref name[i])) { return; }
+                if (!dataAccess.GetData(i, ref name[i])) { return; }
             }
 
             var familyName = new CroSecFamilyName
@@ -52,7 +52,7 @@ namespace KarambaConnect.Component.IO
                 Other = name[7]
             };
 
-            DA.SetData(0, familyName);
+            dataAccess.SetData(0, familyName);
         }
 
         protected override Bitmap Icon => Resource.SetFamilyName;
