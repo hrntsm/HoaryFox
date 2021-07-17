@@ -13,6 +13,7 @@
   
   <ItemGroup>
     <PackageReference Include="Grasshopper" Version="6.20.19322.20361" IncludeAssets="compile;build" />
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
   </ItemGroup>
   
   <ItemGroup>

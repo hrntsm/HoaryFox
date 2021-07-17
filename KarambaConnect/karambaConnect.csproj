@@ -15,14 +15,17 @@
   <ItemGroup>
     <PackageReference Include="Grasshopper" Version="6.20.19322.20361" IncludeAssets="compile;build" />
     <PackageReference Include="STBDotNet" Version="0.1.3" />
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
   </ItemGroup>
   
   <ItemGroup>
     <Reference Include="KarambaCommon">
       <HintPath>Library\karamba132\karambaCommon.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="KarambaGH">
       <HintPath>Library\karamba132\karamba.gha</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="STBReader">
       <HintPath>..\HoaryFox\Library\STBReader.dll</HintPath>
