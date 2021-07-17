@@ -56,11 +56,16 @@ namespace HoaryFox.Component_v2.Tag.Section
 
             dataAccess.SetDataTree(0, _frameTags);
         }
-        private static GH_Structure<GH_String> GetTagStrings(IEnumerable<StbBrace> beams, StbSections sections)
+        private static GH_Structure<GH_String> GetTagStrings(IEnumerable<StbBrace> braces, StbSections sections)
         {
             var ghSecStrings = new GH_Structure<GH_String>();
 
-            foreach (var item in beams.Select((brace, index) => new { brace, index }))
+            if (braces == null)
+            {
+                return ghSecStrings;
+            }
+
+            foreach (var item in braces.Select((brace, index) => new { brace, index }))
             {
                 string secId = item.brace.id_section;
                 var ghPath = new GH_Path(0, item.index);
@@ -86,9 +91,11 @@ namespace HoaryFox.Component_v2.Tag.Section
             return ghSecStrings;
         }
 
-        private static List<Point3d> GetTagPosition(IEnumerable<StbBrace> beams, IEnumerable<StbNode> nodes)
+        private static List<Point3d> GetTagPosition(IEnumerable<StbBrace> braces, IEnumerable<StbNode> nodes)
         {
-            return beams.Select(beam => TagUtils.GetTagPosition(beam.id_node_start, beam.id_node_end, nodes)).ToList();
+            return braces == null
+                ? new List<Point3d>()
+                : braces.Select(beam => TagUtils.GetTagPosition(beam.id_node_start, beam.id_node_end, nodes)).ToList();
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
