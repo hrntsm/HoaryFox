@@ -36,13 +36,17 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                     _nodes.First(node => node.id == column.id_node_bottom),
                     _nodes.First(node => node.id == column.id_node_top)
                 };
-
+                Point3d[] offset =
+                {
+                    new Point3d(column.offset_bottom_X, column.offset_bottom_Y, column.offset_bottom_Z),
+                    new Point3d(column.offset_top_X, column.offset_top_Y, column.offset_top_Z)
+                };
                 Point3d[] sectionPoints =
                 {
-                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z),
+                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
                     new Point3d(),
                     new Point3d(),
-                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z)
+                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
                 };
                 Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
                 sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * column.joint_bottom;
@@ -71,13 +75,17 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                     _nodes.First(node => node.id == post.id_node_bottom),
                     _nodes.First(node => node.id == post.id_node_top)
                 };
-
+                Point3d[] offset =
+                {
+                    new Point3d(post.offset_bottom_X, post.offset_bottom_Y, post.offset_bottom_Z),
+                    new Point3d(post.offset_top_X, post.offset_top_Y, post.offset_top_Z)
+                };
                 Point3d[] sectionPoints =
                 {
-                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z),
+                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
                     new Point3d(),
                     new Point3d(),
-                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z)
+                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
                 };
                 Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
                 sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * post.joint_bottom;
@@ -206,13 +214,17 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                     _nodes.First(node => node.id == girder.id_node_start),
                     _nodes.First(node => node.id == girder.id_node_end)
                 };
-
+                Point3d[] offset =
+                {
+                    new Point3d(girder.offset_start_X, girder.offset_start_Y, girder.offset_start_Z),
+                    new Point3d(girder.offset_end_X, girder.offset_end_Y, girder.offset_end_Z)
+                };
                 Point3d[] sectionPoints =
                 {
-                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z),
+                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
                     Point3d.Origin,
                     Point3d.Origin,
-                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z)
+                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
                 };
                 Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
                 sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * girder.joint_start;
@@ -241,13 +253,17 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                     _nodes.First(node => node.id == beam.id_node_start),
                     _nodes.First(node => node.id == beam.id_node_end)
                 };
-
+                Point3d[] offset =
+                {
+                    new Point3d(beam.offset_start_X, beam.offset_start_Y, beam.offset_start_Z),
+                    new Point3d(beam.offset_end_X, beam.offset_end_Y, beam.offset_end_Z)
+                };
                 Point3d[] sectionPoints =
                 {
-                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z),
+                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
                     Point3d.Origin,
                     Point3d.Origin,
-                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z)
+                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
                 };
                 Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
                 sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * beam.joint_start;
@@ -389,13 +405,17 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                     _nodes.First(node => node.id == brace.id_node_start),
                     _nodes.First(node => node.id == brace.id_node_end)
                 };
-
+                Point3d[] offset =
+                {
+                    new Point3d(brace.offset_start_X, brace.offset_start_Y, brace.offset_start_Z),
+                    new Point3d(brace.offset_end_X, brace.offset_end_Y, brace.offset_end_Z)
+                };
                 Point3d[] sectionPoints =
                 {
-                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z),
+                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
                     Point3d.Origin,
                     Point3d.Origin,
-                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z)
+                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
                 };
                 Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
                 sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * brace.joint_start;
