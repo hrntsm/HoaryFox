@@ -98,22 +98,22 @@ namespace HoaryFox.Component_v2.Geometry
                 {
                     var objAttr = new ObjectAttributes();
 
-                        Dictionary<string, string>[] infos = infoArray[index];
-                        Dictionary<string, string> info = infos[bIndex];
+                    Dictionary<string, string>[] infos = infoArray[index];
+                    Dictionary<string, string> info = infos[bIndex];
 
-                        foreach (KeyValuePair<string, string> pair in info)
-                        {
-                            objAttr.SetUserString(pair.Key, pair.Value);
-                        }
+                    foreach (KeyValuePair<string, string> pair in info)
+                    {
+                        objAttr.SetUserString(pair.Key, pair.Value);
+                    }
 
-                        var layer = new Layer { Name = info["name"], ParentLayerId = parentId, Color = layerColors[index] };
-                        int layerIndex = activeDoc.Layers.Add(layer);
-                        if (layerIndex == -1)
-                        {
-                            layer = activeDoc.Layers.FindName(info["name"]);
-                            layerIndex = layer.Index;
-                        }
-                        objAttr.LayerIndex = layerIndex;
+                    var layer = new Layer { Name = info["name"], ParentLayerId = parentId, Color = layerColors[index] };
+                    int layerIndex = activeDoc.Layers.Add(layer);
+                    if (layerIndex == -1)
+                    {
+                        layer = activeDoc.Layers.FindName(info["name"]);
+                        layerIndex = layer.Index;
+                    }
+                    objAttr.LayerIndex = layerIndex;
 
                     activeDoc.Objects.AddBrep(brep, objAttr);
                 }
