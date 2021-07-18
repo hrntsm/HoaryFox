@@ -70,11 +70,7 @@ namespace HoaryFox.Component_v2.Geometry
             _brepList.Add(brepFromStb.Beam(member.StbBeams));
             _brepList.Add(brepFromStb.Brace(member.StbBraces));
             _brepList.Add(brepFromStb.Slab(member.StbSlabs));
-
-            for (var i = 0; i < 3; i++)
-            {
-                _brepList.Add(new List<Brep>());
-            }
+            _brepList.Add(brepFromStb.Wall(member.StbWalls));
         }
     }
 }

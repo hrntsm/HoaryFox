@@ -649,7 +649,7 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                 }
             }
 
-            // TODO: Box と H 以外の断面を実装する
+            // TODO: Box と H と L 以外の断面を実装する
 
             throw new ArgumentException("There are no matching steel section");
         }
@@ -689,8 +689,8 @@ namespace HoaryFox.Component_v2.Utils.Geometry
 
                 topPts.Add(topPts[0]);
                 curveList[0] = new PolylineCurve(topPts);
-                Vector3d slabNormal = Brep.CreatePlanarBreps(curveList[0], _tolerance[0])[0].Faces[0].NormalAt(0.5, 0.5);
-                curveList[1] = new PolylineCurve(topPts.Select(pt => pt - slabNormal * depth));
+                Vector3d normal = Brep.CreatePlanarBreps(curveList[0], _tolerance[0])[0].Faces[0].NormalAt(0.5, 0.5);
+                curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * depth));
                 brepList.Add(Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                     .CapPlanarHoles(_tolerance[0]));
             }
@@ -738,6 +738,58 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             }
 
             return depth;
+        }
+
+        public List<Brep> Wall(IEnumerable<StbWall> walls)
+        {
+            var brepList = new List<Brep>();
+            if (walls == null)
+            {
+                return brepList;
+            }
+
+            foreach (StbWall wall in walls)
+            {
+                StbWallOffset[] offsets = wall.StbWallOffsetList;
+                var curveList = new PolylineCurve[2];
+                double thickness = GetWallThickness(wall);
+                string[] nodeIds = wall.StbNodeIdOrder.Split(' ');
+                var topPts = new List<Point3d>();
+                foreach (string nodeId in nodeIds)
+                {
+                    var offsetVec = new Vector3d();
+                    if (offsets != null)
+                    {
+                        foreach (StbWallOffset offset in offsets)
+                        {
+                            if (nodeId == offset.id_node)
+                            {
+                                offsetVec = new Vector3d(offset.offset_X, offset.offset_Y, offset.offset_Z);
+                                break;
+                            }
+                        }
+                    }
+
+                    StbNode node = _nodes.First(n => n.id == nodeId);
+                    topPts.Add(new Point3d(node.X, node.Y, node.Z) + offsetVec);
+                }
+
+                topPts.Add(topPts[0]);
+                var centerCurve = new PolylineCurve(topPts);
+                Vector3d normal = Brep.CreatePlanarBreps(centerCurve, _tolerance[0])[0].Faces[0].NormalAt(0.5, 0.5);
+                curveList[0] = new PolylineCurve(topPts.Select(pt => pt + normal * thickness / 2));
+                curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * thickness / 2));
+                brepList.Add(Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+                    .CapPlanarHoles(_tolerance[0]));
+            }
+
+            return brepList;
+        }
+
+        private double GetWallThickness(StbWall wall)
+        {
+            return _sections.StbSecWall_RC.First(sec => sec.id == wall.id_section)
+                .StbSecFigureWall_RC.StbSecWall_RC_Straight.t;
         }
 
         private enum SectionType
