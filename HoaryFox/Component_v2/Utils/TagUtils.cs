@@ -121,10 +121,10 @@ namespace HoaryFox.Component_v2.Utils
 
         public static Dictionary<string, string>[][] GetAllSectionInfoArray(StbMembers members)
         {
-            var allTagList = new Dictionary<string, string>[5][];
+            var allTagList = new Dictionary<string, string>[7][];
 
-            var memberArray = new object[][] { members.StbColumns, members.StbGirders, members.StbPosts, members.StbBeams, members.StbBraces };
-            for (var i = 0; i < 5; i++)
+            var memberArray = new object[][] { members.StbColumns, members.StbGirders, members.StbPosts, members.StbBeams, members.StbBraces, members.StbSlabs, members.StbWalls };
+            for (var i = 0; i < 7; i++)
             {
                 allTagList[i] = memberArray[i] != null ? StbMembersToDictArray(memberArray[i]) : Array.Empty<Dictionary<string, string>>();
             }
