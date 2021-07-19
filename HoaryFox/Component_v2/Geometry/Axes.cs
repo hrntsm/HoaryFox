@@ -33,7 +33,7 @@ namespace HoaryFox.Component_v2.Geometry
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddLineParameter("Columns", "Col", "output StbColumns to Brep", GH_ParamAccess.list);
+            pManager.AddLineParameter("Axis", "Ax", "output StbAxes to Line", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
@@ -49,9 +49,10 @@ namespace HoaryFox.Component_v2.Geometry
             foreach (StbParallelAxes parallel in parallels)
             {
                 var basePt = new Point3d(parallel.X, parallel.Y, 0);
-                var axisVec = Vector3d.XAxis * length;
-                axisVec.Rotate(parallel.angle * Math.PI / 180, Vector3d.ZAxis);
-                var distanceVec = Vector3d.CrossProduct(axisVec, Vector3d.ZAxis);
+                Vector3d axisVec = Vector3d.XAxis * length;
+                axisVec.Rotate(parallel.angle * Math.PI / 180, -Vector3d.ZAxis);
+                Vector3d distanceVec = Vector3d.YAxis;
+                distanceVec.Rotate(parallel.angle * Math.PI / 180, Vector3d.ZAxis);
 
                 foreach (StbParallelAxis pAxis in parallel.StbParallelAxis)
                 {
@@ -69,7 +70,6 @@ namespace HoaryFox.Component_v2.Geometry
         {
             IEnumerable<double> xList = stbNodes.Select(n => n.X);
             IEnumerable<double> yList = stbNodes.Select(n => n.Y);
-            IEnumerable<double> zList = stbNodes.Select(n => n.Z);
 
             return Math.Sqrt(Math.Pow(xList.Max() - xList.Min(), 2) + Math.Pow(yList.Max() - yList.Min(), 2));
         }
