@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
@@ -10,8 +11,12 @@ namespace HoaryFox.Component_v2.Geometry
     public class Axis : GH_Component
     {
         private ST_BRIDGE _stBridge;
+        private int _size;
         private readonly List<Line> _axisLines = new List<Line>();
+        private readonly List<Point3d> _axisPts = new List<Point3d>();
+        private readonly List<string> _axisStr = new List<string>();
 
+        public override bool IsPreviewCapable => true;
         public Axis()
           : base("Axis", "Axis",
               "Description",
@@ -29,6 +34,7 @@ namespace HoaryFox.Component_v2.Geometry
         {
             pManager.AddGenericParameter("Data", "D", "input ST-Bridge Data", GH_ParamAccess.item);
             pManager.AddNumberParameter("Factor", "F", "Axis length factor", GH_ParamAccess.item, 1.2);
+            pManager.AddIntegerParameter("Size", "S", "Axis tag", GH_ParamAccess.item, 12);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -41,6 +47,7 @@ namespace HoaryFox.Component_v2.Geometry
             double factor = 1;
             if (!dataAccess.GetData(0, ref _stBridge)) { return; }
             if (!dataAccess.GetData(1, ref factor)) { return; }
+            if (!dataAccess.GetData(2, ref _size)) { return; }
 
             StbAxes axis = _stBridge.StbModel.StbAxes;
             StbParallelAxes[] parallels = axis.StbParallelAxes;
@@ -60,6 +67,8 @@ namespace HoaryFox.Component_v2.Geometry
                         basePt - axisVec * (factor - 1) + distanceVec * pAxis.distance,
                         basePt + axisVec * factor + distanceVec * pAxis.distance
                     ));
+                    _axisPts.Add(basePt - axisVec * (factor - 1) + distanceVec * pAxis.distance);
+                    _axisStr.Add(pAxis.name);
                 }
             }
 
@@ -74,7 +83,16 @@ namespace HoaryFox.Component_v2.Geometry
             return Math.Sqrt(Math.Pow(xList.Max() - xList.Min(), 2) + Math.Pow(yList.Max() - yList.Min(), 2));
         }
 
-        protected override System.Drawing.Bitmap Icon => null;
+        public override void DrawViewportWires(IGH_PreviewArgs args)
+        {
+            for (var i = 0; i < _axisPts.Count; i++)
+            {
+                args.Display.Draw2dText(_axisStr[i], Color.Black, _axisPts[i], true, _size);
+                args.Display.DrawLine(_axisLines[i], Color.Black);
+            }
+        }
+
+        protected override Bitmap Icon => null;
 
         public override Guid ComponentGuid => new Guid("98315013-7bb3-4ad9-8b69-ad1457ebe0b7");
     }
