@@ -105,15 +105,19 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             {
                 case StbColumnKind_structure.RC:
                     StbSecColumn_RC rcSec = _sections.StbSecColumn_RC.First(sec => sec.id == idSection);
-                    object figure = rcSec.StbSecFigureColumn_RC.Item;
-                    curveList = SecRcColumnToCurves(figure, sectionPoints);
+                    object rcFigure = rcSec.StbSecFigureColumn_RC.Item;
+                    curveList = SecRcColumnToCurves(rcFigure, sectionPoints);
                     break;
                 case StbColumnKind_structure.S:
                     StbSecColumn_S sSec = _sections.StbSecColumn_S.First(sec => sec.id == idSection);
-                    object[] figures = sSec.StbSecSteelFigureColumn_S.Items;
-                    curveList = SecSteelColumnToCurves(figures, sectionPoints);
+                    object[] sFigures = sSec.StbSecSteelFigureColumn_S.Items;
+                    curveList = SecSteelColumnToCurves(sFigures, sectionPoints);
                     break;
                 case StbColumnKind_structure.SRC:
+                    StbSecColumn_SRC srcSec = _sections.StbSecColumn_SRC.First(sec => sec.id == idSection);
+                    object srcFigure = srcSec.StbSecFigureColumn_SRC.Item;
+                    curveList = SecRcColumnToCurves(srcFigure, sectionPoints);
+                    break;
                 case StbColumnKind_structure.CFT:
                 case StbColumnKind_structure.UNDEFINED:
                     break;
@@ -139,7 +143,17 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                     curveList.Add(new PolylineCurve(
                         SectionCornerPoints.ColumnRect(sectionPoints[3], rect.width_X, rect.width_Y)));
                     break;
+                case StbSecColumn_SRC_Rect rect:
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.ColumnRect(sectionPoints[0], rect.width_X, rect.width_Y)));
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.ColumnRect(sectionPoints[3], rect.width_X, rect.width_Y)));
+                    break;
                 case StbSecColumn_RC_Circle circle:
+                    curveList.Add(new ArcCurve(new Circle(sectionPoints[0], circle.D / 2d)));
+                    curveList.Add(new ArcCurve(new Circle(sectionPoints[3], circle.D / 2d)));
+                    break;
+                case StbSecColumn_SRC_Circle circle:
                     curveList.Add(new ArcCurve(new Circle(sectionPoints[0], circle.D / 2d)));
                     curveList.Add(new ArcCurve(new Circle(sectionPoints[3], circle.D / 2d)));
                     break;
@@ -282,17 +296,20 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             {
                 case StbGirderKind_structure.RC:
                     StbSecBeam_RC rcSec = _sections.StbSecBeam_RC.First(sec => sec.id == idSection);
-                    object[] figure = rcSec.StbSecFigureBeam_RC.Items;
-                    curveList = SecRcBeamCurves(figure, sectionPoints);
+                    object[] rcFigure = rcSec.StbSecFigureBeam_RC.Items;
+                    curveList = SecRcBeamCurves(rcFigure, sectionPoints);
                     break;
                 case StbGirderKind_structure.S:
                     StbSecBeam_S sSec = _sections.StbSecBeam_S.First(sec => sec.id == idSection);
-                    object[] figures = sSec.StbSecSteelFigureBeam_S.Items;
-                    curveList = SecSteelBeamToCurves(figures, sectionPoints);
+                    object[] sFigure = sSec.StbSecSteelFigureBeam_S.Items;
+                    curveList = SecSteelBeamToCurves(sFigure, sectionPoints);
                     break;
                 case StbGirderKind_structure.SRC:
-                case StbGirderKind_structure.UNDEFINED:
+                    StbSecBeam_SRC srcSec = _sections.StbSecBeam_SRC.First(sec => sec.id == idSection);
+                    object[] srcFigure = srcSec.StbSecFigureBeam_SRC.Items;
+                    curveList = SecSrcBeamCurves(srcFigure, sectionPoints);
                     break;
+                case StbGirderKind_structure.UNDEFINED:
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -325,12 +342,39 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width)));
                     break;
                 case 3:
-                    var haunch4 = new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch, figures[3] as StbSecBeam_RC_Haunch };
-                    for (var i = 0; i < 4; i++)
-                    {
-                        curveList.Add(new PolylineCurve(
-                            SectionCornerPoints.BeamRect(sectionPoints[i], haunch4[i].depth, haunch4[i].width)));
-                    }
+                    var haunch = new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch };
+                    curveList.AddRange(haunch.Select((fig, i) => new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[i], fig.depth, fig.width))));
+                    break;
+                default:
+                    throw new Exception();
+            }
+
+            return curveList;
+        }
+
+        private static List<Curve> SecSrcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
+        {
+            var curveList = new List<Curve>();
+
+            switch (figures.Count)
+            {
+                case 1:
+                    var straight = figures[0] as StbSecBeam_SRC_Straight;
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[0], straight.depth, straight.width)));
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[3], straight.depth, straight.width)));
+                    break;
+                case 2:
+                    var taper = new[] { figures[0] as StbSecBeam_SRC_Taper, figures[1] as StbSecBeam_SRC_Taper };
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[0], taper[0].depth, taper[0].width)));
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width)));
+                    break;
+                case 3:
+                    var haunch = new[] { figures[0] as StbSecBeam_SRC_Haunch, figures[1] as StbSecBeam_SRC_Haunch, figures[2] as StbSecBeam_SRC_Haunch };
+                    curveList.AddRange(haunch.Select((t, i) => new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[i], t.depth, t.width))));
                     break;
                 default:
                     throw new Exception();
@@ -689,7 +733,7 @@ namespace HoaryFox.Component_v2.Utils.Geometry
 
                 topPts.Add(topPts[0]);
                 curveList[0] = new PolylineCurve(topPts);
-                Vector3d normal = Brep.CreatePlanarBreps(curveList[0], _tolerance[0])[0].Faces[0].NormalAt(0.5, 0.5);
+                Vector3d normal = Vector3d.CrossProduct(curveList[0].TangentAtEnd, curveList[0].TangentAtStart);
                 curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * depth));
                 brepList.Add(Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                     .CapPlanarHoles(_tolerance[0]));
@@ -776,7 +820,7 @@ namespace HoaryFox.Component_v2.Utils.Geometry
 
                 topPts.Add(topPts[0]);
                 var centerCurve = new PolylineCurve(topPts);
-                Vector3d normal = Brep.CreatePlanarBreps(centerCurve, _tolerance[0])[0].Faces[0].NormalAt(0.5, 0.5);
+                Vector3d normal = Vector3d.CrossProduct(centerCurve.TangentAtEnd, centerCurve.TangentAtStart);
                 curveList[0] = new PolylineCurve(topPts.Select(pt => pt + normal * thickness / 2));
                 curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * thickness / 2));
                 brepList.Add(Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
