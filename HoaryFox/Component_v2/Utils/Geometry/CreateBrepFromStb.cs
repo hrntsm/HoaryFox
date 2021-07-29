@@ -541,37 +541,38 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         private static void RotateCurveList(Vector3d memberAxis, IReadOnlyList<Curve> curveList, double rotate, IReadOnlyList<Point3d> sectionPoints, Vector3d secLocalAxis)
         {
             Vector3d rotateAxis = Vector3d.CrossProduct(secLocalAxis, memberAxis);
-            double angle = Vector3d.VectorAngle(secLocalAxis, memberAxis);
+            double outPlaneAngle = Vector3d.VectorAngle(secLocalAxis, memberAxis);
+            double inPlaneAngle = rotate * Math.PI / 180;
             int len = curveList.Count;
             switch (len)
             {
                 case 2:
-                    curveList[0].Rotate(rotate, secLocalAxis, sectionPoints[0]); // 断面内の回転
-                    curveList[0].Rotate(angle, rotateAxis, sectionPoints[0]); // 断面外の回転 
-                    curveList[1].Rotate(rotate, secLocalAxis, sectionPoints[3]);
-                    curveList[1].Rotate(angle, rotateAxis, sectionPoints[3]);
+                    curveList[0].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[0]); // 断面内の回転
+                    curveList[0].Rotate(outPlaneAngle, rotateAxis, sectionPoints[0]); // 断面外の回転 
+                    curveList[1].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[3]);
+                    curveList[1].Rotate(outPlaneAngle, rotateAxis, sectionPoints[3]);
                     break;
                 case 3:
-                    curveList[0].Rotate(rotate, secLocalAxis, sectionPoints[0]);
-                    curveList[0].Rotate(angle, rotateAxis, sectionPoints[0]);
-                    curveList[2].Rotate(rotate, secLocalAxis, sectionPoints[3]);
-                    curveList[2].Rotate(angle, rotateAxis, sectionPoints[3]);
+                    curveList[0].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[0]);
+                    curveList[0].Rotate(outPlaneAngle, rotateAxis, sectionPoints[0]);
+                    curveList[2].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[3]);
+                    curveList[2].Rotate(outPlaneAngle, rotateAxis, sectionPoints[3]);
                     if (sectionPoints[2] == sectionPoints[3])
                     {
-                        curveList[1].Rotate(rotate, secLocalAxis, sectionPoints[1]);
-                        curveList[1].Rotate(angle, rotateAxis, sectionPoints[1]);
+                        curveList[1].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[1]);
+                        curveList[1].Rotate(outPlaneAngle, rotateAxis, sectionPoints[1]);
                     }
                     else
                     {
-                        curveList[1].Rotate(rotate, secLocalAxis, sectionPoints[2]);
-                        curveList[1].Rotate(angle, rotateAxis, sectionPoints[2]);
+                        curveList[1].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[2]);
+                        curveList[1].Rotate(outPlaneAngle, rotateAxis, sectionPoints[2]);
                     }
                     break;
                 case 4:
                     for (var i = 0; i < 4; i++)
                     {
-                        curveList[i].Rotate(rotate, secLocalAxis, sectionPoints[i]);
-                        curveList[i].Rotate(angle, rotateAxis, sectionPoints[i]);
+                        curveList[i].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[i]);
+                        curveList[i].Rotate(outPlaneAngle, rotateAxis, sectionPoints[i]);
                     }
                     break;
                 default:
