@@ -141,14 +141,62 @@ namespace HoaryFox.Component_v2.Utils
                 case StbSecSteelColumn_S_ThreeTypes figure:
                     ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
                     break;
-                // TODO: SRC の鉄骨出力対応する
-                case StbSecSteelColumn_SRC_Same _:
-                case StbSecSteelColumn_SRC_NotSame _:
-                case StbSecSteelColumn_SRC_ThreeTypes _:
+                case StbSecSteelColumn_SRC_Same figure:
+                    ghSecStrings.Append(GetColumnSrcInnerSteelShape(figure.Item, string.Empty));
+                    break;
+                case StbSecSteelColumn_SRC_NotSame figure:
+                    ghSecStrings.Append(GetColumnSrcInnerSteelShape(figure.Item, figure.pos.ToString()));
+                    break;
+                case StbSecSteelColumn_SRC_ThreeTypes figure:
+                    ghSecStrings.Append(GetColumnSrcInnerSteelShape(figure.Item, figure.pos.ToString()));
                     break;
             }
 
             return ghSecStrings;
+        }
+
+        private static GH_String GetColumnSrcInnerSteelShape(object figure, string pos)
+        {
+            switch (figure)
+            {
+                // Shape H
+                case StbSecColumn_SRC_SameShapeH shape:
+                    return new GH_String(shape.shape + "(" + shape.strength_main + ")");
+                case StbSecColumn_SRC_NotSameShapeH shape:
+                    return new GH_String(pos + ":" + shape.shape + "(" + shape.strength_main + ")");
+                case StbSecColumn_SRC_ThreeTypesShapeH shape:
+                    return new GH_String(pos + ":" + shape.shape + "(" + shape.strength_main + ")");
+                // Shape Box
+                case StbSecColumn_SRC_SameShapeBox shape:
+                    return new GH_String(shape.shape + "(" + shape.strength + ")");
+                case StbSecColumn_SRC_NotSameShapeBox shape:
+                    return new GH_String(pos + ":" + shape.shape + "(" + shape.strength + ")");
+                case StbSecColumn_SRC_ThreeTypesShapeBox shape:
+                    return new GH_String(pos + ":" + shape.shape + "(" + shape.strength + ")");
+                // Shape Pipe
+                case StbSecColumn_SRC_SameShapePipe shape:
+                    return new GH_String(shape.shape + "(" + shape.strength + ")");
+                case StbSecColumn_SRC_NotSameShapePipe shape:
+                    return new GH_String(pos + ":" + shape.shape + "(" + shape.strength + ")");
+                case StbSecColumn_SRC_ThreeTypesShapePipe shape:
+                    return new GH_String(pos + ":" + shape.shape + "(" + shape.strength + ")");
+                // Shape Cross
+                case StbSecColumn_SRC_SameShapeCross shape:
+                    return new GH_String("X:" + shape.shape_X + "(" + shape.strength_main_X + ")" + "Y:" + shape.shape_Y + "(" + shape.strength_main_Y + ")");
+                case StbSecColumn_SRC_NotSameShapeCross shape:
+                    return new GH_String(pos + ":" + "X:" + shape.shape_X + "(" + shape.strength_main_X + ")" + "Y:" + shape.shape_Y + "(" + shape.strength_main_Y + ")");
+                case StbSecColumn_SRC_ThreeTypesShapeCross shape:
+                    return new GH_String(pos + ":" + "X:" + shape.shape_X + "(" + shape.strength_main_X + ")" + "Y:" + shape.shape_Y + "(" + shape.strength_main_Y + ")");
+                // Shape T
+                case StbSecColumn_SRC_SameShapeT shape:
+                    return new GH_String("H:" + shape.shape_H + "(" + shape.strength_main_H + ")" + "T:" + shape.shape_T + "(" + shape.strength_main_T + ")");
+                case StbSecColumn_SRC_NotSameShapeT shape:
+                    return new GH_String(pos + ":" + "H:" + shape.shape_H + "(" + shape.strength_main_H + ")" + "T:" + shape.shape_T + "(" + shape.strength_main_T + ")");
+                case StbSecColumn_SRC_ThreeTypesShapeT shape:
+                    return new GH_String(pos + ":" + "H:" + shape.shape_H + "(" + shape.strength_main_H + ")" + "T:" + shape.shape_T + "(" + shape.strength_main_T + ")");
+                default:
+                    throw new ArgumentException("Unsupported SRC inner Steel type");
+            }
         }
 
         internal static IEnumerable<GH_String> GetSlabRcSection(object slabFigure, string strength)
