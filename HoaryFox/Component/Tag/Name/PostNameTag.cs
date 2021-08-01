@@ -20,7 +20,7 @@ namespace HoaryFox.Component_v2.Tag.Name
         public PostNameTag()
           : base("Post Name Tag", "PostTag",
               "Display Post Name Tag",
-              "HoaryFox2", "NameTag")
+              "HoaryFox", "NameTag")
         {
         }
 

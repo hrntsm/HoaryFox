@@ -20,7 +20,7 @@ namespace HoaryFox.Component_v2.Geometry
         public Stb2Brep()
           : base("Stb to Brep", "S2B",
               "Display ST-Bridge model in Brep",
-              "HoaryFox2", "Geometry")
+              "HoaryFox", "Geometry")
         {
         }
 

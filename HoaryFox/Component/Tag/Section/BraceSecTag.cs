@@ -22,7 +22,7 @@ namespace HoaryFox.Component_v2.Tag.Section
         public BraceSecTag()
           : base("Brace Section Tag", "BraceSec",
               "Display Brace Section Tag",
-              "HoaryFox2", "Section")
+              "HoaryFox", "Section")
         {
         }
 

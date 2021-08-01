@@ -20,7 +20,7 @@ namespace HoaryFox.Component_v2.Tag.Name
         public GirderNameTag()
           : base("Girder Name Tag", "GirderTag",
               "Display Girder Name Tag",
-              "HoaryFox2", "NameTag")
+              "HoaryFox", "NameTag")
         {
         }
 

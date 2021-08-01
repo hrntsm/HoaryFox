@@ -12,7 +12,7 @@ namespace HoaryFox.Component_v2.IO
         public StbLoader()
           : base("Load STB file", "Loader",
               "Read ST-Bridge file",
-              "HoaryFox2", "IO")
+              "HoaryFox", "IO")
         {
         }
 

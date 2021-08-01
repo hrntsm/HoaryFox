@@ -21,7 +21,7 @@ namespace HoaryFox.Component_v2.Geometry
         public Stb2Line()
           : base("Stb to Line", "S2L",
               "Display ST-Bridge model in line",
-              "HoaryFox2", "Geometry")
+              "HoaryFox", "Geometry")
         {
         }
 

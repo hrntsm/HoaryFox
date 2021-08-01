@@ -22,7 +22,7 @@ namespace HoaryFox.Component_v2.Tag.Section
         public GirderSecTag()
           : base("Girder Section Tag", "GirderSec",
               "Display Girder Section Tag",
-              "HoaryFox2", "Section")
+              "HoaryFox", "Section")
         {
         }
 

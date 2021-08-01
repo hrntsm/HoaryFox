@@ -22,7 +22,7 @@ namespace HoaryFox.Component_v2.Tag.Section
         public PostSecTag()
           : base("Post Section Tag", "PostSec",
               "Display Post Section Tag",
-              "HoaryFox2", "Section")
+              "HoaryFox", "Section")
         {
         }
 

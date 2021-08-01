@@ -20,7 +20,7 @@ namespace HoaryFox.Component_v2.Tag.Name
         public ColumnNameTag()
           : base("Column Name Tag", "ColumnTag",
               "Display Column Name Tag",
-              "HoaryFox2", "NameTag")
+              "HoaryFox", "NameTag")
         {
         }
 

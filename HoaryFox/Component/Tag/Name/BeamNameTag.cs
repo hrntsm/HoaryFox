@@ -20,7 +20,7 @@ namespace HoaryFox.Component_v2.Tag.Name
         public BeamNameTag()
           : base("Beam Name Tag", "BeamTag",
               "Display Beam Name Tag",
-              "HoaryFox2", "NameTag")
+              "HoaryFox", "NameTag")
         {
         }
 

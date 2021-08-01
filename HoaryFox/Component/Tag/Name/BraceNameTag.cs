@@ -20,7 +20,7 @@ namespace HoaryFox.Component_v2.Tag.Name
         public BraceNameTag()
           : base("Brace Name Tag", "BraceTag",
               "Display Brace Name Tag",
-              "HoaryFox2", "NameTag")
+              "HoaryFox", "NameTag")
         {
         }
 
