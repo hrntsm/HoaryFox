@@ -45,6 +45,7 @@ jobs:
           Configuration: ${{ matrix.configuration }}
           
       - name: Copy karambaConnect to /HoaryFox/bin dir
+        if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
         shell: powershell
         run: |
           cp ./KarambaConnect/bin/Release/net48/KarambaConnect.gha ./HoaryFox/bin/Release/net48/KarambaConnect.gha
