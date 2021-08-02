@@ -343,7 +343,13 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                     break;
                 case 3:
                     var haunch = new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch };
-                    curveList.AddRange(haunch.Select((fig, i) => new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[i], fig.depth, fig.width))));
+                    StbSecBeam_RC_Haunch start = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.START);
+                    StbSecBeam_RC_Haunch center = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.CENTER);
+                    StbSecBeam_RC_Haunch end = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.END);
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], start.depth, start.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], center.depth, center.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], center.depth, center.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], end.depth, end.width)));
                     break;
                 default:
                     throw new Exception();
@@ -374,7 +380,13 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                     break;
                 case 3:
                     var haunch = new[] { figures[0] as StbSecBeam_SRC_Haunch, figures[1] as StbSecBeam_SRC_Haunch, figures[2] as StbSecBeam_SRC_Haunch };
-                    curveList.AddRange(haunch.Select((t, i) => new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[i], t.depth, t.width))));
+                    StbSecBeam_SRC_Haunch start = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.START);
+                    StbSecBeam_SRC_Haunch center = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.CENTER);
+                    StbSecBeam_SRC_Haunch end = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.END);
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], start.depth, start.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], center.depth, center.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], center.depth, center.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], end.depth, end.width)));
                     break;
                 default:
                     throw new Exception();
@@ -538,11 +550,11 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             return curveList;
         }
 
-        private static void RotateCurveList(Vector3d memberAxis, IReadOnlyList<Curve> curveList, double rotate, IReadOnlyList<Point3d> sectionPoints, Vector3d secLocalAxis)
+        private static void RotateCurveList(Vector3d memberAxis, IReadOnlyList<Curve> curveList, double stbRotateValue, IReadOnlyList<Point3d> sectionPoints, Vector3d secLocalAxis)
         {
             Vector3d rotateAxis = Vector3d.CrossProduct(secLocalAxis, memberAxis);
             double outPlaneAngle = Vector3d.VectorAngle(secLocalAxis, memberAxis);
-            double inPlaneAngle = rotate * Math.PI / 180;
+            double inPlaneAngle = stbRotateValue * Math.PI / 180;
             int len = curveList.Count;
             switch (len)
             {
