@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Grasshopper.Kernel;
-using KarambaConnect.K2S;
 using KarambaConnect.Properties;
-using STBDotNet.Elements;
-using STBDotNet.Elements.StbModel;
-using STBDotNet.Elements.StbModel.StbMember;
-using STBDotNet.Elements.StbModel.StbSection;
 using STBDotNet.Serialization;
+using STBDotNet.v202;
 
 namespace KarambaConnect.Component.IO
 {
@@ -26,7 +22,7 @@ namespace KarambaConnect.Component.IO
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Node", "Node", "StbNode data", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Axis", "Axis", "StbAxes data", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Axis", "Axis", "StbAxes data", GH_ParamAccess.item);
             pManager.AddGenericParameter("Story", "Story", "StbStory data", GH_ParamAccess.list);
             pManager.AddGenericParameter("Member", "Mem", "StbMember data", GH_ParamAccess.item);
             pManager.AddGenericParameter("Section", "Sec", "StbSection data", GH_ParamAccess.list);
@@ -44,42 +40,62 @@ namespace KarambaConnect.Component.IO
         {
             var path = string.Empty;
             var isOutput = false;
-            var node = new List<Node>();
-            var axis = new List<Axis>();
-            var story = new List<Story>();
-            var members = new Members();
-            var sections = new List<Section>();
+            var nodes = new List<StbNode>();
+            var axes = new StbAxes();
+            var stories = new List<StbStory>();
+            var members = new StbMembers();
+            var sections = new StbSections();
 
-            if (!dataAccess.GetDataList(0, node)) { return; }
-            if (!dataAccess.GetDataList(1, axis)) { return; }
-            if (!dataAccess.GetDataList(2, story)) { return; }
+            if (!dataAccess.GetDataList(0, nodes)) { return; }
+            if (!dataAccess.GetData(1, ref axes)) { return; }
+            if (!dataAccess.GetDataList(2, stories)) { return; }
             if (!dataAccess.GetData(3, ref members)) { return; }
-            if (!dataAccess.GetDataList(4, sections)) { return; }
+            if (!dataAccess.GetData(4, ref sections)) { return; }
             if (!dataAccess.GetData(5, ref path)) { return; }
             if (!dataAccess.GetData(6, ref isOutput)) { return; }
 
-
-            var elements = new StbElements
+            var stbData = new ST_BRIDGE
             {
-                Version = "1.4.00",
-                Common = StbCommon.Set(),
-                Model = new Model
+                version = "2.0.2",
+                StbCommon = new StbCommon
                 {
-                    Axes = axis,
-                    Members = members,
-                    Nodes = node,
-                    Sections = sections,
-                    Stories = story
-                }
+                    project_name = ActiveCanvasFileName(),
+                    app_name = "HoaryFox",
+                },
+                StbModel = new StbModel
+                {
+                    StbAxes = axes,
+                    StbStories = stories.ToArray(),
+                    StbNodes = nodes.ToArray(),
+                    StbMembers = members,
+                    StbSections = sections,
+                    StbJoints = new StbJoints(),
+                },
+                StbAnaModels = Array.Empty<StbAnaModel>(),
+                StbCalData = new StbCalData(),
             };
 
             if (isOutput)
             {
-                var sr = new Serializer();
-                sr.Serialize(elements, path);
+                bool result = Serializer.Serialize(stbData, path, STBDotNet.Enums.Version.Stb202);
+                if (!result)
+                {
+                    throw new Exception("Failed to serialize.");
+                }
             }
 
-            dataAccess.SetData(0, elements);
+            dataAccess.SetData(0, stbData);
+        }
+
+        private static string ActiveCanvasFileName()
+        {
+            var fileName = Grasshopper.Instances.ActiveCanvas.Document.ToString();
+            if (fileName.EndsWith("*"))
+            {
+                fileName = fileName.Substring(0, fileName.Length - 1) + ".gh";
+            }
+
+            return fileName;
         }
 
         protected override Bitmap Icon => Resource.ExportStb;
