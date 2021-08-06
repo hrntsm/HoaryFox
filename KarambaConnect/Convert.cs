@@ -15,20 +15,25 @@ namespace KarambaConnect
             return new Karamba.Geometry.Point3(spt.X, spt.Y, spt.Z) * 1000;
         }
 
-        public static Point3d ToRhino(this STBDotNet.Elements.StbModel.Node node)
+        public static Karamba.Geometry.Point3 ToKaramba(this STBDotNet.v202.StbNode sNode)
+        {
+            return new Karamba.Geometry.Point3(sNode.X, sNode.Y, sNode.Z) * 1000;
+        }
+
+        public static Point3d ToRhino(this STBDotNet.v202.StbNode node)
         {
             return new Point3d(node.X, node.Y, node.Z) / 1000;
         }
 
-        public static List<STBDotNet.Elements.StbModel.Node> ToStb(this List<Karamba.Nodes.Node> kNodes)
+        public static List<STBDotNet.v202.StbNode> ToStb(this List<Karamba.Nodes.Node> kNodes)
         {
-            var sNodes = new List<STBDotNet.Elements.StbModel.Node>();
+            var sNodes = new List<STBDotNet.v202.StbNode>();
 
             foreach (Karamba.Nodes.Node kNode in kNodes)
             {
-                var sNode = new STBDotNet.Elements.StbModel.Node
+                var sNode = new STBDotNet.v202.StbNode
                 {
-                    Id = kNode.ind + 1,
+                    id = (kNode.ind + 1).ToString(),
                     X = kNode.pos.X * 1000,
                     Y = kNode.pos.Y * 1000,
                     Z = kNode.pos.Z * 1000
@@ -39,17 +44,17 @@ namespace KarambaConnect
             return sNodes;
         }
 
-        public static List<Karamba.Nodes.Node> ToKaramba(this List<STBDotNet.Elements.StbModel.Node> sNodes)
+        public static List<Karamba.Nodes.Node> ToKaramba(this List<STBDotNet.v202.StbNode> sNodes)
         {
             var kNodes = new List<Karamba.Nodes.Node>();
 
-            foreach (STBDotNet.Elements.StbModel.Node sNode in sNodes)
+            foreach (STBDotNet.v202.StbNode sNode in sNodes)
             {
                 var kNode = new Karamba.Nodes.Node
                 {
-                    ind = sNode.Id,
+                    ind = int.Parse(sNode.id),
                     is_visible = true,
-                    pos = sNode.Position.ToKaramba()
+                    pos = sNode.ToKaramba()
                 };
 
                 kNodes.Add(kNode);
