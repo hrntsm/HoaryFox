@@ -4,7 +4,7 @@ using STBDotNet.Elements.StbModel.StbSection;
 
 namespace KarambaConnect.K2S
 {
-    public static class StbSection
+    public static class K2StbSection
     {
         internal static Section GetBeamRc(int croSecId, int gNum, Model kModel)
         {

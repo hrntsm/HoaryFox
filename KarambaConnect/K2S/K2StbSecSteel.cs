@@ -6,7 +6,7 @@ using KCroSec = Karamba.CrossSections;
 
 namespace KarambaConnect.K2S
 {
-    public static class StbSecSteel
+    public static class K2StbSecSteel
     {
         internal static void GetSection(ref Steel secSteel, Model kModel, int croSecId)
         {

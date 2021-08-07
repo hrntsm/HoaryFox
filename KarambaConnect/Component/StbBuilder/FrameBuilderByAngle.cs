@@ -44,7 +44,7 @@ namespace KarambaConnect.Component.StbBuilder
                 throw new ArgumentException("The input is not Karamba3D model!");
             }
             Model kModel = ghKModel.Value;
-            var stbModel = new K2S.StbModel(kModel);
+            var stbModel = new K2S.K2StbModel(kModel);
             // TODO:　実装する
             var sSections = new StbSections();
             _sModel = stbModel.SetByAngle(colMaxAngle);
