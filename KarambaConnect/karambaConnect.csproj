@@ -27,9 +27,6 @@
       <HintPath>Library\karamba132\karamba.gha</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="STBReader">
-      <HintPath>..\HoaryFox\Library\STBReader.dll</HintPath>
-    </Reference>
   </ItemGroup>
   
   <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
