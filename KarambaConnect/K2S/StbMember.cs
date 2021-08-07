@@ -1,49 +1,49 @@
 ﻿using Karamba.Elements;
-using STBDotNet.Elements.StbModel.StbMember;
+using STBDotNet.v202;
 
 namespace KarambaConnect.K2S
 {
     public static class StbMember
     {
-        internal static Column CreateColumn(ModelBeam elem, int croSecId, string kind)
+        internal static StbColumn CreateColumn(ModelBeam elem, int croSecId, StbColumnKind_structure kind)
         {
-            return new Column
+            return new StbColumn
             {
-                Id = elem.ind + 1,
-                Name = elem.id,
-                IdNodeStart = elem.node_inds[0] + 1,
-                IdNodeEnd = elem.node_inds[1] + 1,
-                Rotate = 0d,
-                IdSection = croSecId + 1,
-                Kind = kind
+                id = (elem.ind + 1).ToString(),
+                name = elem.id,
+                id_node_bottom = (elem.node_inds[0] + 1).ToString(),
+                id_node_top = (elem.node_inds[1] + 1).ToString(),
+                rotate = 0d,
+                id_section = (croSecId + 1).ToString(),
+                kind_structure = kind
             };
         }
 
-        internal static Girder CreateGirder(ModelBeam elem, int croSecId, string kind)
+        internal static StbGirder CreateGirder(ModelBeam elem, int croSecId, StbGirderKind_structure kind)
         {
-            return new Girder
+            return new StbGirder
             {
-                Id = elem.ind + 1,
-                Name = elem.id,
-                IdNodeStart = elem.node_inds[0] + 1,
-                IdNodeEnd = elem.node_inds[1] + 1,
-                Rotate = 0d,
-                IdSection = croSecId + 1,
-                Kind = kind
+                id = (elem.ind + 1).ToString(),
+                name = elem.id,
+                id_node_start = (elem.node_inds[0] + 1).ToString(),
+                id_node_end = (elem.node_inds[1] + 1).ToString(),
+                rotate = 0d,
+                id_section = (croSecId + 1).ToString(),
+                kind_structure = kind
             };
         }
 
-        internal static Brace CreateBrace(ModelTruss elem, int croSecId)
+        internal static StbBrace CreateBrace(ModelTruss elem, int croSecId)
         {
-            return new Brace
+            return new StbBrace
             {
-                Id = elem.ind + 1,
-                Name = elem.id,
-                IdNodeStart = elem.node_inds[0] + 1,
-                IdNodeEnd = elem.node_inds[1] + 1,
-                Rotate = 0d,
-                IdSection = croSecId + 1,
-                Kind = "S"
+                id = (elem.ind + 1).ToString(),
+                name = elem.id,
+                id_node_start = (elem.node_inds[0] + 1).ToString(),
+                id_node_end = (elem.node_inds[1] + 1).ToString(),
+                rotate = 0d,
+                id_section = (croSecId + 1).ToString(),
+                kind_structure = StbBraceKind_structure.S
             };
         }
     }
