@@ -3,7 +3,7 @@ using STBDotNet.v202;
 
 namespace KarambaConnect.K2S
 {
-    public static class K2StbMember
+    public static class K2StbMemberItems
     {
         internal static StbColumn CreateColumn(ModelBeam elem, int croSecId, StbColumnKind_structure kind)
         {

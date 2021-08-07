@@ -44,14 +44,11 @@ namespace KarambaConnect.Component.StbBuilder
                 throw new ArgumentException("The input is not Karamba3D model!");
             }
             Model kModel = ghKModel.Value;
-            var stbModel = new K2S.K2StbModel(kModel);
-            // TODO:　実装する
-            var sSections = new StbSections();
-            _sModel = stbModel.SetByAngle(colMaxAngle);
-            _sModel.StbNodes = kModel.nodes.ToStb();
+            var k2S = new K2S.K2StbModel(kModel);
+            _sModel = k2S.SetByAngle(colMaxAngle);
 
             dataAccess.SetData(0, _sModel.StbMembers);
-            dataAccess.SetData(1, sSections);
+            dataAccess.SetData(1, _sModel.StbSections);
         }
 
         protected override Bitmap Icon => Properties.Resource.FrameBuilder;
