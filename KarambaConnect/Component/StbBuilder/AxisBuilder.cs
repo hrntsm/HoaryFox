@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Grasshopper.Kernel;
 using STBDotNet.v202;
+using System.Linq;
 
 namespace KarambaConnect.Component.StbBuilder
 {
@@ -58,41 +59,19 @@ namespace KarambaConnect.Component.StbBuilder
                 var nodeIds = new List<StbNodeId>();
                 if (dir[count] == 0)
                 {
-                    StbParallelAxis xAxis = CreateAxisBase(count, names, dist);
-                    foreach (StbNode node in nodes)
-                    {
-                        if (node.X > dist - range[count] && node.X < dist + range[count])
-                        {
-                            nodeIds.Add(new StbNodeId { id = node.id });
-                        }
-                    }
-
-                    if (nodeIds.Count == 0)
-                    {
-                        throw new ArgumentException("There are no nodes in the target distance range.");
-                    }
-
-                    xAxis.StbNodeIdList = nodeIds.ToArray();
-                    xAxisList.Add(xAxis);
+                    nodeIds.AddRange(from StbNode node in nodes
+                                     where node.X > dist - range[count] && node.X < dist + range[count]
+                                     select new StbNodeId { id = node.id });
+                    CheckNodeIdsNull(nodeIds);
+                    xAxisList.Add(CreateParallelAxis(count, names, dist, nodeIds));
                 }
                 else if (dir[count] == 1)
                 {
-                    StbParallelAxis yAxis = CreateAxisBase(count, names, dist);
-                    foreach (StbNode node in nodes)
-                    {
-                        if (node.Y > dist - range[count] && node.Y < dist + range[count])
-                        {
-                            nodeIds.Add(new StbNodeId { id = node.id });
-                        }
-                    }
-
-                    if (nodeIds.Count == 0)
-                    {
-                        throw new ArgumentException("There are no nodes in the target distance range.");
-                    }
-
-                    yAxis.StbNodeIdList = nodeIds.ToArray();
-                    yAxisList.Add(yAxis);
+                    nodeIds.AddRange(from StbNode node in nodes
+                                     where node.Y > dist - range[count] && node.Y < dist + range[count]
+                                     select new StbNodeId { id = node.id });
+                    CheckNodeIdsNull(nodeIds);
+                    yAxisList.Add(CreateParallelAxis(count, names, dist, nodeIds));
                 }
 
                 count++;
@@ -106,13 +85,22 @@ namespace KarambaConnect.Component.StbBuilder
             dataAccess.SetData(0, axes);
         }
 
-        private static StbParallelAxis CreateAxisBase(int count, List<string> names, double dist)
+        private static void CheckNodeIdsNull(List<StbNodeId> nodeIds)
+        {
+            if (nodeIds.Count == 0)
+            {
+                throw new ArgumentException("There are no nodes in the target distance range.");
+            }
+        }
+
+        private static StbParallelAxis CreateParallelAxis(int count, List<string> names, double dist, List<StbNodeId> nodeIds)
         {
             return new StbParallelAxis()
             {
                 id = (count + 1).ToString(),
                 name = names[count],
-                distance = dist
+                distance = dist,
+                StbNodeIdList = nodeIds.ToArray()
             };
         }
 
