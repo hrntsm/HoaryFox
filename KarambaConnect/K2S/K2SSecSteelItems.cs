@@ -11,10 +11,6 @@ namespace KarambaConnect.K2S
         public List<StbSecRollT> SecRollTs { get; set; }
         public List<StbSecPipe> SecPipes { get; set; }
 
-        public K2SSecSteelItems()
-        {
-        }
-
         public StbSecSteel ToStb()
         {
             return new StbSecSteel

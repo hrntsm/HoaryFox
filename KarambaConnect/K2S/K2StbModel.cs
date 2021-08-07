@@ -71,7 +71,7 @@ namespace KarambaConnect.K2S
             return new StbModel() { StbNodes = _kModel.nodes.ToStb(), StbMembers = members, StbSections = sections };
         }
 
-        private static StbMembers BindMemberProps(IReadOnlyCollection<StbColumn> columns, IReadOnlyCollection<StbGirder> girders, IReadOnlyCollection<StbBrace> braces)
+        private static StbMembers BindMemberProps(IEnumerable<StbColumn> columns, IEnumerable<StbGirder> girders, IEnumerable<StbBrace> braces)
         {
             return new StbMembers()
             {
@@ -82,9 +82,9 @@ namespace KarambaConnect.K2S
         }
 
         private static StbSections BindSectionProps(
-            IReadOnlyCollection<StbSecBeam_S> secBeams_S, IReadOnlyCollection<StbSecBeam_RC> secBeams_Rc,
-            IReadOnlyCollection<StbSecColumn_S> secColumn_S, IReadOnlyCollection<StbSecColumn_RC> secColumn_Rc,
-            IReadOnlyCollection<StbSecBrace_S> secBrace_S,
+            IEnumerable<StbSecBeam_S> secBeams_S, IEnumerable<StbSecBeam_RC> secBeams_Rc,
+            IEnumerable<StbSecColumn_S> secColumn_S, IEnumerable<StbSecColumn_RC> secColumn_Rc,
+            IEnumerable<StbSecBrace_S> secBrace_S,
             K2SSecSteelItems secSteelItems)
         {
             return new StbSections
@@ -98,7 +98,7 @@ namespace KarambaConnect.K2S
             };
         }
 
-        private void ModelTrussToStbBrace(List<StbSecBrace_S> secBrace_S, K2SSecSteelItems secSteel, List<StbBrace> braces, ModelTruss modelTruss)
+        private void ModelTrussToStbBrace(List<StbSecBrace_S> secBrace_S, K2SSecSteelItems secSteel, ICollection<StbBrace> braces, ModelTruss modelTruss)
         {
             int trussCroSecId = _croSecNames.IndexOf(modelTruss.crosec.name);
             braces.Add(K2StbMemberItems.CreateBrace(modelTruss, trussCroSecId));
@@ -110,7 +110,7 @@ namespace KarambaConnect.K2S
 
         private void ModelBeamToStbColumnAndGirder(
             List<StbSecBeam_RC> secBeams_RC, List<StbSecBeam_S> secBeams_S, List<StbSecColumn_RC> secColumn_RC, List<StbSecColumn_S> secColumn_S, K2SSecSteelItems secSteel,
-            double colMaxAngle, List<StbColumn> columns, List<StbGirder> girders, double pAngle, double nAngle, ModelBeam modelBeam)
+            double colMaxAngle, ICollection<StbColumn> columns, ICollection<StbGirder> girders, double pAngle, double nAngle, ModelBeam modelBeam)
         {
             int croSecId = _croSecNames.IndexOf(modelBeam.crosec.name);
             bool positive = pAngle <= colMaxAngle && pAngle >= -1d * colMaxAngle;
@@ -136,7 +136,7 @@ namespace KarambaConnect.K2S
             }
         }
 
-        private void AddBraceSection(List<StbSecBrace_S> secBrace_S, K2SSecSteelItems secSteel, int croSecId, int vNum)
+        private void AddBraceSection(ICollection<StbSecBrace_S> secBrace_S, K2SSecSteelItems secSteel, int croSecId, int vNum)
         {
             secBrace_S.Add(K2StbSections.BraceSteel(croSecId, vNum, _kModel));
             _registeredCroSecId[2].Add(croSecId);
@@ -148,7 +148,7 @@ namespace KarambaConnect.K2S
             }
         }
 
-        private void AddBeamSection(List<StbSecBeam_S> secBeams_S, List<StbSecBeam_RC> secBeams_RC, K2SSecSteelItems secSteel, StbGirderKind_structure kind, int croSecId, int gNum)
+        private void AddBeamSection(ICollection<StbSecBeam_S> secBeams_S, ICollection<StbSecBeam_RC> secBeams_RC, K2SSecSteelItems secSteel, StbGirderKind_structure kind, int croSecId, int gNum)
         {
             switch (kind)
             {
@@ -170,7 +170,7 @@ namespace KarambaConnect.K2S
             _registeredCroSecId[1].Add(croSecId);
         }
 
-        private void AddColumnSection(List<StbSecColumn_S> secColumns_S, List<StbSecColumn_RC> secColumns_RC, K2SSecSteelItems secSteel, StbColumnKind_structure kind, int croSecId, int cNum)
+        private void AddColumnSection(ICollection<StbSecColumn_S> secColumns_S, ICollection<StbSecColumn_RC> secColumns_RC, K2SSecSteelItems secSteel, StbColumnKind_structure kind, int croSecId, int cNum)
         {
             switch (kind)
             {
