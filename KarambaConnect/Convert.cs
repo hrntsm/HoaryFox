@@ -25,12 +25,13 @@ namespace KarambaConnect
             return new Point3d(node.X, node.Y, node.Z) / 1000;
         }
 
-        public static List<STBDotNet.v202.StbNode> ToStb(this List<Karamba.Nodes.Node> kNodes)
+        public static STBDotNet.v202.StbNode[] ToStb(this List<Karamba.Nodes.Node> kNodes)
         {
-            var sNodes = new List<STBDotNet.v202.StbNode>();
+            var sNodes = new STBDotNet.v202.StbNode[kNodes.Count];
 
-            foreach (Karamba.Nodes.Node kNode in kNodes)
+            for (int i = 0; i < kNodes.Count; i++)
             {
+                Karamba.Nodes.Node kNode = kNodes[i];
                 var sNode = new STBDotNet.v202.StbNode
                 {
                     id = (kNode.ind + 1).ToString(),
@@ -38,7 +39,7 @@ namespace KarambaConnect
                     Y = kNode.pos.Y * 1000,
                     Z = kNode.pos.Z * 1000
                 };
-                sNodes.Add(sNode);
+                sNodes[i] = sNode;
             }
 
             return sNodes;

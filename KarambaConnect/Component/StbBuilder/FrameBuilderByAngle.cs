@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using Grasshopper.Kernel;
 using Karamba.GHopper.Models;
-using KarambaConnect.K2S;
 using Rhino.Geometry;
-using STBDotNet.Elements.StbModel.StbMember;
+using STBDotNet.v202;
 using Model = Karamba.Models.Model;
 
 namespace KarambaConnect.Component.StbBuilder
 {
     public class FrameBuilderByAngle : GH_Component
     {
-        private STBDotNet.Elements.StbModel.Model _sModel;
+        private StbModel _sModel;
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
@@ -29,7 +29,7 @@ namespace KarambaConnect.Component.StbBuilder
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddGenericParameter("Member", "Mem", "StbMember data", GH_ParamAccess.item);
-            pManager.AddGenericParameter("Section", "Sec", "StbSection data", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Section", "Sec", "StbSection data", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
@@ -44,12 +44,14 @@ namespace KarambaConnect.Component.StbBuilder
                 throw new ArgumentException("The input is not Karamba3D model!");
             }
             Model kModel = ghKModel.Value;
-            var stbModel = new StbModel(kModel);
+            var stbModel = new K2S.StbModel(kModel);
+            // TODO:　実装する
+            var sSections = new StbSections();
             _sModel = stbModel.SetByAngle(colMaxAngle);
-            _sModel.Nodes = kModel.nodes.ToStb();
+            _sModel.StbNodes = kModel.nodes.ToStb();
 
-            dataAccess.SetData(0, _sModel.Members);
-            dataAccess.SetDataList(1, _sModel.Sections);
+            dataAccess.SetData(0, _sModel.StbMembers);
+            dataAccess.SetData(1, sSections);
         }
 
         protected override Bitmap Icon => Properties.Resource.FrameBuilder;
@@ -57,29 +59,29 @@ namespace KarambaConnect.Component.StbBuilder
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
-            if (_sModel == null || _sModel.Nodes.Count < 1)
+            if (_sModel == null || _sModel.StbNodes.Length < 1)
             {
                 return;
             }
 
-            foreach (Column column in _sModel.Members.Columns)
+            foreach (StbColumn column in _sModel.StbMembers.StbColumns)
             {
-                Point3d ptFrom = _sModel.Nodes[column.IdNodeStart - 1].ToRhino();
-                Point3d ptTo = _sModel.Nodes[column.IdNodeEnd - 1].ToRhino();
+                Point3d ptFrom = _sModel.StbNodes.First(node => node.id == column.id_node_bottom).ToRhino();
+                Point3d ptTo = _sModel.StbNodes.First(node => node.id == column.id_node_top).ToRhino();
                 args.Display.Draw2dText("Column", Color.Brown, (ptFrom + ptTo) / 2, true, 12);
             }
 
-            foreach (Girder girder in _sModel.Members.Girders)
+            foreach (StbGirder girder in _sModel.StbMembers.StbGirders)
             {
-                Point3d ptFrom = _sModel.Nodes[girder.IdNodeStart - 1].ToRhino();
-                Point3d ptTo = _sModel.Nodes[girder.IdNodeEnd - 1].ToRhino();
+                Point3d ptFrom = _sModel.StbNodes.First(node => node.id == girder.id_node_start).ToRhino();
+                Point3d ptTo = _sModel.StbNodes.First(node => node.id == girder.id_node_end).ToRhino();
                 args.Display.Draw2dText("Girder", Color.DarkGreen, (ptFrom + ptTo) / 2, true, 12);
             }
 
-            foreach (Brace brace in _sModel.Members.Braces)
+            foreach (StbBrace brace in _sModel.StbMembers.StbBraces)
             {
-                Point3d ptFrom = _sModel.Nodes[brace.IdNodeStart - 1].ToRhino();
-                Point3d ptTo = _sModel.Nodes[brace.IdNodeEnd - 1].ToRhino();
+                Point3d ptFrom = _sModel.StbNodes.First(node => node.id == brace.id_node_start).ToRhino();
+                Point3d ptTo = _sModel.StbNodes.First(node => node.id == brace.id_node_end).ToRhino();
                 args.Display.Draw2dText("Brace", Color.Purple, (ptFrom + ptTo) / 2, true, 12);
             }
         }
