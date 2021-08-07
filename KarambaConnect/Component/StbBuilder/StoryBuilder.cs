@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Grasshopper.Kernel;
-using STBDotNet.Elements.StbModel;
+using STBDotNet.v202;
 
 namespace KarambaConnect.Component.StbBuilder
 {
@@ -31,7 +32,7 @@ namespace KarambaConnect.Component.StbBuilder
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var count = 0;
-            var nodes = new List<Node>();
+            var nodes = new List<StbNode>();
             var height = new List<double>();
             var range = new List<double>();
             var names = new List<string>();
@@ -41,7 +42,7 @@ namespace KarambaConnect.Component.StbBuilder
             if (!dataAccess.GetDataList(2, range)) { return; }
             if (!dataAccess.GetDataList(3, names)) { return; }
 
-            var stories = new List<Story>();
+            var stories = new List<StbStory>();
 
             if (height.Count != range.Count || height.Count != names.Count || range.Count != names.Count)
             {
@@ -50,33 +51,35 @@ namespace KarambaConnect.Component.StbBuilder
 
             foreach (double h in height)
             {
-                var story = new Story
-                {
-                    Id = count + 1,
-                    Name = names[count],
-                    Height = h,
-                    Kind = "GENERAL"
-                };
-                var nodeIds = new List<NodeId>();
-                foreach (Node node in nodes)
-                {
-                    if (node.Z > h - range[count] && node.Z < h + range[count])
-                    {
-                        nodeIds.Add(new NodeId(node.Id));
-                    }
-                }
-
-                if (nodeIds.Count == 0)
-                {
-                    throw new ArgumentException("There are no nodes in the target height range.");
-                }
-
-                story.NodeIdList = nodeIds;
-                stories.Add(story);
+                StbNodeId[] nodeIds = (from StbNode node in nodes
+                                       where node.Z > h - range[count] && node.Z < h + range[count]
+                                       select new StbNodeId { id = node.id }).ToArray();
+                CheckNodeIdsNull(nodeIds);
+                stories.Add(CreateStory(count, names, h, nodeIds));
                 count++;
             }
 
             dataAccess.SetDataList(0, stories);
+        }
+
+        private static StbStory CreateStory(int count, List<string> names, double h, StbNodeId[] nodeIds)
+        {
+            return new StbStory
+            {
+                id = (count + 1).ToString(),
+                name = names[count],
+                height = h,
+                kind = StbStoryKind.GENERAL,
+                StbNodeIdList = nodeIds
+            };
+        }
+
+        private static void CheckNodeIdsNull(StbNodeId[] nodeIds)
+        {
+            if (nodeIds.Length == 0)
+            {
+                throw new ArgumentException("There are no nodes in the target height range.");
+            }
         }
 
         protected override Bitmap Icon => Properties.Resource.StoryBuilder;

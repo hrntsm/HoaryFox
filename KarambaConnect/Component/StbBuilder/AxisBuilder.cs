@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Grasshopper.Kernel;
 using STBDotNet.v202;
-using System.Linq;
 
 namespace KarambaConnect.Component.StbBuilder
 {
