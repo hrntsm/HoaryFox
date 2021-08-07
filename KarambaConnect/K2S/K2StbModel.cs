@@ -19,8 +19,6 @@ namespace KarambaConnect.K2S
         {
             new List<string>(), new List<string>(), new List<string>()
         };
-        private StbSecSteel _secSteel = new StbSecSteel();
-
         private readonly int[] _tagNum = { 1, 1, 1 };
         private readonly List<string> _croSecNames = new List<string>();
         private readonly Karamba.Models.Model _kModel;
@@ -42,6 +40,7 @@ namespace KarambaConnect.K2S
             var secColumn_S = new List<StbSecColumn_S>();
             var secColumn_Rc = new List<StbSecColumn_RC>();
             var secBrace_S = new List<StbSecBrace_S>();
+            var secSteel = new K2SSecSteelItems();
 
             foreach (ModelElement elem in _kModel.elems)
             {
@@ -56,10 +55,10 @@ namespace KarambaConnect.K2S
                 switch (elem)
                 {
                     case ModelBeam modelBeam:
-                        ModelBeamToStbColumnAndGirder(secBeams_Rc, secBeams_S, secColumn_Rc, secColumn_S, colMaxAngle, columns, girders, pAngle, nAngle, modelBeam);
+                        ModelBeamToStbColumnAndGirder(secBeams_Rc, secBeams_S, secColumn_Rc, secColumn_S, secSteel, colMaxAngle, columns, girders, pAngle, nAngle, modelBeam);
                         break;
                     case ModelTruss modelTruss:
-                        ModelTrussToStbBrace(secBrace_S, braces, modelTruss);
+                        ModelTrussToStbBrace(secBrace_S, secSteel, braces, modelTruss);
                         break;
                     default:
                         throw new ArgumentException("Karamba3D model parse error.");
@@ -67,7 +66,7 @@ namespace KarambaConnect.K2S
             }
 
             StbMembers members = BindMemberProps(columns, girders, braces);
-            StbSections sections = BindSectionProps(secBeams_S, secBeams_Rc, secColumn_S, secColumn_Rc, secBrace_S);
+            StbSections sections = BindSectionProps(secBeams_S, secBeams_Rc, secColumn_S, secColumn_Rc, secBrace_S, secSteel);
 
             return new StbModel() { StbNodes = _kModel.nodes.ToStb(), StbMembers = members, StbSections = sections };
         }
@@ -85,7 +84,8 @@ namespace KarambaConnect.K2S
         private static StbSections BindSectionProps(
             IReadOnlyCollection<StbSecBeam_S> secBeams_S, IReadOnlyCollection<StbSecBeam_RC> secBeams_Rc,
             IReadOnlyCollection<StbSecColumn_S> secColumn_S, IReadOnlyCollection<StbSecColumn_RC> secColumn_Rc,
-            IReadOnlyCollection<StbSecBrace_S> secBrace_S)
+            IReadOnlyCollection<StbSecBrace_S> secBrace_S,
+            K2SSecSteelItems secSteelItems)
         {
             return new StbSections
             {
@@ -94,20 +94,23 @@ namespace KarambaConnect.K2S
                 StbSecBeam_S = secBeams_S.ToArray(),
                 StbSecBeam_RC = secBeams_Rc.ToArray(),
                 StbSecBrace_S = secBrace_S.ToArray(),
+                StbSecSteel = secSteelItems.ToStb(),
             };
         }
 
-        private void ModelTrussToStbBrace(List<StbSecBrace_S> secBrace_S, List<StbBrace> braces, ModelTruss modelTruss)
+        private void ModelTrussToStbBrace(List<StbSecBrace_S> secBrace_S, K2SSecSteelItems secSteel, List<StbBrace> braces, ModelTruss modelTruss)
         {
             int trussCroSecId = _croSecNames.IndexOf(modelTruss.crosec.name);
             braces.Add(K2StbMemberItems.CreateBrace(modelTruss, trussCroSecId));
             if (_registeredCroSecId[2].IndexOf(trussCroSecId) < 0)
             {
-                AddBraceSection(secBrace_S, trussCroSecId, _tagNum[2]++);
+                AddBraceSection(secBrace_S, secSteel, trussCroSecId, _tagNum[2]++);
             }
         }
 
-        private void ModelBeamToStbColumnAndGirder(List<StbSecBeam_RC> secBeams_RC, List<StbSecBeam_S> secBeams_S, List<StbSecColumn_RC> secColumn_RC, List<StbSecColumn_S> secColumn_S, double colMaxAngle, List<StbColumn> columns, List<StbGirder> girders, double pAngle, double nAngle, ModelBeam modelBeam)
+        private void ModelBeamToStbColumnAndGirder(
+            List<StbSecBeam_RC> secBeams_RC, List<StbSecBeam_S> secBeams_S, List<StbSecColumn_RC> secColumn_RC, List<StbSecColumn_S> secColumn_S, K2SSecSteelItems secSteel,
+            double colMaxAngle, List<StbColumn> columns, List<StbGirder> girders, double pAngle, double nAngle, ModelBeam modelBeam)
         {
             int croSecId = _croSecNames.IndexOf(modelBeam.crosec.name);
             bool positive = pAngle <= colMaxAngle && pAngle >= -1d * colMaxAngle;
@@ -119,7 +122,7 @@ namespace KarambaConnect.K2S
                 columns.Add(K2StbMemberItems.CreateColumn(modelBeam, croSecId, kind));
                 if (_registeredCroSecId[0].IndexOf(croSecId) < 0)
                 {
-                    AddColumnSection(secColumn_S, secColumn_RC, kind, croSecId, _tagNum[0]++);
+                    AddColumnSection(secColumn_S, secColumn_RC, secSteel, kind, croSecId, _tagNum[0]++);
                 }
             }
             else
@@ -128,24 +131,24 @@ namespace KarambaConnect.K2S
                 girders.Add(K2StbMemberItems.CreateGirder(modelBeam, croSecId, kind));
                 if (_registeredCroSecId[1].IndexOf(croSecId) < 0)
                 {
-                    AddBeamSection(secBeams_S, secBeams_RC, kind, croSecId, _tagNum[1]++);
+                    AddBeamSection(secBeams_S, secBeams_RC, secSteel, kind, croSecId, _tagNum[1]++);
                 }
             }
         }
 
-        private void AddBraceSection(List<StbSecBrace_S> secBrace_S, int croSecId, int vNum)
+        private void AddBraceSection(List<StbSecBrace_S> secBrace_S, K2SSecSteelItems secSteel, int croSecId, int vNum)
         {
             secBrace_S.Add(K2StbSections.BraceSteel(croSecId, vNum, _kModel));
             _registeredCroSecId[2].Add(croSecId);
 
             if (_registeredCroSecName[2].IndexOf(_kModel.crosecs[croSecId].name) < 0)
             {
-                K2StbSecSteel.GetSection(ref _secSteel, _kModel, croSecId);
+                K2StbSecSteel.GetSection(ref secSteel, _kModel, croSecId);
                 _registeredCroSecName[2].Add(_kModel.crosecs[croSecId].name);
             }
         }
 
-        private void AddBeamSection(List<StbSecBeam_S> secBeams_S, List<StbSecBeam_RC> secBeams_RC, StbGirderKind_structure kind, int croSecId, int gNum)
+        private void AddBeamSection(List<StbSecBeam_S> secBeams_S, List<StbSecBeam_RC> secBeams_RC, K2SSecSteelItems secSteel, StbGirderKind_structure kind, int croSecId, int gNum)
         {
             switch (kind)
             {
@@ -154,7 +157,7 @@ namespace KarambaConnect.K2S
 
                     if (_registeredCroSecName[1].IndexOf(_kModel.crosecs[croSecId].name) < 0)
                     {
-                        K2StbSecSteel.GetSection(ref _secSteel, _kModel, croSecId);
+                        K2StbSecSteel.GetSection(ref secSteel, _kModel, croSecId);
                         _registeredCroSecName[1].Add(_kModel.crosecs[croSecId].name);
                     }
                     break;
@@ -167,7 +170,7 @@ namespace KarambaConnect.K2S
             _registeredCroSecId[1].Add(croSecId);
         }
 
-        private void AddColumnSection(List<StbSecColumn_S> secColumns_S, List<StbSecColumn_RC> secColumns_RC, StbColumnKind_structure kind, int croSecId, int cNum)
+        private void AddColumnSection(List<StbSecColumn_S> secColumns_S, List<StbSecColumn_RC> secColumns_RC, K2SSecSteelItems secSteel, StbColumnKind_structure kind, int croSecId, int cNum)
         {
             switch (kind)
             {
@@ -176,7 +179,7 @@ namespace KarambaConnect.K2S
 
                     if (_registeredCroSecName[0].IndexOf(_kModel.crosecs[croSecId].name) < 0)
                     {
-                        K2StbSecSteel.GetSection(ref _secSteel, _kModel, croSecId);
+                        K2StbSecSteel.GetSection(ref secSteel, _kModel, croSecId);
                         _registeredCroSecName[0].Add(_kModel.crosecs[croSecId].name);
                     }
                     break;
