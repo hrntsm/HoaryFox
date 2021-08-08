@@ -51,8 +51,8 @@ namespace KarambaConnect.Component.IO
 
 
             List<string>[] k3Ids = CrossSection.GetIndex(stBridge);
-            List<CroSec> k3CroSec = CrossSection.GetCroSec(stBridge, familyName);
-            List<BuilderBeam> elems = ElementBuilder.BuilderBeams(stBridge, k3Ids);
+            List<CroSec> k3CroSec = CrossSection.GetCroSec(stBridge.StbModel.StbSections, familyName);
+            List<BuilderBeam> elems = ElementBuilder.BuilderBeams(stBridge.StbModel, k3Ids);
             List<GH_Element> ghElements = elems.Select(e => new GH_Element(e)).ToList();
             k3ElemBe = ghElements;
 

@@ -107,140 +107,200 @@ namespace KarambaConnect.S2K
         private static List<CroSec> StbSecSteelToK3dCroSec(StbSections sections, FemMaterial material, CroSecFamilyName familyName)
         {
             var k3dCroSecList = new List<CroSec>();
-            var secSteel = sections.StbSecSteel;
-            CroSec k3dCroSec;
 
-            if (secSteel.StbSecRollH != null)
+            SetRollHSection(sections, material, familyName, k3dCroSecList);
+            SetBuildHSection(sections, material, familyName, k3dCroSecList);
+            SetRollBoxSection(sections, material, familyName, k3dCroSecList);
+            SetBuildBoxSection(sections, material, familyName, k3dCroSecList);
+            SetRollTSection(sections, material, familyName, k3dCroSecList);
+            SetPipeSection(sections, material, familyName, k3dCroSecList);
+            SetRollCSection(sections, material, familyName, k3dCroSecList);
+            SetRollLSection(sections, material, familyName, k3dCroSecList);
+            SetLipCSection(sections, material, familyName, k3dCroSecList);
+            SetFlatBarSection(sections, material, familyName, k3dCroSecList);
+            SetRoundBarSection(sections, material, familyName, k3dCroSecList);
+
+            return k3dCroSecList;
+        }
+
+        private static void SetRollHSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        {
+            if (sections.StbSecSteel.StbSecRollH != null)
             {
-                foreach (var rollH in secSteel.StbSecRollH)
+                foreach (StbSecRollH rollH in sections.StbSecSteel.StbSecRollH)
                 {
-                    k3dCroSec = new CroSec_I(familyName.H, rollH.name, null, null, material,
+                    var k3dCroSec = new CroSec_I(familyName.H, rollH.name, null, null, material,
                         rollH.A / 10d, rollH.B / 10d, rollH.B / 10d,
                         rollH.t2 / 10d, rollH.t2 / 10d, rollH.t1 / 10d, rollH.r / 10d, rollH.r / 10d);
                     SetK3dCroSecElemId(sections, k3dCroSec, rollH.name);
                     k3dCroSecList.Add(k3dCroSec);
                 }
             }
-            if (secSteel.StbSecBuildH != null)
+        }
+
+        private static void SetBuildHSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        {
+            if (sections.StbSecSteel.StbSecBuildH != null)
             {
-                foreach (var buildH in secSteel.StbSecBuildH)
+                foreach (StbSecBuildH buildH in sections.StbSecSteel.StbSecBuildH)
                 {
-                    k3dCroSec = new CroSec_I(familyName.H, buildH.name, null, null, material,
+                    var k3dCroSec = new CroSec_I(familyName.H, buildH.name, null, null, material,
                         buildH.A / 10d, buildH.B / 10d, buildH.B / 10d,
                         buildH.t2 / 10d, buildH.t2 / 10d, buildH.t1 / 10d);
                     SetK3dCroSecElemId(sections, k3dCroSec, buildH.name);
                     k3dCroSecList.Add(k3dCroSec);
                 }
             }
-            if (secSteel.StbSecRollBOX != null)
+        }
+
+        private static void SetRollBoxSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        {
+            if (sections.StbSecSteel.StbSecRollBOX != null)
             {
-                foreach (var rollBOX in secSteel.StbSecRollBOX)
+                foreach (StbSecRollBOX rollBOX in sections.StbSecSteel.StbSecRollBOX)
                 {
-                    k3dCroSec = new CroSec_Box(familyName.Box, rollBOX.name, null, null, material,
+                    var k3dCroSec = new CroSec_Box(familyName.Box, rollBOX.name, null, null, material,
                         rollBOX.A / 10d, rollBOX.B / 10d, rollBOX.B / 10d,
                         rollBOX.t / 10d, rollBOX.t / 10d, rollBOX.t / 10d, rollBOX.r / 10d, rollBOX.r / 10d);
                     SetK3dCroSecElemId(sections, k3dCroSec, rollBOX.name);
                     k3dCroSecList.Add(k3dCroSec);
                 }
             }
-            if (secSteel.StbSecBuildBOX != null)
+        }
+
+        private static void SetBuildBoxSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        {
+            if (sections.StbSecSteel.StbSecBuildBOX != null)
             {
-                foreach (var buildBOX in secSteel.StbSecBuildBOX)
+                foreach (StbSecBuildBOX buildBOX in sections.StbSecSteel.StbSecBuildBOX)
                 {
-                    k3dCroSec = new CroSec_Box(familyName.Box, buildBOX.name, null, null, material,
+                    var k3dCroSec = new CroSec_Box(familyName.Box, buildBOX.name, null, null, material,
                         buildBOX.A / 10d, buildBOX.B / 10d, buildBOX.B / 10d,
                         buildBOX.t2 / 10d, buildBOX.t2 / 10d, buildBOX.t1 / 10d, 0, -1);
                     SetK3dCroSecElemId(sections, k3dCroSec, buildBOX.name);
                     k3dCroSecList.Add(k3dCroSec);
                 }
             }
-            if (secSteel.StbSecRollT != null)
+        }
+
+        private static void SetRollTSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        {
+            if (sections.StbSecSteel.StbSecRollT != null)
             {
-                foreach (var rollT in secSteel.StbSecRollT)
+                foreach (StbSecRollT rollT in sections.StbSecSteel.StbSecRollT)
                 {
-                    k3dCroSec = new CroSec_T(familyName.T, rollT.name, null, null, material,
+                    var k3dCroSec = new CroSec_T(familyName.T, rollT.name, null, null, material,
                         rollT.A / 10d, rollT.B / 10d,
                         rollT.t2 / 10d, rollT.t1 / 10d, rollT.r / 10d, rollT.r / 10d);
                     SetK3dCroSecElemId(sections, k3dCroSec, rollT.name);
                     k3dCroSecList.Add(k3dCroSec);
                 }
             }
-            if (secSteel.StbSecPipe != null)
+        }
+
+        private static void SetPipeSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        {
+            if (sections.StbSecSteel.StbSecPipe != null)
             {
-                foreach (var pipe in secSteel.StbSecPipe)
+                foreach (StbSecPipe pipe in sections.StbSecSteel.StbSecPipe)
                 {
-                    k3dCroSec = new CroSec_Circle(familyName.Circle, pipe.name, null, null, material,
+                    var k3dCroSec = new CroSec_Circle(familyName.Circle, pipe.name, null, null, material,
                         pipe.D / 10d, pipe.t / 10d);
                     SetK3dCroSecElemId(sections, k3dCroSec, pipe.name);
                     k3dCroSecList.Add(k3dCroSec);
                 }
             }
-            if (secSteel.StbSecRollC != null)
+        }
+
+        private static void SetRollCSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        {
+            if (sections.StbSecSteel.StbSecRollC != null)
             {
-                foreach (var rollC in secSteel.StbSecRollC)
+                foreach (StbSecRollC rollC in sections.StbSecSteel.StbSecRollC)
                 {
                     // TODO: 正確な形状に合わせて等価断面計算する。フランジとウェブの角度が95°なのとフィレットは非考慮
                     int typeFactor = rollC.type == StbSecRollCType.SINGLE ? 1 : 2;
                     var eqLength = Math.Sqrt((rollC.A * rollC.t1 + 2 * rollC.B * rollC.t2 - 2 * rollC.t1 * rollC.t2) * typeFactor) / 10d;
-                    k3dCroSec = new CroSec_Trapezoid(familyName.Circle, rollC.name, null, null, material, eqLength, eqLength, eqLength);
+                    var k3dCroSec = new CroSec_Trapezoid(familyName.Circle, rollC.name, null, null, material, eqLength, eqLength, eqLength);
                     SetK3dCroSecElemId(sections, k3dCroSec, rollC.name);
                     k3dCroSecList.Add(k3dCroSec);
                 }
             }
-            if (secSteel.StbSecRollL != null)
+        }
+
+        private static void SetRollLSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        {
+            if (sections.StbSecSteel.StbSecRollL != null)
             {
-                foreach (var rollL in secSteel.StbSecRollL)
+                foreach (StbSecRollL rollL in sections.StbSecSteel.StbSecRollL)
                 {
                     // TODO: 正確な形状に合わせて等価断面計算する。フィレットは非考慮
                     int typeFactor = rollL.type == StbSecRollLType.SINGLE ? 1 : 2;
                     var eqLength = Math.Sqrt((rollL.A * rollL.t1 + rollL.B * rollL.t2 - rollL.t1 * rollL.t2) * typeFactor) / 10d;
-                    k3dCroSec = new CroSec_Trapezoid(familyName.Circle, rollL.name, null, null, material, eqLength, eqLength, eqLength);
+                    var k3dCroSec = new CroSec_Trapezoid(familyName.Circle, rollL.name, null, null, material, eqLength, eqLength, eqLength);
                     SetK3dCroSecElemId(sections, k3dCroSec, rollL.name);
                     k3dCroSecList.Add(k3dCroSec);
                 }
             }
-            if (secSteel.StbSecLipC != null)
+        }
+
+        private static void SetLipCSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        {
+            if (sections.StbSecSteel.StbSecLipC != null)
             {
-                foreach (var lipC in secSteel.StbSecLipC)
+                foreach (StbSecLipC lipC in sections.StbSecSteel.StbSecLipC)
                 {
                     // TODO: 正確な形状に合わせて等価断面計算する。フィレットは非考慮
                     int typeFactor = lipC.type == StbSecLipCType.SINGLE ? 1 : 2;
                     var eqLength = Math.Sqrt((2 * lipC.A * lipC.t + lipC.H * lipC.t + 2 * lipC.C * lipC.t - 4 * lipC.t * lipC.t) * typeFactor) / 10d;
-                    k3dCroSec = new CroSec_Trapezoid(familyName.Circle, lipC.name, null, null, material, eqLength, eqLength, eqLength);
+                    var k3dCroSec = new CroSec_Trapezoid(familyName.Circle, lipC.name, null, null, material, eqLength, eqLength, eqLength);
                     SetK3dCroSecElemId(sections, k3dCroSec, lipC.name);
                     k3dCroSecList.Add(k3dCroSec);
                 }
             }
-            if (secSteel.StbSecFlatBar != null)
+        }
+
+        private static void SetFlatBarSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        {
+            if (sections.StbSecSteel.StbSecFlatBar != null)
             {
-                foreach (var flatBar in secSteel.StbSecFlatBar)
+                foreach (StbSecFlatBar flatBar in sections.StbSecSteel.StbSecFlatBar)
                 {
-                    k3dCroSec = new CroSec_Trapezoid(familyName.FB, flatBar.name, null, null, material, flatBar.B, flatBar.t, flatBar.t);
+                    var k3dCroSec = new CroSec_Trapezoid(familyName.FB, flatBar.name, null, null, material, flatBar.B, flatBar.t, flatBar.t);
                     SetK3dCroSecElemId(sections, k3dCroSec, flatBar.name);
                     k3dCroSecList.Add(k3dCroSec);
                 }
             }
-            if (secSteel.StbSecRoundBar != null)
+        }
+
+        private static void SetRoundBarSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        {
+            if (sections.StbSecSteel.StbSecRoundBar != null)
             {
-                foreach (var roundBar in secSteel.StbSecRoundBar)
+                foreach (StbSecRoundBar roundBar in sections.StbSecSteel.StbSecRoundBar)
                 {
                     // TODO: Karambaは中実円断面ないため、矩形の等価断面。
                     var eqLength = Math.Sqrt(roundBar.R * roundBar.R * Math.PI) / 10d;
-                    k3dCroSec = new CroSec_Trapezoid(familyName.Circle, roundBar.name, null, null, material, eqLength, eqLength, eqLength);
+                    var k3dCroSec = new CroSec_Trapezoid(familyName.Circle, roundBar.name, null, null, material, eqLength, eqLength, eqLength);
                     SetK3dCroSecElemId(sections, k3dCroSec, roundBar.name);
                     k3dCroSecList.Add(k3dCroSec);
                 }
             }
-
-            return k3dCroSecList;
         }
 
         private static void SetK3dCroSecElemId(StbSections sections, CroSec k3dCroSec, string steelShapeName)
         {
-            foreach (StbSecColumn_S columnS in sections.StbSecColumn_S)
+            CheckSecColumnIdMatching(sections.StbSecColumn_S, k3dCroSec, steelShapeName);
+            CheckSecBeamIdMatching(sections.StbSecBeam_S, k3dCroSec, steelShapeName);
+            CheckSecBraceIdMatching(sections.StbSecBrace_S, k3dCroSec, steelShapeName);
+        }
+
+        private static void CheckSecColumnIdMatching(StbSecColumn_S[] columns, CroSec k3dCroSec, string steelShapeName)
+        {
+            foreach (StbSecColumn_S column in columns)
             {
                 var memberFigureName = string.Empty;
-                object[] figures = columnS.StbSecSteelFigureColumn_S.Items;
+                object[] figures = column.StbSecSteelFigureColumn_S.Items;
                 switch (figures)
                 {
                     case StbSecSteelColumn_S_Same[] same:
@@ -255,13 +315,17 @@ namespace KarambaConnect.S2K
                 }
                 if (memberFigureName == steelShapeName)
                 {
-                    k3dCroSec.AddElemId("Id" + columnS.id);
+                    k3dCroSec.AddElemId("Id" + column.id);
                 }
             }
-            foreach (StbSecBeam_S beamS in sections.StbSecBeam_S)
+        }
+
+        private static void CheckSecBeamIdMatching(StbSecBeam_S[] beams, CroSec k3dCroSec, string steelShapeName)
+        {
+            foreach (StbSecBeam_S beam in beams)
             {
                 var memberFigureName = string.Empty;
-                object[] figures = beamS.StbSecSteelFigureBeam_S.Items;
+                object[] figures = beam.StbSecSteelFigureBeam_S.Items;
                 switch (figures)
                 {
                     case StbSecSteelBeam_S_Straight[] straight:
@@ -282,13 +346,17 @@ namespace KarambaConnect.S2K
                 }
                 if (memberFigureName == steelShapeName)
                 {
-                    k3dCroSec.AddElemId("Id" + beamS.id);
+                    k3dCroSec.AddElemId("Id" + beam.id);
                 }
             }
-            foreach (StbSecBrace_S braceS in sections.StbSecBrace_S)
+        }
+
+        private static void CheckSecBraceIdMatching(StbSecBrace_S[] braces, CroSec k3dCroSec, string steelShapeName)
+        {
+            foreach (StbSecBrace_S brace in braces)
             {
                 var memberFigureName = string.Empty;
-                object[] figures = braceS.StbSecSteelFigureBrace_S.Items;
+                object[] figures = brace.StbSecSteelFigureBrace_S.Items;
                 switch (figures)
                 {
                     case StbSecSteelBrace_S_Same[] same:
@@ -303,7 +371,7 @@ namespace KarambaConnect.S2K
                 }
                 if (memberFigureName == steelShapeName)
                 {
-                    k3dCroSec.AddElemId("Id" + braceS.id);
+                    k3dCroSec.AddElemId("Id" + brace.id);
                 }
             }
         }
