@@ -12,38 +12,48 @@ namespace KarambaConnect.S2K
     {
         public static List<string>[] GetIndex(ST_BRIDGE stBridge)
         {
-            var k3Ids = new[] { new List<string>(), new List<string>(), new List<string>() };
+            var k3dIds = new[] { new List<string>(), new List<string>(), new List<string>() };
             StbMembers members = stBridge.StbModel.StbMembers;
 
-            k3Ids[0].AddRange(members.StbColumns.Select(column => "Id" + column.id));
-            k3Ids[1].AddRange(members.StbGirders.Select(girder => "Id" + girder.id));
-            k3Ids[2].AddRange(members.StbBraces.Select(brace => "Id" + brace.id));
+            if (members.StbColumns != null)
+            {
+                k3dIds[0].AddRange(members.StbColumns.Select(column => "Id" + column.id_section));
+            }
+            if (members.StbGirders != null)
+            {
+                k3dIds[1].AddRange(members.StbGirders.Select(girder => "Id" + girder.id_section));
+            }
+            if (members.StbBraces != null)
+            {
+                k3dIds[2].AddRange(members.StbBraces.Select(brace => "Id" + brace.id_section));
+            }
 
-            return k3Ids;
+            return k3dIds;
         }
 
         public static List<CroSec> GetCroSec(StbSections sections, CroSecFamilyName familyName)
         {
             // TODO: 材軸の回転は未設定
-            var k3CroSec = new List<CroSec>();
+            var k3dCroSec = new List<CroSec>();
 
             var fc21 = new FemMaterial_Isotrop("Concrete", "Fc21", 2186_0000, 911_0000, 911_0000, 24, 14_0000, 1.00E-05, Color.Gray);
+            FemMaterial_Isotrop[] rcMaterials = Material.DefaultRcMaterials();
             var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20500_0000, 8076_0000, 8076_0000, 78.5, 235_0000, 1.20E-05, Color.Brown);
 
-            k3CroSec.AddRange(StbSecColumnRcToK3dCroSec(sections.StbSecColumn_RC, fc21, familyName));
-            k3CroSec.AddRange(StbSecBeamRcToK3dCroSec(sections.StbSecBeam_RC, fc21, familyName));
-            k3CroSec.AddRange(StbSecSteelToK3dCroSec(sections, sn400, familyName));
+            k3dCroSec.AddRange(StbSecColumnRcToK3dCroSec(sections.StbSecColumn_RC, fc21));
+            k3dCroSec.AddRange(StbSecBeamRcToK3dCroSec(sections.StbSecBeam_RC, fc21));
+            k3dCroSec.AddRange(StbSecSteelToK3dCroSec(sections, sn400, familyName));
 
-            return k3CroSec;
+            return k3dCroSec;
         }
 
-        private static List<CroSec> StbSecColumnRcToK3dCroSec(StbSecColumn_RC[] columns, FemMaterial material, CroSecFamilyName familyName)
+        private static List<CroSec> StbSecColumnRcToK3dCroSec(IEnumerable<StbSecColumn_RC> columns, FemMaterial material)
         {
             var k3dCroSecList = new List<CroSec>();
 
-            foreach (var column in columns)
+            foreach (StbSecColumn_RC column in columns)
             {
-                string name = string.Empty;
+                string name;
                 CroSec_Beam k3dCroSec;
                 object figure = column.StbSecFigureColumn_RC.Item;
                 switch (figure)
@@ -53,15 +63,15 @@ namespace KarambaConnect.S2K
                         double widthY = rect.width_Y / 10d;
                         name = $"CD-{widthX * 10}x{widthY * 10}";
                         // TODO:材料の設定は直す
-                        k3dCroSec = new CroSec_Trapezoid(familyName.Box, name, null, null, material, widthX, widthY, widthY);
+                        k3dCroSec = new CroSec_Trapezoid("RcColRect", name, null, null, material, widthX, widthY, widthY);
                         break;
                     case StbSecColumn_RC_Circle circle:
                         double d = circle.D / 10d;
                         name = $"P-{d * 10}";
-                        k3dCroSec = new CroSec_Circle(familyName.Circle, name, null, null, material, d, d / 2);
+                        k3dCroSec = new CroSec_Circle("RcColCircle", name, null, null, material, d, d / 2);
                         break;
                     default:
-                        throw new ArgumentException("Unknown figure type.");
+                        throw new ArgumentException("Convert StbSecColumn_RC to karamba3d error");
                 }
                 k3dCroSec.AddElemId("Id" + column.id);
                 k3dCroSecList.Add(k3dCroSec);
@@ -70,33 +80,39 @@ namespace KarambaConnect.S2K
             return k3dCroSecList;
         }
 
-        private static List<CroSec> StbSecBeamRcToK3dCroSec(StbSecBeam_RC[] girders, FemMaterial material, CroSecFamilyName familyName)
+        private static List<CroSec> StbSecBeamRcToK3dCroSec(IEnumerable<StbSecBeam_RC> girders, FemMaterial material)
         {
             var k3dCroSecList = new List<CroSec>();
 
-            foreach (var girder in girders)
+            foreach (StbSecBeam_RC girder in girders)
             {
-                string name = string.Empty;
-                double width = 0, depth = 0;
+                double width, depth;
                 object[] figures = girder.StbSecFigureBeam_RC.Items;
 
-                switch (figures)
+                switch (figures[0])
                 {
-                    case StbSecBeam_RC_Straight[] straights:
-                        width = straights[0].width / 10d;
-                        depth = straights[0].depth / 10d;
+                    case StbSecBeam_RC_Straight straight:
+                        width = straight.width / 10d;
+                        depth = straight.depth / 10d;
                         break;
-                    case StbSecBeam_RC_Taper[] tapers:
+                    case StbSecBeam_RC_Taper _:
+                        StbSecBeam_RC_Taper[] tapers = { figures[0] as StbSecBeam_RC_Taper, figures[1] as StbSecBeam_RC_Taper };
                         width = tapers.First(figure => figure.pos == StbSecBeam_RC_TaperPos.START).width / 10d;
                         depth = tapers.First(figure => figure.pos == StbSecBeam_RC_TaperPos.START).depth / 10d;
                         break;
-                    case StbSecBeam_RC_Haunch[] haunches:
+                    case StbSecBeam_RC_Haunch _:
+                        StbSecBeam_RC_Haunch[] haunches;
+                        haunches = figures.Length == 2
+                            ? new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch }
+                            : new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch};
                         width = haunches.First(figure => figure.pos == StbSecBeam_RC_HaunchPos.CENTER).width / 10d;
                         depth = haunches.First(figure => figure.pos == StbSecBeam_RC_HaunchPos.CENTER).depth / 10d;
                         break;
+                    default:
+                        throw new ArgumentException("Convert StbSecBeam_RC to karamba3d error");
                 }
-                name = $"BD-{width * 10}x{depth * 10}";
-                var k3dCroSec = new CroSec_Trapezoid(familyName.Box, name, null, null, material, depth, width, width);
+                var name = $"BD-{width * 10}x{depth * 10}";
+                var k3dCroSec = new CroSec_Trapezoid("RcBeam", name, null, null, material, depth, width, width);
                 k3dCroSec.AddElemId("Id" + girder.id);
                 k3dCroSecList.Add(k3dCroSec);
             }
@@ -123,7 +139,7 @@ namespace KarambaConnect.S2K
             return k3dCroSecList;
         }
 
-        private static void SetRollHSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        private static void SetRollHSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, ICollection<CroSec> k3dCroSecList)
         {
             if (sections.StbSecSteel.StbSecRollH != null)
             {
@@ -138,7 +154,7 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void SetBuildHSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        private static void SetBuildHSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, ICollection<CroSec> k3dCroSecList)
         {
             if (sections.StbSecSteel.StbSecBuildH != null)
             {
@@ -153,7 +169,7 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void SetRollBoxSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        private static void SetRollBoxSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, ICollection<CroSec> k3dCroSecList)
         {
             if (sections.StbSecSteel.StbSecRollBOX != null)
             {
@@ -168,7 +184,7 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void SetBuildBoxSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        private static void SetBuildBoxSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, ICollection<CroSec> k3dCroSecList)
         {
             if (sections.StbSecSteel.StbSecBuildBOX != null)
             {
@@ -183,7 +199,7 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void SetRollTSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        private static void SetRollTSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, ICollection<CroSec> k3dCroSecList)
         {
             if (sections.StbSecSteel.StbSecRollT != null)
             {
@@ -198,7 +214,7 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void SetPipeSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        private static void SetPipeSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, ICollection<CroSec> k3dCroSecList)
         {
             if (sections.StbSecSteel.StbSecPipe != null)
             {
@@ -212,7 +228,7 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void SetRollCSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        private static void SetRollCSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, ICollection<CroSec> k3dCroSecList)
         {
             if (sections.StbSecSteel.StbSecRollC != null)
             {
@@ -228,7 +244,7 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void SetRollLSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        private static void SetRollLSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, ICollection<CroSec> k3dCroSecList)
         {
             if (sections.StbSecSteel.StbSecRollL != null)
             {
@@ -244,7 +260,7 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void SetLipCSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        private static void SetLipCSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, ICollection<CroSec> k3dCroSecList)
         {
             if (sections.StbSecSteel.StbSecLipC != null)
             {
@@ -260,7 +276,7 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void SetFlatBarSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        private static void SetFlatBarSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, ICollection<CroSec> k3dCroSecList)
         {
             if (sections.StbSecSteel.StbSecFlatBar != null)
             {
@@ -273,14 +289,14 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void SetRoundBarSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, List<CroSec> k3dCroSecList)
+        private static void SetRoundBarSection(StbSections sections, FemMaterial material, CroSecFamilyName familyName, ICollection<CroSec> k3dCroSecList)
         {
             if (sections.StbSecSteel.StbSecRoundBar != null)
             {
                 foreach (StbSecRoundBar roundBar in sections.StbSecSteel.StbSecRoundBar)
                 {
                     // TODO: Karambaは中実円断面ないため、矩形の等価断面。
-                    var eqLength = Math.Sqrt(roundBar.R * roundBar.R * Math.PI) / 10d;
+                    double eqLength = Math.Sqrt(roundBar.R * roundBar.R * Math.PI) / 10d;
                     var k3dCroSec = new CroSec_Trapezoid(familyName.Circle, roundBar.name, null, null, material, eqLength, eqLength, eqLength);
                     SetK3dCroSecElemId(sections, k3dCroSec, roundBar.name);
                     k3dCroSecList.Add(k3dCroSec);
@@ -295,8 +311,12 @@ namespace KarambaConnect.S2K
             CheckSecBraceIdMatching(sections.StbSecBrace_S, k3dCroSec, steelShapeName);
         }
 
-        private static void CheckSecColumnIdMatching(StbSecColumn_S[] columns, CroSec k3dCroSec, string steelShapeName)
+        private static void CheckSecColumnIdMatching(IEnumerable<StbSecColumn_S> columns, CroSec k3dCroSec, string steelShapeName)
         {
+            if (columns == null)
+            {
+                return;
+            }
             foreach (StbSecColumn_S column in columns)
             {
                 var memberFigureName = string.Empty;
@@ -320,8 +340,12 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void CheckSecBeamIdMatching(StbSecBeam_S[] beams, CroSec k3dCroSec, string steelShapeName)
+        private static void CheckSecBeamIdMatching(IEnumerable<StbSecBeam_S> beams, CroSec k3dCroSec, string steelShapeName)
         {
+            if (beams == null)
+            {
+                return;
+            }
             foreach (StbSecBeam_S beam in beams)
             {
                 var memberFigureName = string.Empty;
@@ -351,8 +375,12 @@ namespace KarambaConnect.S2K
             }
         }
 
-        private static void CheckSecBraceIdMatching(StbSecBrace_S[] braces, CroSec k3dCroSec, string steelShapeName)
+        private static void CheckSecBraceIdMatching(IEnumerable<StbSecBrace_S> braces, CroSec k3dCroSec, string steelShapeName)
         {
+            if (braces == null)
+            {
+                return;
+            }
             foreach (StbSecBrace_S brace in braces)
             {
                 var memberFigureName = string.Empty;

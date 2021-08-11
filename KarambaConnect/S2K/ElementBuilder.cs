@@ -25,6 +25,11 @@ namespace KarambaConnect.S2K
 
         private static List<BuilderBeam> StbColumnToK3dBeam(List<string> k3Ids, StbNode[] nodes, IEnumerable<StbColumn> columns)
         {
+            if (columns == null)
+            {
+                return new List<BuilderBeam>();
+            }
+
             var k3dLine3s = new List<Line3>();
             var k3dKit = new KarambaCommon.Toolkit();
             foreach (StbColumn column in columns)
@@ -41,6 +46,11 @@ namespace KarambaConnect.S2K
 
         private static List<BuilderBeam> StbGirderToK3dBeam(List<string> k3Ids, StbNode[] nodes, IEnumerable<StbGirder> girders)
         {
+            if (girders == null)
+            {
+                return new List<BuilderBeam>();
+            }
+
             var k3dLine3s = new List<Line3>();
             var k3dKit = new KarambaCommon.Toolkit();
             foreach (StbGirder girder in girders)
@@ -57,6 +67,11 @@ namespace KarambaConnect.S2K
 
         private static List<BuilderBeam> StbBraceToK3dBeam(List<string> k3Ids, StbNode[] nodes, IEnumerable<StbBrace> braces)
         {
+            if (braces == null)
+            {
+                return new List<BuilderBeam>();
+            }
+
             var k3dLine3s = new List<Line3>();
             var k3dKit = new KarambaCommon.Toolkit();
             foreach (StbBrace brace in braces)
