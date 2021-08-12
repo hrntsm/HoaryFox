@@ -36,18 +36,16 @@ namespace KarambaConnect.S2K
             // TODO: 材軸の回転は未設定
             var k3dCroSec = new List<CroSec>();
 
-            var fc21 = new FemMaterial_Isotrop("Concrete", "Fc21", 2186_0000, 911_0000, 911_0000, 24, 14_0000, 1.00E-05, Color.Gray);
-            FemMaterial_Isotrop[] rcMaterials = Material.DefaultRcMaterials();
             var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20500_0000, 8076_0000, 8076_0000, 78.5, 235_0000, 1.20E-05, Color.Brown);
 
-            k3dCroSec.AddRange(StbSecColumnRcToK3dCroSec(sections.StbSecColumn_RC, fc21));
-            k3dCroSec.AddRange(StbSecBeamRcToK3dCroSec(sections.StbSecBeam_RC, fc21));
+            k3dCroSec.AddRange(StbSecColumnRcToK3dCroSec(sections.StbSecColumn_RC));
+            k3dCroSec.AddRange(StbSecBeamRcToK3dCroSec(sections.StbSecBeam_RC));
             k3dCroSec.AddRange(StbSecSteelToK3dCroSec(sections, sn400, familyName));
 
             return k3dCroSec;
         }
 
-        private static List<CroSec> StbSecColumnRcToK3dCroSec(IEnumerable<StbSecColumn_RC> columns, FemMaterial material)
+        private static List<CroSec> StbSecColumnRcToK3dCroSec(IEnumerable<StbSecColumn_RC> columns)
         {
             var k3dCroSecList = new List<CroSec>();
 
@@ -56,13 +54,13 @@ namespace KarambaConnect.S2K
                 string name;
                 CroSec_Beam k3dCroSec;
                 object figure = column.StbSecFigureColumn_RC.Item;
+                var material = Material.StbToRcFemMaterial(column.strength_concrete);
                 switch (figure)
                 {
                     case StbSecColumn_RC_Rect rect:
                         double widthX = rect.width_X / 10d;
                         double widthY = rect.width_Y / 10d;
                         name = $"CD-{widthX * 10}x{widthY * 10}";
-                        // TODO:材料の設定は直す
                         k3dCroSec = new CroSec_Trapezoid("RcColRect", name, null, null, material, widthX, widthY, widthY);
                         break;
                     case StbSecColumn_RC_Circle circle:
@@ -80,13 +78,14 @@ namespace KarambaConnect.S2K
             return k3dCroSecList;
         }
 
-        private static List<CroSec> StbSecBeamRcToK3dCroSec(IEnumerable<StbSecBeam_RC> girders, FemMaterial material)
+        private static List<CroSec> StbSecBeamRcToK3dCroSec(IEnumerable<StbSecBeam_RC> girders)
         {
             var k3dCroSecList = new List<CroSec>();
 
             foreach (StbSecBeam_RC girder in girders)
             {
                 double width, depth;
+                var material = Material.StbToRcFemMaterial(girder.strength_concrete);
                 object[] figures = girder.StbSecFigureBeam_RC.Items;
 
                 switch (figures[0])
