@@ -104,7 +104,7 @@ namespace KarambaConnect.S2K
                         StbSecBeam_RC_Haunch[] haunches;
                         haunches = figures.Length == 2
                             ? new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch }
-                            : new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch};
+                            : new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch };
                         width = haunches.First(figure => figure.pos == StbSecBeam_RC_HaunchPos.CENTER).width / 10d;
                         depth = haunches.First(figure => figure.pos == StbSecBeam_RC_HaunchPos.CENTER).depth / 10d;
                         break;
