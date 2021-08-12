@@ -35,8 +35,7 @@ namespace KarambaConnect.S2K
         {
             // TODO: 材軸の回転は未設定
             var k3dCroSec = new List<CroSec>();
-
-            var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20500_0000, 8076_0000, 8076_0000, 78.5, 235_0000, 1.20E-05, Color.Brown);
+            var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20500_0000, 8076_0000, 8076_0000, 78.5, 23_5000, 1.20E-05, Color.Brown);
 
             k3dCroSec.AddRange(StbSecColumnRcToK3dCroSec(sections.StbSecColumn_RC));
             k3dCroSec.AddRange(StbSecBeamRcToK3dCroSec(sections.StbSecBeam_RC));
@@ -320,16 +319,18 @@ namespace KarambaConnect.S2K
             {
                 var memberFigureName = string.Empty;
                 object[] figures = column.StbSecSteelFigureColumn_S.Items;
-                switch (figures)
+                switch (figures[0])
                 {
-                    case StbSecSteelColumn_S_Same[] same:
-                        memberFigureName = same[0].shape;
+                    case StbSecSteelColumn_S_Same same:
+                        memberFigureName = same.shape;
                         break;
-                    case StbSecSteelColumn_S_NotSame[] notSame:
-                        memberFigureName = notSame.First(figure => figure.pos == StbSecSteelColumn_S_NotSamePos.BOTTOM).shape;
+                    case StbSecSteelColumn_S_NotSame _:
+                        memberFigureName = new[] { figures[0] as StbSecSteelColumn_S_NotSame, figures[1] as StbSecSteelColumn_S_NotSame }
+                                .First(figure => figure.pos == StbSecSteelColumn_S_NotSamePos.BOTTOM).shape;
                         break;
-                    case StbSecSteelColumn_S_ThreeTypes[] three:
-                        memberFigureName = three.First(figure => figure.pos == StbSecSteelColumn_S_ThreeTypesPos.CENTER).shape;
+                    case StbSecSteelColumn_S_ThreeTypes _:
+                        memberFigureName = new[] { figures[0] as StbSecSteelColumn_S_ThreeTypes, figures[1] as StbSecSteelColumn_S_ThreeTypes, figures[2] as StbSecSteelColumn_S_ThreeTypes }
+                                .First(figure => figure.pos == StbSecSteelColumn_S_ThreeTypesPos.CENTER).shape;
                         break;
                 }
                 if (memberFigureName == steelShapeName)
@@ -349,21 +350,43 @@ namespace KarambaConnect.S2K
             {
                 var memberFigureName = string.Empty;
                 object[] figures = beam.StbSecSteelFigureBeam_S.Items;
-                switch (figures)
+                switch (figures[0])
                 {
-                    case StbSecSteelBeam_S_Straight[] straight:
-                        memberFigureName = straight[0].shape;
+                    case StbSecSteelBeam_S_Straight straight:
+                        memberFigureName = straight.shape;
                         break;
-                    case StbSecSteelBeam_S_Taper[] taper:
-                        memberFigureName = taper.First(figure => figure.pos == StbSecSteelBeam_S_TaperPos.START).shape;
+                    case StbSecSteelBeam_S_Taper _:
+                        memberFigureName = new[] { figures[0] as StbSecSteelBeam_S_Taper, figures[1] as StbSecSteelBeam_S_Taper }
+                            .First(figure => figure.pos == StbSecSteelBeam_S_TaperPos.START).shape;
                         break;
-                    case StbSecSteelBeam_S_Joint[] joint:
-                        memberFigureName = joint.First(figure => figure.pos == StbSecSteelBeam_S_JointPos.CENTER).shape;
+                    case StbSecSteelBeam_S_Joint _:
+                        var joints = figures.Length == 2
+                             ? new[] { figures[0] as StbSecSteelBeam_S_Joint, figures[1] as StbSecSteelBeam_S_Joint }
+                             : new[] { figures[0] as StbSecSteelBeam_S_Joint, figures[1] as StbSecSteelBeam_S_Joint, figures[2] as StbSecSteelBeam_S_Joint };
+                        memberFigureName = joints.First(figure => figure.pos == StbSecSteelBeam_S_JointPos.CENTER).shape;
                         break;
-                    case StbSecSteelBeam_S_Haunch[] haunch:
+                    case StbSecSteelBeam_S_Haunch _:
+                        var haunch = figures.Length == 2
+                             ? new[] { figures[0] as StbSecSteelBeam_S_Haunch, figures[1] as StbSecSteelBeam_S_Haunch }
+                             : new[] { figures[0] as StbSecSteelBeam_S_Haunch, figures[1] as StbSecSteelBeam_S_Haunch, figures[2] as StbSecSteelBeam_S_Haunch };
                         memberFigureName = haunch.First(figure => figure.pos == StbSecSteelBeam_S_HaunchPos.CENTER).shape;
                         break;
-                    case StbSecSteelBeam_S_FiveTypes[] fiveTypes:
+                    case StbSecSteelBeam_S_FiveTypes _:
+                        StbSecSteelBeam_S_FiveTypes[] fiveTypes;
+                        switch (figures.Length)
+                        {
+                            case 3:
+                                fiveTypes = new[] { figures[0] as StbSecSteelBeam_S_FiveTypes, figures[1] as StbSecSteelBeam_S_FiveTypes, figures[2] as StbSecSteelBeam_S_FiveTypes };
+                                break;
+                            case 4:
+                                fiveTypes = new[] { figures[0] as StbSecSteelBeam_S_FiveTypes, figures[1] as StbSecSteelBeam_S_FiveTypes, figures[2] as StbSecSteelBeam_S_FiveTypes, figures[3] as StbSecSteelBeam_S_FiveTypes };
+                                break;
+                            case 5:
+                                fiveTypes = new[] { figures[0] as StbSecSteelBeam_S_FiveTypes, figures[1] as StbSecSteelBeam_S_FiveTypes, figures[2] as StbSecSteelBeam_S_FiveTypes, figures[3] as StbSecSteelBeam_S_FiveTypes, figures[4] as StbSecSteelBeam_S_FiveTypes };
+                                break;
+                            default:
+                                throw new ArgumentException("StbSecSteelBeam_S_FiveTypes parse error");
+                        }
                         memberFigureName = fiveTypes.First(figure => figure.pos == StbSecSteelBeam_S_FiveTypesPos.CENTER).shape;
                         break;
                 }
@@ -384,16 +407,18 @@ namespace KarambaConnect.S2K
             {
                 var memberFigureName = string.Empty;
                 object[] figures = brace.StbSecSteelFigureBrace_S.Items;
-                switch (figures)
+                switch (figures[0])
                 {
-                    case StbSecSteelBrace_S_Same[] same:
-                        memberFigureName = same[0].shape;
+                    case StbSecSteelBrace_S_Same same:
+                        memberFigureName = same.shape;
                         break;
-                    case StbSecSteelBrace_S_NotSame[] notSame:
-                        memberFigureName = notSame.First(figure => figure.pos == StbSecSteelBrace_S_NotSamePos.BOTTOM).shape;
+                    case StbSecSteelBrace_S_NotSame _:
+                        memberFigureName = new[] { figures[0] as StbSecSteelBrace_S_NotSame, figures[1] as StbSecSteelBrace_S_NotSame }
+                            .First(figure => figure.pos == StbSecSteelBrace_S_NotSamePos.BOTTOM).shape;
                         break;
-                    case StbSecSteelBrace_S_ThreeTypes[] three:
-                        memberFigureName = three.First(figure => figure.pos == StbSecSteelBrace_S_ThreeTypesPos.CENTER).shape;
+                    case StbSecSteelBrace_S_ThreeTypes _:
+                        memberFigureName = new[] { figures[0] as StbSecSteelBrace_S_ThreeTypes, figures[1] as StbSecSteelBrace_S_ThreeTypes, figures[2] as StbSecSteelBrace_S_ThreeTypes }
+                            .First(figure => figure.pos == StbSecSteelBrace_S_ThreeTypesPos.CENTER).shape;
                         break;
                 }
                 if (memberFigureName == steelShapeName)

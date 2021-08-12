@@ -30,7 +30,7 @@ namespace KarambaConnect.S2K
         public static FemMaterial_Isotrop StbToRcFemMaterial(string stbStrengthFc)
         {
             double fc, gamma;
-            var nu = 0.2d;
+            const double Nu = 0.2d;
             // マッチしなかった場合は Fc21 相当で返す
             switch (stbStrengthFc.ToLower())
             {
@@ -92,7 +92,9 @@ namespace KarambaConnect.S2K
                     break;
             }
 
-            return new FemMaterial_Isotrop("Concrete", stbStrengthFc, RcYoungsModulus(fc, gamma), RcShareModulus(fc, gamma, nu), RcShareModulus(fc, gamma, nu), gamma + 1, fc * 1000, 1.00E-05, Color.Gray);
+            return new FemMaterial_Isotrop("Concrete", stbStrengthFc,
+                RcYoungsModulus(fc, gamma), RcShareModulus(fc, gamma, Nu), RcShareModulus(fc, gamma, Nu),
+                gamma + 1, fc * 1000, 1.00E-05, Color.Gray);
         }
 
         private static double RcYoungsModulus(double fc, double gamma)
