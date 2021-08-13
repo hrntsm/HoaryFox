@@ -25,7 +25,7 @@ namespace KarambaConnect.Component.IO
             pManager.AddGenericParameter("Axis", "Axis", "StbAxes data", GH_ParamAccess.item);
             pManager.AddGenericParameter("Story", "Story", "StbStory data", GH_ParamAccess.list);
             pManager.AddGenericParameter("Member", "Mem", "StbMember data", GH_ParamAccess.item);
-            pManager.AddGenericParameter("Section", "Sec", "StbSection data", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Section", "Sec", "StbSection data", GH_ParamAccess.item);
             pManager.AddTextParameter("Path", "Path", "Output path", GH_ParamAccess.item, _defaultOutPath);
             pManager.AddBooleanParameter("Out?", "Out?", "If it is true, output stb file.", GH_ParamAccess.item, false);
 

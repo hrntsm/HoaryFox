@@ -114,11 +114,11 @@ namespace KarambaConnect.K2S
                 t = thickness.Max() * 1000,
                 type = StbSecRollBOXType.ELSE,
             };
-            if (secSteel.SecRollBOXes == null)
+            if (secSteel.SecRollBoxes == null)
             {
-                secSteel.SecRollBOXes = new List<StbSecRollBOX>();
+                secSteel.SecRollBoxes = new List<StbSecRollBOX>();
             }
-            secSteel.SecRollBOXes.Add(box);
+            secSteel.SecRollBoxes.Add(box);
         }
 
         private static void AddTrapezoidSection(ref K2SSecSteelItems secSteel, KCroSec.CroSec_Trapezoid secTrapezoid)

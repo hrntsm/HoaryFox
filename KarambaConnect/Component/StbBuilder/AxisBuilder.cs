@@ -78,14 +78,14 @@ namespace KarambaConnect.Component.StbBuilder
             }
 
             var axes = new StbAxes();
-            var xAxes = new StbParallelAxes() { X = 0, Y = 0, angle = 270, group_name = "X" };
-            var yAxes = new StbParallelAxes() { X = 0, Y = 0, angle = 0, group_name = "Y" };
+            var xAxes = new StbParallelAxes { X = 0, Y = 0, angle = 270, group_name = "X", StbParallelAxis = xAxisList.ToArray() };
+            var yAxes = new StbParallelAxes { X = 0, Y = 0, angle = 0, group_name = "Y", StbParallelAxis = yAxisList.ToArray() };
             axes.StbParallelAxes = new[] { xAxes, yAxes };
 
             dataAccess.SetData(0, axes);
         }
 
-        private static void CheckNodeIdsNull(List<StbNodeId> nodeIds)
+        private static void CheckNodeIdsNull(IReadOnlyCollection<StbNodeId> nodeIds)
         {
             if (nodeIds.Count == 0)
             {
@@ -93,7 +93,7 @@ namespace KarambaConnect.Component.StbBuilder
             }
         }
 
-        private static StbParallelAxis CreateParallelAxis(int count, List<string> names, double dist, List<StbNodeId> nodeIds)
+        private static StbParallelAxis CreateParallelAxis(int count, IReadOnlyList<string> names, double dist, List<StbNodeId> nodeIds)
         {
             return new StbParallelAxis()
             {
