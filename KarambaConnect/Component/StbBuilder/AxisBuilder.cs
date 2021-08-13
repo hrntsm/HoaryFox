@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Grasshopper.Kernel;
-using STBDotNet.Elements.StbModel;
+using STBDotNet.v202;
 
 namespace KarambaConnect.Component.StbBuilder
 {
@@ -26,13 +27,13 @@ namespace KarambaConnect.Component.StbBuilder
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Axis", "Axis", "StbAxis Data", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Axis", "Axis", "StbAxis Data", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var count = 0;
-            var nodes = new List<Node>();
+            var nodes = new List<StbNode>();
             var distance = new List<double>();
             var range = new List<double>();
             var names = new List<string>();
@@ -44,70 +45,63 @@ namespace KarambaConnect.Component.StbBuilder
             if (!dataAccess.GetDataList(3, names)) { return; }
             if (!dataAccess.GetDataList(4, dir)) { return; }
 
-            var axes = new List<Axis>();
-
             if (distance.Count != names.Count || distance.Count != range.Count || distance.Count != dir.Count ||
                 range.Count != names.Count || range.Count != dir.Count || names.Count != dir.Count)
             {
                 throw new ArgumentException("The number of items does not match.");
             }
 
+            var xAxisList = new List<StbParallelAxis>();
+            var yAxisList = new List<StbParallelAxis>();
+
             foreach (double dist in distance)
             {
-                var nodeIds = new List<NodeId>();
+                var nodeIds = new List<StbNodeId>();
                 if (dir[count] == 0)
                 {
-                    var xAxis = new XAxis
-                    {
-                        Id = count + 1,
-                        Name = names[count],
-                        Distance = dist
-                    };
-                    foreach (Node node in nodes)
-                    {
-                        if (node.X > dist - range[count] && node.X < dist + range[count])
-                        {
-                            nodeIds.Add(new NodeId(node.Id));
-                        }
-                    }
-
-                    if (nodeIds.Count == 0)
-                    {
-                        throw new ArgumentException("There are no nodes in the target distance range.");
-                    }
-
-                    xAxis.NodeIdList = nodeIds;
-                    axes.Add(xAxis);
+                    nodeIds.AddRange(from StbNode node in nodes
+                                     where node.X > dist - range[count] && node.X < dist + range[count]
+                                     select new StbNodeId { id = node.id });
+                    CheckNodeIdsNull(nodeIds);
+                    xAxisList.Add(CreateParallelAxis(count, names, dist, nodeIds));
                 }
                 else if (dir[count] == 1)
                 {
-                    var yAxis = new YAxis
-                    {
-                        Id = count + 1,
-                        Name = names[count],
-                        Distance = dist
-                    };
-                    foreach (Node node in nodes)
-                    {
-                        if (node.Y > dist - range[count] && node.Y < dist + range[count])
-                        {
-                            nodeIds.Add(new NodeId(node.Id));
-                        }
-                    }
-
-                    if (nodeIds.Count == 0)
-                    {
-                        throw new ArgumentException("There are no nodes in the target distance range.");
-                    }
-
-                    yAxis.NodeIdList = nodeIds;
-                    axes.Add(yAxis);
+                    nodeIds.AddRange(from StbNode node in nodes
+                                     where node.Y > dist - range[count] && node.Y < dist + range[count]
+                                     select new StbNodeId { id = node.id });
+                    CheckNodeIdsNull(nodeIds);
+                    yAxisList.Add(CreateParallelAxis(count, names, dist, nodeIds));
                 }
 
                 count++;
             }
 
-            dataAccess.SetDataList(0, axes);
+            var axes = new StbAxes();
+            var xAxes = new StbParallelAxes { X = 0, Y = 0, angle = 270, group_name = "X", StbParallelAxis = xAxisList.ToArray() };
+            var yAxes = new StbParallelAxes { X = 0, Y = 0, angle = 0, group_name = "Y", StbParallelAxis = yAxisList.ToArray() };
+            axes.StbParallelAxes = new[] { xAxes, yAxes };
+
+            dataAccess.SetData(0, axes);
+        }
+
+        private static void CheckNodeIdsNull(IReadOnlyCollection<StbNodeId> nodeIds)
+        {
+            if (nodeIds.Count == 0)
+            {
+                throw new ArgumentException("There are no nodes in the target distance range.");
+            }
+        }
+
+        private static StbParallelAxis CreateParallelAxis(int count, IReadOnlyList<string> names, double dist, List<StbNodeId> nodeIds)
+        {
+            return new StbParallelAxis()
+            {
+                id = (count + 1).ToString(),
+                name = names[count],
+                distance = dist,
+                StbNodeIdList = nodeIds.ToArray()
+            };
         }
 
         protected override Bitmap Icon => Properties.Resource.AxisBuilder;
