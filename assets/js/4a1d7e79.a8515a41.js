@@ -1,1 +1,0 @@
-(self.webpackChunkwebsite=self.webpackChunkwebsite||[]).push([[920],{1197:function(e){"use strict";e.exports=JSON.parse('{"allTagsPath":"/HoaryFox/blog/tags","slug":"hello","name":"hello","count":1,"permalink":"/HoaryFox/blog/tags/hello"}')}}]);
