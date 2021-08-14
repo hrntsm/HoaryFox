@@ -96,6 +96,12 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             throw new NotImplementedException();
         }
 
+        internal static Curve ColumnPipe(Point3d pt, double d)
+        {
+            Plane plane = new Plane(pt, Vector3d.ZAxis);
+            return new ArcCurve(new Circle(plane, d / 2));
+        }
+
         //  Z        3 o 2
         //  ^        |   |
         //  o > Y    0 - 1
@@ -186,6 +192,14 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         private static Point3d[] BeamLFaceToFace(Point3d pt, double height, double width, double tw, double tf)
         {
             throw new NotImplementedException();
+        }
+
+
+        internal static Curve BeamPipe(Point3d pt, double d)
+        {
+            Point3d centerPt = new Point3d(pt.X, pt.Y, pt.Z - d / 2);
+            Plane plane = new Plane(centerPt, Vector3d.XAxis);
+            return new ArcCurve(new Circle(plane, d / 2));
         }
     }
 }

@@ -596,119 +596,140 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         {
             StbSecSteel secSteel = _sections.StbSecSteel;
 
+            // TODO: foreach なのに最初にマッチしたもので return しているのでが変なので直す。
             if (secSteel.StbSecBuildBOX != null)
             {
-                foreach (StbSecBuildBOX box in _sections.StbSecSteel.StbSecBuildBOX)
+                foreach (var box in secSteel.StbSecBuildBOX.Where(box => box.name == shape))
                 {
-                    if (box.name == shape)
-                    {
-                        switch (type)
-                        {
-                            case SectionType.Column:
-                            case SectionType.Brace:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.ColumnRect(point, box.B, box.A));
-                            case SectionType.Beam:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.BeamRect(point, box.B, box.A));
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                        }
-                    }
+                    return CurveFromStbSecBox(point, type, box.A, box.B);
                 }
             }
 
             if (secSteel.StbSecRollBOX != null)
             {
-                foreach (StbSecRollBOX box in _sections.StbSecSteel.StbSecRollBOX)
+                foreach (StbSecRollBOX box in secSteel.StbSecRollBOX.Where(box => box.name == shape))
                 {
-                    if (box.name == shape)
-                    {
-                        switch (type)
-                        {
-                            case SectionType.Column:
-                            case SectionType.Brace:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.ColumnRect(point, box.B, box.A));
-                            case SectionType.Beam:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.BeamRect(point, box.B, box.A));
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                        }
-                    }
+                    return CurveFromStbSecBox(point, type, box.A, box.B);
+                }
+            }
+
+            if (secSteel.StbSecFlatBar != null)
+            {
+                foreach (StbSecFlatBar flatBar in secSteel.StbSecFlatBar.Where(bar => bar.name == shape))
+                {
+                    return CurveFromStbSecBox(point, type, flatBar.B, flatBar.t);
                 }
             }
 
             if (secSteel.StbSecBuildH != null)
             {
-                foreach (StbSecBuildH buildH in _sections.StbSecSteel.StbSecBuildH)
+                foreach (StbSecBuildH buildH in secSteel.StbSecBuildH.Where(buildH => buildH.name == shape))
                 {
-                    if (buildH.name == shape)
-                    {
-                        switch (type)
-                        {
-                            case SectionType.Column:
-                            case SectionType.Brace:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.ColumnH(point, buildH.A, buildH.B, buildH.t1, buildH.t2));
-                            case SectionType.Beam:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.BeamH(point, buildH.A, buildH.B, buildH.t1, buildH.t2));
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                        }
-                    }
+                    return CurveFromStbSecH(point, type, buildH.A, buildH.B, buildH.t1, buildH.t2);
                 }
             }
 
             if (secSteel.StbSecRollH != null)
             {
-                foreach (StbSecRollH rollH in _sections.StbSecSteel.StbSecRollH)
+                foreach (StbSecRollH rollH in secSteel.StbSecRollH.Where(rollH => rollH.name == shape))
                 {
-                    if (rollH.name == shape)
-                    {
-                        switch (type)
-                        {
-                            case SectionType.Column:
-                            case SectionType.Brace:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.ColumnH(point, rollH.A, rollH.B, rollH.t1, rollH.t2));
-                            case SectionType.Beam:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.BeamH(point, rollH.A, rollH.B, rollH.t1, rollH.t2));
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                        }
-                    }
+                    return CurveFromStbSecH(point, type, rollH.A, rollH.B, rollH.t1, rollH.t2);
                 }
             }
 
             if (secSteel.StbSecRollL != null)
             {
-                foreach (StbSecRollL rollL in _sections.StbSecSteel.StbSecRollL)
+                foreach (StbSecRollL rollL in secSteel.StbSecRollL.Where(rollL => rollL.name == shape))
                 {
-                    if (rollL.name == shape)
-                    {
-                        switch (type)
-                        {
-                            case SectionType.Column:
-                            case SectionType.Brace:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.ColumnL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
-                            case SectionType.Beam:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.BeamL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                        }
-                    }
+                    return CurveFromStbSecL(point, type, rollL);
                 }
             }
 
-            // TODO: Box と H と L 以外の断面を実装する
+            if (secSteel.StbSecPipe != null)
+            {
+                foreach (StbSecPipe pipe in secSteel.StbSecPipe.Where(pipe => pipe.name == shape))
+                {
+                    return CurveFromStbSecPipe(point, type, pipe.D);
+                }
+            }
+
+            if (secSteel.StbSecRoundBar != null)
+            {
+                foreach (StbSecRoundBar bar in secSteel.StbSecRoundBar.Where(pipe => pipe.name == shape))
+                {
+                    return CurveFromStbSecPipe(point, type, bar.R);
+                }
+            }
+
+            // TODO: C 断面を実装する
+            if (secSteel.StbSecRollC != null || secSteel.StbSecLipC != null)
+            {
+                throw new ArgumentException("StbSecRollC & StbSecLipC is not supported");
+            }
 
             throw new ArgumentException("There are no matching steel section");
+        }
+
+        private static Curve CurveFromStbSecPipe(Point3d point, SectionType type, double diameter)
+        {
+            switch (type)
+            {
+                case SectionType.Column:
+                case SectionType.Brace:
+                    return SectionCornerPoints.ColumnPipe(point, diameter);
+                case SectionType.Beam:
+                    return SectionCornerPoints.BeamPipe(point, diameter);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        private static Curve CurveFromStbSecL(Point3d point, SectionType type, StbSecRollL rollL)
+        {
+            switch (type)
+            {
+                case SectionType.Column:
+                case SectionType.Brace:
+                    return new PolylineCurve(
+                        SectionCornerPoints.ColumnL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
+                case SectionType.Beam:
+                    return new PolylineCurve(
+                        SectionCornerPoints.BeamL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        private static Curve CurveFromStbSecBox(Point3d point, SectionType type, double A, double B)
+        {
+            switch (type)
+            {
+                case SectionType.Column:
+                case SectionType.Brace:
+                    return new PolylineCurve(
+                        SectionCornerPoints.ColumnRect(point, B, A));
+                case SectionType.Beam:
+                    return new PolylineCurve(
+                        SectionCornerPoints.BeamRect(point, B, A));
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        private static Curve CurveFromStbSecH(Point3d point, SectionType type, double A, double B, double t1, double t2)
+        {
+            switch (type)
+            {
+                case SectionType.Column:
+                case SectionType.Brace:
+                    return new PolylineCurve(
+                        SectionCornerPoints.ColumnH(point, A, B, t1, t2));
+                case SectionType.Beam:
+                    return new PolylineCurve(
+                        SectionCornerPoints.BeamH(point, A, B, t1, t2));
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
 
         public List<Brep> Slab(IEnumerable<StbSlab> slabs)
