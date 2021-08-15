@@ -6,7 +6,7 @@ using Grasshopper.Kernel;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
-namespace HoaryFox.Component_v2.Geometry
+namespace HoaryFox.Component.Geometry
 {
     public class Axis : GH_Component
     {
@@ -20,7 +20,7 @@ namespace HoaryFox.Component_v2.Geometry
         public Axis()
           : base("Axis", "Axis",
               "Description",
-              "HoaryFox2", "Geometry")
+              "HoaryFox", "Geometry")
         {
         }
 
@@ -28,6 +28,8 @@ namespace HoaryFox.Component_v2.Geometry
         {
             base.ClearData();
             _axisLines.Clear();
+            _axisPts.Clear();
+            _axisStr.Clear();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -85,7 +87,7 @@ namespace HoaryFox.Component_v2.Geometry
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
-            for (var i = 0; i < _axisPts.Count; i++)
+            for (var i = 0; i < _axisLines.Count; i++)
             {
                 args.Display.Draw2dText(_axisStr[i], Color.Black, _axisPts[i], true, _size);
                 args.Display.DrawLine(_axisLines[i], Color.Black);
