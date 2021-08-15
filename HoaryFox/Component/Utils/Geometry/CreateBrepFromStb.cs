@@ -4,7 +4,7 @@ using System.Linq;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
-namespace HoaryFox.Component_v2.Utils.Geometry
+namespace HoaryFox.Component.Utils.Geometry
 {
     public class CreateBrepFromStb
     {
@@ -105,15 +105,19 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             {
                 case StbColumnKind_structure.RC:
                     StbSecColumn_RC rcSec = _sections.StbSecColumn_RC.First(sec => sec.id == idSection);
-                    object figure = rcSec.StbSecFigureColumn_RC.Item;
-                    curveList = SecRcColumnToCurves(figure, sectionPoints);
+                    object rcFigure = rcSec.StbSecFigureColumn_RC.Item;
+                    curveList = SecRcColumnToCurves(rcFigure, sectionPoints);
                     break;
                 case StbColumnKind_structure.S:
                     StbSecColumn_S sSec = _sections.StbSecColumn_S.First(sec => sec.id == idSection);
-                    object[] figures = sSec.StbSecSteelFigureColumn_S.Items;
-                    curveList = SecSteelColumnToCurves(figures, sectionPoints);
+                    object[] sFigures = sSec.StbSecSteelFigureColumn_S.Items;
+                    curveList = SecSteelColumnToCurves(sFigures, sectionPoints);
                     break;
                 case StbColumnKind_structure.SRC:
+                    StbSecColumn_SRC srcSec = _sections.StbSecColumn_SRC.First(sec => sec.id == idSection);
+                    object srcFigure = srcSec.StbSecFigureColumn_SRC.Item;
+                    curveList = SecRcColumnToCurves(srcFigure, sectionPoints);
+                    break;
                 case StbColumnKind_structure.CFT:
                 case StbColumnKind_structure.UNDEFINED:
                     break;
@@ -139,7 +143,17 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                     curveList.Add(new PolylineCurve(
                         SectionCornerPoints.ColumnRect(sectionPoints[3], rect.width_X, rect.width_Y)));
                     break;
+                case StbSecColumn_SRC_Rect rect:
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.ColumnRect(sectionPoints[0], rect.width_X, rect.width_Y)));
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.ColumnRect(sectionPoints[3], rect.width_X, rect.width_Y)));
+                    break;
                 case StbSecColumn_RC_Circle circle:
+                    curveList.Add(new ArcCurve(new Circle(sectionPoints[0], circle.D / 2d)));
+                    curveList.Add(new ArcCurve(new Circle(sectionPoints[3], circle.D / 2d)));
+                    break;
+                case StbSecColumn_SRC_Circle circle:
                     curveList.Add(new ArcCurve(new Circle(sectionPoints[0], circle.D / 2d)));
                     curveList.Add(new ArcCurve(new Circle(sectionPoints[3], circle.D / 2d)));
                     break;
@@ -282,17 +296,20 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             {
                 case StbGirderKind_structure.RC:
                     StbSecBeam_RC rcSec = _sections.StbSecBeam_RC.First(sec => sec.id == idSection);
-                    object[] figure = rcSec.StbSecFigureBeam_RC.Items;
-                    curveList = SecRcBeamCurves(figure, sectionPoints);
+                    object[] rcFigure = rcSec.StbSecFigureBeam_RC.Items;
+                    curveList = SecRcBeamCurves(rcFigure, sectionPoints);
                     break;
                 case StbGirderKind_structure.S:
                     StbSecBeam_S sSec = _sections.StbSecBeam_S.First(sec => sec.id == idSection);
-                    object[] figures = sSec.StbSecSteelFigureBeam_S.Items;
-                    curveList = SecSteelBeamToCurves(figures, sectionPoints);
+                    object[] sFigure = sSec.StbSecSteelFigureBeam_S.Items;
+                    curveList = SecSteelBeamToCurves(sFigure, sectionPoints);
                     break;
                 case StbGirderKind_structure.SRC:
-                case StbGirderKind_structure.UNDEFINED:
+                    StbSecBeam_SRC srcSec = _sections.StbSecBeam_SRC.First(sec => sec.id == idSection);
+                    object[] srcFigure = srcSec.StbSecFigureBeam_SRC.Items;
+                    curveList = SecSrcBeamCurves(srcFigure, sectionPoints);
                     break;
+                case StbGirderKind_structure.UNDEFINED:
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -325,12 +342,51 @@ namespace HoaryFox.Component_v2.Utils.Geometry
                         SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width)));
                     break;
                 case 3:
-                    var haunch4 = new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch, figures[3] as StbSecBeam_RC_Haunch };
-                    for (var i = 0; i < 4; i++)
-                    {
-                        curveList.Add(new PolylineCurve(
-                            SectionCornerPoints.BeamRect(sectionPoints[i], haunch4[i].depth, haunch4[i].width)));
-                    }
+                    var haunch = new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch };
+                    StbSecBeam_RC_Haunch start = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.START);
+                    StbSecBeam_RC_Haunch center = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.CENTER);
+                    StbSecBeam_RC_Haunch end = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.END);
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], start.depth, start.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], center.depth, center.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], center.depth, center.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], end.depth, end.width)));
+                    break;
+                default:
+                    throw new Exception();
+            }
+
+            return curveList;
+        }
+
+        private static List<Curve> SecSrcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
+        {
+            var curveList = new List<Curve>();
+
+            switch (figures.Count)
+            {
+                case 1:
+                    var straight = figures[0] as StbSecBeam_SRC_Straight;
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[0], straight.depth, straight.width)));
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[3], straight.depth, straight.width)));
+                    break;
+                case 2:
+                    var taper = new[] { figures[0] as StbSecBeam_SRC_Taper, figures[1] as StbSecBeam_SRC_Taper };
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[0], taper[0].depth, taper[0].width)));
+                    curveList.Add(new PolylineCurve(
+                        SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width)));
+                    break;
+                case 3:
+                    var haunch = new[] { figures[0] as StbSecBeam_SRC_Haunch, figures[1] as StbSecBeam_SRC_Haunch, figures[2] as StbSecBeam_SRC_Haunch };
+                    StbSecBeam_SRC_Haunch start = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.START);
+                    StbSecBeam_SRC_Haunch center = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.CENTER);
+                    StbSecBeam_SRC_Haunch end = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.END);
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], start.depth, start.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], center.depth, center.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], center.depth, center.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], end.depth, end.width)));
                     break;
                 default:
                     throw new Exception();
@@ -494,40 +550,41 @@ namespace HoaryFox.Component_v2.Utils.Geometry
             return curveList;
         }
 
-        private static void RotateCurveList(Vector3d memberAxis, IReadOnlyList<Curve> curveList, double rotate, IReadOnlyList<Point3d> sectionPoints, Vector3d secLocalAxis)
+        private static void RotateCurveList(Vector3d memberAxis, IReadOnlyList<Curve> curveList, double stbRotateValue, IReadOnlyList<Point3d> sectionPoints, Vector3d secLocalAxis)
         {
             Vector3d rotateAxis = Vector3d.CrossProduct(secLocalAxis, memberAxis);
-            double angle = Vector3d.VectorAngle(secLocalAxis, memberAxis);
+            double outPlaneAngle = Vector3d.VectorAngle(secLocalAxis, memberAxis);
+            double inPlaneAngle = stbRotateValue * Math.PI / 180;
             int len = curveList.Count;
             switch (len)
             {
                 case 2:
-                    curveList[0].Rotate(rotate, secLocalAxis, sectionPoints[0]); // 断面内の回転
-                    curveList[0].Rotate(angle, rotateAxis, sectionPoints[0]); // 断面外の回転 
-                    curveList[1].Rotate(rotate, secLocalAxis, sectionPoints[3]);
-                    curveList[1].Rotate(angle, rotateAxis, sectionPoints[3]);
+                    curveList[0].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[0]); // 断面内の回転
+                    curveList[0].Rotate(outPlaneAngle, rotateAxis, sectionPoints[0]); // 断面外の回転 
+                    curveList[1].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[3]);
+                    curveList[1].Rotate(outPlaneAngle, rotateAxis, sectionPoints[3]);
                     break;
                 case 3:
-                    curveList[0].Rotate(rotate, secLocalAxis, sectionPoints[0]);
-                    curveList[0].Rotate(angle, rotateAxis, sectionPoints[0]);
-                    curveList[2].Rotate(rotate, secLocalAxis, sectionPoints[3]);
-                    curveList[2].Rotate(angle, rotateAxis, sectionPoints[3]);
+                    curveList[0].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[0]);
+                    curveList[0].Rotate(outPlaneAngle, rotateAxis, sectionPoints[0]);
+                    curveList[2].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[3]);
+                    curveList[2].Rotate(outPlaneAngle, rotateAxis, sectionPoints[3]);
                     if (sectionPoints[2] == sectionPoints[3])
                     {
-                        curveList[1].Rotate(rotate, secLocalAxis, sectionPoints[1]);
-                        curveList[1].Rotate(angle, rotateAxis, sectionPoints[1]);
+                        curveList[1].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[1]);
+                        curveList[1].Rotate(outPlaneAngle, rotateAxis, sectionPoints[1]);
                     }
                     else
                     {
-                        curveList[1].Rotate(rotate, secLocalAxis, sectionPoints[2]);
-                        curveList[1].Rotate(angle, rotateAxis, sectionPoints[2]);
+                        curveList[1].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[2]);
+                        curveList[1].Rotate(outPlaneAngle, rotateAxis, sectionPoints[2]);
                     }
                     break;
                 case 4:
                     for (var i = 0; i < 4; i++)
                     {
-                        curveList[i].Rotate(rotate, secLocalAxis, sectionPoints[i]);
-                        curveList[i].Rotate(angle, rotateAxis, sectionPoints[i]);
+                        curveList[i].Rotate(inPlaneAngle, secLocalAxis, sectionPoints[i]);
+                        curveList[i].Rotate(outPlaneAngle, rotateAxis, sectionPoints[i]);
                     }
                     break;
                 default:
@@ -539,119 +596,140 @@ namespace HoaryFox.Component_v2.Utils.Geometry
         {
             StbSecSteel secSteel = _sections.StbSecSteel;
 
+            // TODO: foreach なのに最初にマッチしたもので return しているのでが変なので直す。
             if (secSteel.StbSecBuildBOX != null)
             {
-                foreach (StbSecBuildBOX box in _sections.StbSecSteel.StbSecBuildBOX)
+                foreach (var box in secSteel.StbSecBuildBOX.Where(box => box.name == shape))
                 {
-                    if (box.name == shape)
-                    {
-                        switch (type)
-                        {
-                            case SectionType.Column:
-                            case SectionType.Brace:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.ColumnRect(point, box.B, box.A));
-                            case SectionType.Beam:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.BeamRect(point, box.B, box.A));
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                        }
-                    }
+                    return CurveFromStbSecBox(point, type, box.A, box.B);
                 }
             }
 
             if (secSteel.StbSecRollBOX != null)
             {
-                foreach (StbSecRollBOX box in _sections.StbSecSteel.StbSecRollBOX)
+                foreach (StbSecRollBOX box in secSteel.StbSecRollBOX.Where(box => box.name == shape))
                 {
-                    if (box.name == shape)
-                    {
-                        switch (type)
-                        {
-                            case SectionType.Column:
-                            case SectionType.Brace:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.ColumnRect(point, box.B, box.A));
-                            case SectionType.Beam:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.BeamRect(point, box.B, box.A));
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                        }
-                    }
+                    return CurveFromStbSecBox(point, type, box.A, box.B);
+                }
+            }
+
+            if (secSteel.StbSecFlatBar != null)
+            {
+                foreach (StbSecFlatBar flatBar in secSteel.StbSecFlatBar.Where(bar => bar.name == shape))
+                {
+                    return CurveFromStbSecBox(point, type, flatBar.B, flatBar.t);
                 }
             }
 
             if (secSteel.StbSecBuildH != null)
             {
-                foreach (StbSecBuildH buildH in _sections.StbSecSteel.StbSecBuildH)
+                foreach (StbSecBuildH buildH in secSteel.StbSecBuildH.Where(buildH => buildH.name == shape))
                 {
-                    if (buildH.name == shape)
-                    {
-                        switch (type)
-                        {
-                            case SectionType.Column:
-                            case SectionType.Brace:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.ColumnH(point, buildH.A, buildH.B, buildH.t1, buildH.t2));
-                            case SectionType.Beam:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.BeamH(point, buildH.A, buildH.B, buildH.t1, buildH.t2));
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                        }
-                    }
+                    return CurveFromStbSecH(point, type, buildH.A, buildH.B, buildH.t1, buildH.t2);
                 }
             }
 
             if (secSteel.StbSecRollH != null)
             {
-                foreach (StbSecRollH rollH in _sections.StbSecSteel.StbSecRollH)
+                foreach (StbSecRollH rollH in secSteel.StbSecRollH.Where(rollH => rollH.name == shape))
                 {
-                    if (rollH.name == shape)
-                    {
-                        switch (type)
-                        {
-                            case SectionType.Column:
-                            case SectionType.Brace:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.ColumnH(point, rollH.A, rollH.B, rollH.t1, rollH.t2));
-                            case SectionType.Beam:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.BeamH(point, rollH.A, rollH.B, rollH.t1, rollH.t2));
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                        }
-                    }
+                    return CurveFromStbSecH(point, type, rollH.A, rollH.B, rollH.t1, rollH.t2);
                 }
             }
 
             if (secSteel.StbSecRollL != null)
             {
-                foreach (StbSecRollL rollL in _sections.StbSecSteel.StbSecRollL)
+                foreach (StbSecRollL rollL in secSteel.StbSecRollL.Where(rollL => rollL.name == shape))
                 {
-                    if (rollL.name == shape)
-                    {
-                        switch (type)
-                        {
-                            case SectionType.Column:
-                            case SectionType.Brace:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.ColumnL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
-                            case SectionType.Beam:
-                                return new PolylineCurve(
-                                    SectionCornerPoints.BeamL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                        }
-                    }
+                    return CurveFromStbSecL(point, type, rollL);
                 }
             }
 
-            // TODO: Box と H と L 以外の断面を実装する
+            if (secSteel.StbSecPipe != null)
+            {
+                foreach (StbSecPipe pipe in secSteel.StbSecPipe.Where(pipe => pipe.name == shape))
+                {
+                    return CurveFromStbSecPipe(point, type, pipe.D);
+                }
+            }
+
+            if (secSteel.StbSecRoundBar != null)
+            {
+                foreach (StbSecRoundBar bar in secSteel.StbSecRoundBar.Where(pipe => pipe.name == shape))
+                {
+                    return CurveFromStbSecPipe(point, type, bar.R);
+                }
+            }
+
+            // TODO: C 断面を実装する
+            if (secSteel.StbSecRollC != null || secSteel.StbSecLipC != null)
+            {
+                throw new ArgumentException("StbSecRollC & StbSecLipC is not supported");
+            }
 
             throw new ArgumentException("There are no matching steel section");
+        }
+
+        private static Curve CurveFromStbSecPipe(Point3d point, SectionType type, double diameter)
+        {
+            switch (type)
+            {
+                case SectionType.Column:
+                case SectionType.Brace:
+                    return SectionCornerPoints.ColumnPipe(point, diameter);
+                case SectionType.Beam:
+                    return SectionCornerPoints.BeamPipe(point, diameter);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        private static Curve CurveFromStbSecL(Point3d point, SectionType type, StbSecRollL rollL)
+        {
+            switch (type)
+            {
+                case SectionType.Column:
+                case SectionType.Brace:
+                    return new PolylineCurve(
+                        SectionCornerPoints.ColumnL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
+                case SectionType.Beam:
+                    return new PolylineCurve(
+                        SectionCornerPoints.BeamL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        private static Curve CurveFromStbSecBox(Point3d point, SectionType type, double A, double B)
+        {
+            switch (type)
+            {
+                case SectionType.Column:
+                case SectionType.Brace:
+                    return new PolylineCurve(
+                        SectionCornerPoints.ColumnRect(point, B, A));
+                case SectionType.Beam:
+                    return new PolylineCurve(
+                        SectionCornerPoints.BeamRect(point, B, A));
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        private static Curve CurveFromStbSecH(Point3d point, SectionType type, double A, double B, double t1, double t2)
+        {
+            switch (type)
+            {
+                case SectionType.Column:
+                case SectionType.Brace:
+                    return new PolylineCurve(
+                        SectionCornerPoints.ColumnH(point, A, B, t1, t2));
+                case SectionType.Beam:
+                    return new PolylineCurve(
+                        SectionCornerPoints.BeamH(point, A, B, t1, t2));
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
 
         public List<Brep> Slab(IEnumerable<StbSlab> slabs)
@@ -689,7 +767,7 @@ namespace HoaryFox.Component_v2.Utils.Geometry
 
                 topPts.Add(topPts[0]);
                 curveList[0] = new PolylineCurve(topPts);
-                Vector3d normal = Brep.CreatePlanarBreps(curveList[0], _tolerance[0])[0].Faces[0].NormalAt(0.5, 0.5);
+                Vector3d normal = Vector3d.CrossProduct(curveList[0].TangentAtEnd, curveList[0].TangentAtStart);
                 curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * depth));
                 brepList.Add(Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                     .CapPlanarHoles(_tolerance[0]));
@@ -776,7 +854,7 @@ namespace HoaryFox.Component_v2.Utils.Geometry
 
                 topPts.Add(topPts[0]);
                 var centerCurve = new PolylineCurve(topPts);
-                Vector3d normal = Brep.CreatePlanarBreps(centerCurve, _tolerance[0])[0].Faces[0].NormalAt(0.5, 0.5);
+                Vector3d normal = Vector3d.CrossProduct(centerCurve.TangentAtEnd, centerCurve.TangentAtStart);
                 curveList[0] = new PolylineCurve(topPts.Select(pt => pt + normal * thickness / 2));
                 curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * thickness / 2));
                 brepList.Add(Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]

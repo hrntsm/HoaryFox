@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel;
-using HoaryFox.Member;
+using HoaryFox.Component.Utils.Geometry;
+using HoaryFox.Properties;
 using Rhino;
 using Rhino.DocObjects;
 using Rhino.Geometry;
-using STBReader;
-using STBReader.Member;
-
+using STBDotNet.v202;
 
 namespace HoaryFox.Component.Geometry
 {
     public class Stb2Line : GH_Component
     {
-        private StbData _stbData;
+        private ST_BRIDGE _stBridge;
         private List<Point3d> _nodes = new List<Point3d>();
         private readonly List<List<Line>> _lineList = new List<List<Line>>();
 
         public Stb2Line()
-          : base(name: "Stb to Line", nickname: "S2L", description: "Read ST-Bridge file and display", category: "HoaryFox", subCategory: "Geometry")
+          : base("Stb to Line", "S2L",
+              "Display ST-Bridge model in line",
+              "HoaryFox", "Geometry")
         {
         }
 
@@ -49,10 +50,15 @@ namespace HoaryFox.Component.Geometry
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var isBake = false;
-            if (!dataAccess.GetData("Data", ref _stbData)) { return; }
+            if (!dataAccess.GetData("Data", ref _stBridge)) { return; }
             if (!dataAccess.GetData("Bake", ref isBake)) { return; }
 
-            MakeLine(isBake);
+            CreateLine();
+            if (isBake)
+            {
+                BakeLine();
+            }
+
             dataAccess.SetDataList(0, _nodes);
             foreach ((List<Line> geometry, int i) in _lineList.Select((geo, index) => (geo, index + 1)))
             {
@@ -60,33 +66,14 @@ namespace HoaryFox.Component.Geometry
             }
         }
 
-        private void MakeLine(bool isBake)
-        {
-            var createLines = new FrameLines(_stbData);
-            _nodes = createLines.Nodes();
-            _lineList.Add(createLines.Columns());
-            _lineList.Add(createLines.Girders());
-            _lineList.Add(createLines.Posts());
-            _lineList.Add(createLines.Beams());
-            _lineList.Add(createLines.Braces());
-
-            if (isBake)
-            {
-                this.BakeLines();
-            }
-        }
-
-        private void BakeLines()
+        private void BakeLine()
         {
             RhinoDoc activeDoc = RhinoDoc.ActiveDoc;
-
             var parentLayerNames = new[] { "Column", "Girder", "Post", "Beam", "Brace", "Slab", "Wall" };
             Color[] layerColors = { Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple, Color.DarkGray, Color.CornflowerBlue };
-            Misc.MakeParentLayers(activeDoc, parentLayerNames, layerColors);
-            var stbFrames = new List<StbFrame> { _stbData.Columns, _stbData.Girders, _stbData.Posts, _stbData.Beams, _stbData.Braces };
+            GeometryBaker.MakeParentLayers(activeDoc, parentLayerNames, layerColors);
 
-            //TODO: このネストは直す
-            List<List<List<string>>> tagList = stbFrames.Select(stbFrame => Misc.GetTag(_stbData, stbFrame)).ToList();
+            Dictionary<string, string>[][] infoArray = Utils.TagUtils.GetAllSectionInfoArray(_stBridge.StbModel.StbMembers, _stBridge.StbModel.StbSections);
 
             foreach ((List<Line> lines, int index) in _lineList.Select((frameBrep, index) => (frameBrep, index)))
             {
@@ -96,19 +83,22 @@ namespace HoaryFox.Component.Geometry
                 foreach ((Line line, int bIndex) in lines.Select((brep, bIndex) => (brep, bIndex)))
                 {
                     var objAttr = new ObjectAttributes();
-                    objAttr.SetUserString("Type", parentLayerNames[index]);
 
                     if (index < 5)
                     {
-                        List<List<string>> tags = tagList[index];
-                        List<string> tag = tags[bIndex];
-                        Misc.SetFrameUserString(ref objAttr, tag);
+                        Dictionary<string, string>[] infos = infoArray[index];
+                        Dictionary<string, string> info = infos[bIndex];
 
-                        var layer = new Layer { Name = tag[0], ParentLayerId = parentId, Color = layerColors[index] };
+                        foreach (KeyValuePair<string, string> pair in info)
+                        {
+                            objAttr.SetUserString(pair.Key, pair.Value);
+                        }
+
+                        var layer = new Layer { Name = info["name"], ParentLayerId = parentId, Color = layerColors[index] };
                         int layerIndex = activeDoc.Layers.Add(layer);
                         if (layerIndex == -1)
                         {
-                            layer = activeDoc.Layers.FindName(tag[0]);
+                            layer = activeDoc.Layers.FindName(info["name"]);
                             layerIndex = layer.Index;
                         }
                         objAttr.LayerIndex = layerIndex;
@@ -123,7 +113,18 @@ namespace HoaryFox.Component.Geometry
             }
         }
 
-        protected override Bitmap Icon => Properties.Resource.Line;
-        public override Guid ComponentGuid => new Guid("7d2f0c4e-4888-4607-8548-592104f6f06d");
+        private void CreateLine()
+        {
+            var createLines = new CreateLineFromStb(_stBridge);
+            _nodes = createLines.Nodes();
+            _lineList.Add(createLines.Columns());
+            _lineList.Add(createLines.Girders());
+            _lineList.Add(createLines.Posts());
+            _lineList.Add(createLines.Beams());
+            _lineList.Add(createLines.Braces());
+        }
+
+        protected override Bitmap Icon => Resource.Line;
+        public override Guid ComponentGuid => new Guid("D1E6793B-F75C-4AEE-9A9F-B9DD08D6EB77");
     }
 }

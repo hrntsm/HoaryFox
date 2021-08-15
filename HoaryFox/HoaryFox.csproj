@@ -13,20 +13,12 @@
   
   <ItemGroup>
     <PackageReference Include="Grasshopper" Version="6.20.19322.20361" IncludeAssets="compile;build" />
+    <PackageReference Include="STBDotNet" Version="0.2.1" />
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
   </ItemGroup>
   
-  <ItemGroup>
-    <Reference Include="STBDotNet">
-      <HintPath>..\..\STBDotNet\STBDotNet\bin\Debug\netstandard2.0\STBDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="STBReader">
-      <HintPath>Library\STBReader.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  
   <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
-    <StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
+    <StartProgram>C:\Program Files\Rhino 6\System\Rhino.exe</StartProgram>
     <StartArguments></StartArguments>
     <StartAction>Program</StartAction>
   </PropertyGroup>
