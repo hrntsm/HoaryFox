@@ -90,7 +90,7 @@ namespace HoaryFox.Component.Geometry
             for (var i = 0; i < _axisLines.Count; i++)
             {
                 args.Display.Draw2dText(_axisStr[i], Color.Black, _axisPts[i], true, _size);
-                args.Display.DrawLine(_axisLines[i], Color.Black);
+                args.Display.DrawPatternedLine(_axisLines[i], Color.Black, 0x0000AFAF, 1);
             }
         }
 
