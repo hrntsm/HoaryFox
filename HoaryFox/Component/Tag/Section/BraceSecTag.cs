@@ -5,12 +5,12 @@ using System.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
-using HoaryFox.Component_v2.Utils;
+using HoaryFox.Component.Utils;
 using HoaryFox.Properties;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
-namespace HoaryFox.Component_v2.Tag.Section
+namespace HoaryFox.Component.Tag.Section
 {
     public class BraceSecTag : GH_Component
     {
@@ -22,7 +22,7 @@ namespace HoaryFox.Component_v2.Tag.Section
         public BraceSecTag()
           : base("Brace Section Tag", "BraceSec",
               "Display Brace Section Tag",
-              "HoaryFox", "Section")
+              "HoaryFox", "SectionTag")
         {
         }
 

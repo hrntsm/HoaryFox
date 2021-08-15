@@ -8,7 +8,7 @@ using Rhino.Geometry;
 using STBDotNet.v202;
 
 
-namespace HoaryFox.Component_v2.Utils
+namespace HoaryFox.Component.Utils
 {
     internal static class TagUtils
     {

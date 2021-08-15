@@ -3,7 +3,7 @@ using System.Linq;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
-namespace HoaryFox.Component_v2.Utils.Geometry
+namespace HoaryFox.Component.Utils.Geometry
 {
     public class CreateLineFromStb
     {
