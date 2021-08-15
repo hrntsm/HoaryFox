@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Grasshopper.Kernel;
-using HoaryFox.Component_v2.Utils;
+using HoaryFox.Component.Utils;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
-namespace HoaryFox.Component_v2.Tag.Name
+namespace HoaryFox.Component.Tag.Name
 {
     public class GirderNameTag : GH_Component
     {

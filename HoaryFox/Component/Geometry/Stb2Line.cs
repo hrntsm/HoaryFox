@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel;
-using HoaryFox.Component_v2.Utils.Geometry;
+using HoaryFox.Component.Utils.Geometry;
 using HoaryFox.Properties;
 using Rhino;
 using Rhino.DocObjects;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
-namespace HoaryFox.Component_v2.Geometry
+namespace HoaryFox.Component.Geometry
 {
     public class Stb2Line : GH_Component
     {

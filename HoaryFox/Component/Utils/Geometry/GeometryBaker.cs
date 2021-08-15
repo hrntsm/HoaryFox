@@ -4,7 +4,7 @@ using System.Linq;
 using Rhino;
 using Rhino.DocObjects;
 
-namespace HoaryFox.Component_v2.Utils.Geometry
+namespace HoaryFox.Component.Utils.Geometry
 {
     public class GeometryBaker
     {

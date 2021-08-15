@@ -2,7 +2,7 @@
 using Grasshopper.Kernel;
 using STBDotNet.v202;
 
-namespace HoaryFox.Component_v2.IO
+namespace HoaryFox.Component.IO
 {
     public class StbLoader : GH_Component
     {
