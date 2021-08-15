@@ -55,6 +55,13 @@ namespace HoaryFox.Component.Geometry
             StbParallelAxes[] parallels = axis.StbParallelAxes;
             double length = GetMaxLength(_stBridge.StbModel.StbNodes);
 
+            StbParallelAxesToLine(factor, parallels, length);
+
+            dataAccess.SetDataList(0, _axisLines);
+        }
+
+        private void StbParallelAxesToLine(double factor, StbParallelAxes[] parallels, double length)
+        {
             foreach (StbParallelAxes parallel in parallels)
             {
                 var basePt = new Point3d(parallel.X, parallel.Y, 0);
@@ -66,15 +73,13 @@ namespace HoaryFox.Component.Geometry
                 foreach (StbParallelAxis pAxis in parallel.StbParallelAxis)
                 {
                     _axisLines.Add(new Line(
-                        basePt - axisVec * (factor - 1) + distanceVec * pAxis.distance,
-                        basePt + axisVec * factor + distanceVec * pAxis.distance
+                        basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance),
+                        basePt + (axisVec * factor) + (distanceVec * pAxis.distance)
                     ));
-                    _axisPts.Add(basePt - axisVec * (factor - 1) + distanceVec * pAxis.distance);
+                    _axisPts.Add(basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance));
                     _axisStr.Add(pAxis.name);
                 }
             }
-
-            dataAccess.SetDataList(0, _axisLines);
         }
 
         private static double GetMaxLength(StbNode[] stbNodes)
