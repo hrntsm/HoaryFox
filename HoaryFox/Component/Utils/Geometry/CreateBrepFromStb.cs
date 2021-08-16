@@ -314,7 +314,8 @@ namespace HoaryFox.Component.Utils.Geometry
                     throw new ArgumentOutOfRangeException();
             }
 
-            RotateCurveList(memberAxis, curveList, rotate, sectionPoints, Vector3d.XAxis);
+            //TODO: ローカル軸での回転を実装する
+            // RotateCurveList(memberAxis, curveList, rotate, sectionPoints, Vector3d.XAxis);
             Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                 .CapPlanarHoles(_tolerance[0]);
             return brep;
@@ -324,32 +325,33 @@ namespace HoaryFox.Component.Utils.Geometry
         private static List<Curve> SecRcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
             var curveList = new List<Curve>();
+            CreateLocalAxis(sectionPoints, out Vector3d yAxis, out Vector3d zAxis);
 
             switch (figures.Count)
             {
                 case 1:
                     var straight = figures[0] as StbSecBeam_RC_Straight;
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[0], straight.depth, straight.width)));
+                        SectionCornerPoints.BeamRect(sectionPoints[0], straight.depth, straight.width, yAxis, zAxis)));
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[3], straight.depth, straight.width)));
+                        SectionCornerPoints.BeamRect(sectionPoints[3], straight.depth, straight.width, yAxis, zAxis)));
                     break;
                 case 2:
                     var taper = new[] { figures[0] as StbSecBeam_RC_Taper, figures[1] as StbSecBeam_RC_Taper };
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[0], taper[0].depth, taper[0].width)));
+                        SectionCornerPoints.BeamRect(sectionPoints[0], taper[0].depth, taper[0].width, yAxis, zAxis)));
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width)));
+                        SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width, yAxis, zAxis)));
                     break;
                 case 3:
                     var haunch = new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch };
                     StbSecBeam_RC_Haunch start = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.START);
                     StbSecBeam_RC_Haunch center = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.CENTER);
                     StbSecBeam_RC_Haunch end = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.END);
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], start.depth, start.width)));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], center.depth, center.width)));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], center.depth, center.width)));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], end.depth, end.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], start.depth, start.width, yAxis, zAxis)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], center.depth, center.width, yAxis, zAxis)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], center.depth, center.width, yAxis, zAxis)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], end.depth, end.width, yAxis, zAxis)));
                     break;
                 default:
                     throw new Exception();
@@ -358,35 +360,45 @@ namespace HoaryFox.Component.Utils.Geometry
             return curveList;
         }
 
+        private static void CreateLocalAxis(IReadOnlyList<Point3d> sectionPoints, out Vector3d yAxis, out Vector3d zAxis)
+        {
+            var xAxis = new Vector3d(sectionPoints[3] - sectionPoints[0]);
+            yAxis = Vector3d.CrossProduct(Vector3d.ZAxis, xAxis);
+            zAxis = Vector3d.CrossProduct(xAxis, yAxis);
+            yAxis.Unitize();
+            zAxis.Unitize();
+        }
+
         private static List<Curve> SecSrcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
             var curveList = new List<Curve>();
+            CreateLocalAxis(sectionPoints, out Vector3d yAxis, out Vector3d zAxis);
 
             switch (figures.Count)
             {
                 case 1:
                     var straight = figures[0] as StbSecBeam_SRC_Straight;
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[0], straight.depth, straight.width)));
+                        SectionCornerPoints.BeamRect(sectionPoints[0], straight.depth, straight.width, yAxis, zAxis)));
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[3], straight.depth, straight.width)));
+                        SectionCornerPoints.BeamRect(sectionPoints[3], straight.depth, straight.width, yAxis, zAxis)));
                     break;
                 case 2:
                     var taper = new[] { figures[0] as StbSecBeam_SRC_Taper, figures[1] as StbSecBeam_SRC_Taper };
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[0], taper[0].depth, taper[0].width)));
+                        SectionCornerPoints.BeamRect(sectionPoints[0], taper[0].depth, taper[0].width, yAxis, zAxis)));
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width)));
+                        SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width, yAxis, zAxis)));
                     break;
                 case 3:
                     var haunch = new[] { figures[0] as StbSecBeam_SRC_Haunch, figures[1] as StbSecBeam_SRC_Haunch, figures[2] as StbSecBeam_SRC_Haunch };
                     StbSecBeam_SRC_Haunch start = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.START);
                     StbSecBeam_SRC_Haunch center = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.CENTER);
                     StbSecBeam_SRC_Haunch end = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.END);
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], start.depth, start.width)));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], center.depth, center.width)));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], center.depth, center.width)));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], end.depth, end.width)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], start.depth, start.width, yAxis, zAxis)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], center.depth, center.width, yAxis, zAxis)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], center.depth, center.width, yAxis, zAxis)));
+                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], end.depth, end.width, yAxis, zAxis)));
                     break;
                 default:
                     throw new Exception();
@@ -709,8 +721,8 @@ namespace HoaryFox.Component.Utils.Geometry
                     return new PolylineCurve(
                         SectionCornerPoints.ColumnRect(point, B, A));
                 case SectionType.Beam:
-                    return new PolylineCurve(
-                        SectionCornerPoints.BeamRect(point, B, A));
+                    // return new PolylineCurve(
+                    //     SectionCornerPoints.BeamRect(point, B, A));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

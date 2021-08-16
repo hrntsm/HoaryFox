@@ -105,15 +105,15 @@ namespace HoaryFox.Component.Utils.Geometry
         //  Z        3 o 2
         //  ^        |   |
         //  o > Y    0 - 1
-        public static Point3d[] BeamRect(Point3d pt, double depth, double width)
+        public static Point3d[] BeamRect(Point3d pt, double depth, double width, Vector3d yAxis, Vector3d zAxis)
         {
             return new[]
             {
-                new Point3d(pt.X, pt.Y - width / 2, pt.Z - depth),
-                new Point3d(pt.X, pt.Y + width / 2, pt.Z - depth),
-                new Point3d(pt.X, pt.Y + width / 2, pt.Z),
-                new Point3d(pt.X, pt.Y - width / 2, pt.Z),
-                new Point3d(pt.X, pt.Y - width / 2, pt.Z - depth),
+                pt - yAxis * width / 2 - zAxis * depth,
+                pt + yAxis * width / 2 - zAxis * depth,
+                pt + yAxis * width / 2,
+                pt - yAxis * width / 2,
+                pt - yAxis * width / 2 - zAxis * depth,
             };
         }
 
