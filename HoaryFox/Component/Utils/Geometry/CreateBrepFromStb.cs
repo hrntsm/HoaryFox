@@ -134,28 +134,29 @@ namespace HoaryFox.Component.Utils.Geometry
         private static List<Curve> SecRcColumnToCurves(object figure, IReadOnlyList<Point3d> sectionPoints)
         {
             var curveList = new List<Curve>();
+            Vector3d[] localAxis = CreateLocalAxis(sectionPoints);
 
             switch (figure)
             {
                 case StbSecColumn_RC_Rect rect:
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.ColumnRect(sectionPoints[0], rect.width_X, rect.width_Y)));
+                        SectionCornerPoints.ColumnRect(sectionPoints[0], rect.width_X, rect.width_Y, localAxis[1], localAxis[2])));
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.ColumnRect(sectionPoints[3], rect.width_X, rect.width_Y)));
+                        SectionCornerPoints.ColumnRect(sectionPoints[3], rect.width_X, rect.width_Y, localAxis[1], localAxis[2])));
                     break;
                 case StbSecColumn_SRC_Rect rect:
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.ColumnRect(sectionPoints[0], rect.width_X, rect.width_Y)));
+                        SectionCornerPoints.ColumnRect(sectionPoints[0], rect.width_X, rect.width_Y, localAxis[1], localAxis[2])));
                     curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.ColumnRect(sectionPoints[3], rect.width_X, rect.width_Y)));
+                        SectionCornerPoints.ColumnRect(sectionPoints[3], rect.width_X, rect.width_Y, localAxis[1], localAxis[2])));
                     break;
                 case StbSecColumn_RC_Circle circle:
-                    curveList.Add(new ArcCurve(new Circle(sectionPoints[0], circle.D / 2d)));
-                    curveList.Add(new ArcCurve(new Circle(sectionPoints[3], circle.D / 2d)));
+                    curveList.Add(SectionCornerPoints.ColumnPipe(sectionPoints[0], circle.D, localAxis[0]));
+                    curveList.Add(SectionCornerPoints.ColumnPipe(sectionPoints[3], circle.D, localAxis[0]));
                     break;
                 case StbSecColumn_SRC_Circle circle:
-                    curveList.Add(new ArcCurve(new Circle(sectionPoints[0], circle.D / 2d)));
-                    curveList.Add(new ArcCurve(new Circle(sectionPoints[3], circle.D / 2d)));
+                    curveList.Add(SectionCornerPoints.ColumnPipe(sectionPoints[0], circle.D, localAxis[0]));
+                    curveList.Add(SectionCornerPoints.ColumnPipe(sectionPoints[3], circle.D, localAxis[0]));
                     break;
                 default:
                     throw new Exception();
@@ -365,6 +366,10 @@ namespace HoaryFox.Component.Utils.Geometry
         {
             var xAxis = new Vector3d(sectionPoints[3] - sectionPoints[0]);
             var yAxis = Vector3d.CrossProduct(Vector3d.ZAxis, xAxis);
+            if (yAxis == Vector3d.Zero)
+            {
+                yAxis = -Vector3d.XAxis;
+            }
             var zAxis = Vector3d.CrossProduct(xAxis, yAxis);
             xAxis.Unitize();
             yAxis.Unitize();
@@ -693,7 +698,7 @@ namespace HoaryFox.Component.Utils.Geometry
             {
                 case SectionType.Column:
                 case SectionType.Brace:
-                    return SectionCornerPoints.ColumnPipe(point, diameter);
+                    return SectionCornerPoints.ColumnPipe(point, diameter, localAxis[0]);
                 case SectionType.Beam:
                     return SectionCornerPoints.BeamPipe(point, diameter, localAxis[0]);
                 default:
@@ -708,7 +713,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 case SectionType.Column:
                 case SectionType.Brace:
                     return new PolylineCurve(
-                        SectionCornerPoints.ColumnL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
+                        SectionCornerPoints.ColumnL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type, localAxis[1], localAxis[2]));
                 case SectionType.Beam:
                     return new PolylineCurve(
                         SectionCornerPoints.BeamL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type, localAxis[1], localAxis[2]));
@@ -724,7 +729,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 case SectionType.Column:
                 case SectionType.Brace:
                     return new PolylineCurve(
-                        SectionCornerPoints.ColumnRect(point, B, A));
+                        SectionCornerPoints.ColumnRect(point, B, A, localAxis[1], localAxis[2]));
                 case SectionType.Beam:
                     return new PolylineCurve(
                         SectionCornerPoints.BeamRect(point, B, A, localAxis[1], localAxis[2]));
@@ -740,7 +745,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 case SectionType.Column:
                 case SectionType.Brace:
                     return new PolylineCurve(
-                        SectionCornerPoints.ColumnH(point, A, B, t1, t2));
+                        SectionCornerPoints.ColumnH(point, A, B, t1, t2, localAxis[1], localAxis[2]));
                 case SectionType.Beam:
                     return new PolylineCurve(
                         SectionCornerPoints.BeamH(point, A, B, t1, t2, localAxis[1], localAxis[2]));
