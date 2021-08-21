@@ -642,7 +642,7 @@ namespace HoaryFox.Component.Utils.Geometry
             {
                 foreach (StbSecBuildH buildH in secSteel.StbSecBuildH.Where(buildH => buildH.name == shape))
                 {
-                    return CurveFromStbSecH(point, type, buildH.A, buildH.B, buildH.t1, buildH.t2);
+                    return CurveFromStbSecH(localAxis, point, type, buildH.A, buildH.B, buildH.t1, buildH.t2);
                 }
             }
 
@@ -650,7 +650,7 @@ namespace HoaryFox.Component.Utils.Geometry
             {
                 foreach (StbSecRollH rollH in secSteel.StbSecRollH.Where(rollH => rollH.name == shape))
                 {
-                    return CurveFromStbSecH(point, type, rollH.A, rollH.B, rollH.t1, rollH.t2);
+                    return CurveFromStbSecH(localAxis, point, type, rollH.A, rollH.B, rollH.t1, rollH.t2);
                 }
             }
 
@@ -658,7 +658,7 @@ namespace HoaryFox.Component.Utils.Geometry
             {
                 foreach (StbSecRollL rollL in secSteel.StbSecRollL.Where(rollL => rollL.name == shape))
                 {
-                    return CurveFromStbSecL(point, type, rollL);
+                    return CurveFromStbSecL(localAxis, point, type, rollL);
                 }
             }
 
@@ -666,7 +666,7 @@ namespace HoaryFox.Component.Utils.Geometry
             {
                 foreach (StbSecPipe pipe in secSteel.StbSecPipe.Where(pipe => pipe.name == shape))
                 {
-                    return CurveFromStbSecPipe(point, type, pipe.D);
+                    return CurveFromStbSecPipe(localAxis, point, type, pipe.D);
                 }
             }
 
@@ -674,7 +674,7 @@ namespace HoaryFox.Component.Utils.Geometry
             {
                 foreach (StbSecRoundBar bar in secSteel.StbSecRoundBar.Where(pipe => pipe.name == shape))
                 {
-                    return CurveFromStbSecPipe(point, type, bar.R);
+                    return CurveFromStbSecPipe(localAxis, point, type, bar.R);
                 }
             }
 
@@ -687,7 +687,7 @@ namespace HoaryFox.Component.Utils.Geometry
             throw new ArgumentException("There are no matching steel section");
         }
 
-        private static Curve CurveFromStbSecPipe(Point3d point, SectionType type, double diameter)
+        private static Curve CurveFromStbSecPipe(Vector3d[] localAxis, Point3d point, SectionType type, double diameter)
         {
             switch (type)
             {
@@ -695,13 +695,13 @@ namespace HoaryFox.Component.Utils.Geometry
                 case SectionType.Brace:
                     return SectionCornerPoints.ColumnPipe(point, diameter);
                 case SectionType.Beam:
-                    return SectionCornerPoints.BeamPipe(point, diameter);
+                    return SectionCornerPoints.BeamPipe(point, diameter, localAxis[0]);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
 
-        private static Curve CurveFromStbSecL(Point3d point, SectionType type, StbSecRollL rollL)
+        private static Curve CurveFromStbSecL(Vector3d[] localAxis, Point3d point, SectionType type, StbSecRollL rollL)
         {
             switch (type)
             {
@@ -711,7 +711,7 @@ namespace HoaryFox.Component.Utils.Geometry
                         SectionCornerPoints.ColumnL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
                 case SectionType.Beam:
                     return new PolylineCurve(
-                        SectionCornerPoints.BeamL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type));
+                        SectionCornerPoints.BeamL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type, localAxis[1], localAxis[2]));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -733,7 +733,7 @@ namespace HoaryFox.Component.Utils.Geometry
             }
         }
 
-        private static Curve CurveFromStbSecH(Point3d point, SectionType type, double A, double B, double t1, double t2)
+        private static Curve CurveFromStbSecH(Vector3d[] localAxis, Point3d point, SectionType type, double A, double B, double t1, double t2)
         {
             switch (type)
             {
@@ -743,7 +743,7 @@ namespace HoaryFox.Component.Utils.Geometry
                         SectionCornerPoints.ColumnH(point, A, B, t1, t2));
                 case SectionType.Beam:
                     return new PolylineCurve(
-                        SectionCornerPoints.BeamH(point, A, B, t1, t2));
+                        SectionCornerPoints.BeamH(point, A, B, t1, t2, localAxis[1], localAxis[2]));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

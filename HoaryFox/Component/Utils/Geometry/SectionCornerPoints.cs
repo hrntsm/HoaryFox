@@ -122,36 +122,36 @@ namespace HoaryFox.Component.Utils.Geometry
         //  Z            | |    
         //  ^        11-10 3 - 2
         //  o > Y    0 - - - - 1
-        public static Point3d[] BeamH(Point3d pt, double height, double width, double tw, double tf)
+        public static Point3d[] BeamH(Point3d pt, double height, double width, double tw, double tf, Vector3d yAxis, Vector3d zAxis)
         {
             return new[]
             {
-                new Point3d(pt.X, pt.Y - width / 2, pt.Z - height),
-                new Point3d(pt.X, pt.Y + width / 2, pt.Z - height),
-                new Point3d(pt.X, pt.Y + width / 2, pt.Z - height + tf),
-                new Point3d(pt.X, pt.Y + tw / 2, pt.Z - height + tf),
-                new Point3d(pt.X, pt.Y + tw / 2, pt.Z - tf),
-                new Point3d(pt.X, pt.Y + width / 2, pt.Z - tf),
-                new Point3d(pt.X, pt.Y + width / 2, pt.Z),
-                new Point3d(pt.X, pt.Y - width / 2, pt.Z),
-                new Point3d(pt.X, pt.Y - width / 2, pt.Z - tf),
-                new Point3d(pt.X, pt.Y - tw / 2, pt.Z - tf),
-                new Point3d(pt.X, pt.Y - tw / 2, pt.Z - height + tf),
-                new Point3d(pt.X, pt.Y - width / 2, pt.Z - height + tf),
-                new Point3d(pt.X, pt.Y - width / 2, pt.Z - height)
+                pt - yAxis * width / 2 - zAxis *  height,
+                pt + yAxis * width / 2 - zAxis *  height,
+                pt + yAxis * width / 2 - zAxis * (height - tf),
+                pt + yAxis * tw / 2    - zAxis * (height - tf),
+                pt + yAxis * tw / 2    - zAxis *  tf,
+                pt + yAxis * width / 2 - zAxis *  tf,
+                pt + yAxis * width / 2,
+                pt - yAxis * width / 2,
+                pt - yAxis * width / 2 - zAxis *  tf,
+                pt - yAxis * tw / 2    - zAxis *  tf,
+                pt - yAxis * tw / 2    - zAxis * (height - tf),
+                pt - yAxis * width / 2 - zAxis * (height - tf),
+                pt - yAxis * width / 2 - zAxis *  height,
             };
         }
 
-        public static Point3d[] BeamL(Point3d pt, double height, double width, double tw, double tf, StbSecRollLType type)
+        public static Point3d[] BeamL(Point3d pt, double height, double width, double tw, double tf, StbSecRollLType type, Vector3d yAxis, Vector3d zAxis)
         {
             switch (type)
             {
                 case StbSecRollLType.SINGLE:
-                    return BeamLSingle(pt, height, width, tw, tf);
+                    return BeamLSingle(pt, height, width, tw, tf, yAxis, zAxis);
                 case StbSecRollLType.BACKTOBACK:
-                    return BeamLBackToBack(pt, height, width, tw, tf);
+                    return BeamLBackToBack(pt, height, width, tw, tf, yAxis, zAxis);
                 case StbSecRollLType.FACETOFACE:
-                    return BeamLFaceToFace(pt, height, width, tw, tf);
+                    return BeamLFaceToFace(pt, height, width, tw, tf, yAxis, zAxis);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -162,17 +162,17 @@ namespace HoaryFox.Component.Utils.Geometry
         //  Z        | 2 - - 3
         //  ^        | |
         //  o > Y    0 1
-        private static Point3d[] BeamLSingle(Point3d pt, double height, double width, double tw, double tf)
+        private static Point3d[] BeamLSingle(Point3d pt, double height, double width, double tw, double tf, Vector3d yAxis, Vector3d zAxis)
         {
             return new[]
             {
-                new Point3d(pt.X, pt.Y - width/2, pt.Z - height),
-                new Point3d(pt.X, pt.Y - width/2 + tw, pt.Z - height),
-                new Point3d(pt.X, pt.Y - width/2 + tw, pt.Z - tf),
-                new Point3d(pt.X, pt.Y + width/2, pt.Z - tf),
-                new Point3d(pt.X, pt.Y + width/2, pt.Z),
-                new Point3d(pt.X, pt.Y - width/2, pt.Z),
-                new Point3d(pt.X, pt.Y - width/2, pt.Z - height),
+                pt - yAxis *  width / 2       - zAxis * height,
+                pt - yAxis * (width / 2 - tw) - zAxis * height,
+                pt - yAxis * (width / 2 - tw) - zAxis * tf,
+                pt + yAxis *  width / 2       - zAxis * tf,
+                pt + yAxis *  width / 2,
+                pt - yAxis *  width / 2,
+                pt - yAxis *  width / 2       - zAxis * height
             };
         }
 
@@ -180,7 +180,7 @@ namespace HoaryFox.Component.Utils.Geometry
         //  Z     6 - 7   2 - 3
         //  ^         |   |
         //  o > Y     0 - 1
-        private static Point3d[] BeamLBackToBack(Point3d pt, double height, double width, double tw, double tf)
+        private static Point3d[] BeamLBackToBack(Point3d pt, double height, double width, double tw, double tf, Vector3d yAxis, Vector3d zAxis)
         {
             throw new NotImplementedException();
         }
@@ -189,16 +189,16 @@ namespace HoaryFox.Component.Utils.Geometry
         //  Z         |   2 - 3   |
         //  ^         |   |   |   |
         //  o > Y     0 - 1   4 - 5
-        private static Point3d[] BeamLFaceToFace(Point3d pt, double height, double width, double tw, double tf)
+        private static Point3d[] BeamLFaceToFace(Point3d pt, double height, double width, double tw, double tf, Vector3d yAxis, Vector3d zAxis)
         {
             throw new NotImplementedException();
         }
 
 
-        internal static Curve BeamPipe(Point3d pt, double d)
+        internal static Curve BeamPipe(Point3d pt, double d, Vector3d xAxis)
         {
-            Point3d centerPt = new Point3d(pt.X, pt.Y, pt.Z - d / 2);
-            Plane plane = new Plane(centerPt, Vector3d.XAxis);
+            var centerPt = new Point3d(pt.X, pt.Y, pt.Z - d / 2);
+            var plane = new Plane(centerPt, xAxis);
             return new ArcCurve(new Circle(plane, d / 2));
         }
     }
