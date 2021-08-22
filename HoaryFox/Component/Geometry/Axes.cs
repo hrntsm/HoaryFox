@@ -12,9 +12,12 @@ namespace HoaryFox.Component.Geometry
     {
         private ST_BRIDGE _stBridge;
         private int _size;
+        private double _factor;
         private readonly List<Line> _axisLines = new List<Line>();
         private readonly List<Point3d> _axisPts = new List<Point3d>();
         private readonly List<string> _axisStr = new List<string>();
+        private readonly List<Point3d> _storyPts = new List<Point3d>();
+        private readonly List<string> _storyStr = new List<string>();
 
         public override bool IsPreviewCapable => true;
         public Axis()
@@ -30,6 +33,8 @@ namespace HoaryFox.Component.Geometry
             _axisLines.Clear();
             _axisPts.Clear();
             _axisStr.Clear();
+            _storyPts.Clear();
+            _storyStr.Clear();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -46,39 +51,49 @@ namespace HoaryFox.Component.Geometry
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            double factor = 1;
             if (!dataAccess.GetData(0, ref _stBridge)) { return; }
-            if (!dataAccess.GetData(1, ref factor)) { return; }
+            if (!dataAccess.GetData(1, ref _factor)) { return; }
             if (!dataAccess.GetData(2, ref _size)) { return; }
 
             StbAxes axis = _stBridge.StbModel.StbAxes;
             StbParallelAxes[] parallels = axis.StbParallelAxes;
+            StbStory[] stories = _stBridge.StbModel.StbStories;
             double length = GetMaxLength(_stBridge.StbModel.StbNodes);
 
-            StbParallelAxesToLine(factor, parallels, length);
+            StbParallelAxesToLine(_factor, parallels, stories, length);
 
             dataAccess.SetDataList(0, _axisLines);
         }
 
-        private void StbParallelAxesToLine(double factor, StbParallelAxes[] parallels, double length)
+        private void StbParallelAxesToLine(double factor, StbParallelAxes[] parallels, StbStory[] stories, double length)
         {
-            foreach (StbParallelAxes parallel in parallels)
+            bool isFirst = true;
+            for (int i = 0; i < stories.Length; i++)
             {
-                var basePt = new Point3d(parallel.X, parallel.Y, 0);
-                Vector3d axisVec = Vector3d.XAxis * length;
-                axisVec.Rotate(parallel.angle * Math.PI / 180, -Vector3d.ZAxis);
-                Vector3d distanceVec = Vector3d.YAxis;
-                distanceVec.Rotate(parallel.angle * Math.PI / 180, Vector3d.ZAxis);
-
-                foreach (StbParallelAxis pAxis in parallel.StbParallelAxis)
+                StbStory story = stories[i];
+                var height = story.height;
+                _storyStr.Add(story.name);
+                _storyPts.Add(new Point3d(0, 0, height));
+                foreach (StbParallelAxes parallel in parallels)
                 {
-                    _axisLines.Add(new Line(
-                        basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance),
-                        basePt + (axisVec * factor) + (distanceVec * pAxis.distance)
-                    ));
-                    _axisPts.Add(basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance));
-                    _axisStr.Add(pAxis.name);
+                    var basePt = new Point3d(parallel.X, parallel.Y, height);
+                    Vector3d axisVec = Vector3d.XAxis * length;
+                    axisVec.Rotate(parallel.angle * Math.PI / 180, -Vector3d.ZAxis);
+                    Vector3d distanceVec = Vector3d.YAxis;
+                    distanceVec.Rotate(parallel.angle * Math.PI / 180, Vector3d.ZAxis);
+
+                    foreach (StbParallelAxis pAxis in parallel.StbParallelAxis)
+                    {
+                        _axisLines.Add(new Line(
+                            basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance),
+                            basePt + (axisVec * factor) + (distanceVec * pAxis.distance)
+                        ));
+                        _axisPts.Add(basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance));
+                        _axisStr.Add(isFirst == true ? pAxis.name : string.Empty);
+                    }
                 }
+
+                isFirst = false;
             }
         }
 
@@ -96,6 +111,23 @@ namespace HoaryFox.Component.Geometry
             {
                 args.Display.Draw2dText(_axisStr[i], Color.Black, _axisPts[i], true, _size);
                 args.Display.DrawPatternedLine(_axisLines[i], Color.Black, 0x0000AFAF, 1);
+            }
+
+            double xMin = _axisPts.Min(pt => pt.X);
+            double yMin = _axisPts.Min(pt => pt.Y);
+            Vector3d vec = new Vector3d(xMin, yMin, 0);
+            double length = _axisLines.Max(line => line.Length);
+
+            for (var i = 1; i < _storyPts.Count; i++)
+            {
+                args.Display.DrawLine(new Line(_storyPts[i - 1] + vec, _storyPts[i] + vec), Color.Black);
+            }
+
+            for (int i = 0; i < _storyPts.Count; i++)
+            {
+                args.Display.Draw2dText(_storyStr[i], Color.Black, _storyPts[i] + vec, true, _size);
+                args.Display.DrawLine(new Line(_storyPts[i] + vec, _storyPts[i] + vec + length * Vector3d.XAxis), Color.Black);
+                args.Display.DrawLine(new Line(_storyPts[i] + vec, _storyPts[i] + vec + length * Vector3d.YAxis), Color.Black);
             }
         }
 
