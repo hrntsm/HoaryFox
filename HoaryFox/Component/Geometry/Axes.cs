@@ -74,26 +74,31 @@ namespace HoaryFox.Component.Geometry
                 double height = story.height;
                 _storyStr.Add(story.name);
                 _storyPts.Add(new Point3d(0, 0, height));
-                foreach (StbParallelAxes parallel in parallels)
-                {
-                    var basePt = new Point3d(parallel.X, parallel.Y, height);
-                    Vector3d axisVec = Vector3d.XAxis * length;
-                    axisVec.Rotate(parallel.angle * Math.PI / 180, -Vector3d.ZAxis);
-                    Vector3d distanceVec = Vector3d.YAxis;
-                    distanceVec.Rotate(parallel.angle * Math.PI / 180, Vector3d.ZAxis);
-
-                    foreach (StbParallelAxis pAxis in parallel.StbParallelAxis)
-                    {
-                        _axisLines.Add(new Line(
-                            basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance),
-                            basePt + (axisVec * factor) + (distanceVec * pAxis.distance)
-                        ));
-                        _axisPts.Add(basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance));
-                        _axisStr.Add(isFirst ? pAxis.name : string.Empty);
-                    }
-                }
+                CreateEachAxis(factor, parallels, length, isFirst, height);
 
                 isFirst = false;
+            }
+        }
+
+        private void CreateEachAxis(double factor, StbParallelAxes[] parallels, double length, bool isFirst, double height)
+        {
+            foreach (StbParallelAxes parallel in parallels)
+            {
+                var basePt = new Point3d(parallel.X, parallel.Y, height);
+                Vector3d axisVec = Vector3d.XAxis * length;
+                axisVec.Rotate(parallel.angle * Math.PI / 180, -Vector3d.ZAxis);
+                Vector3d distanceVec = Vector3d.YAxis;
+                distanceVec.Rotate(parallel.angle * Math.PI / 180, Vector3d.ZAxis);
+
+                foreach (StbParallelAxis pAxis in parallel.StbParallelAxis)
+                {
+                    _axisLines.Add(new Line(
+                        basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance),
+                        basePt + (axisVec * factor) + (distanceVec * pAxis.distance)
+                    ));
+                    _axisPts.Add(basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance));
+                    _axisStr.Add(isFirst ? pAxis.name : string.Empty);
+                }
             }
         }
 
