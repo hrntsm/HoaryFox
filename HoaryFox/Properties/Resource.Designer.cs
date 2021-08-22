@@ -63,6 +63,16 @@ namespace HoaryFox.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
+        internal static System.Drawing.Bitmap Axis {
+            get {
+                object obj = ResourceManager.GetObject("Axis", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
         internal static System.Drawing.Bitmap BeamName {
             get {
                 object obj = ResourceManager.GetObject("BeamName", resourceCulture);
