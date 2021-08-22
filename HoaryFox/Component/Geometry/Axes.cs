@@ -66,13 +66,12 @@ namespace HoaryFox.Component.Geometry
             dataAccess.SetDataList(0, _axisLines);
         }
 
-        private void StbParallelAxesToLine(double factor, StbParallelAxes[] parallels, StbStory[] stories, double length)
+        private void StbParallelAxesToLine(double factor, StbParallelAxes[] parallels, IEnumerable<StbStory> stories, double length)
         {
-            bool isFirst = true;
-            for (int i = 0; i < stories.Length; i++)
+            var isFirst = true;
+            foreach (StbStory story in stories)
             {
-                StbStory story = stories[i];
-                var height = story.height;
+                double height = story.height;
                 _storyStr.Add(story.name);
                 _storyPts.Add(new Point3d(0, 0, height));
                 foreach (StbParallelAxes parallel in parallels)
@@ -90,7 +89,7 @@ namespace HoaryFox.Component.Geometry
                             basePt + (axisVec * factor) + (distanceVec * pAxis.distance)
                         ));
                         _axisPts.Add(basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance));
-                        _axisStr.Add(isFirst == true ? pAxis.name : string.Empty);
+                        _axisStr.Add(isFirst ? pAxis.name : string.Empty);
                     }
                 }
 
@@ -116,7 +115,7 @@ namespace HoaryFox.Component.Geometry
 
             double xMin = _axisPts.Min(pt => pt.X);
             double yMin = _axisPts.Min(pt => pt.Y);
-            Vector3d vec = new Vector3d(xMin, yMin, 0);
+            var vec = new Vector3d(xMin, yMin, 0);
             double length = _axisLines.Max(line => line.Length);
 
             for (var i = 1; i < _storyPts.Count; i++)
@@ -124,7 +123,7 @@ namespace HoaryFox.Component.Geometry
                 args.Display.DrawLine(new Line(_storyPts[i - 1] + vec, _storyPts[i] + vec), Color.Black);
             }
 
-            for (int i = 0; i < _storyPts.Count; i++)
+            for (var i = 0; i < _storyPts.Count; i++)
             {
                 args.Display.Draw2dText(_storyStr[i], Color.Black, _storyPts[i] + vec, true, _size);
                 args.Display.DrawLine(new Line(_storyPts[i] + vec, _storyPts[i] + vec + length * Vector3d.XAxis), Color.Black);
