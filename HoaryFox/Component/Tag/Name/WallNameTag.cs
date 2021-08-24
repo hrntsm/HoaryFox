@@ -13,8 +13,8 @@ namespace HoaryFox.Component.Tag.Name
         private ST_BRIDGE _stBridge;
         private int _size;
 
-        private readonly List<string> _frameName = new List<string>();
-        private readonly List<Point3d> _framePos = new List<Point3d>();
+        private readonly List<string> _plateName = new List<string>();
+        private readonly List<Point3d> _platePos = new List<Point3d>();
 
         public override bool IsPreviewCapable => true;
         public WallNameTag()
@@ -27,8 +27,8 @@ namespace HoaryFox.Component.Tag.Name
         public override void ClearData()
         {
             base.ClearData();
-            _frameName.Clear();
-            _framePos.Clear();
+            _plateName.Clear();
+            _platePos.Clear();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -51,7 +51,7 @@ namespace HoaryFox.Component.Tag.Name
             StbWall[] walls = _stBridge.StbModel.StbMembers.StbWalls;
             foreach (StbWall wall in walls)
             {
-                _frameName.Add(wall.name);
+                _plateName.Add(wall.name);
 
                 string[] nodeIds = wall.StbNodeIdOrder.Split(' ');
                 var pts = new Point3d[nodeIds.Length];
@@ -61,16 +61,16 @@ namespace HoaryFox.Component.Tag.Name
                     StbNode node = nodes.First(n => n.id == nodeId);
                     pts[i] = new Point3d(node.X, node.Y, node.Z);
                 }
-                _framePos.Add(new Point3d(pts.Average(n => n.X), pts.Average(n => n.Y), pts.Average(n => n.Z)));
+                _platePos.Add(new Point3d(pts.Average(n => n.X), pts.Average(n => n.Y), pts.Average(n => n.Z)));
             }
-            dataAccess.SetDataList(0, _frameName);
+            dataAccess.SetDataList(0, _plateName);
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
-            for (var i = 0; i < _frameName.Count; i++)
+            for (var i = 0; i < _plateName.Count; i++)
             {
-                args.Display.Draw2dText(_frameName[i], Color.Black, _framePos[i], true, _size);
+                args.Display.Draw2dText(_plateName[i], Color.Black, _platePos[i], true, _size);
             }
         }
 
