@@ -105,7 +105,7 @@ namespace HoaryFox.Component.Tag.Section
 
         private static List<Point3d> GetTagPosition(IEnumerable<StbGirder> girders, IEnumerable<StbNode> nodes)
         {
-            return girders.Select(girder => TagUtils.GetTagPosition(girder.id_node_start, girder.id_node_end, nodes)).ToList();
+            return girders.Select(girder => TagUtils.GetFrameTagPosition(girder.id_node_start, girder.id_node_end, nodes)).ToList();
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)

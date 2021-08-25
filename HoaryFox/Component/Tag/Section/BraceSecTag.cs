@@ -95,7 +95,7 @@ namespace HoaryFox.Component.Tag.Section
         {
             return braces == null
                 ? new List<Point3d>()
-                : braces.Select(beam => TagUtils.GetTagPosition(beam.id_node_start, beam.id_node_end, nodes)).ToList();
+                : braces.Select(beam => TagUtils.GetFrameTagPosition(beam.id_node_start, beam.id_node_end, nodes)).ToList();
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
