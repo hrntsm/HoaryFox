@@ -19,7 +19,7 @@ namespace HoaryFox.Component.Tag.Section
         private List<Point3d> _tagPos = new List<Point3d>();
 
         public SlabSecTag()
-          : base("Slab Section Tag", "BeamSec",
+          : base("Slab Section Tag", "SlabSec",
               "Display Slab Section Tag",
               "HoaryFox", "SectionTag")
         {
@@ -92,7 +92,7 @@ namespace HoaryFox.Component.Tag.Section
 
         private static List<Point3d> GetTagPosition(IEnumerable<StbSlab> slabs, IEnumerable<StbNode> nodes)
         {
-            return slabs.Select(slab => TagUtils.GetPlateTagPosition(slab.StbNodeIdOrder, slab.StbSlabOffsetList, nodes)).ToList();
+            return slabs.Select(slab => TagUtils.GetSlabTagPosition(slab.StbNodeIdOrder, slab.StbSlabOffsetList, nodes)).ToList();
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
