@@ -253,10 +253,30 @@ namespace HoaryFox.Component.Utils.Geometry
 
                 topPts.Add(topPts[0]);
                 curveList[0] = new PolylineCurve(topPts);
-                Vector3d normal = Vector3d.CrossProduct(curveList[0].TangentAtEnd, curveList[0].TangentAtStart);
-                curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * depth));
-                brepList.Add(Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
-                    .CapPlanarHoles(_tolerance[0]));
+                if (depth > 0)
+                {
+                    Vector3d normal = Vector3d.CrossProduct(curveList[0].TangentAtEnd, curveList[0].TangentAtStart);
+                    curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * depth));
+                    Brep loftBrep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0];
+                    Brep capedBrep = loftBrep.CapPlanarHoles(_tolerance[0]);
+
+                    if (capedBrep == null)
+                    {
+                        //TODO: 厚さのある Planar ではないスラブを closed で生成する方法を考える。現状は一枚の trimmed surface
+                        brepList.Add(Brep.CreatePatch(new[] { curveList[0] }, 20, 20, _tolerance[0]));
+                    }
+                    else
+                    {
+                        brepList.Add(capedBrep);
+                    }
+                }
+                else
+                {
+                    Brep[] planarBrep = Brep.CreatePlanarBreps(new[] { curveList[0] }, _tolerance[0]);
+                    brepList.Add(planarBrep != null
+                        ? planarBrep[0]
+                        : Brep.CreatePatch(new[] { curveList[0] }, 20, 20, _tolerance[0]));
+                }
             }
 
             return brepList;
