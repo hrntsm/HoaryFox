@@ -262,8 +262,25 @@ namespace HoaryFox.Component.Utils.Geometry
 
                     if (capedBrep == null)
                     {
-                        //TODO: 厚さのある Planar ではないスラブを closed で生成する方法を考える。現状は一枚の trimmed surface
-                        brepList.Add(Brep.CreatePatch(new[] { curveList[0] }, 20, 20, _tolerance[0]));
+                        var nonPlanarBrep = new List<Brep>();
+                        Brep topBrep = Brep.CreatePatch(new[] { curveList[0] }, 5, 5, _tolerance[0]);
+                        nonPlanarBrep.Add(topBrep);
+
+                        BrepFace face = topBrep.Faces[0];
+                        Vector3d faceNormal = face.NormalAt(face.Domain(0).Mid, face.Domain(1).Mid);
+                        if (Vector3d.VectorAngle(faceNormal, Vector3d.ZAxis) < Vector3d.VectorAngle(faceNormal, -Vector3d.ZAxis))
+                        {
+                            faceNormal = -faceNormal;
+                        }
+                        Brep bottomBrep = topBrep.DuplicateBrep();
+                        bottomBrep.Translate(faceNormal * depth);
+                        nonPlanarBrep.Add(bottomBrep);
+
+                        IEnumerable<Curve> edgeCurveList = topBrep.Edges.Select(edge => edge.DuplicateCurve());
+                        nonPlanarBrep.AddRange(edgeCurveList.Select(edgeCurve =>
+                            Surface.CreateExtrusion(edgeCurve, faceNormal * depth).ToBrep()));
+
+                        brepList.Add(Brep.JoinBreps(nonPlanarBrep, _tolerance[0])[0] ?? topBrep);
                     }
                     else
                     {
@@ -275,7 +292,7 @@ namespace HoaryFox.Component.Utils.Geometry
                     Brep[] planarBrep = Brep.CreatePlanarBreps(new[] { curveList[0] }, _tolerance[0]);
                     brepList.Add(planarBrep != null
                         ? planarBrep[0]
-                        : Brep.CreatePatch(new[] { curveList[0] }, 20, 20, _tolerance[0]));
+                        : Brep.CreatePatch(new[] { curveList[0] }, 5, 5, _tolerance[0]));
                 }
             }
 
