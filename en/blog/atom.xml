@@ -13,6 +13,10 @@
         <link href="https://hiron.dev/HoaryFox/en/blog/release-v131"/>
         <updated>2021-03-28T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[HoaryFox をバージョン1.3.1にアップデートしました。]]></summary>
+        <author>
+            <name>hiron</name>
+            <uri>https://github.com/hrntsm</uri>
+        </author>
     </entry>
     <entry>
         <title type="html"><![CDATA[Ver1.2.2 リリース情報]]></title>
@@ -20,6 +24,10 @@
         <link href="https://hiron.dev/HoaryFox/en/blog/release-v122"/>
         <updated>2021-02-17T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[HoaryFox をバージョン1.2.2にアップデートしました。]]></summary>
+        <author>
+            <name>hiron</name>
+            <uri>https://github.com/hrntsm</uri>
+        </author>
     </entry>
     <entry>
         <title type="html"><![CDATA[HoaryFox を使って構造図をお手軽に書く試み]]></title>
@@ -27,6 +35,10 @@
         <link href="https://hiron.dev/HoaryFox/en/blog/structural-drawing-with-hoaryfox"/>
         <updated>2021-02-14T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[モチベーション]]></summary>
+        <author>
+            <name>kazugoru</name>
+            <uri>https://twitter.com/kazugoru</uri>
+        </author>
     </entry>
     <entry>
         <title type="html"><![CDATA[Karamba3D 公式サイトに掲載されました。]]></title>
@@ -34,6 +46,10 @@
         <link href="https://hiron.dev/HoaryFox/en/blog/posted-on-karamba3d-website"/>
         <updated>2021-01-20T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[HoaryFox が Karamba3D の公式サイトの THIRD PARTY PLUGINS の欄に掲載されました。]]></summary>
+        <author>
+            <name>hiron</name>
+            <uri>https://github.com/hrntsm</uri>
+        </author>
     </entry>
     <entry>
         <title type="html"><![CDATA[300 ダウンロードありがとうございます！]]></title>
@@ -41,6 +57,10 @@
         <link href="https://hiron.dev/HoaryFox/en/blog/thanks-300dl"/>
         <updated>2021-01-12T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[なんとダウンロード数が 300、Voteに6人も入れていただき評価が4.7 になりました。]]></summary>
+        <author>
+            <name>hiron</name>
+            <uri>https://github.com/hrntsm</uri>
+        </author>
     </entry>
     <entry>
         <title type="html"><![CDATA[ドキュメントページを公開しました]]></title>
@@ -48,6 +68,10 @@
         <link href="https://hiron.dev/HoaryFox/en/blog/release-doc"/>
         <updated>2021-01-06T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[ドキュメントがおおむね完成したので公開しました。]]></summary>
+        <author>
+            <name>hiron</name>
+            <uri>https://github.com/hrntsm</uri>
+        </author>
     </entry>
     <entry>
         <title type="html"><![CDATA[Ver1.2.1 リリース情報]]></title>
@@ -55,6 +79,10 @@
         <link href="https://hiron.dev/HoaryFox/en/blog/release-v121"/>
         <updated>2021-01-02T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[HoaryFox をバージョン1.2.1にアップデートしました。]]></summary>
+        <author>
+            <name>hiron</name>
+            <uri>https://github.com/hrntsm</uri>
+        </author>
     </entry>
     <entry>
         <title type="html"><![CDATA[ようこそ！！]]></title>
@@ -62,5 +90,9 @@
         <link href="https://hiron.dev/HoaryFox/en/blog/welcome"/>
         <updated>2021-01-01T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[HoaryFox の開発者の hiron です。HoaryFoxに興味を持っていただきありがとうございます。]]></summary>
+        <author>
+            <name>hiron</name>
+            <uri>https://github.com/hrntsm</uri>
+        </author>
     </entry>
 </feed>
