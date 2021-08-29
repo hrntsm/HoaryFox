@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel;
+using HoaryFox.Properties;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
@@ -90,7 +91,7 @@ namespace HoaryFox.Component.Tag.Name
             }
         }
 
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Resource.SlabName;
 
         public override Guid ComponentGuid => new Guid("9ee6efbb-20b5-49bb-aae9-02ca6031c09d");
     }

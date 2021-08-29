@@ -6,6 +6,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using HoaryFox.Component.Utils;
+using HoaryFox.Properties;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
@@ -92,7 +93,7 @@ namespace HoaryFox.Component.Tag.Section
             }
         }
 
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Resource.WallSection;
         public override Guid ComponentGuid => new Guid("fcb8d572-732a-473f-a807-7c2e8bc6f64f");
 
     }
