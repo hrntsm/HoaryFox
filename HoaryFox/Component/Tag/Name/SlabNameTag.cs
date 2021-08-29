@@ -53,27 +53,35 @@ namespace HoaryFox.Component.Tag.Name
             {
                 _plateName.Add(slab.name);
                 StbSlabOffset[] offsets = slab.StbSlabOffsetList;
-
                 string[] nodeIds = slab.StbNodeIdOrder.Split(' ');
-                var pts = new Point3d[nodeIds.Length];
-                for (int i = 0; i < nodeIds.Length; i++)
-                {
-                    string nodeId = nodeIds[i];
-                    StbNode node = nodes.First(n => n.id == nodeId);
-                    var offsetVec = new Vector3d();
-                    if (offsets != null)
-                    {
-                        foreach (var offset in offsets.Where(offset => nodeId == offset.id_node))
-                        {
-                            offsetVec = new Vector3d(offset.offset_X, offset.offset_Y, offset.offset_Z);
-                        }
-                    }
-                    pts[i] = new Point3d(node.X, node.Y, node.Z) + offsetVec;
-                }
+                Point3d[] pts = SlabNodeToPoint3ds(nodeIds, nodes, offsets);
                 _platePos.Add(new Point3d(pts.Average(n => n.X), pts.Average(n => n.Y), pts.Average(n => n.Z)));
             }
             dataAccess.SetDataList(0, _plateName);
         }
+
+        private static Point3d[] SlabNodeToPoint3ds(IReadOnlyList<string> nodeIds, StbNode[] nodes, StbSlabOffset[] offsets)
+        {
+            var pts = new Point3d[nodeIds.Count];
+            for (var i = 0; i < nodeIds.Count; i++)
+            {
+                string nodeId = nodeIds[i];
+                StbNode node = nodes.First(n => n.id == nodeId);
+                var offsetVec = new Vector3d();
+                if (offsets != null)
+                {
+                    foreach (StbSlabOffset offset in offsets.Where(offset => nodeId == offset.id_node))
+                    {
+                        offsetVec = new Vector3d(offset.offset_X, offset.offset_Y, offset.offset_Z);
+                    }
+                }
+
+                pts[i] = new Point3d(node.X, node.Y, node.Z) + offsetVec;
+            }
+
+            return pts;
+        }
+
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
             for (var i = 0; i < _plateName.Count; i++)

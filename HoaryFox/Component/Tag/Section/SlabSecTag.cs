@@ -61,33 +61,37 @@ namespace HoaryFox.Component.Tag.Section
 
             foreach (var item in slabs.Select((slab, index) => new { slab, index }))
             {
-                string secId = item.slab.id_section;
-                var ghPath = new GH_Path(0, item.index);
-                StbSlabKind_structure kindStruct = item.slab.kind_structure;
-
-                switch (kindStruct)
-                {
-                    case StbSlabKind_structure.RC:
-                        StbSecSlab_RC secRc = sections.StbSecSlab_RC.First(i => i.id == secId);
-                        foreach (object figure in secRc.StbSecFigureSlab_RC.Items)
-                        {
-                            ghSecStrings.AppendRange(TagUtils.GetSlabRcSection(figure, secRc.strength_concrete), ghPath);
-                        }
-                        break;
-                    case StbSlabKind_structure.DECK:
-                        StbSecSlabDeck secDeck = sections.StbSecSlabDeck.First(i => i.id == secId);
-                        ghSecStrings.AppendRange(TagUtils.GetSlabDeckSection(secDeck.StbSecFigureSlabDeck.StbSecSlabDeckStraight, secDeck.strength_concrete), ghPath);
-                        break;
-                    case StbSlabKind_structure.PRECAST:
-                        StbSecSlabPrecast secPrecast = sections.StbSecSlabPrecast.First(i => i.id == secId);
-                        ghSecStrings.AppendRange(TagUtils.GetSlabPrecastSection(secPrecast.precast_type, secPrecast.StbSecProductSlabPrecast, secPrecast.strength_concrete), ghPath);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(kindStruct), kindStruct, null);
-                }
+                SetSectionInfo(sections, ghSecStrings, item.slab, item.index);
             }
 
             return ghSecStrings;
+        }
+
+        private static void SetSectionInfo(StbSections sections, GH_Structure<GH_String> ghSecStrings, StbSlab slab, int index)
+        {
+            string secId = slab.id_section;
+            var ghPath = new GH_Path(0, index);
+            StbSlabKind_structure kindStruct = slab.kind_structure;
+            switch (kindStruct)
+            {
+                case StbSlabKind_structure.RC:
+                    StbSecSlab_RC secRc = sections.StbSecSlab_RC.First(i => i.id == secId);
+                    foreach (object figure in secRc.StbSecFigureSlab_RC.Items)
+                    {
+                        ghSecStrings.AppendRange(TagUtils.GetSlabRcSection(figure, secRc.strength_concrete), ghPath);
+                    }
+                    break;
+                case StbSlabKind_structure.DECK:
+                    StbSecSlabDeck secDeck = sections.StbSecSlabDeck.First(i => i.id == secId);
+                    ghSecStrings.AppendRange(TagUtils.GetSlabDeckSection(secDeck.StbSecFigureSlabDeck.StbSecSlabDeckStraight, secDeck.strength_concrete), ghPath);
+                    break;
+                case StbSlabKind_structure.PRECAST:
+                    StbSecSlabPrecast secPrecast = sections.StbSecSlabPrecast.First(i => i.id == secId);
+                    ghSecStrings.AppendRange(TagUtils.GetSlabPrecastSection(secPrecast.precast_type, secPrecast.StbSecProductSlabPrecast, secPrecast.strength_concrete), ghPath);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(kindStruct), kindStruct, null);
+            }
         }
 
         private static List<Point3d> GetTagPosition(IEnumerable<StbSlab> slabs, IEnumerable<StbNode> nodes)
