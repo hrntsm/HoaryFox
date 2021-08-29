@@ -12,16 +12,57 @@ namespace HoaryFox.Component.Utils
 {
     internal static class TagUtils
     {
-        internal static Point3d GetTagPosition(string idStart, string idEnd, IEnumerable<StbNode> nodes)
+        internal static Point3d GetFrameTagPosition(string idStart, string idEnd, IEnumerable<StbNode> nodes)
         {
             StbNode startNode = nodes.First(node => node.id == idStart);
             StbNode endNode = nodes.First(node => node.id == idEnd);
 
-            return new Point3d(
-                (startNode.X + endNode.X) / 2.0,
-                (startNode.Y + endNode.Y) / 2.0,
-                (startNode.Z + endNode.Z) / 2.0
+            return new Point3d((startNode.X + endNode.X) / 2.0, (startNode.Y + endNode.Y) / 2.0, (startNode.Z + endNode.Z) / 2.0
             );
+        }
+
+        internal static Point3d GetSlabTagPosition(string idOrder, StbSlabOffset[] offsets, IEnumerable<StbNode> nodes)
+        {
+            string[] nodeIds = idOrder.Split(' ');
+            var pts = new Point3d[nodeIds.Length];
+            for (int i = 0; i < nodeIds.Length; i++)
+            {
+                string nodeId = nodeIds[i];
+                StbNode node = nodes.First(n => n.id == nodeId);
+                var offsetVec = new Vector3d();
+                if (offsets != null)
+                {
+                    foreach (var offset in offsets.Where(offset => nodeId == offset.id_node))
+                    {
+                        offsetVec = new Vector3d(offset.offset_X, offset.offset_Y, offset.offset_Z);
+                    }
+                }
+                pts[i] = new Point3d(node.X, node.Y, node.Z) + offsetVec;
+            }
+
+            return new Point3d(pts.Average(n => n.X), pts.Average(n => n.Y), pts.Average(n => n.Z));
+        }
+
+        internal static Point3d GetWallTagPosition(string idOrder, StbWallOffset[] offsets, IEnumerable<StbNode> nodes)
+        {
+            string[] nodeIds = idOrder.Split(' ');
+            var pts = new Point3d[nodeIds.Length];
+            for (int i = 0; i < nodeIds.Length; i++)
+            {
+                string nodeId = nodeIds[i];
+                StbNode node = nodes.First(n => n.id == nodeId);
+                var offsetVec = new Vector3d();
+                if (offsets != null)
+                {
+                    foreach (var offset in offsets.Where(offset => nodeId == offset.id_node))
+                    {
+                        offsetVec = new Vector3d(offset.offset_X, offset.offset_Y, offset.offset_Z);
+                    }
+                }
+                pts[i] = new Point3d(node.X, node.Y, node.Z) + offsetVec;
+            }
+
+            return new Point3d(pts.Average(n => n.X), pts.Average(n => n.Y), pts.Average(n => n.Z));
         }
 
         internal static IEnumerable<GH_String> GetBeamRcSection(object rcFigure, string strength)
@@ -218,7 +259,23 @@ namespace HoaryFox.Component.Utils
             return ghSecString;
         }
 
-        internal static IEnumerable<GH_String> GetWallSection(StbSecWall_RC_Straight figure, string strength)
+        internal static IEnumerable<GH_String> GetSlabDeckSection(StbSecSlabDeckStraight figure, string strength)
+        {
+            var ghSecString = new GH_Structure<GH_String>();
+            ghSecString.Append(new GH_String("t=" + figure.depth + "(" + strength + ")"));
+
+            return ghSecString;
+        }
+
+        internal static IEnumerable<GH_String> GetSlabPrecastSection(StbSecSlabPrecastPrecast_type type, StbSecProductSlabPrecast figure, string strength)
+        {
+            var ghSecString = new GH_Structure<GH_String>();
+            ghSecString.Append(new GH_String("t=" + figure.depth + "(" + strength + ", type:" + type + ")"));
+
+            return ghSecString;
+        }
+
+        internal static IEnumerable<GH_String> GetWallRcSection(StbSecWall_RC_Straight figure, string strength)
         {
             var ghSecString = new GH_Structure<GH_String>();
             ghSecString.Append(new GH_String("t=" + figure.t + "(" + strength + ")"));
@@ -369,7 +426,7 @@ namespace HoaryFox.Component.Utils
                     break;
                 case "StbWall": // RC しかない
                     StbSecWall_RC wallRc = sections.StbSecWall_RC.First(sec => sec.id == pDict["id_section"]);
-                    sectionInfo = GetWallSection(wallRc.StbSecFigureWall_RC.StbSecWall_RC_Straight, wallRc.strength_concrete).ToList();
+                    sectionInfo = GetWallRcSection(wallRc.StbSecFigureWall_RC.StbSecWall_RC_Straight, wallRc.strength_concrete).ToList();
                     break;
             }
 

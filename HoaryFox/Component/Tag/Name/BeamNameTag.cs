@@ -17,6 +17,8 @@ namespace HoaryFox.Component.Tag.Name
         private readonly List<Point3d> _framePos = new List<Point3d>();
 
         public override bool IsPreviewCapable => true;
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
+
         public BeamNameTag()
           : base("Beam Name Tag", "BeamTag",
               "Display Beam Name Tag",
@@ -55,7 +57,7 @@ namespace HoaryFox.Component.Tag.Name
 
                 string idNodeStart = beam.id_node_start;
                 string idNodeEnd = beam.id_node_end;
-                _framePos.Add(TagUtils.GetTagPosition(idNodeStart, idNodeEnd, nodes));
+                _framePos.Add(TagUtils.GetFrameTagPosition(idNodeStart, idNodeEnd, nodes));
             }
             dataAccess.SetDataList(0, _frameName);
         }

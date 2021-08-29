@@ -18,6 +18,8 @@ namespace HoaryFox.Component.Geometry
         private List<Point3d> _nodes = new List<Point3d>();
         private readonly List<List<Line>> _lineList = new List<List<Line>>();
 
+        public override GH_Exposure Exposure => GH_Exposure.primary;
+
         public Stb2Line()
           : base("Stb to Line", "S2L",
               "Display ST-Bridge model in line",

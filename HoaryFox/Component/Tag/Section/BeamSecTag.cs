@@ -18,6 +18,7 @@ namespace HoaryFox.Component.Tag.Section
         private int _size;
         private GH_Structure<GH_String> _frameTags = new GH_Structure<GH_String>();
         private List<Point3d> _tagPos = new List<Point3d>();
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
 
         public BeamSecTag()
           : base("Beam Section Tag", "BeamSec",
@@ -105,7 +106,7 @@ namespace HoaryFox.Component.Tag.Section
 
         private static List<Point3d> GetTagPosition(IEnumerable<StbBeam> beams, IEnumerable<StbNode> nodes)
         {
-            return beams.Select(beam => TagUtils.GetTagPosition(beam.id_node_start, beam.id_node_end, nodes)).ToList();
+            return beams.Select(beam => TagUtils.GetFrameTagPosition(beam.id_node_start, beam.id_node_end, nodes)).ToList();
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)

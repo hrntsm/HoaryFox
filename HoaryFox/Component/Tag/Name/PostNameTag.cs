@@ -17,6 +17,8 @@ namespace HoaryFox.Component.Tag.Name
         private readonly List<Point3d> _framePos = new List<Point3d>();
 
         public override bool IsPreviewCapable => true;
+        public override GH_Exposure Exposure => GH_Exposure.primary;
+
         public PostNameTag()
           : base("Post Name Tag", "PostTag",
               "Display Post Name Tag",
@@ -55,7 +57,7 @@ namespace HoaryFox.Component.Tag.Name
 
                 string idNodeStart = post.id_node_bottom;
                 string idNodeEnd = post.id_node_top;
-                _framePos.Add(TagUtils.GetTagPosition(idNodeStart, idNodeEnd, nodes));
+                _framePos.Add(TagUtils.GetFrameTagPosition(idNodeStart, idNodeEnd, nodes));
             }
             dataAccess.SetDataList(0, _frameName);
         }

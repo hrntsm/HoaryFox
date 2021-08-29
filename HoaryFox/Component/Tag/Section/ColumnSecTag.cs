@@ -18,6 +18,8 @@ namespace HoaryFox.Component.Tag.Section
         private int _size;
         private GH_Structure<GH_String> _frameTags = new GH_Structure<GH_String>();
         private List<Point3d> _tagPos = new List<Point3d>();
+        public override GH_Exposure Exposure => GH_Exposure.primary;
+
 
         public ColumnSecTag()
           : base("Column Section Tag", "ColumnSec",
@@ -100,7 +102,7 @@ namespace HoaryFox.Component.Tag.Section
 
         private static List<Point3d> GetTagPosition(IEnumerable<StbColumn> columns, IEnumerable<StbNode> nodes)
         {
-            return columns.Select(beam => TagUtils.GetTagPosition(beam.id_node_bottom, beam.id_node_top, nodes)).ToList();
+            return columns.Select(beam => TagUtils.GetFrameTagPosition(beam.id_node_bottom, beam.id_node_top, nodes)).ToList();
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)

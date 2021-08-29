@@ -18,6 +18,7 @@ namespace HoaryFox.Component.Tag.Section
         private int _size;
         private GH_Structure<GH_String> _frameTags = new GH_Structure<GH_String>();
         private List<Point3d> _tagPos = new List<Point3d>();
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
 
         public GirderSecTag()
           : base("Girder Section Tag", "GirderSec",
@@ -105,7 +106,7 @@ namespace HoaryFox.Component.Tag.Section
 
         private static List<Point3d> GetTagPosition(IEnumerable<StbGirder> girders, IEnumerable<StbNode> nodes)
         {
-            return girders.Select(girder => TagUtils.GetTagPosition(girder.id_node_start, girder.id_node_end, nodes)).ToList();
+            return girders.Select(girder => TagUtils.GetFrameTagPosition(girder.id_node_start, girder.id_node_end, nodes)).ToList();
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
