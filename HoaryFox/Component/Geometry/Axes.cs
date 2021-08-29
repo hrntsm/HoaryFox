@@ -21,6 +21,8 @@ namespace HoaryFox.Component.Geometry
         private readonly List<string> _storyStr = new List<string>();
 
         public override bool IsPreviewCapable => true;
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
+
         public Axis()
           : base("Axis", "Axis",
               "Description",

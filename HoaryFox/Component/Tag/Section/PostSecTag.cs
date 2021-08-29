@@ -18,6 +18,7 @@ namespace HoaryFox.Component.Tag.Section
         private int _size;
         private GH_Structure<GH_String> _frameTags = new GH_Structure<GH_String>();
         private List<Point3d> _tagPos = new List<Point3d>();
+        public override GH_Exposure Exposure => GH_Exposure.primary;
 
         public PostSecTag()
           : base("Post Section Tag", "PostSec",

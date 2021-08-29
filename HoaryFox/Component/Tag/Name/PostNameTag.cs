@@ -17,6 +17,8 @@ namespace HoaryFox.Component.Tag.Name
         private readonly List<Point3d> _framePos = new List<Point3d>();
 
         public override bool IsPreviewCapable => true;
+        public override GH_Exposure Exposure => GH_Exposure.primary;
+
         public PostNameTag()
           : base("Post Name Tag", "PostTag",
               "Display Post Name Tag",

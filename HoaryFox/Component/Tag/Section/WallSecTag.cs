@@ -19,6 +19,8 @@ namespace HoaryFox.Component.Tag.Section
         private GH_Structure<GH_String> _plateTags = new GH_Structure<GH_String>();
         private List<Point3d> _tagPos = new List<Point3d>();
 
+        public override GH_Exposure Exposure => GH_Exposure.quarternary;
+
         public WallSecTag()
           : base("Wall Section Tag", "WallSec",
               "Display Wall Section Tag",

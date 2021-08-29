@@ -18,6 +18,8 @@ namespace HoaryFox.Component.Tag.Name
         private readonly List<Point3d> _platePos = new List<Point3d>();
 
         public override bool IsPreviewCapable => true;
+        public override GH_Exposure Exposure => GH_Exposure.quarternary;
+
         public WallNameTag()
           : base("Wall Name Tag", "WallTag",
               "Display Wall Name Tag",

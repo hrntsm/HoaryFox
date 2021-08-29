@@ -17,6 +17,8 @@ namespace HoaryFox.Component.Geometry
         private ST_BRIDGE _stBridge;
         private readonly List<List<Brep>> _brepList = new List<List<Brep>>();
 
+        public override GH_Exposure Exposure => GH_Exposure.primary;
+
         public Stb2Brep()
           : base("Stb to Brep", "S2B",
               "Display ST-Bridge model in Brep",
