@@ -268,33 +268,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 Brep loftBrep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0];
                 Brep capedBrep = loftBrep.CapPlanarHoles(_tolerance[0]);
 
-                if (capedBrep == null)
-                {
-                    var nonPlanarBrep = new List<Brep>();
-                    var topBrep = Brep.CreatePatch(new[] { curveList[0] }, 5, 5, _tolerance[0]);
-                    nonPlanarBrep.Add(topBrep);
-
-                    BrepFace face = topBrep.Faces[0];
-                    Vector3d faceNormal = face.NormalAt(face.Domain(0).Mid, face.Domain(1).Mid);
-                    if (Vector3d.VectorAngle(faceNormal, Vector3d.ZAxis) < Vector3d.VectorAngle(faceNormal, -Vector3d.ZAxis))
-                    {
-                        faceNormal = -faceNormal;
-                    }
-
-                    Brep bottomBrep = topBrep.DuplicateBrep();
-                    bottomBrep.Translate(faceNormal * depth);
-                    nonPlanarBrep.Add(bottomBrep);
-
-                    IEnumerable<Curve> edgeCurveList = topBrep.Edges.Select(edge => edge.DuplicateCurve());
-                    nonPlanarBrep.AddRange(edgeCurveList.Select(edgeCurve =>
-                        Surface.CreateExtrusion(edgeCurve, faceNormal * depth).ToBrep()));
-
-                    brepList.Add(Brep.JoinBreps(nonPlanarBrep, _tolerance[0])[0] ?? topBrep);
-                }
-                else
-                {
-                    brepList.Add(capedBrep);
-                }
+                brepList.Add(capedBrep ?? NonPlanarBrep(depth, curveList));
             }
             else
             {
@@ -303,6 +277,29 @@ namespace HoaryFox.Component.Utils.Geometry
                     ? planarBrep[0]
                     : Brep.CreatePatch(new[] { curveList[0] }, 5, 5, _tolerance[0]));
             }
+        }
+
+        private Brep NonPlanarBrep(double depth, IList<PolylineCurve> curveList)
+        {
+            var nonPlanarBrep = new List<Brep>();
+            var topBrep = Brep.CreatePatch(new[] { curveList[0] }, 5, 5, _tolerance[0]);
+            nonPlanarBrep.Add(topBrep);
+
+            BrepFace face = topBrep.Faces[0];
+            Vector3d faceNormal = face.NormalAt(face.Domain(0).Mid, face.Domain(1).Mid);
+            if (Vector3d.VectorAngle(faceNormal, Vector3d.ZAxis) < Vector3d.VectorAngle(faceNormal, -Vector3d.ZAxis))
+            {
+                faceNormal = -faceNormal;
+            }
+
+            Brep bottomBrep = topBrep.DuplicateBrep();
+            bottomBrep.Translate(faceNormal * depth);
+            nonPlanarBrep.Add(bottomBrep);
+
+            IEnumerable<Curve> edgeCurveList = topBrep.Edges.Select(edge => edge.DuplicateCurve());
+            nonPlanarBrep.AddRange(edgeCurveList.Select(edgeCurve =>
+                Surface.CreateExtrusion(edgeCurve, faceNormal * depth).ToBrep()));
+            return Brep.JoinBreps(nonPlanarBrep, _tolerance[0])[0] ?? topBrep;
         }
 
         public List<Brep> Wall(IEnumerable<StbWall> walls)
