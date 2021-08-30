@@ -116,6 +116,12 @@ module.exports = {
       ],
       copyright: `Copyright © ${new Date().getFullYear()} hrntsm, Inc. Built with Docusaurus.`,
     },
+    //TODO: ADD key
+    algolia: {
+      apiKey: 'YOUR_API_KEY',
+      indexName: 'YOUR_INDEX_NAME',
+      contextualSearch: true,
+    },
   },
   presets: [
     [
