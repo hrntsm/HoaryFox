@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
 using HoaryFox.Component.Utils.Geometry;
 using HoaryFox.Properties;
 using Rhino;
@@ -16,7 +18,7 @@ namespace HoaryFox.Component.Geometry
     {
         private ST_BRIDGE _stBridge;
         private List<Point3d> _nodes = new List<Point3d>();
-        private readonly List<List<Line>> _lineList = new List<List<Line>>();
+        private readonly GH_Structure<GH_Line>[] _lineList = new GH_Structure<GH_Line>[5];
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
@@ -25,12 +27,6 @@ namespace HoaryFox.Component.Geometry
               "Display ST-Bridge model in line",
               "HoaryFox", "Geometry")
         {
-        }
-
-        public override void ClearData()
-        {
-            base.ClearData();
-            _lineList.Clear();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -42,11 +38,11 @@ namespace HoaryFox.Component.Geometry
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddPointParameter("Nodes", "pt", "output StbNodes to point3d", GH_ParamAccess.list);
-            pManager.AddLineParameter("Columns", "Col", "output StbColumns to Line", GH_ParamAccess.list);
-            pManager.AddLineParameter("Girders", "Gird", "output StbGirders to Line", GH_ParamAccess.list);
-            pManager.AddLineParameter("Posts", "Pst", "output StbPosts to Line", GH_ParamAccess.list);
-            pManager.AddLineParameter("Beams", "Beam", "output StbBeams to Line", GH_ParamAccess.list);
-            pManager.AddLineParameter("Braces", "Brc", "output StbBraces to Line", GH_ParamAccess.list);
+            pManager.AddLineParameter("Columns", "Col", "output StbColumns to Line", GH_ParamAccess.tree);
+            pManager.AddLineParameter("Girders", "Gird", "output StbGirders to Line", GH_ParamAccess.tree);
+            pManager.AddLineParameter("Posts", "Pst", "output StbPosts to Line", GH_ParamAccess.tree);
+            pManager.AddLineParameter("Beams", "Beam", "output StbBeams to Line", GH_ParamAccess.tree);
+            pManager.AddLineParameter("Braces", "Brc", "output StbBraces to Line", GH_ParamAccess.tree);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
@@ -62,9 +58,9 @@ namespace HoaryFox.Component.Geometry
             }
 
             dataAccess.SetDataList(0, _nodes);
-            foreach ((List<Line> geometry, int i) in _lineList.Select((geo, index) => (geo, index + 1)))
+            foreach ((GH_Structure<GH_Line> geometry, int i) in _lineList.Select((geo, index) => (geo, index + 1)))
             {
-                dataAccess.SetDataList(i, geometry);
+                dataAccess.SetDataTree(i, geometry);
             }
         }
 
@@ -77,18 +73,18 @@ namespace HoaryFox.Component.Geometry
 
             Dictionary<string, string>[][] infoArray = Utils.TagUtils.GetAllSectionInfoArray(_stBridge.StbModel.StbMembers, _stBridge.StbModel.StbSections);
 
-            foreach ((List<Line> lines, int index) in _lineList.Select((frameBrep, index) => (frameBrep, index)))
+            foreach ((GH_Structure<GH_Line> lines, int i) in _lineList.Select((frameBrep, index) => (frameBrep, index)))
             {
-                Layer parentLayer = activeDoc.Layers.FindName(parentLayerNames[index]);
+                Layer parentLayer = activeDoc.Layers.FindName(parentLayerNames[i]);
                 int parentIndex = parentLayer.Index;
                 Guid parentId = parentLayer.Id;
-                foreach ((Line line, int bIndex) in lines.Select((brep, bIndex) => (brep, bIndex)))
+                foreach ((Line line, int bIndex) in lines.Select((geometry, bIndex) => (geometry.Value, bIndex)))
                 {
                     var objAttr = new ObjectAttributes();
 
-                    if (index < 5)
+                    if (i < 5)
                     {
-                        Dictionary<string, string>[] infos = infoArray[index];
+                        Dictionary<string, string>[] infos = infoArray[i];
                         Dictionary<string, string> info = infos[bIndex];
 
                         foreach (KeyValuePair<string, string> pair in info)
@@ -96,7 +92,7 @@ namespace HoaryFox.Component.Geometry
                             objAttr.SetUserString(pair.Key, pair.Value);
                         }
 
-                        var layer = new Layer { Name = info["name"], ParentLayerId = parentId, Color = layerColors[index] };
+                        var layer = new Layer { Name = info["name"], ParentLayerId = parentId, Color = layerColors[i] };
                         int layerIndex = activeDoc.Layers.Add(layer);
                         if (layerIndex == -1)
                         {
@@ -119,11 +115,11 @@ namespace HoaryFox.Component.Geometry
         {
             var createLines = new CreateLineFromStb(_stBridge);
             _nodes = createLines.Nodes();
-            _lineList.Add(createLines.Columns());
-            _lineList.Add(createLines.Girders());
-            _lineList.Add(createLines.Posts());
-            _lineList.Add(createLines.Beams());
-            _lineList.Add(createLines.Braces());
+            _lineList[0] = createLines.Columns();
+            _lineList[1] = createLines.Girders();
+            _lineList[2] = createLines.Posts();
+            _lineList[3] = createLines.Beams();
+            _lineList[4] = createLines.Braces();
         }
 
         protected override Bitmap Icon => Resource.Line;
