@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
 using HoaryFox.Component.Utils.Geometry;
 using HoaryFox.Properties;
 using Rhino;
@@ -15,7 +17,7 @@ namespace HoaryFox.Component.Geometry
     public class Stb2Brep : GH_Component
     {
         private ST_BRIDGE _stBridge;
-        private readonly List<List<Brep>> _brepList = new List<List<Brep>>();
+        private readonly GH_Structure<GH_Brep>[] _brepList = new GH_Structure<GH_Brep>[7];
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
@@ -29,7 +31,6 @@ namespace HoaryFox.Component.Geometry
         public override void ClearData()
         {
             base.ClearData();
-            _brepList.Clear();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -40,13 +41,13 @@ namespace HoaryFox.Component.Geometry
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddBrepParameter("Columns", "Col", "output StbColumns to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Girders", "Gird", "output StbGirders to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Posts", "Pst", "output StbPosts to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Beams", "Bm", "output StbBeams to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Braces", "Brc", "output StbBraces to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Slabs", "Slb", "output StbSlabs to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Walls", "Wl", "output StbWalls to Brep", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Columns", "Col", "output StbColumns to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Girders", "Gird", "output StbGirders to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Posts", "Pst", "output StbPosts to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Beams", "Bm", "output StbBeams to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Braces", "Brc", "output StbBraces to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Slabs", "Slb", "output StbSlabs to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Walls", "Wl", "output StbWalls to Brep", GH_ParamAccess.tree);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
@@ -63,7 +64,7 @@ namespace HoaryFox.Component.Geometry
 
             for (var i = 0; i < 7; i++)
             {
-                dataAccess.SetDataList(i, _brepList[i]);
+                dataAccess.SetDataTree(i, _brepList[i]);
             }
         }
 
@@ -74,13 +75,13 @@ namespace HoaryFox.Component.Geometry
         {
             StbMembers member = _stBridge.StbModel.StbMembers;
             var brepFromStb = new CreateMemberBrepListFromStb(_stBridge.StbModel.StbSections, _stBridge.StbModel.StbNodes, new[] { DocumentTolerance(), DocumentAngleTolerance() });
-            _brepList.Add(brepFromStb.Column(member.StbColumns));
-            _brepList.Add(brepFromStb.Girder(member.StbGirders));
-            _brepList.Add(brepFromStb.Post(member.StbPosts));
-            _brepList.Add(brepFromStb.Beam(member.StbBeams));
-            _brepList.Add(brepFromStb.Brace(member.StbBraces));
-            _brepList.Add(brepFromStb.Slab(member.StbSlabs));
-            _brepList.Add(brepFromStb.Wall(member.StbWalls));
+            _brepList[0] = brepFromStb.Column(member.StbColumns);
+            _brepList[1] = brepFromStb.Girder(member.StbGirders);
+            _brepList[2] = brepFromStb.Post(member.StbPosts);
+            _brepList[3] = brepFromStb.Beam(member.StbBeams);
+            _brepList[4] = brepFromStb.Brace(member.StbBraces);
+            _brepList[5] = brepFromStb.Slab(member.StbSlabs);
+            _brepList[6] = brepFromStb.Wall(member.StbWalls);
         }
 
         private void BakeBrep()
@@ -92,15 +93,15 @@ namespace HoaryFox.Component.Geometry
 
             Dictionary<string, string>[][] infoArray = Utils.TagUtils.GetAllSectionInfoArray(_stBridge.StbModel.StbMembers, _stBridge.StbModel.StbSections);
 
-            foreach ((List<Brep> breps, int index) in _brepList.Select((frameBrep, index) => (frameBrep, index)))
+            foreach ((GH_Structure<GH_Brep> breps, int i) in _brepList.Select((frameBrep, index) => (frameBrep, index)))
             {
-                Layer parentLayer = activeDoc.Layers.FindName(parentLayerNames[index]);
+                Layer parentLayer = activeDoc.Layers.FindName(parentLayerNames[i]);
                 Guid parentId = parentLayer.Id;
-                foreach ((Brep brep, int bIndex) in breps.Select((brep, bIndex) => (brep, bIndex)))
+                foreach ((Brep brep, int bIndex) in breps.Select((brep, bIndex) => (brep.Value, bIndex)))
                 {
                     var objAttr = new ObjectAttributes();
 
-                    Dictionary<string, string>[] infos = infoArray[index];
+                    Dictionary<string, string>[] infos = infoArray[i];
                     Dictionary<string, string> info = infos[bIndex];
 
                     foreach (KeyValuePair<string, string> pair in info)
@@ -108,7 +109,7 @@ namespace HoaryFox.Component.Geometry
                         objAttr.SetUserString(pair.Key, pair.Value);
                     }
 
-                    var layer = new Layer { Name = info["name"], ParentLayerId = parentId, Color = layerColors[index] };
+                    var layer = new Layer { Name = info["name"], ParentLayerId = parentId, Color = layerColors[i] };
                     int layerIndex = activeDoc.Layers.Add(layer);
                     if (layerIndex == -1)
                     {

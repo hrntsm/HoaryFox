@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using STBDotNet.v202;
 
@@ -18,15 +20,15 @@ namespace HoaryFox.Component.Utils.Geometry
             _sections = sections;
         }
 
-        public List<Brep> Column(IEnumerable<StbColumn> columns)
+        public GH_Structure<GH_Brep> Column(IEnumerable<StbColumn> columns)
         {
-            var brepList = new List<Brep>();
+            var brepList = new GH_Structure<GH_Brep>();
             if (columns == null)
             {
                 return brepList;
             }
 
-            foreach (StbColumn column in columns)
+            foreach ((StbColumn column, int i) in columns.Select((column, index) => (column, index)))
             {
                 StbColumnKind_structure kind = column.kind_structure;
 
@@ -52,21 +54,21 @@ namespace HoaryFox.Component.Utils.Geometry
                 sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * column.joint_top;
 
                 var brepMaker = new BrepMaker.Column(_sections, _tolerance);
-                brepList.Add(brepMaker.CreateColumnBrep(column.id_section, column.rotate, kind, sectionPoints, memberAxis));
+                brepList.Append(new GH_Brep(brepMaker.CreateColumnBrep(column.id_section, column.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
             }
 
             return brepList;
         }
 
-        public List<Brep> Post(IEnumerable<StbPost> posts)
+        public GH_Structure<GH_Brep> Post(IEnumerable<StbPost> posts)
         {
-            var brepList = new List<Brep>();
+            var brepList = new GH_Structure<GH_Brep>();
             if (posts == null)
             {
                 return brepList;
             }
 
-            foreach (StbPost post in posts)
+            foreach ((StbPost post, int i) in posts.Select((post, index) => (post, index)))
             {
                 StbColumnKind_structure kind = post.kind_structure;
 
@@ -92,21 +94,21 @@ namespace HoaryFox.Component.Utils.Geometry
                 sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * post.joint_top;
 
                 var brepMaker = new BrepMaker.Column(_sections, _tolerance);
-                brepList.Add(brepMaker.CreateColumnBrep(post.id_section, post.rotate, kind, sectionPoints, memberAxis));
+                brepList.Append(new GH_Brep(brepMaker.CreateColumnBrep(post.id_section, post.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
             }
 
             return brepList;
         }
 
-        public List<Brep> Girder(IEnumerable<StbGirder> girders)
+        public GH_Structure<GH_Brep> Girder(IEnumerable<StbGirder> girders)
         {
-            var brepList = new List<Brep>();
+            var brepList = new GH_Structure<GH_Brep>();
             if (girders == null)
             {
                 return brepList;
             }
 
-            foreach (StbGirder girder in girders)
+            foreach ((StbGirder girder, int i) in girders.Select((girder, index) => (girder, index)))
             {
                 StbGirderKind_structure kind = girder.kind_structure;
 
@@ -132,21 +134,21 @@ namespace HoaryFox.Component.Utils.Geometry
                 sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * girder.joint_end;
 
                 var brepMaker = new BrepMaker.Girder(_sections, _tolerance);
-                brepList.Add(brepMaker.CreateGirderBrep(girder.id_section, girder.rotate, kind, sectionPoints, memberAxis));
+                brepList.Append(new GH_Brep(brepMaker.CreateGirderBrep(girder.id_section, girder.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
             }
 
             return brepList;
         }
 
-        public List<Brep> Beam(IEnumerable<StbBeam> beams)
+        public GH_Structure<GH_Brep> Beam(IEnumerable<StbBeam> beams)
         {
-            var brepList = new List<Brep>();
+            var brepList = new GH_Structure<GH_Brep>();
             if (beams == null)
             {
                 return brepList;
             }
 
-            foreach (StbBeam beam in beams)
+            foreach ((StbBeam beam, int i) in beams.Select((beam, index) => (beam, index)))
             {
                 StbGirderKind_structure kind = beam.kind_structure;
 
@@ -172,21 +174,21 @@ namespace HoaryFox.Component.Utils.Geometry
                 sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * beam.joint_end;
 
                 var brepMaker = new BrepMaker.Girder(_sections, _tolerance);
-                brepList.Add(brepMaker.CreateGirderBrep(beam.id_section, beam.rotate, kind, sectionPoints, memberAxis));
+                brepList.Append(new GH_Brep(brepMaker.CreateGirderBrep(beam.id_section, beam.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
             }
 
             return brepList;
         }
 
-        public List<Brep> Brace(IEnumerable<StbBrace> braces)
+        public GH_Structure<GH_Brep> Brace(IEnumerable<StbBrace> braces)
         {
-            var brepList = new List<Brep>();
+            var brepList = new GH_Structure<GH_Brep>();
             if (braces == null)
             {
                 return brepList;
             }
 
-            foreach (StbBrace brace in braces)
+            foreach ((StbBrace brace, int i) in braces.Select((brace, index) => (brace, index)))
             {
                 StbBraceKind_structure kind = brace.kind_structure;
 
@@ -212,21 +214,21 @@ namespace HoaryFox.Component.Utils.Geometry
                 sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * brace.joint_end;
 
                 var brepMaker = new BrepMaker.Brace(_sections, _tolerance);
-                brepList.Add(brepMaker.CreateBraceBrep(brace.id_section, brace.rotate, kind, sectionPoints, memberAxis));
+                brepList.Append(new GH_Brep(brepMaker.CreateBraceBrep(brace.id_section, brace.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
             }
 
             return brepList;
         }
 
-        public List<Brep> Slab(IEnumerable<StbSlab> slabs)
+        public GH_Structure<GH_Brep> Slab(IEnumerable<StbSlab> slabs)
         {
-            var brepList = new List<Brep>();
+            var brepList = new GH_Structure<GH_Brep>();
             if (slabs == null)
             {
                 return brepList;
             }
 
-            foreach (StbSlab slab in slabs)
+            foreach ((StbSlab slab, int i) in slabs.Select((slab, index) => (slab, index)))
             {
                 StbSlabOffset[] offsets = slab.StbSlabOffsetList;
                 var curveList = new PolylineCurve[2];
@@ -253,13 +255,13 @@ namespace HoaryFox.Component.Utils.Geometry
 
                 topPts.Add(topPts[0]);
                 curveList[0] = new PolylineCurve(topPts);
-                CreateSlabBrep(depth, curveList, topPts, brepList);
+                brepList.Append(CreateSlabBrep(depth, curveList, topPts), new GH_Path(0, i));
             }
 
             return brepList;
         }
 
-        private void CreateSlabBrep(double depth, IList<PolylineCurve> curveList, IEnumerable<Point3d> topPts, ICollection<Brep> brepList)
+        private GH_Brep CreateSlabBrep(double depth, IList<PolylineCurve> curveList, IEnumerable<Point3d> topPts)
         {
             if (depth > 0)
             {
@@ -268,18 +270,18 @@ namespace HoaryFox.Component.Utils.Geometry
                 Brep loftBrep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0];
                 Brep capedBrep = loftBrep.CapPlanarHoles(_tolerance[0]);
 
-                brepList.Add(capedBrep ?? NonPlanarBrep(depth, curveList));
+                return capedBrep == null ? NonPlanarBrep(depth, curveList) : new GH_Brep(capedBrep);
             }
             else
             {
                 Brep[] planarBrep = Brep.CreatePlanarBreps(new[] { curveList[0] }, _tolerance[0]);
-                brepList.Add(planarBrep != null
+                return new GH_Brep(planarBrep != null
                     ? planarBrep[0]
                     : Brep.CreatePatch(new[] { curveList[0] }, 5, 5, _tolerance[0]));
             }
         }
 
-        private Brep NonPlanarBrep(double depth, IList<PolylineCurve> curveList)
+        private GH_Brep NonPlanarBrep(double depth, IList<PolylineCurve> curveList)
         {
             var nonPlanarBrep = new List<Brep>();
             var topBrep = Brep.CreatePatch(new[] { curveList[0] }, 5, 5, _tolerance[0]);
@@ -299,18 +301,18 @@ namespace HoaryFox.Component.Utils.Geometry
             IEnumerable<Curve> edgeCurveList = topBrep.Edges.Select(edge => edge.DuplicateCurve());
             nonPlanarBrep.AddRange(edgeCurveList.Select(edgeCurve =>
                 Surface.CreateExtrusion(edgeCurve, faceNormal * depth).ToBrep()));
-            return Brep.JoinBreps(nonPlanarBrep, _tolerance[0])[0] ?? topBrep;
+            return new GH_Brep(Brep.JoinBreps(nonPlanarBrep, _tolerance[0])[0] ?? topBrep);
         }
 
-        public List<Brep> Wall(IEnumerable<StbWall> walls)
+        public GH_Structure<GH_Brep> Wall(IEnumerable<StbWall> walls)
         {
-            var brepList = new List<Brep>();
+            var brepList = new GH_Structure<GH_Brep>();
             if (walls == null)
             {
                 return brepList;
             }
 
-            foreach (StbWall wall in walls)
+            foreach ((StbWall wall, int i) in walls.Select((wall, index) => (wall, index)))
             {
                 StbWallOffset[] offsets = wall.StbWallOffsetList;
                 var curveList = new PolylineCurve[2];
@@ -341,8 +343,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 Vector3d normal = Vector3d.CrossProduct(centerCurve.TangentAtEnd, centerCurve.TangentAtStart);
                 curveList[0] = new PolylineCurve(topPts.Select(pt => pt + normal * thickness / 2));
                 curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * thickness / 2));
-                brepList.Add(Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
-                    .CapPlanarHoles(_tolerance[0]));
+                brepList.Append(new GH_Brep(Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0].CapPlanarHoles(_tolerance[0])), new GH_Path(0, i));
             }
 
             return brepList;
