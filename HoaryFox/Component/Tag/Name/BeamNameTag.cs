@@ -70,7 +70,7 @@ namespace HoaryFox.Component.Tag.Name
             }
         }
 
-        protected override System.Drawing.Bitmap Icon => Properties.Resource.BeamName;
+        protected override Bitmap Icon => Properties.Resource.BeamName;
 
         public override Guid ComponentGuid => new Guid("FDC62C6D-7C03-412D-8FF8-B76439197730");
     }
