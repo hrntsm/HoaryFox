@@ -78,6 +78,10 @@ module.exports = {
           title: 'Docs',
           items: [
             {
+              label: 'License',
+              to: 'docs/License/MIT_License',
+            },
+            {
               label: 'Component',
               to: 'docs/Component/Geometry',
             },
