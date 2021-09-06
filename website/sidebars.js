@@ -1,11 +1,7 @@
 module.exports = {
-  someSidebar: {
-    Component: [
-      'Component/Geometry',
-      'Component/IO', 
-      'Component/NameTag', 
-      'Component/SectionTag', 
-      'Component/StbBuilder'
+  Sidebar: {
+    License: [
+      'License/MIT_License'
     ],
     Usage: [
       'Usage/HowToInstall', 
@@ -13,6 +9,13 @@ module.exports = {
       'Usage/ConvertToKaramba', 
       'Usage/ExportSTB',
       'Usage/BakeGeometry'
+    ],
+    Component: [
+      'Component/Geometry',
+      'Component/IO', 
+      'Component/NameTag', 
+      'Component/SectionTag', 
+      'Component/StbBuilder'
     ],
   },
 };
