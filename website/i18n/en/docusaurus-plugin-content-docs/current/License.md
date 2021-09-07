@@ -1,6 +1,6 @@
 ---
-id: MIT_License
-title: MIT License
+id: License
+title: License
 ---
 
 HoaryFox is released under MIT license.  
