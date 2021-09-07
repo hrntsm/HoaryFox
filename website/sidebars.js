@@ -1,7 +1,6 @@
 module.exports = {
   Sidebar: [
     'License',
-    'Changelog',
     {
       type: 'category',
       label: 'Getting Start',
@@ -25,5 +24,6 @@ module.exports = {
         'Component/StbBuilder',
       ]
     },
+    'Changelog',
   ],
 };
