@@ -21,6 +21,7 @@ module.exports = {
     }
   },
   themeConfig: {
+    hideableSidebar: true,
     image: `img/HFicon.png`,
     metadates: [
       {
