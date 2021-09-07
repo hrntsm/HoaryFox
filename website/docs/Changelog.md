@@ -26,11 +26,11 @@ title: Changelog
 
 ### 修正
 
-- Stb から Karamba3D への変換で、材料の単位が間違っていたものを修正
+- ST-Bridge から Karamba3D への変換で、材料の単位が間違っていたものを修正
 
 ### 変更
 
-- Stb から Karamba3D への変換で、RC の断面名を「Id + 数字」から、「BD- や CD- + 断面サイズ」の表現とした
+- ST-Bridge から Karamba3D への変換で、RC の断面名を「Id + 数字」から、「BD- や CD- + 断面サイズ」の表現とした
   - 例えば BD-300x600 のような形式
 - FrameBuilder コンポーネントを FrameBuilder by angle コンポーネントと NodeBuilder コンポーネントに分けた
   - もともとは 45 度で柱と梁を区別していたが、この変更により入力した角度で区別するようにした
@@ -50,11 +50,11 @@ title: Changelog
 
 ### 追加
 
-- Stb への書き出しが可能になった
+- ST-Bridge への書き出しが可能になった
 
 ### その他
 
-- Stb を扱う部分を [STBDotNet](https://github.com/hrntsm/STBDotNet/tree/main) として分離したライブラリにし、保守性をあげた
+- ST-Bridge を扱う部分を [STBDotNet](https://github.com/hrntsm/STBDotNet/tree/main) として分離したライブラリにし、保守性をあげた
 
 ---
 
