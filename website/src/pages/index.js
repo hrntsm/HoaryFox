@@ -69,7 +69,7 @@ function Home() {
                 'button button--outline button--secondary button--lg',
                 styles.getStarted,
               )}
-              to={useBaseUrl('docs/License/MIT_License')}>
+              to={useBaseUrl('docs/License')}>
               Get Started
             </Link>
           </div>

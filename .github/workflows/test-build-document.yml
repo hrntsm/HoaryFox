@@ -1,0 +1,23 @@
+name: test build document site
+
+on:
+  push:
+    branches: [develop]
+    paths:
+      - "website/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    defaults:
+      run:
+        working-directory: website
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: git config
+      run: |
+        git config --global user.email "contact@hrntsm.com"
+        git config --global user.name "hrntsm"
+    - run: yarn install
+    - run: yarn build
