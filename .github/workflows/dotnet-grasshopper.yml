@@ -7,6 +7,8 @@ on:
       - "website/**"
   pull_request:
     branches: [main, develop]
+    paths-ignore:
+      - "website/**"
     
 jobs:
   build:

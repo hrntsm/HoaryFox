@@ -80,7 +80,7 @@ module.exports = {
           items: [
             {
               label: 'License',
-              to: 'docs/License/MIT_License',
+              to: 'docs/License',
             },
             {
               label: 'Component',
