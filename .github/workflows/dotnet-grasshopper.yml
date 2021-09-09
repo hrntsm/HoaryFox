@@ -52,18 +52,7 @@ jobs:
         run: |
           cp ./KarambaConnect/bin/Release/net48/KarambaConnect.gha ./HoaryFox/bin/Release/net48/KarambaConnect.gha
           cp ./Samples ./HoaryFox/bin/Release/net48/Samples -recurse
-
-      - name: README.md to pdf
-        if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
-        uses: 3rdJCG/mdtopdf-action@0.1.0
-        with:
-         root_file: README.md
-
-      - name: README(JP).md to pdf
-        if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
-        uses: 3rdJCG/mdtopdf-action@0.1.0
-        with:
-         root_file: README(JP).md
+          cp ./LICENSE ./HoaryFox/bin/Release/net48/LICENSE
 
       - name: Upload release build of plugin as artefact
         if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
@@ -75,6 +64,4 @@ jobs:
             ./HoaryFox/bin/Release/net48/KarambaConnect.gha
             ./HoaryFox/bin/Release/net48/STBDotNet.dll
             ./HoaryFox/bin/Release/net48/Samples/
-            ./LICENSE
-            ./README.pdf
-            ./README(JP).pdf
+            ./HoaryFox/bin/Release/net48/LICENSE
