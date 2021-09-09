@@ -55,13 +55,13 @@ jobs:
 
       - name: README.md to pdf
         if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
-        uses: 3rdJCG/mdtopdf-action
+        uses: 3rdJCG/mdtopdf-action@0.1.0
         with:
          root_file: README.md
 
       - name: README(JP).md to pdf
         if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
-        uses: 3rdJCG/mdtopdf-action
+        uses: 3rdJCG/mdtopdf-action@0.1.0
         with:
          root_file: README(JP).md
 
