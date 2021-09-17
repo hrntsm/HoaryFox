@@ -103,6 +103,10 @@ module.exports = {
               label: 'Twitter',
               href: 'https://twitter.com/hiron_rgkr',
             },
+            {
+              label: 'Discussion',
+              href: 'https://github.com/hrntsm/HoaryFox/discussions',
+            }
           ],
         },
         {
