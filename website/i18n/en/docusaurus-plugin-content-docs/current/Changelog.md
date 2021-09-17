@@ -5,7 +5,7 @@ title: Changelog
 
 ---
 
-## [v2.0.0 - 2021-00-00]()
+## [v2.0.0 - 2021-09-17](https://github.com/hrntsm/HoaryFox/releases/tag/v2.0.0)
 
 ### CHANGE
 
