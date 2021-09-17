@@ -65,6 +65,17 @@ Out? の値を True にするとファイルが出力されます。
 
 ---
 
+## Karamba3D を使った構造最適化を行ったモデルの出力
+
+本機能を使った Karamba3D との連携の参考に Samples のフォルダに以下のようなオフィスビルの構造最適化を行い、その結果を ST-Bridge で出力するデータ ExportOptimizedOfficeBuilding2STB.gh を入れています。  
+このデータで最適化した建物の ST-Bridge データは SampleBuilding.stb として Samples のフォルダに含まれています。
+
+最適化は Karamba3D のフル版の機能を使用するため、フリー版、トライアル版では試すことはできません。  
+
+![](../../images/ExportStb/OptimizedModel2STB.png)
+
+---
+
 ## 変換の仕様
 
 以下の仕様により ST-Bridge データの作成を行います。
