@@ -1,0 +1,11 @@
+{
+  "HoaryFox は簡単に建築構造向け BIM データ \"ST-Bridge\" を Grasshopper で扱えるように設計しています。": {
+    "message": "HoaryFox is designed to easily handle \"ST-Bridge\", BIM data for Japan building structures  in Grasshopper."
+  },
+  "Grasshopper の可視化や形状最適化機能を使った構造設計の効率化を目指しています。": {
+    "message": "We aim to improve the efficiency of structural design using Grasshopper's visualization and shape optimization capabilities."
+  },
+  "Grasshopper の構造解析ツール Karamba3D への ST-Bridge データの入出力をサポートします。": {
+    "message": "Supports the input and output of ST-Bridge data to and from Grasshopper's structural analysis tool Karamba3D."
+  }
+}

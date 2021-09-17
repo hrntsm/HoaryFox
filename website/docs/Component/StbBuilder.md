@@ -3,10 +3,10 @@ id: StbBuilder
 title: StbBuilder
 ---
 
-STB 書き出しのための情報を作成するコンポーネントのカテゴリ
+ST-Bridge 書き出しのための情報を作成するコンポーネントのカテゴリ
 
 :::note
-このコンポーネントの使用方法や注意点は [Export ST-Bridge file](../Usage/ExportSTB) にも詳しく書いていますので、そちらも参照してください。
+使用方法や注意点は [Export ST-Bridge file](../Usage/ExportSTB) にも詳しく書いていますので、そちらも参照してください。
 :::
 
 ---
@@ -58,7 +58,7 @@ STB 書き出しのための情報を作成するコンポーネントのカテ�
 |Distance|原点からの軸の距離（mm）|
 |Range|軸の幅（mm）|
 |Name|軸の名前|
-|Direcrion|軸の方向|
+|Direction|軸の方向|
 
 |出力|説明|
 |---|:---:|

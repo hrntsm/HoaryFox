@@ -9,28 +9,18 @@ using Karamba.GHopper.CrossSections;
 using Karamba.GHopper.Elements;
 using KarambaConnect.Properties;
 using KarambaConnect.S2K;
-using STBReader;
+using STBDotNet.v202;
 
 namespace KarambaConnect.Component.IO
 {
     public class Convert2Karamba : GH_Component
     {
-        private StbData _stbData;
-        private List<GH_Element> _k3ElemBe = new List<GH_Element>();
-        private readonly List<GH_Element> _k3ElemSh = new List<GH_Element>();
-
+        private ST_BRIDGE _stBridge;
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
         public Convert2Karamba()
           : base("Convert to Karamba", "S2K", "Convert ST-Bridge file to Karamba.", "HoaryFox", "IO")
         {
-        }
-
-        public override void ClearData()
-        {
-            base.ClearData();
-            _k3ElemBe.Clear();
-            _k3ElemSh.Clear();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -46,24 +36,25 @@ namespace KarambaConnect.Component.IO
             pManager.AddParameter(new Param_CrossSection(), "CrossSection", "CroSec", "Karamba CrossSection", GH_ParamAccess.list);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var familyName = new CroSecFamilyName();
-            if (!DA.GetData(0, ref _stbData)) { return; }
-            if (!DA.GetData(1, ref familyName))
+            var k3dElemSh = new List<GH_Element>();
+
+            if (!dataAccess.GetData(0, ref _stBridge)) { return; }
+            if (!dataAccess.GetData(1, ref familyName))
             {
                 familyName = CroSecFamilyName.Default();
             }
 
 
-            List<string>[] k3Ids = CrossSection.GetIndex(_stbData);
-            List<CroSec> k3CroSec = CrossSection.GetCroSec(_stbData, familyName);
-            List<BuilderBeam> elems = Element.BuilderBeams(_stbData, k3Ids);
-            List<GH_Element> ghElements = elems.Select(e => new GH_Element(e)).ToList();
-            _k3ElemBe = ghElements;
+            List<string>[] k3dIds = CrossSection.GetIndex(_stBridge);
+            List<CroSec> k3dCroSec = CrossSection.GetCroSec(_stBridge.StbModel.StbSections, familyName);
+            List<BuilderBeam> k3dBeamElems = ElementBuilder.BuilderBeams(_stBridge.StbModel, k3dIds);
+            List<GH_Element> ghK3dElements = k3dBeamElems.Select(e => new GH_Element(e)).ToList();
 
-            DA.SetDataList(0, _k3ElemBe);
-            DA.SetDataList(1, k3CroSec);
+            dataAccess.SetDataList(0, ghK3dElements);
+            dataAccess.SetDataList(1, k3dCroSec);
         }
 
         protected override Bitmap Icon => Resource.ToKaramba;

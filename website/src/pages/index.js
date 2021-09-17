@@ -5,33 +5,34 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
+import Translate, {translate} from '@docusaurus/Translate';
 
 const features = [
   {
     title: 'Easy to use',
     imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
-      <>
+      <Translate>
         HoaryFox は簡単に建築構造向け BIM データ "ST-Bridge" を Grasshopper で扱えるように設計しています。
-      </>
+      </Translate>
     ),
   },
   {
     title: 'Focus on improvement of efficiency',
     imageUrl: 'img/undraw_docusaurus_tree.svg',
     description: (
-      <>
+      <Translate>
         Grasshopper の可視化や形状最適化機能を使った構造設計の効率化を目指しています。
-      </>
+      </Translate>
     ),
   },
   {
     title: 'Enhance Karamba3D',
     imageUrl: 'img/undraw_docusaurus_react.svg',
     description: (
-      <>
+      <Translate>
         Grasshopper の構造解析ツール Karamba3D への ST-Bridge データの入出力をサポートします。
-      </>
+      </Translate>
     ),
   },
 ];
@@ -68,7 +69,7 @@ function Home() {
                 'button button--outline button--secondary button--lg',
                 styles.getStarted,
               )}
-              to={useBaseUrl('docs/Usage/HowToInstall')}>
+              to={useBaseUrl('docs/License')}>
               Get Started
             </Link>
           </div>

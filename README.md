@@ -2,8 +2,10 @@
 
 [![License](https://img.shields.io/github/license/hrntsm/HoaryFox)](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE)
 [![Release](https://img.shields.io/github/v/release/hrntsm/HoaryFox)](https://github.com/hrntsm/HoaryFox/releases)
-[![download](https://img.shields.io/badge/download-Food4Rhino-lightgray)](https://www.food4rhino.com/app/hoaryfox)
+[![download](https://img.shields.io/github/downloads/hrntsm/HoaryFox/total)](https://github.com/hrntsm/HoaryFox/releases)
 
+![Build](https://img.shields.io/github/workflow/status/hrntsm/HoaryFox/Build%20Grasshopper%20Plugin)
+![CodeQL](https://img.shields.io/github/workflow/status/hrntsm/HoaryFox/CodeQL?label=CodeQL)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c0a462728dce4983802d447ed67d3e7c)](https://www.codacy.com/gh/hrntsm/HoaryFox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hrntsm/HoaryFox&amp;utm_campaign=Badge_Grade)
 [![Maintainability](https://api.codeclimate.com/v1/badges/bc78a575fcf5e9448929/maintainability)](https://codeclimate.com/github/hrntsm/HoaryFox/maintainability)
 

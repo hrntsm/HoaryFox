@@ -3,31 +3,34 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel;
-using HoaryFox.Member;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
+using HoaryFox.Component.Utils.Geometry;
 using HoaryFox.Properties;
 using Rhino;
 using Rhino.DocObjects;
 using Rhino.Geometry;
-using STBReader;
-using STBReader.Member;
+using STBDotNet.v202;
 
 namespace HoaryFox.Component.Geometry
 {
     public class Stb2Brep : GH_Component
     {
-        private StbData _stbData;
+        private ST_BRIDGE _stBridge;
+        private readonly GH_Structure<GH_Brep>[] _brepList = new GH_Structure<GH_Brep>[7];
 
-        private readonly List<List<Brep>> _geometryBreps = new List<List<Brep>>();
+        public override GH_Exposure Exposure => GH_Exposure.primary;
 
         public Stb2Brep()
-          : base("Stb to Brep", "S2B", "Read ST-Bridge file and display", "HoaryFox", "Geometry")
+          : base("Stb to Brep", "S2B",
+              "Display ST-Bridge model in Brep",
+              "HoaryFox", "Geometry")
         {
         }
 
         public override void ClearData()
         {
             base.ClearData();
-            _geometryBreps.Clear();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -38,92 +41,83 @@ namespace HoaryFox.Component.Geometry
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddBrepParameter("Columns", "Col", "output StbColumns to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Girders", "Gird", "output StbGirders to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Posts", "Pst", "output StbPosts to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Beams", "Bm", "output StbBeams to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Braces", "Brc", "output StbBraces to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Slabs", "Slb", "output StbSlabs to Brep", GH_ParamAccess.list);
-            pManager.AddBrepParameter("Walls", "Wl", "output StbWalls to Brep", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Columns", "Col", "output StbColumns to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Girders", "Gird", "output StbGirders to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Posts", "Pst", "output StbPosts to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Beams", "Bm", "output StbBeams to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Braces", "Brc", "output StbBraces to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Slabs", "Slb", "output StbSlabs to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Walls", "Wl", "output StbWalls to Brep", GH_ParamAccess.tree);
         }
 
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             var isBake = false;
-            if (!DA.GetData("Data", ref _stbData)) { return; }
-            if (!DA.GetData("Bake", ref isBake)) { return; }
-            this.MakeBrep(isBake);
+            if (!dataAccess.GetData("Data", ref _stBridge)) { return; }
+            if (!dataAccess.GetData("Bake", ref isBake)) { return; }
+
+            CreateBrep();
+            if (isBake)
+            {
+                BakeBrep();
+            }
 
             for (var i = 0; i < 7; i++)
             {
-                DA.SetDataList(i, _geometryBreps[i]);
+                dataAccess.SetDataTree(i, _brepList[i]);
             }
         }
 
         protected override Bitmap Icon => Resource.Brep;
-        public override Guid ComponentGuid => new Guid("7d2f0c4e-4888-4607-8548-592104f6f06f");
+        public override Guid ComponentGuid => new Guid("B2D5EA7F-E75F-406B-8D22-C267B43C5E72");
 
-        private void MakeBrep(bool isBake)
+        private void CreateBrep()
         {
-            var stbFrames = new List<StbFrame>
-            {
-                _stbData.Columns, _stbData.Girders, _stbData.Posts, _stbData.Beams, _stbData.Braces
-            };
-            var breps = new FrameBreps(_stbData);
-
-            foreach (StbFrame frame in stbFrames)
-            {
-                _geometryBreps.Add(breps.Frame(frame));
-            }
-            _geometryBreps.Add(breps.Slab(_stbData.Slabs));
-            _geometryBreps.Add(breps.Wall(_stbData.Walls));
-
-            if (isBake)
-            {
-                this.BakeBreps(stbFrames);
-            }
+            StbMembers member = _stBridge.StbModel.StbMembers;
+            var brepFromStb = new CreateMemberBrepListFromStb(_stBridge.StbModel.StbSections, _stBridge.StbModel.StbNodes, new[] { DocumentTolerance(), DocumentAngleTolerance() });
+            _brepList[0] = brepFromStb.Column(member.StbColumns);
+            _brepList[1] = brepFromStb.Girder(member.StbGirders);
+            _brepList[2] = brepFromStb.Post(member.StbPosts);
+            _brepList[3] = brepFromStb.Beam(member.StbBeams);
+            _brepList[4] = brepFromStb.Brace(member.StbBraces);
+            _brepList[5] = brepFromStb.Slab(member.StbSlabs);
+            _brepList[6] = brepFromStb.Wall(member.StbWalls);
         }
 
-        private void BakeBreps(IEnumerable<StbFrame> stbFrames)
+        private void BakeBrep()
         {
             RhinoDoc activeDoc = RhinoDoc.ActiveDoc;
             var parentLayerNames = new[] { "Column", "Girder", "Post", "Beam", "Brace", "Slab", "Wall" };
             Color[] layerColors = { Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple, Color.DarkGray, Color.CornflowerBlue };
-            Misc.MakeParentLayers(activeDoc, parentLayerNames, layerColors);
+            GeometryBaker.MakeParentLayers(activeDoc, parentLayerNames, layerColors);
 
-            //TODO: このネストは直す
-            List<List<List<string>>> tagList = stbFrames.Select(stbFrame => Misc.GetTag(_stbData, stbFrame)).ToList();
+            Dictionary<string, string>[][] infoArray = Utils.TagUtils.GetAllSectionInfoArray(_stBridge.StbModel.StbMembers, _stBridge.StbModel.StbSections);
 
-            foreach ((List<Brep> frameBreps, int index) in _geometryBreps.Select((frameBrep, index) => (frameBrep, index)))
+            foreach ((GH_Structure<GH_Brep> breps, int i) in _brepList.Select((frameBrep, index) => (frameBrep, index)))
             {
-                Layer parentLayer = activeDoc.Layers.FindName(parentLayerNames[index]);
-                int parentIndex = parentLayer.Index;
+                Layer parentLayer = activeDoc.Layers.FindName(parentLayerNames[i]);
                 Guid parentId = parentLayer.Id;
-
-                foreach ((Brep brep, int bIndex) in frameBreps.Select((brep, bIndex) => (brep, bIndex)))
+                foreach ((Brep brep, int bIndex) in breps.Select((brep, bIndex) => (brep.Value, bIndex)))
                 {
                     var objAttr = new ObjectAttributes();
-                    objAttr.SetUserString("Type", parentLayerNames[index]);
 
-                    if (index < 5)
-                    {
-                        List<List<string>> tags = tagList[index];
-                        List<string> tag = tags[bIndex];
-                        Misc.SetFrameUserString(ref objAttr, tag);
+                    Dictionary<string, string>[] infos = infoArray[i];
+                    Dictionary<string, string> info = infos[bIndex];
 
-                        var layer = new Layer { Name = tag[0], ParentLayerId = parentId, Color = layerColors[index] };
-                        int layerIndex = activeDoc.Layers.Add(layer);
-                        if (layerIndex == -1)
-                        {
-                            layer = activeDoc.Layers.FindName(tag[0]);
-                            layerIndex = layer.Index;
-                        }
-                        objAttr.LayerIndex = layerIndex;
-                    }
-                    else
+                    foreach (KeyValuePair<string, string> pair in info)
                     {
-                        objAttr.LayerIndex = parentIndex;
+                        objAttr.SetUserString(pair.Key, pair.Value);
                     }
+
+                    var layer = new Layer { Name = info["name"], ParentLayerId = parentId, Color = layerColors[i] };
+                    int layerIndex = activeDoc.Layers.Add(layer);
+                    if (layerIndex == -1)
+                    {
+                        layer = activeDoc.Layers.FindName(info["name"]);
+                        layerIndex = layer.Index;
+                    }
+                    objAttr.LayerIndex = layerIndex;
+
                     activeDoc.Objects.AddBrep(brep, objAttr);
                 }
             }

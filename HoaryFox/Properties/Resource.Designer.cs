@@ -63,6 +63,16 @@ namespace HoaryFox.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
+        internal static System.Drawing.Bitmap Axis {
+            get {
+                object obj = ResourceManager.GetObject("Axis", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
         internal static System.Drawing.Bitmap BeamName {
             get {
                 object obj = ResourceManager.GetObject("BeamName", resourceCulture);
@@ -196,6 +206,46 @@ namespace HoaryFox.Properties {
         internal static System.Drawing.Bitmap PostSection {
             get {
                 object obj = ResourceManager.GetObject("PostSection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap SlabName {
+            get {
+                object obj = ResourceManager.GetObject("SlabName", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap SlabSection {
+            get {
+                object obj = ResourceManager.GetObject("SlabSection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap WallName {
+            get {
+                object obj = ResourceManager.GetObject("WallName", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap WallSection {
+            get {
+                object obj = ResourceManager.GetObject("WallSection", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

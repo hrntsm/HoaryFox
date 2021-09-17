@@ -8,9 +8,22 @@ module.exports = {
   favicon: 'img/HFicon.png',
   organizationName: 'hrntsm', // Usually your GitHub org/user name.
   projectName: 'HoaryFox', // Usually your repo name.
+  i18n: {
+    defaultLocale: 'ja',
+    locales: ['ja', 'en'],
+    localeConfigs: {
+      ja: {
+        label: '日本語',
+      },
+      en: {
+        label: 'English',
+      }
+    }
+  },
   themeConfig: {
+    hideableSidebar: true,
     image: `img/HFicon.png`,
-    metadates:[
+    metadates: [
       {
         name: `twitter:card`,
         content: `summary`
@@ -44,7 +57,7 @@ module.exports = {
           position: 'right',
         },
         {
-          href: 'https://hiron.dev',
+          href: 'https://hiron.dev/about/',
           label: 'AboutMe',
           position: 'right'
         },
@@ -52,6 +65,10 @@ module.exports = {
           to: 'docs/contact',
           label: 'Contact',
           position: 'right'
+        },
+        {
+          type: 'localeDropdown',
+          position: 'right',
         }
       ],
     },
@@ -61,6 +78,10 @@ module.exports = {
         {
           title: 'Docs',
           items: [
+            {
+              label: 'License',
+              to: 'docs/License',
+            },
             {
               label: 'Component',
               to: 'docs/Component/Geometry',
@@ -82,6 +103,10 @@ module.exports = {
               label: 'Twitter',
               href: 'https://twitter.com/hiron_rgkr',
             },
+            {
+              label: 'Discussion',
+              href: 'https://github.com/hrntsm/HoaryFox/discussions',
+            }
           ],
         },
         {
@@ -107,15 +132,13 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
+            'https://github.com/hrntsm/HoaryFox/edit/develop/website/',
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/blog/',
+            'https://github.com/hrntsm/HoaryFox/edit/develop/website/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

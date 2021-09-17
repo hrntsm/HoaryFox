@@ -16,11 +16,11 @@ title: SectionTag
 |入力|説明|
 |---|:---:|
 |Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
 
 |出力|説明|
 |---|:---:|
-|SecTag|符号のリスト|
+|SecTag|符号のツリー|
 
 ---
 
@@ -33,11 +33,11 @@ title: SectionTag
 |入力|説明|
 |---|:---:|
 |Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
 
 |出力|説明|
 |---|:---:|
-|SecTag|符号のリスト|
+|SecTag|符号のツリー|
 
 ---
 
@@ -50,11 +50,11 @@ title: SectionTag
 |入力|説明|
 |---|:---:|
 |Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
 
 |出力|説明|
 |---|:---:|
-|SecTag|符号のリスト|
+|SecTag|符号のツリー|
 
 ---
 
@@ -67,11 +67,11 @@ title: SectionTag
 |入力|説明|
 |---|:---:|
 |Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
 
 |出力|説明|
 |---|:---:|
-|SecTag|符号のリスト|
+|SecTag|符号のツリー|
 
 ---
 
@@ -84,8 +84,42 @@ title: SectionTag
 |入力|説明|
 |---|:---:|
 |Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
 
 |出力|説明|
 |---|:---:|
-|SecTag|符号のリスト|
+|SecTag|符号のツリー|
+
+---
+
+## Slab Section Tag
+
+![](../../images/Component/SlabSectionTag.png)
+
+ブレースの断面情報表示
+
+|入力|説明|
+|---|:---:|
+|Data|Load STB file コンポーネントの Data 出力を入力|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
+
+|出力|説明|
+|---|:---:|
+|SecTag|符号のツリー|
+
+---
+
+## Wall Section Tag
+
+![](../../images/Component/WallSectionTag.png)
+
+ブレースの断面情報表示
+
+|入力|説明|
+|---|:---:|
+|Data|Load STB file コンポーネントの Data 出力を入力|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
+
+|出力|説明|
+|---|:---:|
+|SecTag|符号のツリー|
