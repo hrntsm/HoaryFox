@@ -5,6 +5,39 @@ title: Changelog
 
 ---
 
+## [v2.0.0 - 2021-09-17](https://github.com/hrntsm/HoaryFox/releases/tag/v2.0.0)
+
+### 変更
+
+- これまでは ST-Bridge v1 と v2 の両方に対応していたが、本バージョンから v2 のみ対応とした
+- Stb2Brep、Stb2Line のコンポーネントの機能を使い Bake した際より多くの情報が Rhino での UserText として出力されるようにした
+- Stb2Brep で部材のハンチに対応した Brep が表示されるようにした
+- Tag コンポーネントはこれまで 中央断面等の代表断面のみを表示していたが、全ての断面情報が表示されるようにした
+  - SRC の場合は、RC形状、鉄骨形状 ともに出力される
+- 壁開口が非対応となった
+- Stb2Brep コンポーネントでスラブと壁を一枚のサーフェスではなく Closed Brep で出力するようにした
+- HoaryFox v1 のときは、Karamba3D から ST-Bridge に変換した際に、変換状況の概要がパネルで確認できたが、v2 では現状できなくなった
+
+### 追加
+
+- スラブと壁のタグ出力が可能になった
+  - SlabNameTag, WallNameTag, SlabSectionTag, WallSectionTag の追加
+- 軸の表示機能の追加
+  - Axis コンポーネントを使うことで、階情報、軸情報が出力される
+- Karamba3D への変化の際、ST-Bridge 内での RC の材料名称に応じて Karamba3Dないでの材質を指定するようにした。
+  - 例えば材質が FC21 となっている場合、建築学会の基準に基づき FC21 相当の材料物性が入力される
+  - 強度に応じてヤング率、せん断弾性係数、密度が変わる
+  - 対応は fc18, 21, 24, 26, 30, 33, 36, 40, 42, 45, 50, 55, 60 でそれ以外は fc21 相当の材質で変換
+  - 鋼材は強度以外は材質間で変化ないのですべてSN400扱い
+- Karamba3D データの ST-Bridge への変換出力がこれまでの ST-Bridge v1.4 準拠の内容から v2.0.2 準拠の内容に変更した
+
+### その他
+
+- これまで ST-Bridge の取り扱いには STBDotNet と STBReader 二つのライブラリを使っていたが、STBDotNet に統一した
+- GitHub の CodeQL 機能を使用してコードの脆弱性をチェックするようにした
+
+---
+
 ## [v1.3.1 - 2021-03-28](https://github.com/hrntsm/HoaryFox/releases/tag/v1.3.1)
 
 ### 追加
