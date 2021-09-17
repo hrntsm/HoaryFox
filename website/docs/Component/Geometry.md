@@ -66,8 +66,8 @@ title: Geometry
 |入力|説明|
 |---|:---:|
 |Data|Load STB file コンポーネントの Data 出力を入力|
-|Factor|各 Brep を断面符号ごとにレイヤー分けして Bake する|
-|Size|各 Brep を断面符号ごとにレイヤー分けして Bake する|
+|Factor|軸線の長さの比率|
+|Size|軸名、階名の文字のサイズ。デフォルトは 12|
 
 |出力|説明|
 |---|:---:|
