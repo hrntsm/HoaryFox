@@ -158,64 +158,98 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
         private void TwoFigureCurveList(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
         {
-            string start, center, end;
             switch (figures[0])
             {
                 case StbSecSteelBeam_S_Taper _:
                     {
-                        var tapers = new[] { figures[0] as StbSecSteelBeam_S_Taper, figures[1] as StbSecSteelBeam_S_Taper };
-                        start = tapers.First(sec => sec.pos == StbSecSteelBeam_S_TaperPos.START).shape;
-                        end = tapers.First(sec => sec.pos == StbSecSteelBeam_S_TaperPos.END).shape;
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionType.Beam, localAxis));
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+                        TwoFigureTaper(figures, sectionPoints, curveList, localAxis);
                         break;
                     }
                 case StbSecSteelBeam_S_Joint _:
                     {
-                        var joint = new[] { figures[0] as StbSecSteelBeam_S_Joint, figures[1] as StbSecSteelBeam_S_Joint };
-                        center = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.CENTER).shape;
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionType.Beam, localAxis));
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+                        TwoFigureJoint(figures, sectionPoints, curveList, localAxis);
                         break;
                     }
                 case StbSecSteelBeam_S_Haunch _:
                     {
-                        var joint = new[] { figures[0] as StbSecSteelBeam_S_Haunch, figures[1] as StbSecSteelBeam_S_Haunch };
-                        center = joint.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.CENTER).shape;
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionType.Beam, localAxis));
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionType.Beam, localAxis));
-                        break;
-                    }
-            }
-        }
-
-        private void ThreeFigureCurveList(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
-        {
-            string start, center, end;
-            switch (figures[0])
-            {
-                case StbSecSteelBeam_S_Haunch _:
-                    {
-                        var haunch = new[] { figures[0] as StbSecSteelBeam_S_Haunch, figures[1] as StbSecSteelBeam_S_Haunch, figures[2] as StbSecSteelBeam_S_Haunch };
-                        start = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.START).shape;
-                        center = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.CENTER).shape;
-                        end = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.END).shape;
+                        TwoFigureHaunch(figures, sectionPoints, curveList, localAxis);
                         break;
                     }
                 default:
                     {
-                        var joint = new[] { figures[0] as StbSecSteelBeam_S_Joint, figures[1] as StbSecSteelBeam_S_Joint, figures[2] as StbSecSteelBeam_S_Joint };
-                        start = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.START).shape;
-                        center = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.CENTER).shape;
-                        end = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.END).shape;
-                        break;
+                        throw new ArgumentException("Unmatched StbSecSteelBeam_S");
                     }
             }
+        }
+
+        private void TwoFigureTaper(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        {
+            var tapers = new[] { figures[0] as StbSecSteelBeam_S_Taper, figures[1] as StbSecSteelBeam_S_Taper };
+            string start = tapers.First(sec => sec.pos == StbSecSteelBeam_S_TaperPos.START).shape;
+            string end = tapers.First(sec => sec.pos == StbSecSteelBeam_S_TaperPos.END).shape;
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+        }
+
+        private void TwoFigureJoint(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        {
+            var joint = new[] { figures[0] as StbSecSteelBeam_S_Joint, figures[1] as StbSecSteelBeam_S_Joint };
+            string center = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.CENTER).shape;
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+        }
+
+        private void TwoFigureHaunch(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        {
+            var joint = new[] { figures[0] as StbSecSteelBeam_S_Haunch, figures[1] as StbSecSteelBeam_S_Haunch };
+            string center = joint.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.CENTER).shape;
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+        }
+
+        private void ThreeFigureCurveList(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        {
+            switch (figures[0])
+            {
+                case StbSecSteelBeam_S_Haunch _:
+                    {
+                        ThreeFigureHaunch(figures, sectionPoints, curveList, localAxis);
+                        break;
+                    }
+                case StbSecSteelBeam_S_Joint _:
+                    {
+                        ThreeFigureJoint(figures, sectionPoints, curveList, localAxis);
+                        break;
+                    }
+                default:
+                    {
+                        throw new ArgumentException("Unmatched StbSecSteelBeam_S");
+                    }
+            }
+        }
+
+        private void ThreeFigureHaunch(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        {
+            var haunch = new[] { figures[0] as StbSecSteelBeam_S_Haunch, figures[1] as StbSecSteelBeam_S_Haunch, figures[2] as StbSecSteelBeam_S_Haunch };
+            string start = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.START).shape;
+            string center = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.CENTER).shape;
+            string end = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.END).shape;
             curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionType.Beam, localAxis));
             curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionType.Beam, localAxis));
             curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionType.Beam, localAxis));
             curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Beam, localAxis));
         }
 
+        private void ThreeFigureJoint(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        {
+            var joint = new[] { figures[0] as StbSecSteelBeam_S_Joint, figures[1] as StbSecSteelBeam_S_Joint, figures[2] as StbSecSteelBeam_S_Joint };
+            string start = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.START).shape;
+            string center = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.CENTER).shape;
+            string end = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.END).shape;
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+        }
     }
 }
