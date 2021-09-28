@@ -120,6 +120,9 @@ namespace HoaryFox.Component.Utils
             var ghSecStrings = new GH_Structure<GH_String>();
             switch (steelFigure)
             {
+                case StbSecSteelBeam_S_Joint figure:
+                    ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
+                    break;
                 case StbSecSteelBeam_S_Haunch figure:
                     ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
                     break;
@@ -131,6 +134,9 @@ namespace HoaryFox.Component.Utils
                     break;
                 case StbSecSteelBeam_S_Straight figure:
                     ghSecStrings.Append(new GH_String(figure.shape + "(" + figure.strength_main + ")"));
+                    break;
+                case StbSecSteelBeam_SRC_Joint figure:
+                    ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
                     break;
                 case StbSecSteelBeam_SRC_Haunch figure:
                     ghSecStrings.Append(new GH_String(figure.pos + ":" + figure.shape + "(" + figure.strength_main + ")"));
@@ -420,7 +426,13 @@ namespace HoaryFox.Component.Utils
                             }
                             break;
                         case "DECK":
+                            StbSecSlabDeck slabDeck = sections.StbSecSlabDeck.First(sec => sec.id == pDict["id_section"]);
+                            var deckFigure = slabDeck.StbSecFigureSlabDeck.StbSecSlabDeckStraight;
+                            sectionInfo.AddRange(GetSlabDeckSection(deckFigure, slabDeck.strength_concrete).ToList());
+                            break;
                         case "PRECAST":
+                            StbSecSlabPrecast slabPrecast = sections.StbSecSlabPrecast.First(sec => sec.id == pDict["id_section"]);
+                            sectionInfo.AddRange(GetSlabPrecastSection(slabPrecast.precast_type, slabPrecast.StbSecProductSlabPrecast, slabPrecast.strength_concrete).ToList());
                             break;
                     }
                     break;

@@ -25,22 +25,18 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                             depth = tapers.First(sec => sec.pos == StbSecSlab_RC_TaperPos.TIP).depth;
                             break;
                         case 3:
-                            var haunches = new[]
-                            {
-                                slabRc[0] as StbSecSlab_RC_Haunch, slabRc[1] as StbSecSlab_RC_Haunch,
-                                slabRc[2] as StbSecSlab_RC_Haunch
-                            };
+                            var haunches = new[] { slabRc[0] as StbSecSlab_RC_Haunch, slabRc[1] as StbSecSlab_RC_Haunch, slabRc[2] as StbSecSlab_RC_Haunch };
                             depth = haunches.First(sec => sec.pos == StbSecSlab_RC_HaunchPos.CENTER).depth;
                             break;
                     }
 
                     break;
                 case StbSlabKind_structure.DECK:
-                // StbSecSlabDeck slabDeck = _sections.StbSecSlabDeck.FirstOrDefault(sec => sec.id == slab.id_section);
-                // break;
+                    depth = sections.StbSecSlabDeck.FirstOrDefault(sec => sec.id == slab.id_section).StbSecFigureSlabDeck.StbSecSlabDeckStraight.depth;
+                    break;
                 case StbSlabKind_structure.PRECAST:
-                // StbSecSlabPrecast slabPrecast = _sections.StbSecSlabPrecast.FirstOrDefault(sec => sec.id == slab.id_section);
-                // break;
+                    depth = sections.StbSecSlabPrecast.FirstOrDefault(sec => sec.id == slab.id_section).StbSecFigureSlabPrecast.StbSecSlabPrecastStraight.depth_concrete;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
