@@ -125,6 +125,10 @@ module.exports = {
       ],
       copyright: `Copyright © ${new Date().getFullYear()} hrntsm, Inc. Built with Docusaurus.`,
     },
+    algolia: {
+      apiKey: '28d1c171c6f64559d0a227407c166cee',
+      indexName: 'hoaryfox',
+    },
   },
   presets: [
     [
