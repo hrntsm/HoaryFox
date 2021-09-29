@@ -1,5 +1,8 @@
 name: Check Code Format
-on: pull_request
+on: 
+  pull_request:
+    paths-ignore:
+      - "website/**"
 
 jobs:
   check:

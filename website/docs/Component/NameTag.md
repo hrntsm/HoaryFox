@@ -16,11 +16,11 @@ title: NameTag
 |入力|説明|
 |---|:---:|
 |Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12|
 
 |出力|説明|
 |---|:---:|
-|NameTag|符号のリスト|
+|NameTag|符号のツリー|
 
 ---
 
@@ -33,11 +33,11 @@ title: NameTag
 |入力|説明|
 |---|:---:|
 |Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
 
 |出力|説明|
 |---|:---:|
-|NameTag|符号のリスト|
+|NameTag|符号のツリー|
 
 ---
 
@@ -50,11 +50,11 @@ title: NameTag
 |入力|説明|
 |---|:---:|
 |Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
 
 |出力|説明|
 |---|:---:|
-|NameTag|符号のリスト|
+|NameTag|符号のツリー|
 
 ---
 
@@ -67,11 +67,11 @@ title: NameTag
 |入力|説明|
 |---|:---:|
 |Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
 
 |出力|説明|
 |---|:---:|
-|NameTag|符号のリスト|
+|NameTag|符号のツリー|
 
 ---
 
@@ -84,8 +84,42 @@ title: NameTag
 |入力|説明|
 |---|:---:|
 |Data|Load STB file コンポーネントの Data 出力を入力|
-|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは12です|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
 
 |出力|説明|
 |---|:---:|
-|NameTag|符号のリスト|
+|NameTag|符号のツリー|
+
+---
+
+## Slab Name Tag
+
+![](../../images/Component/SlabNameTag.png)
+
+ブレースの部材符号表示
+
+|入力|説明|
+|---|:---:|
+|Data|Load STB file コンポーネントの Data 出力を入力|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
+
+|出力|説明|
+|---|:---:|
+|NameTag|符号のツリー|
+
+---
+
+## Wall Name Tag
+
+![](../../images/Component/WallNameTag.png)
+
+ブレースの部材符号表示
+
+|入力|説明|
+|---|:---:|
+|Data|Load STB file コンポーネントの Data 出力を入力|
+|Size|Rhino のビューポートに表示する文字サイズ。デフォルトは 12|
+
+|出力|説明|
+|---|:---:|
+|NameTag|符号のツリー|

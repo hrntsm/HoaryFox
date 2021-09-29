@@ -21,6 +21,7 @@ module.exports = {
     }
   },
   themeConfig: {
+    hideableSidebar: true,
     image: `img/HFicon.png`,
     metadates: [
       {
@@ -78,6 +79,10 @@ module.exports = {
           title: 'Docs',
           items: [
             {
+              label: 'License',
+              to: 'docs/License',
+            },
+            {
               label: 'Component',
               to: 'docs/Component/Geometry',
             },
@@ -98,6 +103,10 @@ module.exports = {
               label: 'Twitter',
               href: 'https://twitter.com/hiron_rgkr',
             },
+            {
+              label: 'Discussion',
+              href: 'https://github.com/hrntsm/HoaryFox/discussions',
+            }
           ],
         },
         {

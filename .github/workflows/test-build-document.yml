@@ -1,0 +1,19 @@
+name: test build document site
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - "website/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    defaults:
+      run:
+        working-directory: website
+
+    steps:
+    - uses: actions/checkout@v2
+    - run: yarn install
+    - run: yarn build

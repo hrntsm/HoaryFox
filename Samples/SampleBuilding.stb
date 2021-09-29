@@ -1,0 +1,1265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ST_BRIDGE version="2.0.2" xmlns="https://www.building-smart.or.jp/dl">
+  <StbCommon project_name="ExportOptimizedOfficeBuilding2STB.gh" app_name="HoaryFox" />
+  <StbModel>
+    <StbNodes>
+      <StbNode id="1" X="0" Y="0" Z="0" kind="ON_GIRDER" />
+      <StbNode id="2" X="3600" Y="0" Z="0" kind="ON_GIRDER" />
+      <StbNode id="3" X="3600" Y="10800" Z="0" kind="ON_GIRDER" />
+      <StbNode id="4" X="0" Y="10800" Z="0" kind="ON_GIRDER" />
+      <StbNode id="5" X="3600" Y="14400" Z="0" kind="ON_GIRDER" />
+      <StbNode id="6" X="0" Y="14400" Z="0" kind="ON_GIRDER" />
+      <StbNode id="7" X="7200" Y="0" Z="0" kind="ON_GIRDER" />
+      <StbNode id="8" X="7200" Y="10800" Z="0" kind="ON_GIRDER" />
+      <StbNode id="9" X="7200" Y="14400" Z="0" kind="ON_GIRDER" />
+      <StbNode id="10" X="10800" Y="0" Z="0" kind="ON_GIRDER" />
+      <StbNode id="11" X="10800" Y="10800" Z="0" kind="ON_GIRDER" />
+      <StbNode id="12" X="10800" Y="14400" Z="0" kind="ON_GIRDER" />
+      <StbNode id="13" X="14400" Y="0" Z="0" kind="ON_GIRDER" />
+      <StbNode id="14" X="14400" Y="10800" Z="0" kind="ON_GIRDER" />
+      <StbNode id="15" X="14400" Y="14400" Z="0" kind="ON_GIRDER" />
+      <StbNode id="16" X="18000" Y="0" Z="0" kind="ON_GIRDER" />
+      <StbNode id="17" X="18000" Y="10800" Z="0" kind="ON_GIRDER" />
+      <StbNode id="18" X="18000" Y="14400" Z="0" kind="ON_GIRDER" />
+      <StbNode id="19" X="21600" Y="0" Z="0" kind="ON_GIRDER" />
+      <StbNode id="20" X="21600" Y="10800" Z="0" kind="ON_GIRDER" />
+      <StbNode id="21" X="21600" Y="14400" Z="0" kind="ON_GIRDER" />
+      <StbNode id="22" X="0" Y="0" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="23" X="0" Y="0" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="24" X="0" Y="0" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="25" X="0" Y="0" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="26" X="0" Y="0" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="27" X="3600" Y="0" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="28" X="3600" Y="0" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="29" X="3600" Y="0" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="30" X="3600" Y="0" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="31" X="3600" Y="0" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="32" X="3600" Y="10800" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="33" X="3600" Y="10800" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="34" X="3600" Y="10800" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="35" X="3600" Y="10800" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="36" X="3600" Y="10800" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="37" X="0" Y="10800" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="38" X="0" Y="10800" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="39" X="0" Y="10800" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="40" X="0" Y="10800" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="41" X="0" Y="10800" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="42" X="3600" Y="14400" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="43" X="3600" Y="14400" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="44" X="3600" Y="14400" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="45" X="3600" Y="14400" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="46" X="3600" Y="14400" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="47" X="0" Y="14400" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="48" X="0" Y="14400" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="49" X="0" Y="14400" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="50" X="0" Y="14400" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="51" X="0" Y="14400" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="52" X="7200" Y="0" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="53" X="7200" Y="0" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="54" X="7200" Y="0" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="55" X="7200" Y="0" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="56" X="7200" Y="0" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="57" X="7200" Y="10800" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="58" X="7200" Y="10800" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="59" X="7200" Y="10800" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="60" X="7200" Y="10800" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="61" X="7200" Y="10800" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="62" X="7200" Y="14400" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="63" X="7200" Y="14400" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="64" X="7200" Y="14400" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="65" X="7200" Y="14400" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="66" X="7200" Y="14400" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="67" X="10800" Y="0" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="68" X="10800" Y="0" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="69" X="10800" Y="0" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="70" X="10800" Y="0" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="71" X="10800" Y="0" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="72" X="10800" Y="10800" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="73" X="10800" Y="10800" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="74" X="10800" Y="10800" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="75" X="10800" Y="10800" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="76" X="10800" Y="10800" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="77" X="10800" Y="14400" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="78" X="10800" Y="14400" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="79" X="10800" Y="14400" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="80" X="10800" Y="14400" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="81" X="10800" Y="14400" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="82" X="14400" Y="0" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="83" X="14400" Y="0" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="84" X="14400" Y="0" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="85" X="14400" Y="0" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="86" X="14400" Y="0" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="87" X="14400" Y="10800" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="88" X="14400" Y="10800" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="89" X="14400" Y="10800" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="90" X="14400" Y="10800" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="91" X="14400" Y="10800" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="92" X="14400" Y="14400" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="93" X="14400" Y="14400" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="94" X="14400" Y="14400" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="95" X="14400" Y="14400" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="96" X="14400" Y="14400" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="97" X="18000" Y="0" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="98" X="18000" Y="0" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="99" X="18000" Y="0" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="100" X="18000" Y="0" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="101" X="18000" Y="0" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="102" X="18000" Y="10800" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="103" X="18000" Y="10800" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="104" X="18000" Y="10800" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="105" X="18000" Y="10800" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="106" X="18000" Y="10800" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="107" X="18000" Y="14400" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="108" X="18000" Y="14400" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="109" X="18000" Y="14400" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="110" X="18000" Y="14400" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="111" X="18000" Y="14400" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="112" X="21600" Y="0" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="113" X="21600" Y="0" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="114" X="21600" Y="0" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="115" X="21600" Y="0" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="116" X="21600" Y="0" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="117" X="21600" Y="10800" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="118" X="21600" Y="10800" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="119" X="21600" Y="10800" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="120" X="21600" Y="10800" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="121" X="21600" Y="10800" Z="20000" kind="ON_GIRDER" />
+      <StbNode id="122" X="21600" Y="14400" Z="4000" kind="ON_GIRDER" />
+      <StbNode id="123" X="21600" Y="14400" Z="8000" kind="ON_GIRDER" />
+      <StbNode id="124" X="21600" Y="14400" Z="12000" kind="ON_GIRDER" />
+      <StbNode id="125" X="21600" Y="14400" Z="16000" kind="ON_GIRDER" />
+      <StbNode id="126" X="21600" Y="14400" Z="20000" kind="ON_GIRDER" />
+    </StbNodes>
+    <StbAxes>
+      <StbParallelAxes group_name="X" X="0" Y="0" angle="270">
+        <StbParallelAxis id="1" name="X1" distance="0">
+          <StbNodeIdList>
+            <StbNodeId id="1" />
+            <StbNodeId id="4" />
+            <StbNodeId id="6" />
+            <StbNodeId id="22" />
+            <StbNodeId id="23" />
+            <StbNodeId id="24" />
+            <StbNodeId id="25" />
+            <StbNodeId id="26" />
+            <StbNodeId id="37" />
+            <StbNodeId id="38" />
+            <StbNodeId id="39" />
+            <StbNodeId id="40" />
+            <StbNodeId id="41" />
+            <StbNodeId id="47" />
+            <StbNodeId id="48" />
+            <StbNodeId id="49" />
+            <StbNodeId id="50" />
+            <StbNodeId id="51" />
+          </StbNodeIdList>
+        </StbParallelAxis>
+        <StbParallelAxis id="2" name="X2" distance="3600">
+          <StbNodeIdList>
+            <StbNodeId id="2" />
+            <StbNodeId id="3" />
+            <StbNodeId id="5" />
+            <StbNodeId id="27" />
+            <StbNodeId id="28" />
+            <StbNodeId id="29" />
+            <StbNodeId id="30" />
+            <StbNodeId id="31" />
+            <StbNodeId id="32" />
+            <StbNodeId id="33" />
+            <StbNodeId id="34" />
+            <StbNodeId id="35" />
+            <StbNodeId id="36" />
+            <StbNodeId id="42" />
+            <StbNodeId id="43" />
+            <StbNodeId id="44" />
+            <StbNodeId id="45" />
+            <StbNodeId id="46" />
+          </StbNodeIdList>
+        </StbParallelAxis>
+        <StbParallelAxis id="3" name="X3" distance="7200">
+          <StbNodeIdList>
+            <StbNodeId id="7" />
+            <StbNodeId id="8" />
+            <StbNodeId id="9" />
+            <StbNodeId id="52" />
+            <StbNodeId id="53" />
+            <StbNodeId id="54" />
+            <StbNodeId id="55" />
+            <StbNodeId id="56" />
+            <StbNodeId id="57" />
+            <StbNodeId id="58" />
+            <StbNodeId id="59" />
+            <StbNodeId id="60" />
+            <StbNodeId id="61" />
+            <StbNodeId id="62" />
+            <StbNodeId id="63" />
+            <StbNodeId id="64" />
+            <StbNodeId id="65" />
+            <StbNodeId id="66" />
+          </StbNodeIdList>
+        </StbParallelAxis>
+        <StbParallelAxis id="4" name="X4" distance="10800">
+          <StbNodeIdList>
+            <StbNodeId id="10" />
+            <StbNodeId id="11" />
+            <StbNodeId id="12" />
+            <StbNodeId id="67" />
+            <StbNodeId id="68" />
+            <StbNodeId id="69" />
+            <StbNodeId id="70" />
+            <StbNodeId id="71" />
+            <StbNodeId id="72" />
+            <StbNodeId id="73" />
+            <StbNodeId id="74" />
+            <StbNodeId id="75" />
+            <StbNodeId id="76" />
+            <StbNodeId id="77" />
+            <StbNodeId id="78" />
+            <StbNodeId id="79" />
+            <StbNodeId id="80" />
+            <StbNodeId id="81" />
+          </StbNodeIdList>
+        </StbParallelAxis>
+        <StbParallelAxis id="5" name="X5" distance="14400">
+          <StbNodeIdList>
+            <StbNodeId id="13" />
+            <StbNodeId id="14" />
+            <StbNodeId id="15" />
+            <StbNodeId id="82" />
+            <StbNodeId id="83" />
+            <StbNodeId id="84" />
+            <StbNodeId id="85" />
+            <StbNodeId id="86" />
+            <StbNodeId id="87" />
+            <StbNodeId id="88" />
+            <StbNodeId id="89" />
+            <StbNodeId id="90" />
+            <StbNodeId id="91" />
+            <StbNodeId id="92" />
+            <StbNodeId id="93" />
+            <StbNodeId id="94" />
+            <StbNodeId id="95" />
+            <StbNodeId id="96" />
+          </StbNodeIdList>
+        </StbParallelAxis>
+        <StbParallelAxis id="6" name="X6" distance="18000">
+          <StbNodeIdList>
+            <StbNodeId id="16" />
+            <StbNodeId id="17" />
+            <StbNodeId id="18" />
+            <StbNodeId id="97" />
+            <StbNodeId id="98" />
+            <StbNodeId id="99" />
+            <StbNodeId id="100" />
+            <StbNodeId id="101" />
+            <StbNodeId id="102" />
+            <StbNodeId id="103" />
+            <StbNodeId id="104" />
+            <StbNodeId id="105" />
+            <StbNodeId id="106" />
+            <StbNodeId id="107" />
+            <StbNodeId id="108" />
+            <StbNodeId id="109" />
+            <StbNodeId id="110" />
+            <StbNodeId id="111" />
+          </StbNodeIdList>
+        </StbParallelAxis>
+        <StbParallelAxis id="7" name="X7" distance="21600">
+          <StbNodeIdList>
+            <StbNodeId id="19" />
+            <StbNodeId id="20" />
+            <StbNodeId id="21" />
+            <StbNodeId id="112" />
+            <StbNodeId id="113" />
+            <StbNodeId id="114" />
+            <StbNodeId id="115" />
+            <StbNodeId id="116" />
+            <StbNodeId id="117" />
+            <StbNodeId id="118" />
+            <StbNodeId id="119" />
+            <StbNodeId id="120" />
+            <StbNodeId id="121" />
+            <StbNodeId id="122" />
+            <StbNodeId id="123" />
+            <StbNodeId id="124" />
+            <StbNodeId id="125" />
+            <StbNodeId id="126" />
+          </StbNodeIdList>
+        </StbParallelAxis>
+      </StbParallelAxes>
+      <StbParallelAxes group_name="Y" X="0" Y="0" angle="0">
+        <StbParallelAxis id="8" name="Y1" distance="0">
+          <StbNodeIdList>
+            <StbNodeId id="1" />
+            <StbNodeId id="2" />
+            <StbNodeId id="7" />
+            <StbNodeId id="10" />
+            <StbNodeId id="13" />
+            <StbNodeId id="16" />
+            <StbNodeId id="19" />
+            <StbNodeId id="22" />
+            <StbNodeId id="23" />
+            <StbNodeId id="24" />
+            <StbNodeId id="25" />
+            <StbNodeId id="26" />
+            <StbNodeId id="27" />
+            <StbNodeId id="28" />
+            <StbNodeId id="29" />
+            <StbNodeId id="30" />
+            <StbNodeId id="31" />
+            <StbNodeId id="52" />
+            <StbNodeId id="53" />
+            <StbNodeId id="54" />
+            <StbNodeId id="55" />
+            <StbNodeId id="56" />
+            <StbNodeId id="67" />
+            <StbNodeId id="68" />
+            <StbNodeId id="69" />
+            <StbNodeId id="70" />
+            <StbNodeId id="71" />
+            <StbNodeId id="82" />
+            <StbNodeId id="83" />
+            <StbNodeId id="84" />
+            <StbNodeId id="85" />
+            <StbNodeId id="86" />
+            <StbNodeId id="97" />
+            <StbNodeId id="98" />
+            <StbNodeId id="99" />
+            <StbNodeId id="100" />
+            <StbNodeId id="101" />
+            <StbNodeId id="112" />
+            <StbNodeId id="113" />
+            <StbNodeId id="114" />
+            <StbNodeId id="115" />
+            <StbNodeId id="116" />
+          </StbNodeIdList>
+        </StbParallelAxis>
+        <StbParallelAxis id="9" name="Y2" distance="10800">
+          <StbNodeIdList>
+            <StbNodeId id="3" />
+            <StbNodeId id="4" />
+            <StbNodeId id="8" />
+            <StbNodeId id="11" />
+            <StbNodeId id="14" />
+            <StbNodeId id="17" />
+            <StbNodeId id="20" />
+            <StbNodeId id="32" />
+            <StbNodeId id="33" />
+            <StbNodeId id="34" />
+            <StbNodeId id="35" />
+            <StbNodeId id="36" />
+            <StbNodeId id="37" />
+            <StbNodeId id="38" />
+            <StbNodeId id="39" />
+            <StbNodeId id="40" />
+            <StbNodeId id="41" />
+            <StbNodeId id="57" />
+            <StbNodeId id="58" />
+            <StbNodeId id="59" />
+            <StbNodeId id="60" />
+            <StbNodeId id="61" />
+            <StbNodeId id="72" />
+            <StbNodeId id="73" />
+            <StbNodeId id="74" />
+            <StbNodeId id="75" />
+            <StbNodeId id="76" />
+            <StbNodeId id="87" />
+            <StbNodeId id="88" />
+            <StbNodeId id="89" />
+            <StbNodeId id="90" />
+            <StbNodeId id="91" />
+            <StbNodeId id="102" />
+            <StbNodeId id="103" />
+            <StbNodeId id="104" />
+            <StbNodeId id="105" />
+            <StbNodeId id="106" />
+            <StbNodeId id="117" />
+            <StbNodeId id="118" />
+            <StbNodeId id="119" />
+            <StbNodeId id="120" />
+            <StbNodeId id="121" />
+          </StbNodeIdList>
+        </StbParallelAxis>
+        <StbParallelAxis id="10" name="Y3" distance="14400">
+          <StbNodeIdList>
+            <StbNodeId id="5" />
+            <StbNodeId id="6" />
+            <StbNodeId id="9" />
+            <StbNodeId id="12" />
+            <StbNodeId id="15" />
+            <StbNodeId id="18" />
+            <StbNodeId id="21" />
+            <StbNodeId id="42" />
+            <StbNodeId id="43" />
+            <StbNodeId id="44" />
+            <StbNodeId id="45" />
+            <StbNodeId id="46" />
+            <StbNodeId id="47" />
+            <StbNodeId id="48" />
+            <StbNodeId id="49" />
+            <StbNodeId id="50" />
+            <StbNodeId id="51" />
+            <StbNodeId id="62" />
+            <StbNodeId id="63" />
+            <StbNodeId id="64" />
+            <StbNodeId id="65" />
+            <StbNodeId id="66" />
+            <StbNodeId id="77" />
+            <StbNodeId id="78" />
+            <StbNodeId id="79" />
+            <StbNodeId id="80" />
+            <StbNodeId id="81" />
+            <StbNodeId id="92" />
+            <StbNodeId id="93" />
+            <StbNodeId id="94" />
+            <StbNodeId id="95" />
+            <StbNodeId id="96" />
+            <StbNodeId id="107" />
+            <StbNodeId id="108" />
+            <StbNodeId id="109" />
+            <StbNodeId id="110" />
+            <StbNodeId id="111" />
+            <StbNodeId id="122" />
+            <StbNodeId id="123" />
+            <StbNodeId id="124" />
+            <StbNodeId id="125" />
+            <StbNodeId id="126" />
+          </StbNodeIdList>
+        </StbParallelAxis>
+      </StbParallelAxes>
+    </StbAxes>
+    <StbStories>
+      <StbStory id="1" name="1F" height="0" kind="GENERAL">
+        <StbNodeIdList>
+          <StbNodeId id="1" />
+          <StbNodeId id="2" />
+          <StbNodeId id="3" />
+          <StbNodeId id="4" />
+          <StbNodeId id="5" />
+          <StbNodeId id="6" />
+          <StbNodeId id="7" />
+          <StbNodeId id="8" />
+          <StbNodeId id="9" />
+          <StbNodeId id="10" />
+          <StbNodeId id="11" />
+          <StbNodeId id="12" />
+          <StbNodeId id="13" />
+          <StbNodeId id="14" />
+          <StbNodeId id="15" />
+          <StbNodeId id="16" />
+          <StbNodeId id="17" />
+          <StbNodeId id="18" />
+          <StbNodeId id="19" />
+          <StbNodeId id="20" />
+          <StbNodeId id="21" />
+        </StbNodeIdList>
+      </StbStory>
+      <StbStory id="2" name="2F" height="4000" kind="GENERAL">
+        <StbNodeIdList>
+          <StbNodeId id="22" />
+          <StbNodeId id="27" />
+          <StbNodeId id="32" />
+          <StbNodeId id="37" />
+          <StbNodeId id="42" />
+          <StbNodeId id="47" />
+          <StbNodeId id="52" />
+          <StbNodeId id="57" />
+          <StbNodeId id="62" />
+          <StbNodeId id="67" />
+          <StbNodeId id="72" />
+          <StbNodeId id="77" />
+          <StbNodeId id="82" />
+          <StbNodeId id="87" />
+          <StbNodeId id="92" />
+          <StbNodeId id="97" />
+          <StbNodeId id="102" />
+          <StbNodeId id="107" />
+          <StbNodeId id="112" />
+          <StbNodeId id="117" />
+          <StbNodeId id="122" />
+        </StbNodeIdList>
+      </StbStory>
+      <StbStory id="3" name="3F" height="8000" kind="GENERAL">
+        <StbNodeIdList>
+          <StbNodeId id="23" />
+          <StbNodeId id="28" />
+          <StbNodeId id="33" />
+          <StbNodeId id="38" />
+          <StbNodeId id="43" />
+          <StbNodeId id="48" />
+          <StbNodeId id="53" />
+          <StbNodeId id="58" />
+          <StbNodeId id="63" />
+          <StbNodeId id="68" />
+          <StbNodeId id="73" />
+          <StbNodeId id="78" />
+          <StbNodeId id="83" />
+          <StbNodeId id="88" />
+          <StbNodeId id="93" />
+          <StbNodeId id="98" />
+          <StbNodeId id="103" />
+          <StbNodeId id="108" />
+          <StbNodeId id="113" />
+          <StbNodeId id="118" />
+          <StbNodeId id="123" />
+        </StbNodeIdList>
+      </StbStory>
+      <StbStory id="4" name="4F" height="12000" kind="GENERAL">
+        <StbNodeIdList>
+          <StbNodeId id="24" />
+          <StbNodeId id="29" />
+          <StbNodeId id="34" />
+          <StbNodeId id="39" />
+          <StbNodeId id="44" />
+          <StbNodeId id="49" />
+          <StbNodeId id="54" />
+          <StbNodeId id="59" />
+          <StbNodeId id="64" />
+          <StbNodeId id="69" />
+          <StbNodeId id="74" />
+          <StbNodeId id="79" />
+          <StbNodeId id="84" />
+          <StbNodeId id="89" />
+          <StbNodeId id="94" />
+          <StbNodeId id="99" />
+          <StbNodeId id="104" />
+          <StbNodeId id="109" />
+          <StbNodeId id="114" />
+          <StbNodeId id="119" />
+          <StbNodeId id="124" />
+        </StbNodeIdList>
+      </StbStory>
+      <StbStory id="5" name="5F" height="16000" kind="GENERAL">
+        <StbNodeIdList>
+          <StbNodeId id="25" />
+          <StbNodeId id="30" />
+          <StbNodeId id="35" />
+          <StbNodeId id="40" />
+          <StbNodeId id="45" />
+          <StbNodeId id="50" />
+          <StbNodeId id="55" />
+          <StbNodeId id="60" />
+          <StbNodeId id="65" />
+          <StbNodeId id="70" />
+          <StbNodeId id="75" />
+          <StbNodeId id="80" />
+          <StbNodeId id="85" />
+          <StbNodeId id="90" />
+          <StbNodeId id="95" />
+          <StbNodeId id="100" />
+          <StbNodeId id="105" />
+          <StbNodeId id="110" />
+          <StbNodeId id="115" />
+          <StbNodeId id="120" />
+          <StbNodeId id="125" />
+        </StbNodeIdList>
+      </StbStory>
+      <StbStory id="6" name="RF" height="20000" kind="GENERAL">
+        <StbNodeIdList>
+          <StbNodeId id="26" />
+          <StbNodeId id="31" />
+          <StbNodeId id="36" />
+          <StbNodeId id="41" />
+          <StbNodeId id="46" />
+          <StbNodeId id="51" />
+          <StbNodeId id="56" />
+          <StbNodeId id="61" />
+          <StbNodeId id="66" />
+          <StbNodeId id="71" />
+          <StbNodeId id="76" />
+          <StbNodeId id="81" />
+          <StbNodeId id="86" />
+          <StbNodeId id="91" />
+          <StbNodeId id="96" />
+          <StbNodeId id="101" />
+          <StbNodeId id="106" />
+          <StbNodeId id="111" />
+          <StbNodeId id="116" />
+          <StbNodeId id="121" />
+          <StbNodeId id="126" />
+        </StbNodeIdList>
+      </StbStory>
+    </StbStories>
+    <StbMembers>
+      <StbColumns>
+        <StbColumn id="33" name="Column" id_node_bottom="1" id_node_top="22" id_section="2" kind_structure="S" />
+        <StbColumn id="34" name="Column" id_node_bottom="22" id_node_top="23" id_section="3" kind_structure="S" />
+        <StbColumn id="35" name="Column" id_node_bottom="23" id_node_top="24" id_section="4" kind_structure="S" />
+        <StbColumn id="36" name="Column" id_node_bottom="24" id_node_top="25" id_section="5" kind_structure="S" />
+        <StbColumn id="37" name="Column" id_node_bottom="25" id_node_top="26" id_section="6" kind_structure="S" />
+        <StbColumn id="38" name="Column" id_node_bottom="2" id_node_top="27" id_section="7" kind_structure="S" />
+        <StbColumn id="39" name="Column" id_node_bottom="27" id_node_top="28" id_section="8" kind_structure="S" />
+        <StbColumn id="40" name="Column" id_node_bottom="28" id_node_top="29" id_section="9" kind_structure="S" />
+        <StbColumn id="41" name="Column" id_node_bottom="29" id_node_top="30" id_section="10" kind_structure="S" />
+        <StbColumn id="42" name="Column" id_node_bottom="30" id_node_top="31" id_section="6" kind_structure="S" />
+        <StbColumn id="43" name="Column" id_node_bottom="3" id_node_top="32" id_section="7" kind_structure="S" />
+        <StbColumn id="44" name="Column" id_node_bottom="32" id_node_top="33" id_section="3" kind_structure="S" />
+        <StbColumn id="45" name="Column" id_node_bottom="33" id_node_top="34" id_section="11" kind_structure="S" />
+        <StbColumn id="46" name="Column" id_node_bottom="34" id_node_top="35" id_section="12" kind_structure="S" />
+        <StbColumn id="47" name="Column" id_node_bottom="35" id_node_top="36" id_section="6" kind_structure="S" />
+        <StbColumn id="48" name="Column" id_node_bottom="4" id_node_top="37" id_section="13" kind_structure="S" />
+        <StbColumn id="49" name="Column" id_node_bottom="37" id_node_top="38" id_section="14" kind_structure="S" />
+        <StbColumn id="50" name="Column" id_node_bottom="38" id_node_top="39" id_section="15" kind_structure="S" />
+        <StbColumn id="51" name="Column" id_node_bottom="39" id_node_top="40" id_section="6" kind_structure="S" />
+        <StbColumn id="52" name="Column" id_node_bottom="40" id_node_top="41" id_section="6" kind_structure="S" />
+        <StbColumn id="53" name="Column" id_node_bottom="5" id_node_top="42" id_section="16" kind_structure="S" />
+        <StbColumn id="54" name="Column" id_node_bottom="42" id_node_top="43" id_section="17" kind_structure="S" />
+        <StbColumn id="55" name="Column" id_node_bottom="43" id_node_top="44" id_section="14" kind_structure="S" />
+        <StbColumn id="56" name="Column" id_node_bottom="44" id_node_top="45" id_section="15" kind_structure="S" />
+        <StbColumn id="57" name="Column" id_node_bottom="45" id_node_top="46" id_section="6" kind_structure="S" />
+        <StbColumn id="58" name="Column" id_node_bottom="6" id_node_top="47" id_section="18" kind_structure="S" />
+        <StbColumn id="59" name="Column" id_node_bottom="47" id_node_top="48" id_section="19" kind_structure="S" />
+        <StbColumn id="60" name="Column" id_node_bottom="48" id_node_top="49" id_section="12" kind_structure="S" />
+        <StbColumn id="61" name="Column" id_node_bottom="49" id_node_top="50" id_section="6" kind_structure="S" />
+        <StbColumn id="62" name="Column" id_node_bottom="50" id_node_top="51" id_section="6" kind_structure="S" />
+        <StbColumn id="63" name="Column" id_node_bottom="7" id_node_top="52" id_section="20" kind_structure="S" />
+        <StbColumn id="64" name="Column" id_node_bottom="52" id_node_top="53" id_section="21" kind_structure="S" />
+        <StbColumn id="65" name="Column" id_node_bottom="53" id_node_top="54" id_section="22" kind_structure="S" />
+        <StbColumn id="66" name="Column" id_node_bottom="54" id_node_top="55" id_section="4" kind_structure="S" />
+        <StbColumn id="67" name="Column" id_node_bottom="55" id_node_top="56" id_section="6" kind_structure="S" />
+        <StbColumn id="68" name="Column" id_node_bottom="8" id_node_top="57" id_section="5" kind_structure="S" />
+        <StbColumn id="69" name="Column" id_node_bottom="57" id_node_top="58" id_section="14" kind_structure="S" />
+        <StbColumn id="70" name="Column" id_node_bottom="58" id_node_top="59" id_section="11" kind_structure="S" />
+        <StbColumn id="71" name="Column" id_node_bottom="59" id_node_top="60" id_section="12" kind_structure="S" />
+        <StbColumn id="72" name="Column" id_node_bottom="60" id_node_top="61" id_section="6" kind_structure="S" />
+        <StbColumn id="73" name="Column" id_node_bottom="9" id_node_top="62" id_section="6" kind_structure="S" />
+        <StbColumn id="74" name="Column" id_node_bottom="62" id_node_top="63" id_section="20" kind_structure="S" />
+        <StbColumn id="75" name="Column" id_node_bottom="63" id_node_top="64" id_section="10" kind_structure="S" />
+        <StbColumn id="76" name="Column" id_node_bottom="64" id_node_top="65" id_section="15" kind_structure="S" />
+        <StbColumn id="77" name="Column" id_node_bottom="65" id_node_top="66" id_section="6" kind_structure="S" />
+        <StbColumn id="78" name="Column" id_node_bottom="10" id_node_top="67" id_section="20" kind_structure="S" />
+        <StbColumn id="79" name="Column" id_node_bottom="67" id_node_top="68" id_section="3" kind_structure="S" />
+        <StbColumn id="80" name="Column" id_node_bottom="68" id_node_top="69" id_section="22" kind_structure="S" />
+        <StbColumn id="81" name="Column" id_node_bottom="69" id_node_top="70" id_section="20" kind_structure="S" />
+        <StbColumn id="82" name="Column" id_node_bottom="70" id_node_top="71" id_section="6" kind_structure="S" />
+        <StbColumn id="83" name="Column" id_node_bottom="11" id_node_top="72" id_section="6" kind_structure="S" />
+        <StbColumn id="84" name="Column" id_node_bottom="72" id_node_top="73" id_section="11" kind_structure="S" />
+        <StbColumn id="85" name="Column" id_node_bottom="73" id_node_top="74" id_section="11" kind_structure="S" />
+        <StbColumn id="86" name="Column" id_node_bottom="74" id_node_top="75" id_section="15" kind_structure="S" />
+        <StbColumn id="87" name="Column" id_node_bottom="75" id_node_top="76" id_section="6" kind_structure="S" />
+        <StbColumn id="88" name="Column" id_node_bottom="12" id_node_top="77" id_section="6" kind_structure="S" />
+        <StbColumn id="89" name="Column" id_node_bottom="77" id_node_top="78" id_section="10" kind_structure="S" />
+        <StbColumn id="90" name="Column" id_node_bottom="78" id_node_top="79" id_section="4" kind_structure="S" />
+        <StbColumn id="91" name="Column" id_node_bottom="79" id_node_top="80" id_section="15" kind_structure="S" />
+        <StbColumn id="92" name="Column" id_node_bottom="80" id_node_top="81" id_section="6" kind_structure="S" />
+        <StbColumn id="93" name="Column" id_node_bottom="13" id_node_top="82" id_section="14" kind_structure="S" />
+        <StbColumn id="94" name="Column" id_node_bottom="82" id_node_top="83" id_section="21" kind_structure="S" />
+        <StbColumn id="95" name="Column" id_node_bottom="83" id_node_top="84" id_section="3" kind_structure="S" />
+        <StbColumn id="96" name="Column" id_node_bottom="84" id_node_top="85" id_section="20" kind_structure="S" />
+        <StbColumn id="97" name="Column" id_node_bottom="85" id_node_top="86" id_section="6" kind_structure="S" />
+        <StbColumn id="98" name="Column" id_node_bottom="14" id_node_top="87" id_section="5" kind_structure="S" />
+        <StbColumn id="99" name="Column" id_node_bottom="87" id_node_top="88" id_section="17" kind_structure="S" />
+        <StbColumn id="100" name="Column" id_node_bottom="88" id_node_top="89" id_section="17" kind_structure="S" />
+        <StbColumn id="101" name="Column" id_node_bottom="89" id_node_top="90" id_section="12" kind_structure="S" />
+        <StbColumn id="102" name="Column" id_node_bottom="90" id_node_top="91" id_section="6" kind_structure="S" />
+        <StbColumn id="103" name="Column" id_node_bottom="15" id_node_top="92" id_section="5" kind_structure="S" />
+        <StbColumn id="104" name="Column" id_node_bottom="92" id_node_top="93" id_section="4" kind_structure="S" />
+        <StbColumn id="105" name="Column" id_node_bottom="93" id_node_top="94" id_section="10" kind_structure="S" />
+        <StbColumn id="106" name="Column" id_node_bottom="94" id_node_top="95" id_section="15" kind_structure="S" />
+        <StbColumn id="107" name="Column" id_node_bottom="95" id_node_top="96" id_section="6" kind_structure="S" />
+        <StbColumn id="108" name="Column" id_node_bottom="16" id_node_top="97" id_section="13" kind_structure="S" />
+        <StbColumn id="109" name="Column" id_node_bottom="97" id_node_top="98" id_section="23" kind_structure="S" />
+        <StbColumn id="110" name="Column" id_node_bottom="98" id_node_top="99" id_section="9" kind_structure="S" />
+        <StbColumn id="111" name="Column" id_node_bottom="99" id_node_top="100" id_section="11" kind_structure="S" />
+        <StbColumn id="112" name="Column" id_node_bottom="100" id_node_top="101" id_section="6" kind_structure="S" />
+        <StbColumn id="113" name="Column" id_node_bottom="17" id_node_top="102" id_section="24" kind_structure="S" />
+        <StbColumn id="114" name="Column" id_node_bottom="102" id_node_top="103" id_section="25" kind_structure="S" />
+        <StbColumn id="115" name="Column" id_node_bottom="103" id_node_top="104" id_section="11" kind_structure="S" />
+        <StbColumn id="116" name="Column" id_node_bottom="104" id_node_top="105" id_section="10" kind_structure="S" />
+        <StbColumn id="117" name="Column" id_node_bottom="105" id_node_top="106" id_section="6" kind_structure="S" />
+        <StbColumn id="118" name="Column" id_node_bottom="18" id_node_top="107" id_section="13" kind_structure="S" />
+        <StbColumn id="119" name="Column" id_node_bottom="107" id_node_top="108" id_section="19" kind_structure="S" />
+        <StbColumn id="120" name="Column" id_node_bottom="108" id_node_top="109" id_section="20" kind_structure="S" />
+        <StbColumn id="121" name="Column" id_node_bottom="109" id_node_top="110" id_section="15" kind_structure="S" />
+        <StbColumn id="122" name="Column" id_node_bottom="110" id_node_top="111" id_section="6" kind_structure="S" />
+        <StbColumn id="123" name="Column" id_node_bottom="19" id_node_top="112" id_section="2" kind_structure="S" />
+        <StbColumn id="124" name="Column" id_node_bottom="112" id_node_top="113" id_section="3" kind_structure="S" />
+        <StbColumn id="125" name="Column" id_node_bottom="113" id_node_top="114" id_section="11" kind_structure="S" />
+        <StbColumn id="126" name="Column" id_node_bottom="114" id_node_top="115" id_section="5" kind_structure="S" />
+        <StbColumn id="127" name="Column" id_node_bottom="115" id_node_top="116" id_section="6" kind_structure="S" />
+        <StbColumn id="128" name="Column" id_node_bottom="20" id_node_top="117" id_section="26" kind_structure="S" />
+        <StbColumn id="129" name="Column" id_node_bottom="117" id_node_top="118" id_section="9" kind_structure="S" />
+        <StbColumn id="130" name="Column" id_node_bottom="118" id_node_top="119" id_section="27" kind_structure="S" />
+        <StbColumn id="131" name="Column" id_node_bottom="119" id_node_top="120" id_section="5" kind_structure="S" />
+        <StbColumn id="132" name="Column" id_node_bottom="120" id_node_top="121" id_section="6" kind_structure="S" />
+        <StbColumn id="133" name="Column" id_node_bottom="21" id_node_top="122" id_section="18" kind_structure="S" />
+        <StbColumn id="134" name="Column" id_node_bottom="122" id_node_top="123" id_section="19" kind_structure="S" />
+        <StbColumn id="135" name="Column" id_node_bottom="123" id_node_top="124" id_section="15" kind_structure="S" />
+        <StbColumn id="136" name="Column" id_node_bottom="124" id_node_top="125" id_section="6" kind_structure="S" />
+        <StbColumn id="137" name="Column" id_node_bottom="125" id_node_top="126" id_section="6" kind_structure="S" />
+      </StbColumns>
+      <StbGirders>
+        <StbGirder id="1" name="FGirder" id_node_start="1" id_node_end="2" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="2" name="FGirder" id_node_start="2" id_node_end="3" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="3" name="FGirder" id_node_start="3" id_node_end="4" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="4" name="FGirder" id_node_start="4" id_node_end="1" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="5" name="FGirder" id_node_start="3" id_node_end="5" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="6" name="FGirder" id_node_start="5" id_node_end="6" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="7" name="FGirder" id_node_start="6" id_node_end="4" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="8" name="FGirder" id_node_start="2" id_node_end="7" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="9" name="FGirder" id_node_start="7" id_node_end="8" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="10" name="FGirder" id_node_start="8" id_node_end="3" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="11" name="FGirder" id_node_start="8" id_node_end="9" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="12" name="FGirder" id_node_start="9" id_node_end="5" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="13" name="FGirder" id_node_start="7" id_node_end="10" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="14" name="FGirder" id_node_start="10" id_node_end="11" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="15" name="FGirder" id_node_start="11" id_node_end="8" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="16" name="FGirder" id_node_start="11" id_node_end="12" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="17" name="FGirder" id_node_start="12" id_node_end="9" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="18" name="FGirder" id_node_start="10" id_node_end="13" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="19" name="FGirder" id_node_start="13" id_node_end="14" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="20" name="FGirder" id_node_start="14" id_node_end="11" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="21" name="FGirder" id_node_start="14" id_node_end="15" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="22" name="FGirder" id_node_start="15" id_node_end="12" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="23" name="FGirder" id_node_start="13" id_node_end="16" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="24" name="FGirder" id_node_start="16" id_node_end="17" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="25" name="FGirder" id_node_start="17" id_node_end="14" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="26" name="FGirder" id_node_start="17" id_node_end="18" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="27" name="FGirder" id_node_start="18" id_node_end="15" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="28" name="FGirder" id_node_start="16" id_node_end="19" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="29" name="FGirder" id_node_start="19" id_node_end="20" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="30" name="FGirder" id_node_start="20" id_node_end="17" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="31" name="FGirder" id_node_start="20" id_node_end="21" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="32" name="FGirder" id_node_start="21" id_node_end="18" id_section="1" kind_structure="RC" isFoundation="false" />
+        <StbGirder id="138" name="Girder" id_node_start="22" id_node_end="27" id_section="28" kind_structure="S" isFoundation="false" />
+        <StbGirder id="139" name="Girder" id_node_start="27" id_node_end="32" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="140" name="Girder" id_node_start="32" id_node_end="37" id_section="30" kind_structure="S" isFoundation="false" />
+        <StbGirder id="141" name="Girder" id_node_start="37" id_node_end="22" id_section="31" kind_structure="S" isFoundation="false" />
+        <StbGirder id="142" name="Girder" id_node_start="32" id_node_end="42" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="143" name="Girder" id_node_start="42" id_node_end="47" id_section="33" kind_structure="S" isFoundation="false" />
+        <StbGirder id="144" name="Girder" id_node_start="47" id_node_end="37" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="145" name="Girder" id_node_start="27" id_node_end="52" id_section="34" kind_structure="S" isFoundation="false" />
+        <StbGirder id="146" name="Girder" id_node_start="52" id_node_end="57" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="147" name="Girder" id_node_start="57" id_node_end="32" id_section="35" kind_structure="S" isFoundation="false" />
+        <StbGirder id="148" name="Girder" id_node_start="57" id_node_end="62" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="149" name="Girder" id_node_start="62" id_node_end="42" id_section="36" kind_structure="S" isFoundation="false" />
+        <StbGirder id="150" name="Girder" id_node_start="52" id_node_end="67" id_section="37" kind_structure="S" isFoundation="false" />
+        <StbGirder id="151" name="Girder" id_node_start="67" id_node_end="72" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="152" name="Girder" id_node_start="72" id_node_end="57" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="153" name="Girder" id_node_start="72" id_node_end="77" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="154" name="Girder" id_node_start="77" id_node_end="62" id_section="38" kind_structure="S" isFoundation="false" />
+        <StbGirder id="155" name="Girder" id_node_start="67" id_node_end="82" id_section="39" kind_structure="S" isFoundation="false" />
+        <StbGirder id="156" name="Girder" id_node_start="82" id_node_end="87" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="157" name="Girder" id_node_start="87" id_node_end="72" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="158" name="Girder" id_node_start="87" id_node_end="92" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="159" name="Girder" id_node_start="92" id_node_end="77" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="160" name="Girder" id_node_start="82" id_node_end="97" id_section="34" kind_structure="S" isFoundation="false" />
+        <StbGirder id="161" name="Girder" id_node_start="97" id_node_end="102" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="162" name="Girder" id_node_start="102" id_node_end="87" id_section="35" kind_structure="S" isFoundation="false" />
+        <StbGirder id="163" name="Girder" id_node_start="102" id_node_end="107" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="164" name="Girder" id_node_start="107" id_node_end="92" id_section="36" kind_structure="S" isFoundation="false" />
+        <StbGirder id="165" name="Girder" id_node_start="97" id_node_end="112" id_section="28" kind_structure="S" isFoundation="false" />
+        <StbGirder id="166" name="Girder" id_node_start="112" id_node_end="117" id_section="31" kind_structure="S" isFoundation="false" />
+        <StbGirder id="167" name="Girder" id_node_start="117" id_node_end="102" id_section="30" kind_structure="S" isFoundation="false" />
+        <StbGirder id="168" name="Girder" id_node_start="117" id_node_end="122" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="169" name="Girder" id_node_start="122" id_node_end="107" id_section="33" kind_structure="S" isFoundation="false" />
+        <StbGirder id="170" name="Girder" id_node_start="23" id_node_end="28" id_section="40" kind_structure="S" isFoundation="false" />
+        <StbGirder id="171" name="Girder" id_node_start="28" id_node_end="33" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="172" name="Girder" id_node_start="33" id_node_end="38" id_section="41" kind_structure="S" isFoundation="false" />
+        <StbGirder id="173" name="Girder" id_node_start="38" id_node_end="23" id_section="31" kind_structure="S" isFoundation="false" />
+        <StbGirder id="174" name="Girder" id_node_start="33" id_node_end="43" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="175" name="Girder" id_node_start="43" id_node_end="48" id_section="42" kind_structure="S" isFoundation="false" />
+        <StbGirder id="176" name="Girder" id_node_start="48" id_node_end="38" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="177" name="Girder" id_node_start="28" id_node_end="53" id_section="40" kind_structure="S" isFoundation="false" />
+        <StbGirder id="178" name="Girder" id_node_start="53" id_node_end="58" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="179" name="Girder" id_node_start="58" id_node_end="33" id_section="43" kind_structure="S" isFoundation="false" />
+        <StbGirder id="180" name="Girder" id_node_start="58" id_node_end="63" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="181" name="Girder" id_node_start="63" id_node_end="43" id_section="44" kind_structure="S" isFoundation="false" />
+        <StbGirder id="182" name="Girder" id_node_start="53" id_node_end="68" id_section="42" kind_structure="S" isFoundation="false" />
+        <StbGirder id="183" name="Girder" id_node_start="68" id_node_end="73" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="184" name="Girder" id_node_start="73" id_node_end="58" id_section="44" kind_structure="S" isFoundation="false" />
+        <StbGirder id="185" name="Girder" id_node_start="73" id_node_end="78" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="186" name="Girder" id_node_start="78" id_node_end="63" id_section="44" kind_structure="S" isFoundation="false" />
+        <StbGirder id="187" name="Girder" id_node_start="68" id_node_end="83" id_section="42" kind_structure="S" isFoundation="false" />
+        <StbGirder id="188" name="Girder" id_node_start="83" id_node_end="88" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="189" name="Girder" id_node_start="88" id_node_end="73" id_section="44" kind_structure="S" isFoundation="false" />
+        <StbGirder id="190" name="Girder" id_node_start="88" id_node_end="93" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="191" name="Girder" id_node_start="93" id_node_end="78" id_section="45" kind_structure="S" isFoundation="false" />
+        <StbGirder id="192" name="Girder" id_node_start="83" id_node_end="98" id_section="40" kind_structure="S" isFoundation="false" />
+        <StbGirder id="193" name="Girder" id_node_start="98" id_node_end="103" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="194" name="Girder" id_node_start="103" id_node_end="88" id_section="34" kind_structure="S" isFoundation="false" />
+        <StbGirder id="195" name="Girder" id_node_start="103" id_node_end="108" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="196" name="Girder" id_node_start="108" id_node_end="93" id_section="46" kind_structure="S" isFoundation="false" />
+        <StbGirder id="197" name="Girder" id_node_start="98" id_node_end="113" id_section="40" kind_structure="S" isFoundation="false" />
+        <StbGirder id="198" name="Girder" id_node_start="113" id_node_end="118" id_section="31" kind_structure="S" isFoundation="false" />
+        <StbGirder id="199" name="Girder" id_node_start="118" id_node_end="103" id_section="42" kind_structure="S" isFoundation="false" />
+        <StbGirder id="200" name="Girder" id_node_start="118" id_node_end="123" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="201" name="Girder" id_node_start="123" id_node_end="108" id_section="42" kind_structure="S" isFoundation="false" />
+        <StbGirder id="202" name="Girder" id_node_start="24" id_node_end="29" id_section="39" kind_structure="S" isFoundation="false" />
+        <StbGirder id="203" name="Girder" id_node_start="29" id_node_end="34" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="204" name="Girder" id_node_start="34" id_node_end="39" id_section="47" kind_structure="S" isFoundation="false" />
+        <StbGirder id="205" name="Girder" id_node_start="39" id_node_end="24" id_section="31" kind_structure="S" isFoundation="false" />
+        <StbGirder id="206" name="Girder" id_node_start="34" id_node_end="44" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="207" name="Girder" id_node_start="44" id_node_end="49" id_section="43" kind_structure="S" isFoundation="false" />
+        <StbGirder id="208" name="Girder" id_node_start="49" id_node_end="39" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="209" name="Girder" id_node_start="29" id_node_end="54" id_section="48" kind_structure="S" isFoundation="false" />
+        <StbGirder id="210" name="Girder" id_node_start="54" id_node_end="59" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="211" name="Girder" id_node_start="59" id_node_end="34" id_section="47" kind_structure="S" isFoundation="false" />
+        <StbGirder id="212" name="Girder" id_node_start="59" id_node_end="64" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="213" name="Girder" id_node_start="64" id_node_end="44" id_section="36" kind_structure="S" isFoundation="false" />
+        <StbGirder id="214" name="Girder" id_node_start="54" id_node_end="69" id_section="49" kind_structure="S" isFoundation="false" />
+        <StbGirder id="215" name="Girder" id_node_start="69" id_node_end="74" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="216" name="Girder" id_node_start="74" id_node_end="59" id_section="35" kind_structure="S" isFoundation="false" />
+        <StbGirder id="217" name="Girder" id_node_start="74" id_node_end="79" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="218" name="Girder" id_node_start="79" id_node_end="64" id_section="47" kind_structure="S" isFoundation="false" />
+        <StbGirder id="219" name="Girder" id_node_start="69" id_node_end="84" id_section="39" kind_structure="S" isFoundation="false" />
+        <StbGirder id="220" name="Girder" id_node_start="84" id_node_end="89" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="221" name="Girder" id_node_start="89" id_node_end="74" id_section="50" kind_structure="S" isFoundation="false" />
+        <StbGirder id="222" name="Girder" id_node_start="89" id_node_end="94" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="223" name="Girder" id_node_start="94" id_node_end="79" id_section="45" kind_structure="S" isFoundation="false" />
+        <StbGirder id="224" name="Girder" id_node_start="84" id_node_end="99" id_section="39" kind_structure="S" isFoundation="false" />
+        <StbGirder id="225" name="Girder" id_node_start="99" id_node_end="104" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="226" name="Girder" id_node_start="104" id_node_end="89" id_section="50" kind_structure="S" isFoundation="false" />
+        <StbGirder id="227" name="Girder" id_node_start="104" id_node_end="109" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="228" name="Girder" id_node_start="109" id_node_end="94" id_section="47" kind_structure="S" isFoundation="false" />
+        <StbGirder id="229" name="Girder" id_node_start="99" id_node_end="114" id_section="34" kind_structure="S" isFoundation="false" />
+        <StbGirder id="230" name="Girder" id_node_start="114" id_node_end="119" id_section="31" kind_structure="S" isFoundation="false" />
+        <StbGirder id="231" name="Girder" id_node_start="119" id_node_end="104" id_section="44" kind_structure="S" isFoundation="false" />
+        <StbGirder id="232" name="Girder" id_node_start="119" id_node_end="124" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="233" name="Girder" id_node_start="124" id_node_end="109" id_section="44" kind_structure="S" isFoundation="false" />
+        <StbGirder id="234" name="Girder" id_node_start="25" id_node_end="30" id_section="38" kind_structure="S" isFoundation="false" />
+        <StbGirder id="235" name="Girder" id_node_start="30" id_node_end="35" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="236" name="Girder" id_node_start="35" id_node_end="40" id_section="31" kind_structure="S" isFoundation="false" />
+        <StbGirder id="237" name="Girder" id_node_start="40" id_node_end="25" id_section="31" kind_structure="S" isFoundation="false" />
+        <StbGirder id="238" name="Girder" id_node_start="35" id_node_end="45" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="239" name="Girder" id_node_start="45" id_node_end="50" id_section="51" kind_structure="S" isFoundation="false" />
+        <StbGirder id="240" name="Girder" id_node_start="50" id_node_end="40" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="241" name="Girder" id_node_start="30" id_node_end="55" id_section="38" kind_structure="S" isFoundation="false" />
+        <StbGirder id="242" name="Girder" id_node_start="55" id_node_end="60" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="243" name="Girder" id_node_start="60" id_node_end="35" id_section="52" kind_structure="S" isFoundation="false" />
+        <StbGirder id="244" name="Girder" id_node_start="60" id_node_end="65" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="245" name="Girder" id_node_start="65" id_node_end="45" id_section="51" kind_structure="S" isFoundation="false" />
+        <StbGirder id="246" name="Girder" id_node_start="55" id_node_end="70" id_section="35" kind_structure="S" isFoundation="false" />
+        <StbGirder id="247" name="Girder" id_node_start="70" id_node_end="75" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="248" name="Girder" id_node_start="75" id_node_end="60" id_section="31" kind_structure="S" isFoundation="false" />
+        <StbGirder id="249" name="Girder" id_node_start="75" id_node_end="80" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="250" name="Girder" id_node_start="80" id_node_end="65" id_section="53" kind_structure="S" isFoundation="false" />
+        <StbGirder id="251" name="Girder" id_node_start="70" id_node_end="85" id_section="38" kind_structure="S" isFoundation="false" />
+        <StbGirder id="252" name="Girder" id_node_start="85" id_node_end="90" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="253" name="Girder" id_node_start="90" id_node_end="75" id_section="31" kind_structure="S" isFoundation="false" />
+        <StbGirder id="254" name="Girder" id_node_start="90" id_node_end="95" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="255" name="Girder" id_node_start="95" id_node_end="80" id_section="51" kind_structure="S" isFoundation="false" />
+        <StbGirder id="256" name="Girder" id_node_start="85" id_node_end="100" id_section="35" kind_structure="S" isFoundation="false" />
+        <StbGirder id="257" name="Girder" id_node_start="100" id_node_end="105" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="258" name="Girder" id_node_start="105" id_node_end="90" id_section="52" kind_structure="S" isFoundation="false" />
+        <StbGirder id="259" name="Girder" id_node_start="105" id_node_end="110" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="260" name="Girder" id_node_start="110" id_node_end="95" id_section="51" kind_structure="S" isFoundation="false" />
+        <StbGirder id="261" name="Girder" id_node_start="100" id_node_end="115" id_section="35" kind_structure="S" isFoundation="false" />
+        <StbGirder id="262" name="Girder" id_node_start="115" id_node_end="120" id_section="31" kind_structure="S" isFoundation="false" />
+        <StbGirder id="263" name="Girder" id_node_start="120" id_node_end="105" id_section="52" kind_structure="S" isFoundation="false" />
+        <StbGirder id="264" name="Girder" id_node_start="120" id_node_end="125" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="265" name="Girder" id_node_start="125" id_node_end="110" id_section="53" kind_structure="S" isFoundation="false" />
+        <StbGirder id="266" name="Girder" id_node_start="26" id_node_end="31" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="267" name="Girder" id_node_start="31" id_node_end="36" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="268" name="Girder" id_node_start="36" id_node_end="41" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="269" name="Girder" id_node_start="41" id_node_end="26" id_section="54" kind_structure="S" isFoundation="false" />
+        <StbGirder id="270" name="Girder" id_node_start="36" id_node_end="46" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="271" name="Girder" id_node_start="46" id_node_end="51" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="272" name="Girder" id_node_start="51" id_node_end="41" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="273" name="Girder" id_node_start="31" id_node_end="56" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="274" name="Girder" id_node_start="56" id_node_end="61" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="275" name="Girder" id_node_start="61" id_node_end="36" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="276" name="Girder" id_node_start="61" id_node_end="66" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="277" name="Girder" id_node_start="66" id_node_end="46" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="278" name="Girder" id_node_start="56" id_node_end="71" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="279" name="Girder" id_node_start="71" id_node_end="76" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="280" name="Girder" id_node_start="76" id_node_end="61" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="281" name="Girder" id_node_start="76" id_node_end="81" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="282" name="Girder" id_node_start="81" id_node_end="66" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="283" name="Girder" id_node_start="71" id_node_end="86" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="284" name="Girder" id_node_start="86" id_node_end="91" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="285" name="Girder" id_node_start="91" id_node_end="76" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="286" name="Girder" id_node_start="91" id_node_end="96" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="287" name="Girder" id_node_start="96" id_node_end="81" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="288" name="Girder" id_node_start="86" id_node_end="101" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="289" name="Girder" id_node_start="101" id_node_end="106" id_section="29" kind_structure="S" isFoundation="false" />
+        <StbGirder id="290" name="Girder" id_node_start="106" id_node_end="91" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="291" name="Girder" id_node_start="106" id_node_end="111" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="292" name="Girder" id_node_start="111" id_node_end="96" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="293" name="Girder" id_node_start="101" id_node_end="116" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="294" name="Girder" id_node_start="116" id_node_end="121" id_section="54" kind_structure="S" isFoundation="false" />
+        <StbGirder id="295" name="Girder" id_node_start="121" id_node_end="106" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="296" name="Girder" id_node_start="121" id_node_end="126" id_section="32" kind_structure="S" isFoundation="false" />
+        <StbGirder id="297" name="Girder" id_node_start="126" id_node_end="111" id_section="32" kind_structure="S" isFoundation="false" />
+      </StbGirders>
+      <StbBraces>
+        <StbBrace id="298" name="Brace" id_node_start="3" id_node_end="42" id_section="55" kind_structure="S" />
+        <StbBrace id="299" name="Brace" id_node_start="32" id_node_end="43" id_section="56" kind_structure="S" />
+        <StbBrace id="300" name="Brace" id_node_start="33" id_node_end="44" id_section="57" kind_structure="S" />
+        <StbBrace id="301" name="Brace" id_node_start="34" id_node_end="45" id_section="58" kind_structure="S" />
+        <StbBrace id="302" name="Brace" id_node_start="35" id_node_end="46" id_section="59" kind_structure="S" />
+        <StbBrace id="303" name="Brace" id_node_start="17" id_node_end="107" id_section="55" kind_structure="S" />
+        <StbBrace id="304" name="Brace" id_node_start="102" id_node_end="108" id_section="56" kind_structure="S" />
+        <StbBrace id="305" name="Brace" id_node_start="103" id_node_end="109" id_section="57" kind_structure="S" />
+        <StbBrace id="306" name="Brace" id_node_start="104" id_node_end="110" id_section="58" kind_structure="S" />
+        <StbBrace id="307" name="Brace" id_node_start="105" id_node_end="111" id_section="60" kind_structure="S" />
+      </StbBraces>
+    </StbMembers>
+    <StbSections>
+      <StbSecColumn_S id="2" name="C1">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP800x45" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="3" name="C2">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP500x36" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="4" name="C3">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP400x32" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="5" name="C4">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP400x16" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="6" name="C5">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP400x12" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="7" name="C6">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP650x40" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="8" name="C7">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP600x40" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="9" name="C8">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP500x28" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="10" name="C9">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP400x25" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="11" name="C10">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP450x25" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="12" name="C11">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP400x22" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="13" name="C12">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP650x50" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="14" name="C13">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP450x32" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="15" name="C14">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP400x19" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="16" name="C15">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP650x45" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="17" name="C16">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP450x28" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="18" name="C17">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP650x36" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="19" name="C18">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP500x25" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="20" name="C19">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP450x22" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="21" name="C20">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP500x40" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="22" name="C21">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP500x32" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="23" name="C22">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP600x32" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="24" name="C23">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP550x36" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="25" name="C24">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP550x40" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="26" name="C25">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP700x45" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecColumn_S id="27" name="C26">
+        <StbSecSteelFigureColumn_S>
+          <StbSecSteelColumn_S_Same shape="BCP400x28" strength_main="SN400" />
+        </StbSecSteelFigureColumn_S>
+      </StbSecColumn_S>
+      <StbSecBeam_RC id="1" name="G1">
+        <StbSecFigureBeam_RC>
+          <StbSecBeam_RC_Straight width="600" depth="1600" />
+        </StbSecFigureBeam_RC>
+      </StbSecBeam_RC>
+      <StbSecBeam_S id="28" name="G2">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H1000x400x19x40" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="29" name="G3">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H450x200x12x25" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="30" name="G4">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H850x400x19x40" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="31" name="G5">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H400x200x9x19" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="32" name="G6">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H400x200x9x12" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="33" name="G7">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H800x400x19x40" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="34" name="G8">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H650x300x16x32" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="35" name="G9">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H450x250x12x25" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="36" name="G10">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H500x250x12x28" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="37" name="G11">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H600x250x16x32" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="38" name="G12">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H450x250x9x22" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="39" name="G13">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H600x300x16x32" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="40" name="G14">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H750x350x16x36" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="41" name="G15">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H700x300x14x32" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="42" name="G16">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H700x350x14x32" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="43" name="G17">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H500x300x16x32" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="44" name="G18">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H500x300x16x28" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="45" name="G19">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H500x300x12x25" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="46" name="G20">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H500x300x16x25" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="47" name="G21">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H500x250x12x25" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="48" name="G22">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H600x300x14x28" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="49" name="G23">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H600x300x16x28" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="50" name="G24">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H450x250x12x28" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="51" name="G25">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H450x200x9x22" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="52" name="G26">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H400x200x9x22" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="53" name="G27">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H400x200x12x22" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBeam_S id="54" name="G28">
+        <StbSecSteelFigureBeam_S>
+          <StbSecSteelBeam_S_Straight shape="H400x200x9x16" strength_main="SN400" />
+        </StbSecSteelFigureBeam_S>
+      </StbSecBeam_S>
+      <StbSecBrace_S id="55" name="V1">
+        <StbSecSteelFigureBrace_S>
+          <StbSecSteelBrace_S_Same shape="H350x350x12x19" strength_main="SN400" />
+        </StbSecSteelFigureBrace_S>
+      </StbSecBrace_S>
+      <StbSecBrace_S id="56" name="V2">
+        <StbSecSteelFigureBrace_S>
+          <StbSecSteelBrace_S_Same shape="H400x400x13x21" strength_main="SN400" />
+        </StbSecSteelFigureBrace_S>
+      </StbSecBrace_S>
+      <StbSecBrace_S id="57" name="V3">
+        <StbSecSteelFigureBrace_S>
+          <StbSecSteelBrace_S_Same shape="H300x300x10x15" strength_main="SN400" />
+        </StbSecSteelFigureBrace_S>
+      </StbSecBrace_S>
+      <StbSecBrace_S id="58" name="V4">
+        <StbSecSteelFigureBrace_S>
+          <StbSecSteelBrace_S_Same shape="H150x150x7x10" strength_main="SN400" />
+        </StbSecSteelFigureBrace_S>
+      </StbSecBrace_S>
+      <StbSecBrace_S id="59" name="V5">
+        <StbSecSteelFigureBrace_S>
+          <StbSecSteelBrace_S_Same shape="H125x125x6.5x9" strength_main="SN400" />
+        </StbSecSteelFigureBrace_S>
+      </StbSecBrace_S>
+      <StbSecBrace_S id="60" name="V6">
+        <StbSecSteelFigureBrace_S>
+          <StbSecSteelBrace_S_Same shape="H100x100x6x8" strength_main="SN400" />
+        </StbSecSteelFigureBrace_S>
+      </StbSecBrace_S>
+      <StbSecSteel>
+        <StbSecRoll-H name="H1000x400x19x40" type="H" A="1000" B="400" t1="19" t2="40" r="18.000000000000004" />
+        <StbSecRoll-H name="H450x200x12x25" type="H" A="450" B="200" t1="12" t2="25" r="13.000000000000002" />
+        <StbSecRoll-H name="H850x400x19x40" type="H" A="850" B="400" t1="19" t2="40" r="18.000000000000004" />
+        <StbSecRoll-H name="H400x200x9x19" type="H" A="400" B="200" t1="9.0000000000000018" t2="19" r="13.000000000000002" />
+        <StbSecRoll-H name="H400x200x9x12" type="H" A="400" B="200" t1="9.0000000000000018" t2="12" r="13.000000000000002" />
+        <StbSecRoll-H name="H800x400x19x40" type="H" A="800" B="400" t1="19" t2="40" r="18.000000000000004" />
+        <StbSecRoll-H name="H650x300x16x32" type="H" A="650" B="300" t1="16" t2="32" r="13.000000000000002" />
+        <StbSecRoll-H name="H450x250x12x25" type="H" A="450" B="250" t1="12" t2="25" r="13.000000000000002" />
+        <StbSecRoll-H name="H500x250x12x28" type="H" A="500" B="250" t1="12" t2="28" r="13.000000000000002" />
+        <StbSecRoll-H name="H600x250x16x32" type="H" A="600" B="250" t1="16" t2="32" r="13.000000000000002" />
+        <StbSecRoll-H name="H450x250x9x22" type="H" A="450" B="250" t1="9.0000000000000018" t2="22" r="13.000000000000002" />
+        <StbSecRoll-H name="H600x300x16x32" type="H" A="600" B="300" t1="16" t2="32" r="13.000000000000002" />
+        <StbSecRoll-H name="H750x350x16x36" type="H" A="750" B="350.00000000000006" t1="16" t2="36.000000000000007" r="18.000000000000004" />
+        <StbSecRoll-H name="H700x300x14x32" type="H" A="700.00000000000011" B="300" t1="14" t2="32" r="18.000000000000004" />
+        <StbSecRoll-H name="H700x350x14x32" type="H" A="700.00000000000011" B="350.00000000000006" t1="14" t2="32" r="18.000000000000004" />
+        <StbSecRoll-H name="H500x300x16x32" type="H" A="500" B="300" t1="16" t2="32" r="13.000000000000002" />
+        <StbSecRoll-H name="H500x300x16x28" type="H" A="500" B="300" t1="16" t2="28" r="13.000000000000002" />
+        <StbSecRoll-H name="H500x300x12x25" type="H" A="500" B="300" t1="12" t2="25" r="13.000000000000002" />
+        <StbSecRoll-H name="H500x300x16x25" type="H" A="500" B="300" t1="16" t2="25" r="13.000000000000002" />
+        <StbSecRoll-H name="H500x250x12x25" type="H" A="500" B="250" t1="12" t2="25" r="13.000000000000002" />
+        <StbSecRoll-H name="H600x300x14x28" type="H" A="600" B="300" t1="14" t2="28" r="13.000000000000002" />
+        <StbSecRoll-H name="H600x300x16x28" type="H" A="600" B="300" t1="16" t2="28" r="13.000000000000002" />
+        <StbSecRoll-H name="H450x250x12x28" type="H" A="450" B="250" t1="12" t2="28" r="13.000000000000002" />
+        <StbSecRoll-H name="H450x200x9x22" type="H" A="450" B="200" t1="9.0000000000000018" t2="22" r="13.000000000000002" />
+        <StbSecRoll-H name="H400x200x9x22" type="H" A="400" B="200" t1="9.0000000000000018" t2="22" r="13.000000000000002" />
+        <StbSecRoll-H name="H400x200x12x22" type="H" A="400" B="200" t1="12" t2="22" r="13.000000000000002" />
+        <StbSecRoll-H name="H400x200x9x16" type="H" A="400" B="200" t1="9.0000000000000018" t2="16" r="13.000000000000002" />
+        <StbSecRoll-H name="H350x350x12x19" type="H" A="350.00000000000006" B="350.00000000000006" t1="12" t2="19" r="13.000000000000002" />
+        <StbSecRoll-H name="H400x400x13x21" type="H" A="400" B="400" t1="13.000000000000002" t2="21" r="22" />
+        <StbSecRoll-H name="H300x300x10x15" type="H" A="300" B="300" t1="10" t2="15" r="13.000000000000002" />
+        <StbSecRoll-H name="H150x150x7x10" type="H" A="150" B="150" t1="7" t2="10" r="8" />
+        <StbSecRoll-H name="H125x125x6.5x9" type="H" A="125" B="125" t1="6.5000000000000009" t2="9.0000000000000018" r="8" />
+        <StbSecRoll-H name="H100x100x6x8" type="H" A="100" B="100" t1="6" t2="8" r="8" />
+        <StbSecRoll-BOX name="BCP800x45" type="ELSE" A="800" B="800" t="45" r="158" />
+        <StbSecRoll-BOX name="BCP500x36" type="ELSE" A="500" B="500" t="36.000000000000007" r="126" />
+        <StbSecRoll-BOX name="BCP400x32" type="ELSE" A="400" B="400" t="32" r="112" />
+        <StbSecRoll-BOX name="BCP400x16" type="ELSE" A="400" B="400" t="16" r="56" />
+        <StbSecRoll-BOX name="BCP400x12" type="ELSE" A="400" B="400" t="12" r="42" />
+        <StbSecRoll-BOX name="BCP650x40" type="ELSE" A="650" B="650" t="40" r="140" />
+        <StbSecRoll-BOX name="BCP600x40" type="ELSE" A="600" B="600" t="40" r="140" />
+        <StbSecRoll-BOX name="BCP500x28" type="ELSE" A="500" B="500" t="28" r="98" />
+        <StbSecRoll-BOX name="BCP400x25" type="ELSE" A="400" B="400" t="25" r="88" />
+        <StbSecRoll-BOX name="BCP450x25" type="ELSE" A="450" B="450" t="25" r="88" />
+        <StbSecRoll-BOX name="BCP400x22" type="ELSE" A="400" B="400" t="22" r="77" />
+        <StbSecRoll-BOX name="BCP650x50" type="ELSE" A="650" B="650" t="50" r="175.00000000000003" />
+        <StbSecRoll-BOX name="BCP450x32" type="ELSE" A="450" B="450" t="32" r="112" />
+        <StbSecRoll-BOX name="BCP400x19" type="ELSE" A="400" B="400" t="19" r="67" />
+        <StbSecRoll-BOX name="BCP650x45" type="ELSE" A="650" B="650" t="45" r="158" />
+        <StbSecRoll-BOX name="BCP450x28" type="ELSE" A="450" B="450" t="28" r="98" />
+        <StbSecRoll-BOX name="BCP650x36" type="ELSE" A="650" B="650" t="36.000000000000007" r="126" />
+        <StbSecRoll-BOX name="BCP500x25" type="ELSE" A="500" B="500" t="25" r="88" />
+        <StbSecRoll-BOX name="BCP450x22" type="ELSE" A="450" B="450" t="22" r="77" />
+        <StbSecRoll-BOX name="BCP500x40" type="ELSE" A="500" B="500" t="40" r="140" />
+        <StbSecRoll-BOX name="BCP500x32" type="ELSE" A="500" B="500" t="32" r="112" />
+        <StbSecRoll-BOX name="BCP600x32" type="ELSE" A="600" B="600" t="32" r="112" />
+        <StbSecRoll-BOX name="BCP550x36" type="ELSE" A="550" B="550" t="36.000000000000007" r="126" />
+        <StbSecRoll-BOX name="BCP550x40" type="ELSE" A="550" B="550" t="40" r="140" />
+        <StbSecRoll-BOX name="BCP700x45" type="ELSE" A="700.00000000000011" B="700.00000000000011" t="45" r="158" />
+        <StbSecRoll-BOX name="BCP400x28" type="ELSE" A="400" B="400" t="28" r="98" />
+      </StbSecSteel>
+    </StbSections>
+    <StbJoints />
+  </StbModel>
+  <StbCalData />
+  <StbAnaModels />
+</ST_BRIDGE>
