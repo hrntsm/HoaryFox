@@ -116,11 +116,9 @@ module.exports = {
       ],
       copyright: `Copyright © ${new Date().getFullYear()} hrntsm, Inc. Built with Docusaurus.`,
     },
-    //TODO: ADD key
     algolia: {
-      apiKey: 'YOUR_API_KEY',
-      indexName: 'YOUR_INDEX_NAME',
-      contextualSearch: true,
+      apiKey: '28d1c171c6f64559d0a227407c166cee',
+      indexName: 'hoaryfox',
     },
   },
   presets: [
