@@ -18,7 +18,7 @@ jobs:
     - name: git config
       run: |
         git config --global user.email "contact@hrntsm.com"
-        git config --global user.name "hrntsm"
+        git config --global user.name "hiron"
     - run: yarn install
     - run: yarn deploy
       env:
