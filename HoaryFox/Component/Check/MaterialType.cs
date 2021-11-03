@@ -31,13 +31,13 @@ namespace HoaryFox.Component.Check
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Columns", "Col", "output StbColumns to Brep", GH_ParamAccess.tree);
-            pManager.AddTextParameter("Girders", "Gird", "output StbGirders to Brep", GH_ParamAccess.tree);
-            pManager.AddTextParameter("Posts", "Pst", "output StbPosts to Brep", GH_ParamAccess.tree);
-            pManager.AddTextParameter("Beams", "Bm", "output StbBeams to Brep", GH_ParamAccess.tree);
-            pManager.AddTextParameter("Braces", "Brc", "output StbBraces to Brep", GH_ParamAccess.tree);
-            pManager.AddTextParameter("Slabs", "Slb", "output StbSlabs to Brep", GH_ParamAccess.tree);
-            pManager.AddTextParameter("Walls", "Wl", "output StbWalls to Brep", GH_ParamAccess.tree);
+            pManager.AddTextParameter("Columns", "Col", "output StbColumn material types", GH_ParamAccess.tree);
+            pManager.AddTextParameter("Girders", "Gird", "output StbGirder material types", GH_ParamAccess.tree);
+            pManager.AddTextParameter("Posts", "Pst", "output StbPost material types", GH_ParamAccess.tree);
+            pManager.AddTextParameter("Beams", "Bm", "output StbBeam material types", GH_ParamAccess.tree);
+            pManager.AddTextParameter("Braces", "Brc", "output StbBrace material types", GH_ParamAccess.tree);
+            pManager.AddTextParameter("Slabs", "Slb", "output StbSlab material types", GH_ParamAccess.tree);
+            pManager.AddTextParameter("Walls", "Wl", "output StbWall materila types", GH_ParamAccess.tree);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
