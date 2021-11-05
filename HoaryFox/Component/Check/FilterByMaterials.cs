@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
@@ -6,14 +7,14 @@ using Grasshopper.Kernel.Types;
 
 namespace HoaryFox.Component.Check
 {
-    public class SortByMaterials : GH_Component
+    public class FilterByMaterials : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
-        public SortByMaterials()
-          : base("Sort by materials", "SortByMat",
-              "Sort geometry by material",
-              "HoaryFox", "Check")
+        public FilterByMaterials()
+          : base("Filter by materials", "FilterByMat",
+              "Filter geometry by material",
+              "HoaryFox", "Filter")
         {
         }
 
@@ -51,9 +52,22 @@ namespace HoaryFox.Component.Check
                 results[i] = new GH_Structure<GH_Brep>();
             }
 
+            if (!FilterValue(breps, floors, materials, results))
+            {
+                return;
+            }
+
+            for (var i = 0; i < 4; i++)
+            {
+                dataAccess.SetDataTree(i, results[i]);
+            }
+        }
+
+        private bool FilterValue(GH_Structure<GH_Brep> breps, GH_Structure<GH_Integer> floors, GH_Structure<GH_String> materials, IReadOnlyList<GH_Structure<GH_Brep>> results)
+        {
             for (var i = 0; i < breps.PathCount; i++)
             {
-                var path = floors.IsEmpty ? breps.Paths[i] : new GH_Path(floors.Branches[i][0].Value, i);
+                GH_Path path = floors.IsEmpty ? breps.Paths[i] : new GH_Path(floors.Branches[i][0].Value, i);
 
                 switch (materials.Branches[i][0].ToString())
                 {
@@ -71,14 +85,11 @@ namespace HoaryFox.Component.Check
                         break;
                     default:
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Unknown material type");
-                        return;
+                        return false;
                 }
             }
 
-            for (var i = 0; i < 4; i++)
-            {
-                dataAccess.SetDataTree(i, results[i]);
-            }
+            return true;
         }
 
         protected override Bitmap Icon => null;

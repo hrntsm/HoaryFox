@@ -18,7 +18,7 @@ namespace HoaryFox.Component.Check
         public Floor()
           : base("Floor", "Fl",
               "Check floor",
-              "HoaryFox", "Check")
+              "HoaryFox", "Filter")
         {
         }
 
@@ -50,49 +50,59 @@ namespace HoaryFox.Component.Check
             {
                 var decisionNode = new List<string>();
                 var result = new GH_Structure<GH_Integer>();
-                foreach ((Dictionary<string, string> info, int itemIndex) in infoDict.Select((dict, itemIndex) => (dict, itemIndex)))
-                {
-                    switch (info["stb_element_type"])
-                    {
-                        case "StbColumn":
-                        case "StbPost":
-                            decisionNode.Add(info["id_node_top"]);
-                            break;
-                        case "StbGirder":
-                        case "StbBeam":
-                        case "StbBrace":
-                            decisionNode.Add(info["id_node_end"]);
-                            break;
-                        case "StbSlab":
-                        case "StbWall":
-                            decisionNode.Add(info["StbNodeIdOrder"].Split(' ')[2]);
-                            break;
-                    }
-                }
-
-                foreach ((string node, int itemIndex) in decisionNode.Select((node, itemIndex) => (node, itemIndex)))
-                {
-                    foreach ((StbStory story, int storyIndex) in _stBridge.StbModel.StbStories.Select((story, storyIndex) => (story, storyIndex)))
-                    {
-                        IEnumerable<string> floorNodes = story.StbNodeIdList.Select(i => i.id);
-                        if (floorNodes.Contains(node))
-                        {
-                            result.Append(new GH_Integer(storyIndex), new GH_Path(0, itemIndex));
-                            break;
-                        }
-                    }
-                }
+                GetFloorDecisionNode(infoDict, decisionNode);
+                SetFloorIndex(decisionNode, result);
 
                 floorList[index] = result;
             }
 
-            var floorName = _stBridge.StbModel.StbStories.Select(story => story.name).ToList();
+            List<string> floorName = _stBridge.StbModel.StbStories.Select(story => story.name).ToList();
 
             for (var i = 0; i < 7; i++)
             {
                 dataAccess.SetDataTree(i, floorList[i]);
             }
             dataAccess.SetDataList("FloorName", floorName);
+        }
+
+        private void SetFloorIndex(IEnumerable<string> decisionNode, GH_Structure<GH_Integer> result)
+        {
+            foreach ((string node, int itemIndex) in decisionNode.Select((node, itemIndex) => (node, itemIndex)))
+            {
+                foreach ((StbStory story, int storyIndex) in _stBridge.StbModel.StbStories.Select((story, storyIndex) =>
+                    (story, storyIndex)))
+                {
+                    IEnumerable<string> floorNodes = story.StbNodeIdList.Select(i => i.id);
+                    if (floorNodes.Contains(node))
+                    {
+                        result.Append(new GH_Integer(storyIndex), new GH_Path(0, itemIndex));
+                        break;
+                    }
+                }
+            }
+        }
+
+        private static void GetFloorDecisionNode(IEnumerable<Dictionary<string, string>> infoDict, ICollection<string> decisionNode)
+        {
+            foreach (Dictionary<string, string> info in infoDict)
+            {
+                switch (info["stb_element_type"])
+                {
+                    case "StbColumn":
+                    case "StbPost":
+                        decisionNode.Add(info["id_node_top"]);
+                        break;
+                    case "StbGirder":
+                    case "StbBeam":
+                    case "StbBrace":
+                        decisionNode.Add(info["id_node_end"]);
+                        break;
+                    case "StbSlab":
+                    case "StbWall":
+                        decisionNode.Add(info["StbNodeIdOrder"].Split(' ')[2]);
+                        break;
+                }
+            }
         }
 
         protected override Bitmap Icon => null;

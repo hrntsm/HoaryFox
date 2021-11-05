@@ -20,7 +20,7 @@ namespace HoaryFox.Component.Check
         public MaterialType()
           : base("Material Type", "MatType",
               "Check material type",
-              "HoaryFox", "Check")
+              "HoaryFox", "Filter")
         {
         }
 
@@ -37,7 +37,7 @@ namespace HoaryFox.Component.Check
             pManager.AddTextParameter("Beams", "Bm", "output StbBeam material types", GH_ParamAccess.tree);
             pManager.AddTextParameter("Braces", "Brc", "output StbBrace material types", GH_ParamAccess.tree);
             pManager.AddTextParameter("Slabs", "Slb", "output StbSlab material types", GH_ParamAccess.tree);
-            pManager.AddTextParameter("Walls", "Wl", "output StbWall materila types", GH_ParamAccess.tree);
+            pManager.AddTextParameter("Walls", "Wl", "output StbWall material types", GH_ParamAccess.tree);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
