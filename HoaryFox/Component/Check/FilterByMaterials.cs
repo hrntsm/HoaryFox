@@ -60,7 +60,7 @@ namespace HoaryFox.Component.Check
             }
         }
 
-        private bool FilterValue(GH_Structure<GH_Brep> breps, GH_Structure<GH_Integer> floors, GH_Structure<GH_String> materials, IReadOnlyList<GH_Structure<GH_Brep>> results)
+        private void FilterValue(GH_Structure<GH_Brep> breps, GH_Structure<GH_Integer> floors, GH_Structure<GH_String> materials, IReadOnlyList<GH_Structure<GH_Brep>> results)
         {
             for (var i = 0; i < breps.PathCount; i++)
             {
@@ -82,11 +82,11 @@ namespace HoaryFox.Component.Check
                         break;
                     default:
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Unknown material type");
-                        return false;
+                        return;
                 }
             }
 
-            return true;
+            return;
         }
 
         protected override Bitmap Icon => null;
