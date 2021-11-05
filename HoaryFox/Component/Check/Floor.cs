@@ -82,7 +82,7 @@ namespace HoaryFox.Component.Check
             }
         }
 
-        private static void GetFloorDecisionNode(IEnumerable<Dictionary<string, string>> infoDict, ICollection<string> decisionNode)
+        private void GetFloorDecisionNode(IEnumerable<Dictionary<string, string>> infoDict, ICollection<string> decisionNode)
         {
             foreach (Dictionary<string, string> info in infoDict)
             {
@@ -100,6 +100,9 @@ namespace HoaryFox.Component.Check
                     case "StbSlab":
                     case "StbWall":
                         decisionNode.Add(info["StbNodeIdOrder"].Split(' ')[2]);
+                        break;
+                    default:
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Unknown stb element type");
                         break;
                 }
             }
