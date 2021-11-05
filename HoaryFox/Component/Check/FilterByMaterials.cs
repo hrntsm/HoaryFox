@@ -85,8 +85,6 @@ namespace HoaryFox.Component.Check
                         return;
                 }
             }
-
-            return;
         }
 
         protected override Bitmap Icon => null;
