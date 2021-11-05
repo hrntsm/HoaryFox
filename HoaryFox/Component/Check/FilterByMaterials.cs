@@ -52,10 +52,7 @@ namespace HoaryFox.Component.Check
                 results[i] = new GH_Structure<GH_Brep>();
             }
 
-            if (!FilterValue(breps, floors, materials, results))
-            {
-                return;
-            }
+            FilterValue(breps, floors, materials, results);
 
             for (var i = 0; i < 4; i++)
             {
