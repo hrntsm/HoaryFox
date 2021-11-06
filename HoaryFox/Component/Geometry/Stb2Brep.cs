@@ -28,11 +28,6 @@ namespace HoaryFox.Component.Geometry
         {
         }
 
-        public override void ClearData()
-        {
-            base.ClearData();
-        }
-
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Data", "D", "input ST-Bridge Data", GH_ParamAccess.item);
