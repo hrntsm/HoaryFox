@@ -4,6 +4,7 @@ using System.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+using HoaryFox.Properties;
 
 namespace HoaryFox.Component.Check
 {
@@ -22,7 +23,7 @@ namespace HoaryFox.Component.Check
         {
             pManager.AddBrepParameter("Geometry", "Geo", "Geometry", GH_ParamAccess.tree);
             pManager.AddTextParameter("Materials", "Mats", "Geometry material info", GH_ParamAccess.tree);
-            pManager.AddIntegerParameter("Floors", "Fls", "Geometry floor info", GH_ParamAccess.tree);
+            pManager.AddIntegerParameter("Stories", "Sts", "Geometry story info", GH_ParamAccess.tree);
             pManager[2].Optional = true;
         }
 
@@ -38,11 +39,11 @@ namespace HoaryFox.Component.Check
         {
             if (!dataAccess.GetDataTree(0, out GH_Structure<GH_Brep> breps)) { return; }
             if (!dataAccess.GetDataTree(1, out GH_Structure<GH_String> materials)) { return; }
-            if (!dataAccess.GetDataTree(2, out GH_Structure<GH_Integer> floors)) { return; }
+            if (!dataAccess.GetDataTree(2, out GH_Structure<GH_Integer> stories)) { return; }
 
-            if (breps.Paths.Count != materials.Paths.Count || (breps.Paths.Count != floors.Paths.Count && !floors.IsEmpty))
+            if (breps.Paths.Count != materials.Paths.Count || (breps.Paths.Count != stories.Paths.Count && !stories.IsEmpty))
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Geometries, materials and floors must have the same number of items");
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Geometries, materials and stories must have the same number of items");
                 return;
             }
 
@@ -52,7 +53,7 @@ namespace HoaryFox.Component.Check
                 results[i] = new GH_Structure<GH_Brep>();
             }
 
-            FilterValue(breps, floors, materials, results);
+            FilterValue(breps, stories, materials, results);
 
             for (var i = 0; i < 4; i++)
             {
@@ -60,11 +61,11 @@ namespace HoaryFox.Component.Check
             }
         }
 
-        private void FilterValue(GH_Structure<GH_Brep> breps, GH_Structure<GH_Integer> floors, GH_Structure<GH_String> materials, IReadOnlyList<GH_Structure<GH_Brep>> results)
+        private void FilterValue(GH_Structure<GH_Brep> breps, GH_Structure<GH_Integer> stories, GH_Structure<GH_String> materials, IReadOnlyList<GH_Structure<GH_Brep>> results)
         {
             for (var i = 0; i < breps.PathCount; i++)
             {
-                GH_Path path = floors.IsEmpty ? breps.Paths[i] : new GH_Path(floors.Branches[i][0].Value, i);
+                GH_Path path = stories.IsEmpty ? breps.Paths[i] : new GH_Path(stories.Branches[i][0].Value, i);
 
                 switch (materials.Branches[i][0].ToString())
                 {

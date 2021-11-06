@@ -19,7 +19,7 @@ namespace HoaryFox.Component.Check
 
         public MaterialType()
           : base("Material Type", "MatType",
-              "Check material type",
+              "Get material type",
               "HoaryFox", "Filter")
         {
         }

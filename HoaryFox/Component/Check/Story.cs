@@ -10,14 +10,14 @@ using STBDotNet.v202;
 
 namespace HoaryFox.Component.Check
 {
-    public class Floor : GH_Component
+    public class Story : GH_Component
     {
         private ST_BRIDGE _stBridge;
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
-        public Floor()
-          : base("Floor", "Fl",
-              "Check floor",
+        public Story()
+          : base("Story", "St",
+              "Get story info",
               "HoaryFox", "Filter")
         {
         }
@@ -29,14 +29,14 @@ namespace HoaryFox.Component.Check
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddIntegerParameter("Columns", "Col", "output StbColumn floors", GH_ParamAccess.tree);
-            pManager.AddIntegerParameter("Girders", "Gird", "output StbGirders floors", GH_ParamAccess.tree);
-            pManager.AddIntegerParameter("Posts", "Pst", "output StbPosts floors", GH_ParamAccess.tree);
-            pManager.AddIntegerParameter("Beams", "Bm", "output StbBeams floors", GH_ParamAccess.tree);
-            pManager.AddIntegerParameter("Braces", "Brc", "output StbBraces floors", GH_ParamAccess.tree);
-            pManager.AddIntegerParameter("Slabs", "Slb", "output StbSlabs floors", GH_ParamAccess.tree);
-            pManager.AddIntegerParameter("Walls", "Wl", "output StbWalls floors", GH_ParamAccess.tree);
-            pManager.AddTextParameter("FloorName", "Name", "output each index floor name", GH_ParamAccess.list);
+            pManager.AddIntegerParameter("Columns", "Col", "Output the story to which the StbColumn belongs", GH_ParamAccess.tree);
+            pManager.AddIntegerParameter("Girders", "Gird", "Output the story to which the StbGirder belongs", GH_ParamAccess.tree);
+            pManager.AddIntegerParameter("Posts", "Pst", "Output the story to which the StbPost belongs", GH_ParamAccess.tree);
+            pManager.AddIntegerParameter("Beams", "Bm", "Output the story to which the StbBeam belongs", GH_ParamAccess.tree);
+            pManager.AddIntegerParameter("Braces", "Brc", "Output the story to which the StbBrace belongs", GH_ParamAccess.tree);
+            pManager.AddIntegerParameter("Slabs", "Slb", "Output the story to which the StbSlab belongs", GH_ParamAccess.tree);
+            pManager.AddIntegerParameter("Walls", "Wl", "Output the story to which the StbWall belongs", GH_ParamAccess.tree);
+            pManager.AddTextParameter("StoryName", "Name", "output each index story name", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
@@ -51,29 +51,29 @@ namespace HoaryFox.Component.Check
                 var decisionNode = new List<string>();
                 var result = new GH_Structure<GH_Integer>();
                 GetFloorDecisionNode(infoDict, decisionNode);
-                SetFloorIndex(decisionNode, result);
+                SetStoryIndex(decisionNode, result);
 
                 floorList[index] = result;
             }
 
-            List<string> floorName = _stBridge.StbModel.StbStories.Select(story => story.name).ToList();
+            List<string> storyName = _stBridge.StbModel.StbStories.Select(story => story.name).ToList();
 
             for (var i = 0; i < 7; i++)
             {
                 dataAccess.SetDataTree(i, floorList[i]);
             }
-            dataAccess.SetDataList("FloorName", floorName);
+            dataAccess.SetDataList("StoryName", storyName);
         }
 
-        private void SetFloorIndex(IEnumerable<string> decisionNode, GH_Structure<GH_Integer> result)
+        private void SetStoryIndex(IEnumerable<string> decisionNode, GH_Structure<GH_Integer> result)
         {
             foreach ((string node, int itemIndex) in decisionNode.Select((node, itemIndex) => (node, itemIndex)))
             {
                 foreach ((StbStory story, int storyIndex) in _stBridge.StbModel.StbStories.Select((story, storyIndex) =>
                     (story, storyIndex)))
                 {
-                    IEnumerable<string> floorNodes = story.StbNodeIdList.Select(i => i.id);
-                    if (floorNodes.Contains(node))
+                    IEnumerable<string> storyNodes = story.StbNodeIdList.Select(i => i.id);
+                    if (storyNodes.Contains(node))
                     {
                         result.Append(new GH_Integer(storyIndex), new GH_Path(0, itemIndex));
                         break;
