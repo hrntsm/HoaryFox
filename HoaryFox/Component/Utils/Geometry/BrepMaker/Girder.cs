@@ -17,7 +17,22 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
         }
         public Brep CreateGirderBrep(string idSection, double rotate, StbGirderKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
         {
-            var curveList = new List<Curve>();
+            List<Curve> curveList = CreateFromEachGirderKind(idSection, kind, sectionPoints);
+
+            Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
+            Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+                .CapPlanarHoles(_tolerance[0]);
+
+            if (brep.GetVolume() < 0)
+            {
+                brep.Flip();
+            }
+            return brep;
+        }
+
+        private List<Curve> CreateFromEachGirderKind(string idSection, StbGirderKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
+        {
+            List<Curve> curveList;
             switch (kind)
             {
                 case StbGirderKind_structure.RC:
@@ -40,10 +55,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     throw new ArgumentOutOfRangeException();
             }
 
-            Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
-            Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
-                .CapPlanarHoles(_tolerance[0]);
-            return brep;
+            return curveList;
         }
 
 

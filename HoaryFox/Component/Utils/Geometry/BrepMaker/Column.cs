@@ -18,8 +18,22 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
         public Brep CreateColumnBrep(string idSection, double rotate, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
         {
-            var curveList = new List<Curve>();
+            List<Curve> curveList = CreateFromEachColumnKind(idSection, kind, sectionPoints);
 
+            Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
+            Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+                .CapPlanarHoles(_tolerance[0]);
+
+            if (brep.GetVolume() < 0)
+            {
+                brep.Flip();
+            }
+            return brep;
+        }
+
+        private List<Curve> CreateFromEachColumnKind(string idSection, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
+        {
+            List<Curve> curveList;
             switch (kind)
             {
                 case StbColumnKind_structure.RC:
@@ -39,15 +53,12 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     break;
                 case StbColumnKind_structure.CFT:
                 case StbColumnKind_structure.UNDEFINED:
-                    break;
+                    throw new ArgumentException("Unsupported StbColumnKind");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
-            Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
-                .CapPlanarHoles(_tolerance[0]);
-            return brep;
+            return curveList;
         }
 
         private static List<Curve> SecRcColumnToCurves(object figure, IReadOnlyList<Point3d> sectionPoints)
