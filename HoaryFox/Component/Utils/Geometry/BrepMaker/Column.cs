@@ -38,18 +38,15 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             {
                 case StbColumnKind_structure.RC:
                     StbSecColumn_RC rcSec = _sections.StbSecColumn_RC.First(sec => sec.id == idSection);
-                    object rcFigure = rcSec.StbSecFigureColumn_RC.Item;
-                    curveList = SecRcColumnToCurves(rcFigure, sectionPoints);
+                    curveList = SecRcColumnToCurves(rcSec.StbSecFigureColumn_RC.Item, sectionPoints);
                     break;
                 case StbColumnKind_structure.S:
                     StbSecColumn_S sSec = _sections.StbSecColumn_S.First(sec => sec.id == idSection);
-                    object[] sFigures = sSec.StbSecSteelFigureColumn_S.Items;
-                    curveList = SecSteelColumnToCurves(sFigures, sectionPoints);
+                    curveList = SecSteelColumnToCurves(sSec.StbSecSteelFigureColumn_S.Items, sectionPoints);
                     break;
                 case StbColumnKind_structure.SRC:
                     StbSecColumn_SRC srcSec = _sections.StbSecColumn_SRC.First(sec => sec.id == idSection);
-                    object srcFigure = srcSec.StbSecFigureColumn_SRC.Item;
-                    curveList = SecRcColumnToCurves(srcFigure, sectionPoints);
+                    curveList = SecRcColumnToCurves(srcSec.StbSecFigureColumn_SRC.Item, sectionPoints);
                     break;
                 case StbColumnKind_structure.CFT:
                 case StbColumnKind_structure.UNDEFINED:
