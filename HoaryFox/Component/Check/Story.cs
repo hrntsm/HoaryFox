@@ -108,7 +108,7 @@ namespace HoaryFox.Component.Check
             }
         }
 
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Resource.Story;
         public override Guid ComponentGuid => new Guid("5cc64205-b80e-48ba-b813-01c70110f02f");
     }
 }

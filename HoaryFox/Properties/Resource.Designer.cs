@@ -143,6 +143,16 @@ namespace HoaryFox.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
+        internal static System.Drawing.Bitmap FilterByMaterial {
+            get {
+                object obj = ResourceManager.GetObject("FilterByMaterial", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
         internal static System.Drawing.Bitmap GirderName {
             get {
                 object obj = ResourceManager.GetObject("GirderName", resourceCulture);
@@ -193,6 +203,16 @@ namespace HoaryFox.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
+        internal static System.Drawing.Bitmap MaterialType {
+            get {
+                object obj = ResourceManager.GetObject("MaterialType", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
         internal static System.Drawing.Bitmap PostName {
             get {
                 object obj = ResourceManager.GetObject("PostName", resourceCulture);
@@ -226,6 +246,16 @@ namespace HoaryFox.Properties {
         internal static System.Drawing.Bitmap SlabSection {
             get {
                 object obj = ResourceManager.GetObject("SlabSection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap Story {
+            get {
+                object obj = ResourceManager.GetObject("Story", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
