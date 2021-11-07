@@ -269,24 +269,24 @@ namespace HoaryFox.Component.Utils.Geometry
                 curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * depth));
                 Brep loftBrep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0];
                 Brep capedBrep = loftBrep.CapPlanarHoles(_tolerance[0]);
+
+                if (capedBrep == null)
+                {
+                    return NonPlanarBrep(depth, curveList);
+                }
+
                 if (capedBrep.GetVolume() < 0)
                 {
                     capedBrep.Flip();
                 }
                 capedBrep.Faces.SplitKinkyFaces();
 
-                return capedBrep == null ? NonPlanarBrep(depth, curveList) : new GH_Brep(capedBrep);
+                return new GH_Brep(capedBrep);
             }
 
-            Brep planarBrep = Brep.CreatePlanarBreps(new[] { curveList[0] }, _tolerance[0])[0];
-
-            if (planarBrep.GetVolume() < 0)
-            {
-                planarBrep.Flip();
-            }
-            planarBrep.Faces.SplitKinkyFaces();
-
-            return new GH_Brep(planarBrep ?? Brep.CreatePatch(new[] { curveList[0] }, 5, 5, _tolerance[0]));
+            return new GH_Brep(curveList[0].IsPlanar()
+                     ? Brep.CreatePlanarBreps(curveList[0], _tolerance[0])[0]
+                     : Brep.CreatePatch(new[] { curveList[0] }, 5, 5, _tolerance[0]));
         }
 
         private GH_Brep NonPlanarBrep(double depth, IList<PolylineCurve> curveList)
@@ -352,11 +352,14 @@ namespace HoaryFox.Component.Utils.Geometry
                 curveList[0] = new PolylineCurve(topPts.Select(pt => pt + normal * thickness / 2));
                 curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * thickness / 2));
                 Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0].CapPlanarHoles(_tolerance[0]);
-                if (brep.GetVolume() < 0)
+                if (brep != null)
                 {
-                    brep.Flip();
+                    if (brep.GetVolume() < 0)
+                    {
+                        brep.Flip();
+                    }
+                    brep.Faces.SplitKinkyFaces();
                 }
-                brep.Faces.SplitKinkyFaces();
 
                 brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
             }
