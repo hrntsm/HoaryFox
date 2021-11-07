@@ -23,11 +23,11 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
             Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                 .CapPlanarHoles(_tolerance[0]);
-
             if (brep.GetVolume() < 0)
             {
                 brep.Flip();
             }
+            brep.Faces.SplitKinkyFaces();
             return brep;
         }
 

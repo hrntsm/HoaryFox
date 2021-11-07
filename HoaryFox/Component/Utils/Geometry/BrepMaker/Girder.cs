@@ -27,6 +27,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             {
                 brep.Flip();
             }
+            brep.Faces.SplitKinkyFaces();
             return brep;
         }
 

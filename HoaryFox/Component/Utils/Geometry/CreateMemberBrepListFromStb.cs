@@ -273,6 +273,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 {
                     capedBrep.Flip();
                 }
+                capedBrep.Faces.SplitKinkyFaces();
 
                 return capedBrep == null ? NonPlanarBrep(depth, curveList) : new GH_Brep(capedBrep);
             }
@@ -283,6 +284,7 @@ namespace HoaryFox.Component.Utils.Geometry
             {
                 planarBrep.Flip();
             }
+            planarBrep.Faces.SplitKinkyFaces();
 
             return new GH_Brep(planarBrep ?? Brep.CreatePatch(new[] { curveList[0] }, 5, 5, _tolerance[0]));
         }
@@ -354,6 +356,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 {
                     brep.Flip();
                 }
+                brep.Faces.SplitKinkyFaces();
 
                 brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
             }
