@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
         <title>HoaryFox Blog</title>
         <link>https://hiron.dev/HoaryFox/en/blog</link>
@@ -13,6 +13,9 @@
             <guid>release-v131</guid>
             <pubDate>Sun, 28 Mar 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[HoaryFox をバージョン1.3.1にアップデートしました。]]></description>
+            <content:encoded><![CDATA[<p>HoaryFox をバージョン1.3.1にアップデートしました。<br/>
+<!-- -->今回のアップデート内容は以下です。</p><ul><li>Stb2Brep, Stb2Line に Bake 機能を追加<ul><li>構造種別ごと（主柱、大梁、間柱、小梁、床、壁） のレイヤーにサブレイヤーとして部材符号ごとに Bake します。</li><li>Bake 時に断面情報などを UserText としてジオメトリに紐づけた</li></ul></li><li>Bake 機能追加にあわせて、Stb2Brep の出力修正<ul><li>これまでは単一の板のような OpenBrep の集合として出力していたが、上記 UserText の書き出しに合わせて、部材ごとに Brep を結合してジオメトリそのものにも意味があるようにしたした</li></ul></li></ul><p>いつも使っていただいてありがとうございます。<br/>
+<!-- -->引き続きよろしくお願いいたします。</p>]]></content:encoded>
         </item>
         <item>
             <title><![CDATA[Ver1.2.2 リリース情報]]></title>
@@ -20,6 +23,9 @@
             <guid>release-v122</guid>
             <pubDate>Wed, 17 Feb 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[HoaryFox をバージョン1.2.2にアップデートしました。]]></description>
+            <content:encoded><![CDATA[<p>HoaryFox をバージョン1.2.2にアップデートしました。<br/>
+<!-- -->今回のアップデート内容は以下です。</p><ul><li>本ドキュメントサイトを作成</li><li>STB から Karamba3D への変換関連<ul><li>材料特性の単位が間違っていたので修正</li><li>断面のファミリー名指定を行う SetCroSecFamilyName コンポーネント追加</li><li>RC 断面の断面名を &quot;Id + 数字&quot; から BD- または CD- と数字で断面サイズがわかるようにした<ul><li>例えば BD-300x600 のような断面名</li></ul></li></ul></li><li>Karamba3D から STB への変換関連<ul><li>FrameBuilder using Karamba コンポーネントを、部材の変換と節点の変換の部分を分離した。<ul><li>FrameBuilder by angle と NodeBuilder</li></ul></li><li>変換の際、柱梁を判定する角度を入力可能にした</li><li>上記判定結果を Rhino のビューポートにテキストで出力するようにした</li></ul></li></ul><p>いつも使っていただいてありがとうございます。<br/>
+<!-- -->引き続きよろしくお願いいたします。</p>]]></content:encoded>
         </item>
         <item>
             <title><![CDATA[HoaryFox を使って構造図をお手軽に書く試み]]></title>
@@ -27,6 +33,17 @@
             <guid>structural-drawing-with-hoaryfox</guid>
             <pubDate>Sun, 14 Feb 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[モチベーション]]></description>
+            <content:encoded><![CDATA[<h2>モチベーション</h2><p>日本の建築構造系の共有フォーマットである <a href="https://www.building-smart.or.jp/meeting/buildall/structural-design/">ST-Bridge(STB ファイル)</a> ですが，正直なところ使用機会がありませんでした。
+というのも最近まで BIM ソフトも普及しておらず，一貫構造計算プログラムでしか使用されていません。
+その一貫構造計算プログラムにおいても相互でファイルをやり取りする必要もないため，長年 STB ファイルは宙ぶらりんの状態でした。</p><p><img src="../images/Blog/structural-drawing-with-hoaryfox/1.jpg"/></p><p><a href="https://www.building-smart.or.jp/meeting/buildall/structural-design/">上図は Building Smart Japan より</a></p><p>昨今は徐々に BIM ソフトも普及しつつあり STB ファイルを使用して構造モデルを BIM ソフトに取り込み，図面など作成するような段階まで行きつつあります。
+ただソフト価格が高額であるため，中小零細の建築事務所まで普及するのはまだ先になりそうです。</p><p>そんなときに現れたのが，STB ファイルを Grasshopper 上で読み込むコンポーネント<a href="https://www.food4rhino.com/app/hoaryfox">「HoaryFox」</a>。
+これを利用して打ち合わせ用に建物モデルをビジュアル化したり，計算書内に建物説明用のモデルを挿入したりしていました。
+あるとき建物断面情報を持った STB ファイルを CAD ソフトである「Rhinoceros」で読み込めているのであれば，それをもとに構造図を手軽に書けるのでは？と気付き，様々試行錯誤しました。</p><p>以下はその記録です。</p><hr/><h2>必要なプラグイン</h2><p>必要なプラグインは以下の 2 つとなります。
+特段特殊なものではないので，各々インストールしてもらえればと思います。</p><ul><li><a href="https://www.food4rhino.com/app/hoaryfox">HoaryFox (Grasshopper コンポーネント)</a></li><li><a href="https://www.food4rhino.com/app/sectiontools-rhino">SECTIONTOOLS FOR RHINO (Rhinoceros コンポーネント)</a></li></ul><h2>「HoaryFox」による解析モデルの取り込み</h2><h3>1. 解析モデルの読み込み</h3><p>基本的には HoaryFox の公式チュートリアル <a href="https://hiron.dev/HoaryFox/docs/Usage/ShowSTBModel">Show ST-Bridge model</a> の項目を参照して，解析モデルを Grasshopper に取り込みます。</p><h3>2. 断面を Rhino 側に Bake</h3><p>読み込んだモデルを Rhino 側に Bake します。そのまままるごと Bake しても問題ありませんが，柱・梁・間柱・小梁などの部材種別ごとにレイヤ分けして Bake すると，後の修正作業が楽になります。</p><p><img src="../images/Blog/structural-drawing-with-hoaryfox/2.png"/></p><h2>「SECTIONTOOLS FOR RHINO」 による断面作成</h2><h3>1. 断面線の作成</h3><p>コマンド：stCreate と入力するか，ツールバーの　 Section Tools → create で断面を切る位置を指定します。コマンドが起動すると，いくつかオプションが出てきます。</p><ul><li>Dir : 表示されている画面の水平もしくは垂直軸に断面基準線を置くか設定できます。画面表示によって動きが異なり，Top もしくは Perspective では建物 X/Y 通りの断面が作成でき，Front もしくは Right では建物伏図・見上げ図が作成出来ます。</li></ul><p><img src="../images/Blog/structural-drawing-with-hoaryfox/5.png"/>
+<img src="../images/Blog/structural-drawing-with-hoaryfox/6.png"/></p><ul><li>ExtrudeDir : 断面線で切った Brep を押し出す事ができます。通常は 0 です。</li><li>Replace : 断面線を設定した位置に既存の断面線が存在する場合，置き換える事ができます。</li><li>Name : 断面線の頭文字を設定出来ます。「X」と設定すれば，X00, X01,X02,,,と命名されます。</li><li>LoadFromFile : 自作したテキストファイルを読み込み，自動で断面線を構築することが出来ます。</li><li>Attributes : 作成した断面の属性を指定します。切断されたオブジェクトの属性とするか，ディスプレイに表示されている属性と設定できます。</li><li>SoliMode : 3D 上の切断したオブジェクトをソリッド化し切断面をサーフェス化するか，ハッチで埋めるか指定できます。</li><li>Labels : 断面線位置を指定した際に表示される断面名表示の設定です。</li><li>ArrowScale : 断面線を指定した際に表示される断面線矢印の大きさを指定できます。</li></ul><h3>2. 線情報のレイアウト</h3><p>コマンド：stLayout と入力するか，ツールバーの Section Tools → 2DLayout で各断面を平面に展開することが出来ます。
+コマンドを起動すると，どの断面を展開するか List が表示されます。展開したい断面名を指定します。</p><p><img src="../images/Blog/structural-drawing-with-hoaryfox/8.png"/></p><p>断面名を選択すると，オプションが表示されます。</p><ul><li>Grip : 配置する際の基点を指定します。Min で断面左下，Center で中央，Max で右上が基点になります。</li><li>ApplyToAll : Grip の設定を全断面に使用するか否かを設定します。</li><li>ShowSolid : stCreate で指定したソリッドを平面レイアウトにも設定するかを指定します。</li><li>PlotWeight : レイアウト曲線のプロットの重みをコントロールします。</li></ul><p><img src="../images/Blog/structural-drawing-with-hoaryfox/10.png"/></p><p>以上で断面情報を平面に書き出すことが出来ました。
+必要に応じ通り芯や寸法を足して出力すれば，構造モデルと不整合のない構造図が完成します。
+Rhino からエクスポートし，他の CAD ソフトにデータを移すことも可能です。</p><h2>今後のやりたいこと</h2><h3>断面符号情報の一括出力</h3><p>現状，断面線情報は平面に展開出来ましたが，それに付随する断面符号は譲渡してあるのにも関わらず設定出来ていません。今後試行錯誤し，符号情報ごと平面展開できるようにしたいです。</p>]]></content:encoded>
         </item>
         <item>
             <title><![CDATA[Karamba3D 公式サイトに掲載されました。]]></title>
@@ -34,6 +51,9 @@
             <guid>posted-on-karamba3d-website</guid>
             <pubDate>Wed, 20 Jan 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[HoaryFox が Karamba3D の公式サイトの THIRD PARTY PLUGINS の欄に掲載されました。]]></description>
+            <content:encoded><![CDATA[<p>HoaryFox が Karamba3D の公式サイトの THIRD PARTY PLUGINS の欄に掲載されました。<br/>
+<!-- -->5年程度前に &quot;構造とデジタル&quot;（<a href="https://hiron.dev/article">今はこちらに移動</a>） というブログを書くにあたって Karamba3D を触りだし、ついに公式サイトに掲載されるまで来たことは、とても感慨深いです。<br/>
+<!-- -->まだまだ機能不足な点が多いですが、引き続きよろしくお願いいたします。</p><p><a href="https://www.karamba3d.com/download/">https://www.karamba3d.com/download/</a></p><p><img src="../images/Blog/post-on-karamba3d.png"/></p>]]></content:encoded>
         </item>
         <item>
             <title><![CDATA[300 ダウンロードありがとうございます！]]></title>
@@ -41,6 +61,9 @@
             <guid>thanks-300dl</guid>
             <pubDate>Tue, 12 Jan 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[なんとダウンロード数が 300、Voteに6人も入れていただき評価が4.7 になりました。]]></description>
+            <content:encoded><![CDATA[<p>なんとダウンロード数が 300、Voteに6人も入れていただき評価が4.7 になりました。<br/>
+<!-- -->皆様使っていただきありがとうございます！！！<br/>
+<!-- -->引き続きじわじわ開発していきますので、よろしくお願いいたします。</p><p><img src="../images/Blog/300dl.png"/></p>]]></content:encoded>
         </item>
         <item>
             <title><![CDATA[ドキュメントページを公開しました]]></title>
@@ -48,6 +71,9 @@
             <guid>release-doc</guid>
             <pubDate>Wed, 06 Jan 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[ドキュメントがおおむね完成したので公開しました。]]></description>
+            <content:encoded><![CDATA[<p>ドキュメントがおおむね完成したので公開しました。<br/>
+<!-- -->ver1.2 になって機能が増え、ドキュメントがないと仕様がわからず使いづらいことが想定されるため、整備しました。<br/>
+<!-- -->Karamba への入出力で何がどこまで変換されるかわかるように仕様を記載したため、使用される方は以下より確認してください。  </p><ul><li><a href="https://hrntsm.github.io/HoaryFox/docs/Usage/ConvertToKaramba">Karamba への変換</a></li><li><a href="https://hrntsm.github.io/HoaryFox/docs/Usage/ExportSTB">Stb の出力</a></li></ul>]]></content:encoded>
         </item>
         <item>
             <title><![CDATA[Ver1.2.1 リリース情報]]></title>
@@ -55,6 +81,8 @@
             <guid>release-v121</guid>
             <pubDate>Sat, 02 Jan 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[HoaryFox をバージョン1.2.1にアップデートしました。]]></description>
+            <content:encoded><![CDATA[<p>HoaryFox をバージョン1.2.1にアップデートしました。<br/>
+<!-- -->今回のアップデート内容は以下です。</p><ul><li>Karamba のデータを ST-Bridge データとしてアウトプットする機能を追加</li><li>上記に合わせて以下のコンポーネントを追加<ul><li>Export STB file</li><li>Axis Builder</li><li>Story Builder</li><li>Frame Builder using Karamba</li></ul></li><li>アイコンの変更<ul><li>Load STB file コンポーネントに使用していたアイコン変更（HF→ のようなアイコン）</li><li>バージョン1.1で Load STB file に使用していたアイコンを Export STB に使用</li></ul></li></ul>]]></content:encoded>
         </item>
         <item>
             <title><![CDATA[ようこそ！！]]></title>
@@ -62,6 +90,8 @@
             <guid>welcome</guid>
             <pubDate>Fri, 01 Jan 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[HoaryFox の開発者の hiron です。HoaryFoxに興味を持っていただきありがとうございます。]]></description>
+            <content:encoded><![CDATA[<p>HoaryFox の開発者の hiron です。HoaryFoxに興味を持っていただきありがとうございます。<br/>
+<!-- -->うれしいことにいろいろな方に使っていただき開発開始から1年半程度たち HoaryFox は バージョン1.2 となりました。機能がだいぶ増えたので今回ドキュメントサイトを作成することにしました。</p><p>このドキュメントサイトは Facebook が開発している OSS の <a href="https://v2.docusaurus.io/">docusaurus</a> を使用しています。簡単にドキュメントサイトが作成できるので、こちらも興味があったら使用してみてください。</p><p>何か疑問点あればお気軽にお問い合わせいただければと思います。</p>]]></content:encoded>
         </item>
     </channel>
 </rss>
