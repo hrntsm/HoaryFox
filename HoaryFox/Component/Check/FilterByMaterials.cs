@@ -66,24 +66,26 @@ namespace HoaryFox.Component.Check
             for (var i = 0; i < breps.PathCount; i++)
             {
                 GH_Path path = stories.IsEmpty ? breps.Paths[i] : new GH_Path(stories.Branches[i][0].Value, i);
-
-                switch (materials.Branches[i][0].ToString())
+                if (breps.Branches[i][0] != null)
                 {
-                    case "RC":
-                        results[0].Append(breps.Branches[i][0].DuplicateBrep(), path);
-                        break;
-                    case "S":
-                        results[1].Append(breps.Branches[i][0].DuplicateBrep(), path);
-                        break;
-                    case "SRC":
-                        results[2].Append(breps.Branches[i][0].DuplicateBrep(), path);
-                        break;
-                    case "CFT":
-                        results[3].Append(breps.Branches[i][0].DuplicateBrep(), path);
-                        break;
-                    default:
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Unknown material type");
-                        return;
+                    switch (materials.Branches[i][0].ToString())
+                    {
+                        case "RC":
+                            results[0].Append(breps.Branches[i][0].DuplicateBrep(), path);
+                            break;
+                        case "S":
+                            results[1].Append(breps.Branches[i][0].DuplicateBrep(), path);
+                            break;
+                        case "SRC":
+                            results[2].Append(breps.Branches[i][0].DuplicateBrep(), path);
+                            break;
+                        case "CFT":
+                            results[3].Append(breps.Branches[i][0].DuplicateBrep(), path);
+                            break;
+                        default:
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Unknown material type");
+                            return;
+                    }
                 }
             }
         }
