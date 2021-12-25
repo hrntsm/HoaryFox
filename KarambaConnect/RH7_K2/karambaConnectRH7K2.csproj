@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <Version>2.0.2</Version>
+    <Title>karambaConnect</Title>
+    <Description>Description of karambaConnect</Description>
+    <TargetExt>.gha</TargetExt>
+    <Authors>hrntsm</Authors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Grasshopper" Version="7.10.21256.17001" IncludeAssets="compile;build" />
+    <PackageReference Include="STBDotNet" Version="0.2.1" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Common\KarambaConnectCommon.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="KarambaCommon">
+      <HintPath>..\Common\Library\karamba220\karambaCommon.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="KarambaGH">
+      <HintPath>..\Common\Library\karamba220\karamba.gha</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  
+  <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
+    <StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
+    <StartArguments></StartArguments>
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
+
+</Project>
