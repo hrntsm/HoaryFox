@@ -18,36 +18,36 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
         public Brep CreateColumnBrep(string idSection, double rotate, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
         {
-            var curveList = new List<Curve>();
+            List<Curve> curveList = CreateFromEachColumnKind(idSection, kind, sectionPoints);
+            Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
+            return Utils.CreateCapedBrepFromLoft(curveList, _tolerance[0]);
+        }
 
+        private List<Curve> CreateFromEachColumnKind(string idSection, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
+        {
+            List<Curve> curveList;
             switch (kind)
             {
                 case StbColumnKind_structure.RC:
                     StbSecColumn_RC rcSec = _sections.StbSecColumn_RC.First(sec => sec.id == idSection);
-                    object rcFigure = rcSec.StbSecFigureColumn_RC.Item;
-                    curveList = SecRcColumnToCurves(rcFigure, sectionPoints);
+                    curveList = SecRcColumnToCurves(rcSec.StbSecFigureColumn_RC.Item, sectionPoints);
                     break;
                 case StbColumnKind_structure.S:
                     StbSecColumn_S sSec = _sections.StbSecColumn_S.First(sec => sec.id == idSection);
-                    object[] sFigures = sSec.StbSecSteelFigureColumn_S.Items;
-                    curveList = SecSteelColumnToCurves(sFigures, sectionPoints);
+                    curveList = SecSteelColumnToCurves(sSec.StbSecSteelFigureColumn_S.Items, sectionPoints);
                     break;
                 case StbColumnKind_structure.SRC:
                     StbSecColumn_SRC srcSec = _sections.StbSecColumn_SRC.First(sec => sec.id == idSection);
-                    object srcFigure = srcSec.StbSecFigureColumn_SRC.Item;
-                    curveList = SecRcColumnToCurves(srcFigure, sectionPoints);
+                    curveList = SecRcColumnToCurves(srcSec.StbSecFigureColumn_SRC.Item, sectionPoints);
                     break;
                 case StbColumnKind_structure.CFT:
                 case StbColumnKind_structure.UNDEFINED:
-                    break;
+                    throw new ArgumentException("Unsupported StbColumnKind");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
-            Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
-                .CapPlanarHoles(_tolerance[0]);
-            return brep;
+            return curveList;
         }
 
         private static List<Curve> SecRcColumnToCurves(object figure, IReadOnlyList<Point3d> sectionPoints)

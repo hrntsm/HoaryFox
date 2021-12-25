@@ -19,8 +19,14 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
         public Brep CreateBraceBrep(string idSection, double rotate, StbBraceKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
         {
-            var curveList = new List<Curve>();
+            List<Curve> curveList = CreateFromEachBraceKind(idSection, kind, sectionPoints);
+            Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
+            return Utils.CreateCapedBrepFromLoft(curveList, _tolerance[0]);
+        }
 
+        private List<Curve> CreateFromEachBraceKind(string idSection, StbBraceKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
+        {
+            List<Curve> curveList;
             switch (kind)
             {
                 case StbBraceKind_structure.S:
@@ -35,10 +41,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     throw new ArgumentOutOfRangeException();
             }
 
-            Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
-            Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
-                .CapPlanarHoles(_tolerance[0]);
-            return brep;
+            return curveList;
         }
 
         private List<Curve> SecSteelBraceToCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
