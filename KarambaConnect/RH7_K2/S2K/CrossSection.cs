@@ -35,7 +35,7 @@ namespace KarambaConnect.S2K
         {
             // TODO: 材軸の回転は未設定
             var k3dCroSec = new List<CroSec>();
-            var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20500_0000, 8076_0000, 8076_0000, 78.5, 23_5000, 1.20E-05, Color.Brown);
+            var sn400 = new FemMaterial_Isotrop("Steel", "SN400", 20500_0000, 8076_0000, 8076_0000, 78.5, 23_5000, 23_5000, FemMaterial.FlowHypothesis.mises, 1.20E-05, Color.Brown);
 
             k3dCroSec.AddRange(StbSecColumnRcToK3dCroSec(sections.StbSecColumn_RC));
             k3dCroSec.AddRange(StbSecBeamRcToK3dCroSec(sections.StbSecBeam_RC));
