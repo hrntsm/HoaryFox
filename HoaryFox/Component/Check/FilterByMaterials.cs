@@ -47,47 +47,57 @@ namespace HoaryFox.Component.Check
                 return;
             }
 
-            var results = new GH_Structure<GH_Brep>[4];
+            var filteredBreps = new GH_Structure<GH_Brep>[4];
             for (var i = 0; i < 4; i++)
             {
-                results[i] = new GH_Structure<GH_Brep>();
+                filteredBreps[i] = new GH_Structure<GH_Brep>();
             }
 
-            FilterValue(breps, stories, materials, results);
+            FilterValue(breps, stories, materials, filteredBreps);
 
             for (var i = 0; i < 4; i++)
             {
-                dataAccess.SetDataTree(i, results[i]);
+                dataAccess.SetDataTree(i, filteredBreps[i]);
             }
         }
 
-        private void FilterValue(GH_Structure<GH_Brep> breps, GH_Structure<GH_Integer> stories, GH_Structure<GH_String> materials, IReadOnlyList<GH_Structure<GH_Brep>> results)
+        private void FilterValue(GH_Structure<GH_Brep> breps, GH_Structure<GH_Integer> stories, GH_Structure<GH_String> materials, IReadOnlyList<GH_Structure<GH_Brep>> filteredBreps)
         {
             for (var i = 0; i < breps.PathCount; i++)
             {
                 GH_Path path = stories.IsEmpty ? breps.Paths[i] : new GH_Path(stories.Branches[i][0].Value, i);
-                if (breps.Branches[i][0] != null)
+                GH_Brep brep = breps.Branches[i][0];
+                var materialType = materials.Branches[i][0].ToString();
+
+                SetMaterialFilteredBrep(filteredBreps, brep, materialType, path);
+            }
+        }
+
+        private bool SetMaterialFilteredBrep(IReadOnlyList<GH_Structure<GH_Brep>> results, GH_Brep brep, string materialType, GH_Path path)
+        {
+            if (brep != null)
+            {
+                switch (materialType)
                 {
-                    switch (materials.Branches[i][0].ToString())
-                    {
-                        case "RC":
-                            results[0].Append(breps.Branches[i][0].DuplicateBrep(), path);
-                            break;
-                        case "S":
-                            results[1].Append(breps.Branches[i][0].DuplicateBrep(), path);
-                            break;
-                        case "SRC":
-                            results[2].Append(breps.Branches[i][0].DuplicateBrep(), path);
-                            break;
-                        case "CFT":
-                            results[3].Append(breps.Branches[i][0].DuplicateBrep(), path);
-                            break;
-                        default:
-                            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Unknown material type");
-                            return;
-                    }
+                    case "RC":
+                        results[0].Append(brep.DuplicateBrep(), path);
+                        break;
+                    case "S":
+                        results[1].Append(brep.DuplicateBrep(), path);
+                        break;
+                    case "SRC":
+                        results[2].Append(brep.DuplicateBrep(), path);
+                        break;
+                    case "CFT":
+                        results[3].Append(brep.DuplicateBrep(), path);
+                        break;
+                    default:
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Unknown material type");
+                        return true;
                 }
             }
+
+            return false;
         }
 
         protected override Bitmap Icon => Resource.FilterByMaterial;
