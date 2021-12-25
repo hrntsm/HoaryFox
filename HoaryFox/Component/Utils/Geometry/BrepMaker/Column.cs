@@ -19,16 +19,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
         public Brep CreateColumnBrep(string idSection, double rotate, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
         {
             List<Curve> curveList = CreateFromEachColumnKind(idSection, kind, sectionPoints);
-
             Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
-            Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
-                .CapPlanarHoles(_tolerance[0]);
-            if (brep.GetVolume() < 0)
-            {
-                brep.Flip();
-            }
-            brep.Faces.SplitKinkyFaces();
-            return brep;
+            return Utils.CreateCapedBrepFromLoft(curveList, _tolerance[0]);
         }
 
         private List<Curve> CreateFromEachColumnKind(string idSection, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints)

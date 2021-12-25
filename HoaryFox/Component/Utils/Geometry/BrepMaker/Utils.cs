@@ -53,6 +53,18 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
         }
 
+        public static Brep CreateCapedBrepFromLoft(List<Curve> curveList, double tolerance)
+        {
+            Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+                .CapPlanarHoles(tolerance);
+            if (brep.SolidOrientation == BrepSolidOrientation.Inward)
+            {
+                brep.Flip();
+            }
+            brep.Faces.SplitKinkyFaces();
+            return brep;
+        }
+
         public enum SectionType
         {
             Column,

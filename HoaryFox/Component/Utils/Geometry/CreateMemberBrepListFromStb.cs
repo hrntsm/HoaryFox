@@ -275,7 +275,7 @@ namespace HoaryFox.Component.Utils.Geometry
                     return NonPlanarBrep(depth, curveList);
                 }
 
-                if (capedBrep.GetVolume() < 0)
+                if (capedBrep.SolidOrientation == BrepSolidOrientation.Inward)
                 {
                     capedBrep.Flip();
                 }
@@ -354,7 +354,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0].CapPlanarHoles(_tolerance[0]);
                 if (brep != null)
                 {
-                    if (brep.GetVolume() < 0)
+                    if (brep.SolidOrientation == BrepSolidOrientation.Inward)
                     {
                         brep.Flip();
                     }
