@@ -11,16 +11,21 @@
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <RootNamespace>HoaryFox</RootNamespace>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Grasshopper" Version="6.34.21034.7001" IncludeAssets="compile;build" />
     <PackageReference Include="STBDotNet" Version="0.2.2" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Common\HoaryFoxCommon.csproj" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <Compile Include="..\RH7\**\*.cs" Exclude="..\RH7\HoaryFoxRH7Info.cs" />
+    <Compile Remove="..\RH7\obj\Debug\net48\**" />
+  </ItemGroup>
+
   <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
     <StartProgram>C:\Program Files\Rhino 6\System\Rhino.exe</StartProgram>
     <StartArguments></StartArguments>
