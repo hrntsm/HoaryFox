@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <Version>2.0.2</Version>
+    <Title>karambaConnect</Title>
+    <Description>HoaryFox karamba connect extension</Description>
+    <TargetExt>.gha</TargetExt>
+    <Authors>hrntsm</Authors>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <PackageId>karambaConnect</PackageId>
+    <AssemblyName>karambaConnect</AssemblyName>
+    <RootNamespace>karambaConnect</RootNamespace>
+    <DefineConstants>TRACE;karamba2</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="STBDotNet" Version="0.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\KarambaConnectCommon.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="KarambaCommon">
+      <HintPath>..\Common\Library\RH6_Karamba2\karambaCommon.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="KarambaGH">
+      <HintPath>..\Common\Library\RH6_Karamba2\karamba.gha</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="GH_IO">
+      <HintPath>..\Common\Library\RH6_Karamba2\GH_IO.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Grasshopper">
+      <HintPath>..\Common\Library\RH6_Karamba2\Grasshopper.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="RhinoCommon">
+      <HintPath>..\Common\Library\RH6_Karamba2\RhinoCommon.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\RH7K2\**\*.cs" Exclude="..\RH7K2\karambaConnectRH7K2Info.cs" />
+    <Compile Remove="..\RH7K2\obj\**" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
+    <StartProgram>C:\Program Files\Rhino 6\System\Rhino.exe</StartProgram>
+    <StartArguments></StartArguments>
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="set OUTPUT_DIRECTORY= &quot;$(SolutionDir)Release\RH6_K2\KarambaConnect\&quot;&#xD;&#xA;if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;if not exist %25OUTPUT_DIRECTORY%25  (&#xD;&#xA;mkdir %25OUTPUT_DIRECTORY%25&#xD;&#xA;)&#xD;&#xA;copy &quot;$(TargetDir)&quot;  %25OUTPUT_DIRECTORY%25&#xD;&#xA;)" />
+  </Target>
+
+</Project>
