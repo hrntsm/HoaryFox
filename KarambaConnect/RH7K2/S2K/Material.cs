@@ -47,65 +47,74 @@ namespace KarambaConnect.S2K
         {
             double fc, gamma;
             const double Nu = 0.2d;
-            // マッチしなかった場合は Fc21 相当で返す
-            switch (stbStrengthFc.ToLower())
+
+            if (stbStrengthFc == null)
             {
-                case "fc18":
-                    fc = 18;
-                    gamma = 23;
-                    break;
-                case "fc21":
-                    fc = 21;
-                    gamma = 23;
-                    break;
-                case "fc24":
-                    fc = 24;
-                    gamma = 23;
-                    break;
-                case "fc27":
-                    fc = 27;
-                    gamma = 23;
-                    break;
-                case "fc30":
-                    fc = 30;
-                    gamma = 23;
-                    break;
-                case "fc33":
-                    fc = 33;
-                    gamma = 23;
-                    break;
-                case "fc36":
-                    fc = 36;
-                    gamma = 23;
-                    break;
-                case "fc40":
-                    fc = 40;
-                    gamma = 23.5;
-                    break;
-                case "fc42":
-                    fc = 42;
-                    gamma = 23.5;
-                    break;
-                case "fc45":
-                    fc = 45;
-                    gamma = 23.5;
-                    break;
-                case "fc50":
-                    fc = 50;
-                    gamma = 24;
-                    break;
-                case "fc55":
-                    fc = 55;
-                    gamma = 24;
-                    break;
-                case "fc60":
-                    fc = 60;
-                    gamma = 24;
-                    break;
-                default:
-                    fc = 21;
-                    gamma = 23;
-                    break;
+                fc = 21;
+                gamma = 23;
+            }
+            else
+            {
+                // マッチしなかった場合は Fc21 相当で返す
+                switch (stbStrengthFc.ToLower())
+                {
+                    case "fc18":
+                        fc = 18;
+                        gamma = 23;
+                        break;
+                    case "fc21":
+                        fc = 21;
+                        gamma = 23;
+                        break;
+                    case "fc24":
+                        fc = 24;
+                        gamma = 23;
+                        break;
+                    case "fc27":
+                        fc = 27;
+                        gamma = 23;
+                        break;
+                    case "fc30":
+                        fc = 30;
+                        gamma = 23;
+                        break;
+                    case "fc33":
+                        fc = 33;
+                        gamma = 23;
+                        break;
+                    case "fc36":
+                        fc = 36;
+                        gamma = 23;
+                        break;
+                    case "fc40":
+                        fc = 40;
+                        gamma = 23.5;
+                        break;
+                    case "fc42":
+                        fc = 42;
+                        gamma = 23.5;
+                        break;
+                    case "fc45":
+                        fc = 45;
+                        gamma = 23.5;
+                        break;
+                    case "fc50":
+                        fc = 50;
+                        gamma = 24;
+                        break;
+                    case "fc55":
+                        fc = 55;
+                        gamma = 24;
+                        break;
+                    case "fc60":
+                        fc = 60;
+                        gamma = 24;
+                        break;
+                    default:
+                        fc = 21;
+                        gamma = 23;
+                        break;
+                }
             }
 
 #if karamba1
