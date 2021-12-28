@@ -5,8 +5,8 @@ using System.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
-using HoaryFoxCommon.Properties;
 using HoaryFox.Component.Utils;
+using HoaryFoxCommon.Properties;
 using Rhino.Geometry;
 using STBDotNet.v202;
 

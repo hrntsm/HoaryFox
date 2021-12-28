@@ -20,13 +20,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KarambaConnect", "KarambaCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KarambaConnectCommon", "KarambaConnect\Common\KarambaConnectCommon.csproj", "{E6241903-54B8-42A9-BD55-052F1D1B35FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "karambaConnectRH6K1", "KarambaConnect\RH6_K1\karambaConnectRH6K1.csproj", "{D3B3F92E-513B-4C33-82F5-B7F9D3463F16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "karambaConnectRH6K1", "KarambaConnect\RH6K1\karambaConnectRH6K1.csproj", "{D3B3F92E-513B-4C33-82F5-B7F9D3463F16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "karambaConnectRH6K2", "KarambaConnect\RH6_K2\karambaConnectRH6K2.csproj", "{A3A37FBC-B7FC-4F4A-92E7-09F19704E840}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "karambaConnectRH6K2", "KarambaConnect\RH6K2\karambaConnectRH6K2.csproj", "{A3A37FBC-B7FC-4F4A-92E7-09F19704E840}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "karambaConnectRH7K1", "KarambaConnect\RH7_K1\karambaConnectRH7K1.csproj", "{CE8BFA92-E7F4-48DD-A548-9569ED587A51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "karambaConnectRH7K1", "KarambaConnect\RH7K1\karambaConnectRH7K1.csproj", "{CE8BFA92-E7F4-48DD-A548-9569ED587A51}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "karambaConnectRH7K2", "KarambaConnect\RH7_K2\karambaConnectRH7K2.csproj", "{98FB69EA-C92D-443A-9649-ADF837BC6AB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "karambaConnectRH7K2", "KarambaConnect\RH7K2\karambaConnectRH7K2.csproj", "{98FB69EA-C92D-443A-9649-ADF837BC6AB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

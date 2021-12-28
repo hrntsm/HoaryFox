@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <Compile Include="..\RH7\**\*.cs" Exclude="..\RH7\HoaryFoxRH7Info.cs" />
-    <Compile Remove="..\RH7\obj\Debug\net48\**" />
+    <Compile Remove="..\RH7\obj\**" />
   </ItemGroup>
 
   <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
