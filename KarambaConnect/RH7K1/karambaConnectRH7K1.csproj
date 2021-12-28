@@ -48,4 +48,8 @@
     <StartAction>Program</StartAction>
   </PropertyGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="set OUTPUT_DIRECTORY= &quot;$(SolutionDir)Release\RH7_K1\KarambaConnect\&quot;&#xD;&#xA;if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;if not exist %25OUTPUT_DIRECTORY%25  (&#xD;&#xA;mkdir %25OUTPUT_DIRECTORY%25&#xD;&#xA;)&#xD;&#xA;copy &quot;$(TargetDir)&quot;  %25OUTPUT_DIRECTORY%25&#xD;&#xA;)" />
+  </Target>
+
 </Project>
