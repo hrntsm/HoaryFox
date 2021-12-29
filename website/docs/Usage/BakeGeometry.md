@@ -22,6 +22,6 @@ Bake の入力に Button などを使用して True を入力すると Rhino へ
 
 Bake されたジオメトリには、メタ情報を追加しています。
 ジオメトリを選択し、Properties の Attribute User Text を確認すると、断面サイズなどの値を確認することができるような BIM 的な機能になっています。  
-なお、Rhino 側で UserText を編集してもモデルを Grasshopper 側へ反映することはできません。
+なお、Rhino 側で UserText を編集しても、モデルは Grasshopper 側へは反映されません。
 
 ![](../../images/BakeGeometry/Bake.png)

@@ -22,8 +22,9 @@ Display a part as a Line
 | ------- | :------------------------------: |
 | Nodes   | Output the Point3d list of nodes |
 | Columns |   Output list of column lines    |
-| Posts   | output list of intercolumn lines |
-| Beams   | Output list of small beam lines  |
+| Girders |   Output list of girder lines    |
+| Posts   |    output list of post lines     |
+| Beams   |    Output list of beam lines     |
 | Braces  |   output list of braces lines    |
 
 ## Stb to Brep

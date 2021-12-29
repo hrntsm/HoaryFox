@@ -5,6 +5,27 @@ title: Changelog
 
 ---
 
+## [v2.1.0 - 2021-12-29](https://github.com/hrntsm/HoaryFox/releases/tag/v2.1.0)
+
+### 追加
+
+- LCA 解析への出力のためのフィルター機能を追加
+  - MaterialType
+  - Story
+  - Filter by Material
+
+### 修正
+
+- Karamba3D 連携で、断面形状が null のときエラーで止まっていたため修正
+
+### 変更
+
+- Stb to Brep コンポーネントで Brep を作成する方法を変更した。
+  - これまでの方法では、体積が負になることがあったため Brep の法線を確認して体積が負になるならば面を反転する処理を追加した。
+  - Planer の面にならないスラブに厚さを与えるようにした。
+
+---
+
 ## [v2.0.1 - 2021-10-10](https://github.com/hrntsm/HoaryFox/releases/tag/v2.0.1)
 
 ### 追加
