@@ -23,6 +23,7 @@ module.exports = {
         'Component/NameTag',
         'Component/SectionTag',
         'Component/StbBuilder',
+        'Component/Filter',
       ]
     },
     'Changelog',

@@ -5,6 +5,18 @@ title: Changelog
 
 ---
 
+## [v2.1.0 - 2021-12-29](https://github.com/hrntsm/HoaryFox/releases/tag/v2.1.0)
+
+### 追加
+
+
+### 修正
+
+
+### 変更
+
+---
+
 ## [v2.0.1 - 2021-10-10](https://github.com/hrntsm/HoaryFox/releases/tag/v2.0.1)
 
 ### 追加
