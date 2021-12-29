@@ -16,6 +16,7 @@ title: Changelog
 
 ### FIX
 
+- Multi-targeted builds, as we found that only matching combinations of versions would work.
 - Karamba3D connection error stopped when the cross-sectional shape was null.
 
 ### CHANGE
