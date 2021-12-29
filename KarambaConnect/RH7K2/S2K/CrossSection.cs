@@ -51,13 +51,17 @@ namespace KarambaConnect.S2K
         private static List<CroSec> StbSecColumnRcToK3dCroSec(IEnumerable<StbSecColumn_RC> columns)
         {
             var k3dCroSecList = new List<CroSec>();
+            if (columns == null)
+            {
+                return k3dCroSecList;
+            }
 
             foreach (StbSecColumn_RC column in columns)
             {
                 string name;
                 CroSec_Beam k3dCroSec;
                 object figure = column.StbSecFigureColumn_RC.Item;
-                var material = Material.StbToRcFemMaterial(column.strength_concrete);
+                FemMaterial_Isotrop material = Material.StbToRcFemMaterial(column.strength_concrete);
                 switch (figure)
                 {
                     case StbSecColumn_RC_Rect rect:
@@ -84,11 +88,15 @@ namespace KarambaConnect.S2K
         private static List<CroSec> StbSecBeamRcToK3dCroSec(IEnumerable<StbSecBeam_RC> girders)
         {
             var k3dCroSecList = new List<CroSec>();
+            if (girders == null)
+            {
+                return k3dCroSecList;
+            }
 
             foreach (StbSecBeam_RC girder in girders)
             {
                 double width, depth;
-                var material = Material.StbToRcFemMaterial(girder.strength_concrete);
+                FemMaterial_Isotrop material = Material.StbToRcFemMaterial(girder.strength_concrete);
                 object[] figures = girder.StbSecFigureBeam_RC.Items;
 
                 switch (figures[0])
@@ -125,6 +133,10 @@ namespace KarambaConnect.S2K
         private static List<CroSec> StbSecSteelToK3dCroSec(StbSections sections, FemMaterial material, CroSecFamilyName familyName)
         {
             var k3dCroSecList = new List<CroSec>();
+            if (sections.StbSecSteel == null)
+            {
+                return k3dCroSecList;
+            }
 
             SetRollHSection(sections, material, familyName, k3dCroSecList);
             SetBuildHSection(sections, material, familyName, k3dCroSecList);
