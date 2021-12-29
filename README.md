@@ -5,7 +5,6 @@
 [![download](https://img.shields.io/github/downloads/hrntsm/HoaryFox/total)](https://github.com/hrntsm/HoaryFox/releases)
 
 ![Build](https://img.shields.io/github/workflow/status/hrntsm/HoaryFox/Build%20Grasshopper%20Plugin)
-![CodeQL](https://img.shields.io/github/workflow/status/hrntsm/HoaryFox/CodeQL?label=CodeQL)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c0a462728dce4983802d447ed67d3e7c)](https://www.codacy.com/gh/hrntsm/HoaryFox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hrntsm/HoaryFox&amp;utm_campaign=Badge_Grade)
 [![Maintainability](https://api.codeclimate.com/v1/badges/bc78a575fcf5e9448929/maintainability)](https://codeclimate.com/github/hrntsm/HoaryFox/maintainability)
 
@@ -18,13 +17,12 @@ As a experimental function, it creates an analytical model of Karamba from st-br
 
 1. Download HoaryFox.gha file from [food4rhino](https://www.food4rhino.com/app/hoaryfox) or [release page](https://github.com/hrntsm/HoaryFox/releases)
 2. In Grasshopper, choose File > Special Folders > Components folder. Save the gha file there.  
-   + If you want to use Karamba3D convert, it is super recommended to save the HoaryFox directory in the same directory as Karamba.gha
 3. Right-click the file > Properties > make sure there is no "blocked" text
 4. Restart Rhino and Grasshopper
 
-## Usage
-
 Please see [the documentation site](https://hiron.dev/HoaryFox/) for detailed instructions.
+
+## Usage
 
 Input st-bridge file path, output some its tag data(StbColumn, StbGirder, StbPost, StbBeam, StbBrace, StbSlab).
 
@@ -32,6 +30,8 @@ Support for ST-bridge ver2.0 is now available from HoaryFox ver1.1.
 If you need more information, send direct message to my twitter account.
 
 Please refer to Samples directory files.
+
+Please see [the documentation site](https://hiron.dev/HoaryFox/) for detailed instructions.
 
 ## Karamba3D Integration
 
