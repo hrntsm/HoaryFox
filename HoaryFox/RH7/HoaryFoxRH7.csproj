@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <Version>2.0.2</Version>
+    <Title>HoaryFox</Title>
+    <Description>This Component read ST-Bridge file(.stb) and display its model data.</Description>
+    <TargetExt>.gha</TargetExt>
+    <Authors>hrntsm</Authors>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    <AssemblyName>HoaryFox</AssemblyName>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RootNamespace>HoaryFox</RootNamespace>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Grasshopper" Version="7.10.21256.17001" IncludeAssets="compile;build" />
+    <PackageReference Include="STBDotNet" Version="0.2.2" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Common\HoaryFoxCommon.csproj" />
+  </ItemGroup>
+  
+  <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
+    <StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
+    <StartArguments></StartArguments>
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="set OUTPUT_DIRECTORY1= &quot;$(SolutionDir)Release\RH7_K1\HoaryFox\&quot;&#xD;&#xA;set OUTPUT_DIRECTORY2= &quot;$(SolutionDir)Release\RH7_K2\HoaryFox\&quot;&#xD;&#xA;if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;if not exist %25OUTPUT_DIRECTORY1%25  (&#xD;&#xA;mkdir %25OUTPUT_DIRECTORY1%25&#xD;&#xA;)&#xD;&#xA;if not exist %25OUTPUT_DIRECTORY2%25  (&#xD;&#xA;mkdir %25OUTPUT_DIRECTORY2%25&#xD;&#xA;)&#xD;&#xA;copy &quot;$(TargetDir)&quot;  %25OUTPUT_DIRECTORY1%25&#xD;&#xA;copy &quot;$(TargetDir)&quot;  %25OUTPUT_DIRECTORY2%25&#xD;&#xA;)" />
+  </Target>
+
+</Project>

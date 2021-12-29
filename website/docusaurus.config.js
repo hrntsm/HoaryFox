@@ -25,6 +25,10 @@ module.exports = {
     image: `img/HFicon.png`,
     metadates: [
       {
+        name: 'keywords',
+        content: 'BIM, ST-Bridge, Grasshopper, Rhinoceros, HoaryFox',
+      },
+      {
         name: `twitter:card`,
         content: `summary`
       },

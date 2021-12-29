@@ -11,22 +11,23 @@ HoaryFox は 建築構造架構の可視化ツールです。
 ST-Bridge file(.stb) を読み込んで、表示をします。  
 対応するデータの形式を一貫構造計算ソフトから出力されてる stb データとすることで、使用しているソフトに限らずモデルの生成ができ、かつ可視化用に別途モデリングする必要がないことが特徴です。  
 Rhino を使わないスタンドアロンのビューアが必要な場合は [STEVIA](https://github.com/hrntsm/STEVIA-Stb2U/wiki) を使ってみてください。  
-試験的な機能としてモデルを Karamba3D へ変換する機能、および Karamba3D のモデルを ST-Bridge データとして出力する機能を追加しました。
+モデルを Karamba3D へ変換する機能、および Karamba3D のモデルを ST-Bridge データとして出力する機能を追加しました。
 
 ## Install
 
 1. Grasshopper 内で, File > Special Folders > Components folder を選択し、HoaryFox のフォルダをそこに保存します。
-   - Karamba3D との連携機能を使う場合は、Karamba.gha のデータも上記フォルダに保存することを推奨します。
 2. コンポーネントを右クリックし プロパティの中で、ブロックしない に設定する
 3. Rhino を再起動する。
 
-## Usage
+詳しいインストール方法は [ドキュメントサイトのインストール](https://hiron.dev/HoaryFox/docs/Usage/HowToInstall) を参照してください。
 
-詳しい使い方は [ドキュメントサイト](https://hiron.dev/HoaryFox/) を参照してください。
+## Usage
 
 STB Loader コンポーネントに ST-Bridge データのパスを入力することデータを Grasshopper 向けに変換し、それを各コンポーネント渡すことでコンポーネントに応じた図化がされます。  
 HoaryFox ver1.1 より ST-Bridge ver2.0 に対応しました。  
 Samples のフォルダ内にあるサンプルの Grasshopper データを参照してください。
+
+詳しい使い方は [ドキュメントサイト](https://hiron.dev/HoaryFox/) を参照してください。
 
 ## Karamba3D Integration
 

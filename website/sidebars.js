@@ -11,6 +11,7 @@ module.exports = {
         'Usage/ConvertToKaramba',
         'Usage/ExportSTB',
         'Usage/BakeGeometry',
+        'Usage/LCAAnalysis',
       ]
     },
     {
@@ -22,6 +23,7 @@ module.exports = {
         'Component/NameTag',
         'Component/SectionTag',
         'Component/StbBuilder',
+        'Component/Filter',
       ]
     },
     'Changelog',

@@ -5,6 +5,41 @@ title: Changelog
 
 ---
 
+## [v2.1.0 - 2021-12-29](https://github.com/hrntsm/HoaryFox/releases/tag/v2.1.0)
+
+### ADD
+
+- Added filtering for output to LCA analysis
+  - MaterialType
+  - Story
+  - Filter by Material
+
+### FIX
+
+- Karamba3D connection error stopped when the cross-sectional shape was null.
+
+### CHANGE
+
+- The method of creating a brep with the Stb to Brep component has been changed.
+  - In the previous method, the volume was sometimes negative, so we added a process to check the normal of the brep and flip the face if the volume is negative.
+  - Slabs that are not Planer faces are now given a thickness.
+
+---
+
+## [v2.0.1 - 2021-10-10](https://github.com/hrntsm/HoaryFox/releases/tag/v2.0.1)
+
+### ADD
+
+- Added a search bar using Algolia to the website.
+
+### FIX
+
+- The Stb2Brep component to fail to create a Brep when a deck slab and a precast slab are included.
+- Fixed an error when converting beams with two cross sections with Stb2Brep.
+  - This makes it possible to create a Brep that reflects the one-sided haunch.
+
+---
+
 ## [v2.0.0 - 2021-09-17](https://github.com/hrntsm/HoaryFox/releases/tag/v2.0.0)
 
 ### CHANGE
@@ -66,7 +101,7 @@ title: Changelog
 - RC cross-section names have been changed from "Id + number" to BD- or CD- to indicate the cross-section size.
   - For example, BD-300x600.
 - The FrameBuilder using Karamba3D component has been separated into two parts: frame conversion and nodal conversion.
-  - Framebuilder by angle and NodeBuilderFrameBuilder 
+  - Framebuilder by angle and NodeBuilderFrameBuilder
   - Allowed input of the angle for determining the column and beam when converting
   - Added text output to Rhino viewport to show results of the above decisions
 
