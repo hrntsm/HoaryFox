@@ -19,7 +19,7 @@
   
   <ItemGroup>
     <PackageReference Include="Grasshopper" Version="7.10.21256.17001" IncludeAssets="compile;build" />
-    <PackageReference Include="STBDotNet" Version="0.2.2" />
+    <PackageReference Include="STBDotNet" Version="0.2.3" />
   </ItemGroup>
   
   <ItemGroup>
