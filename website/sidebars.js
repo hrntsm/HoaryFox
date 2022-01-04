@@ -31,6 +31,7 @@ module.exports = {
       label: 'Coding Guide',
       items: [
         'Coding/GettingStartSTBCoding',
+        'Coding/GetModelData',
       ]
     },
     'Changelog',

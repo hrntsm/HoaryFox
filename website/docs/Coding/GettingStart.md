@@ -185,7 +185,6 @@ path の TypeHint は string にしてください。
 
 ![](../../images/Coding/GettingStart/gh.png)
 
-
 ```cs title=C#Script_Component
 using STBDotNet.Serialization;
 using Version = STBDotNet.Enums.Version;
