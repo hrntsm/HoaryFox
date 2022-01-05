@@ -11,7 +11,7 @@ title: Get model data & draw
 基本的なイメージとしては一貫構造計算ソフトに近いものと考えていただくのが早いと思います。
 
 モデルの位置、断面情報は、`StbModel` に含まれ、以下のような構成になっています。
-部材の情報を取得したければ StbMember、断面の情報を取得したければ StbSections を使用する形になります。
+部材の情報を取得したければ `StbMember`、断面の情報を取得したければ `StbSections` を使用する形になります。
 
 ```
 ST_BRIDGE
@@ -42,7 +42,7 @@ StbNode[] nodes = model.StbModel.StbNodes;
 
 StbNode は節点の id や座標情報を持つクラスになっています。
 仕様上は配列のインデックスと StbNode がもつ id は一致することを強制していないので、部材の節点を参照する際は必ず id を使って参照してください。
-id が "1" の節点情報を取得する際は例えば Linq を使うと以下のように書くことができます。
+id が "1" の節点情報を取得する際は、例えば Linq を使うと以下のように書くことができます。
 
 ```cs {1,4}
 // using System.Linq をあらかじめしてください。
@@ -55,7 +55,7 @@ id は数字で与えられている場合が多いですが、データの形�
 
 ### Point3d で図化
 
-Rhino の Point3d として可視化したい場合は以下のように取得した節点情報から Point3d を作成することで可能です。
+Rhino の Point3d として可視化したい場合は以下のように取得した節点情報から Point3d の配列を作成することで可能です。
 
 ```cs {4}
 // using System.Linq をあらかじめしてください。
@@ -68,4 +68,43 @@ Point3d[] pts = nodes.Select(n => new Point3d(n.x, n.y, n.z)).ToArray();
 
 ## 部材情報の取得
 
+ここでは例として柱の情報を取得する方法について紹介します。
+柱の情報は `StbColumn` にあるので、その値を取得します。
+
+```cs
+// model は v202.ST_BRIDGE 型のインスタンス
+StbColumn[] columns = model.StbModel.StbColumns;
+```
+
+`StbColumn` はどんな値を持つかは、仕様説明書、または以下の STBDotNet のドキュメントを参照してください。
+
+- [StbColumn ドキュメントページ](https://hiron.dev/STBDotNet/docs/STBDotNet.v202.StbColumn.html)
+
+構成する節点は、中間節点を無視すれば、`id_node_bottom` と `id_node_top` から取得することができます。
+この2つから得られたid と前節で取得した節点情報を使うことで、柱を構成するラインを作成することができます。
+
+```cs
+// model は v202.ST_BRIDGE 型のインスタンス
+StbNode[] nodes = model.StbModel.StbNodes;
+StbColumn[] columns = model.StbModel.StbColumns;
+
+// STBDotNet の Point3 クラスを使っていますが、Rhino の Point3d でも問題ないです。
+var pts = new STBDotNet.Geometry.Point3[2][columns.length];
+
+foreach (var (column, i) in columns.Select((c, i)=>(c, i)))
+{
+    aaaaa
+}
+```
+
+なおより正確に部材を描画したい場合は、例えばStbColumnにはoffset のプロパティが含まれますので、それを端部の節点座標に反映することで柱のオフセットを考慮することができます。
+
 ### Line での図化
+
+上下端の節点座標を配列で取得できたので、それを使用してラインを作成することができます。
+
+### 部材名の出力
+
+## C# Script コンポーネント化
+
+これまでのことを踏まえて Grasshopper で動作するラインにタグ付けできるコンポーネントを作成します。
