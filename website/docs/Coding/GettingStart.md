@@ -35,6 +35,7 @@ VisualStudio を起動して ツール から NuGet パッケージマネージ�
 #### HoaryFox がある場合
 
 HoaryFox が Grasshopper にインストールされている場合は、Grasshopper が 参照している HoaryFox のフォルダ内にある STBDotNet.dll を使用します。
+使用する HoaryFox はバージョン 2.1.1 以降を推奨します。
 
 C# Script コンポーネントを配置して、右クリックし Manage Assemblies... を選択してください。
 
@@ -141,11 +142,11 @@ v202 の `ST_BRIDGE` 型は以下のようなデータを持っています。
 バージョンごとに若干クラスが持つデータは異なりますが、Model と Common を持つことは共通です。
 違うバージョンを使う際はドキュメントを参照してください。
 
-このデータの構成は、ST-Bridge_XML 仕様説明書 に準拠した形になっているので、STBDotNet のドキュメントを見なくても使用説明書を見るとデータの構成を把握することができます。
+このデータの構成は、ST-Bridge_XML 仕様説明書 に準拠した形になっているので、STBDotNet のドキュメントを見なくても仕様説明書を見るとデータの構成を概ね把握することができます。
 
 仕様書は BuildingSmartJapan の [構造設計小委員会](https://www.building-smart.or.jp/meeting/buildall/structural-design/) のページよりダウンロードしてください。
 
-以下は仕様書の ST_BRIDGE の箇所の抜粋になります。
+以下はバージョン 2.0.2 の仕様書の ST_BRIDGE の箇所の抜粋になります。
 属性、子要素がそのまま ST_BRIDGE 型が持つプロパティとなっています。
 これは、この ST_BRIDGE 型に限らず、全てのクラスで共通の形式になります。
 
@@ -176,7 +177,7 @@ namespace ConsoleApp1
 ```
 
 model を取得する際に対象のバージョンの型にキャストし、アプリの名前を取得しています。
-アプリの名前の取得の仕方が、仕様書の通りになっていることがわかります。
+アプリの名前の取得の仕方が、仕様書のデータの階層と同様になっていることがわかります。
 
 ### Grasshopper の場合
 
