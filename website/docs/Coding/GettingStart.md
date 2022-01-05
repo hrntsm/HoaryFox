@@ -3,6 +3,14 @@ id: GettingStartSTBCoding
 title: Getting Start
 ---
 
+ここでは、コードを書くことで ST-Bridge データを扱う方法について紹介します。
+基本的には HoaryFox の内部実装を基にしてどのように処理していくかを紹介していく形になっています。
+
+実際のHoaryFoxの実装については様々なケースにエラーなく対応するため複雑になっていますが、ベースとなる動作を理解し必要な場合に自分でカスタマイズための参考にしてください。
+
+なお、HoaryFox の実装は以下で見ることができます。
+- [hrntsm/HoaryFox](https://github.com/hrntsm/HoaryFox/tree/main/HoaryFox/RH7/Component)
+
 ## 環境構築
 
 HoaryFox は ST-Bridge のデータの処理に .NET のライブラリである STBDotNet を使っています。
