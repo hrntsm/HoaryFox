@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="STBDotNet" Version="0.2.2" />
+    <PackageReference Include="STBDotNet" Version="0.2.3" />
   </ItemGroup>
 
   <ItemGroup>

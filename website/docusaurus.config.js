@@ -133,6 +133,9 @@ module.exports = {
       apiKey: '28d1c171c6f64559d0a227407c166cee',
       indexName: 'hoaryfox',
     },
+    prism: {
+      additionalLanguages: ['csharp'],
+    },
   },
   presets: [
     [

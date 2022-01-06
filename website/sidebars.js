@@ -26,6 +26,14 @@ module.exports = {
         'Component/Filter',
       ]
     },
+    {
+      type: 'category',
+      label: 'Coding Guide',
+      items: [
+        'Coding/GettingStartSTBCoding',
+        'Coding/GetModelData',
+      ]
+    },
     'Changelog',
   ],
 };
