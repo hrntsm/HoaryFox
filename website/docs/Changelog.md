@@ -5,6 +5,18 @@ title: Changelog
 
 ---
 
+## [v2.1.1 - 2022-1-6](https://github.com/hrntsm/HoaryFox/releases/tag/v2.1.1)
+
+### 追加
+
+- STBDotNet を使ったコーディングのサンプルページの追加
+
+### 変更
+
+- 上記サンプル作成に当たり STBDotNet のバグを見つけたので修正して参照するバージョンを修正後の 0.2.3 に変更
+
+---
+
 ## [v2.1.0 - 2021-12-29](https://github.com/hrntsm/HoaryFox/releases/tag/v2.1.0)
 
 ### 追加
@@ -16,6 +28,7 @@ title: Changelog
 
 ### 修正
 
+- バージョンごとに整合した組み合わせでないと動かないことがわかったため、マルチターゲットビルドするようにした
 - Karamba3D 連携で、断面形状が null のときエラーで止まっていたため修正
 
 ### 変更

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <Version>2.0.2</Version>
+    <Version>2.1.1</Version>
     <Title>HoaryFox</Title>
     <Description>This Component read ST-Bridge file(.stb) and display its model data.</Description>
     <TargetExt>.gha</TargetExt>
@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Grasshopper" Version="6.34.21034.7001" IncludeAssets="compile;build" />
-    <PackageReference Include="STBDotNet" Version="0.2.2" />
+    <PackageReference Include="STBDotNet" Version="0.2.3" />
   </ItemGroup>
 
   <ItemGroup>
