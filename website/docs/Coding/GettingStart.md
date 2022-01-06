@@ -6,9 +6,10 @@ title: Getting Start
 ここでは、コードを書くことで ST-Bridge データを扱う方法について紹介します。
 基本的には HoaryFox の内部実装を基にしてどのように処理していくかを紹介していく形になっています。
 
-実際のHoaryFoxの実装については様々なケースにエラーなく対応するため複雑になっていますが、ベースとなる動作を理解し必要な場合に自分でカスタマイズための参考にしてください。
+実際の HoaryFox の実装については様々なケースにエラーなく対応するため複雑になっていますが、ベースとなる動作を理解し必要な場合に自分でカスタマイズするための参考にしてください。
 
 なお、HoaryFox の実装は以下で見ることができます。
+
 - [hrntsm/HoaryFox](https://github.com/hrntsm/HoaryFox/tree/main/HoaryFox/RH7/Component)
 
 ## 環境構築
@@ -27,14 +28,14 @@ STBDotNet は OSS で開発しているライブラリになります。
 
 ### IDE 向け
 
-パッケージマネージャーを使って nuget から参照してください。
-以下では VisualStudio を使った場合の例をあげます。
+ここでは VisualStudio のような統合開発環境（IDE）を使ってコードを書く場合の方法について紹介します。
 
+VisualStudio ではパッケージマネージャーを使って nuget から参照してください。
 VisualStudio を起動して ツール から NuGet パッケージマネージャー の ソリューションの NuGet パッケージの管理を選択してください。
 
 ![](../../images/Coding/GettingStart/nuget.png)
 
-参照のタブを選び STBDotNet を検索し、対象のプロジェクトにインストールしてください。
+参照のタブを選び STBDotNet を検索し、対象のプロジェクトにインストールしてください。使用するバージョンは最新のものを推奨します。
 
 ![](../../images/Coding/GettingStart/install_stbdotnet.png)
 
@@ -56,7 +57,8 @@ C# Script コンポーネントを配置して、右クリックし Manage Assem
 #### HoaryFox がない場合
 
 Nuget のサイトから必要なバージョンをダウンロードしてください。
-STBDotNet の ページは以下でページ右側の Download package からダウンロードができます。
+STBDotNet の ページは以下になります。
+ページ右側の Download package からダウンロードができます。
 
 - [Nuget/STBDotNet](https://www.nuget.org/packages/STBDotNet/)
 
@@ -70,13 +72,12 @@ nuget は C# などが動作している .NET 向けのライブラリがあげ�
 
 ## ST-Bridge ファイルの読み込み
 
-例として VisualStudio を使用した例をあげますが、Grasshopper の C# コンポーネントを使用する際もコードの内容は同様です。
+例として VisualStudio を使用した例を最初にあげますが、Grasshopper の C# Script コンポーネントを使用する際もコードの内容は同様です。
 
 ### コンソールアプリの作成
 
 VisualStudio を起動したらコンソールアプリを作成してください。
 プロジェクトの名前を ConsoleApp1 とした場合の例をあげます。
-
 program.cs を以下のように書き換えてください。
 
 ```cs title=program.cs
@@ -115,15 +116,14 @@ var model = Serializer.Deserialize(stbPath, Version.Stb202) as STBDotNet.v202.ST
 
 ### データのバージョン取得方法
 
-もし ST-Bridge のバージョンがわからない場合はバージョンを取得するメソッドがあります。
-以下のメソッドでバージョンを取得することができます。
+もし ST-Bridge のバージョンがわからない場合は、以下のメソッドでバージョンを取得することができます。
 
 ```cs
 Version stbVersion = STBDotNet.Utils.Util.GetStbVersion(stbPath);
 ```
 
 ですが、ST-Bridge データは xml 形式のテキストデータなので、任意のテキストエディタで確認したほうが早いです。
-テキストエディタで開くと冒頭で以下のようになっており、そこでバージョンを確認することができます。  
+テキストエディタで開くとデータの冒頭は以下のようになっており、そこでバージョンを確認することができます。  
 例えば HoaryFox で書き出した ST-Bridge データの冒頭は以下のようになっており、バージョンが 2.0.2 であることが確認できます。
 
 ```xml
@@ -152,16 +152,16 @@ v202 の `ST_BRIDGE` 型は以下のようなデータを持っています。
 
 このデータの構成は、ST-Bridge_XML 仕様説明書 に準拠した形になっているので、STBDotNet のドキュメントを見なくても仕様説明書を見るとデータの構成を概ね把握することができます。
 
-仕様書は BuildingSmartJapan の [構造設計小委員会](https://www.building-smart.or.jp/meeting/buildall/structural-design/) のページよりダウンロードしてください。
+仕様書は BuildingSmart Japan の [構造設計小委員会](https://www.building-smart.or.jp/meeting/buildall/structural-design/) のページよりダウンロードしてください。
 
 以下はバージョン 2.0.2 の仕様書の ST_BRIDGE の箇所の抜粋になります。
-属性、子要素がそのまま ST_BRIDGE 型が持つプロパティとなっています。
+属性、子要素がそのまま上で示した STBDotNet の ST_BRIDGE 型が持つプロパティとなっています。
 これは、この ST_BRIDGE 型に限らず、全てのクラスで共通の形式になります。
 
-![](../../images/Coding/GettingStart/siyoh.png)
+> ![](../../images/Coding/GettingStart/siyoh.png)
 
-例えば、書き出したアプリの名前を取得すること考えます。
-仕様書を確認すると、アプリ名は StbCommon の app_name にあることがわかります。
+データの構造を理解するための例として、書き出したアプリの名前を取得する方法を紹介します。
+仕様書を確認すると、アプリ名は `StbCommon` の `app_name` にあることがわかります。
 C# で値を取得するしてコンソールに表示する方法は以下になります。
 
 ```cs title=Program.cs {12,13,14}
@@ -189,7 +189,7 @@ model を取得する際に対象のバージョンの型にキャストし、�
 
 ### Grasshopper の場合
 
-STBDotNet を参照している状態で以下のようにすることでアプリの名前を返すことができます。
+環境構築の箇所であげたように STBDotNet を参照している状態で以下のようにすることでアプリの名前を返すことができます。
 path の TypeHint は string にしてください。
 
 ![](../../images/Coding/GettingStart/gh.png)
@@ -207,3 +207,5 @@ public class Script_Instance : GH_ScriptInstance
     }
 }
 ```
+
+ここでは HoaryFox の Karamba3D 連携機能で書き出した ST-Bridge データを読み込んでいるため、 アプリ名の HoaryFox が出力されています。
