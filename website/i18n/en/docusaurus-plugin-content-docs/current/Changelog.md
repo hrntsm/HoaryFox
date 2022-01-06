@@ -5,6 +5,18 @@ title: Changelog
 
 ---
 
+## [v2.1.1 - 2022-1-6](https://github.com/hrntsm/HoaryFox/releases/tag/v2.1.1)
+
+### ADD
+
+- Add a sample page for coding with STBDotNet
+
+### CHANGE
+
+- In creating the above sample, a bug was found in STBDotNet, so it was fixed and the version referenced was changed to 0.2.3 after the fix.
+
+---
+
 ## [v2.1.0 - 2021-12-29](https://github.com/hrntsm/HoaryFox/releases/tag/v2.1.0)
 
 ### ADD
