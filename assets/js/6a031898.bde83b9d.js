@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkhoaryfox_website=self.webpackChunkhoaryfox_website||[]).push([[4568],{5930:function(e){e.exports=JSON.parse('{"permalink":"/HoaryFox/blog/tags/update-info","page":1,"postsPerPage":10,"totalPages":1,"totalCount":3,"previousPage":null,"nextPage":null,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
