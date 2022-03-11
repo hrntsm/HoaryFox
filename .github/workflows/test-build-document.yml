@@ -7,7 +7,7 @@ on:
       - "website/**"
 
 jobs:
-  deploy:
+  test-build:
     runs-on: ubuntu-18.04
     defaults:
       run:
@@ -17,3 +17,22 @@ jobs:
     - uses: actions/checkout@v2
     - run: yarn install
     - run: yarn build
+
+  check-version:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create comments
+      run: |
+        echo "アップデートに向けて以下更新したか？" >> comments
+        echo "- package.json のバージョン" >> comments
+        sed -i -z 's/\n/\\n/g' comments
+    - name: Post multi-line comments
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        URL: ${{ github.event.pull_request.comments_url }}
+      run: |
+        curl -X POST \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
+            -d "{\"body\": \"$(cat comments)\"}" \
+            ${URL}
