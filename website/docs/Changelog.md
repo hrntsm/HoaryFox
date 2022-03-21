@@ -5,6 +5,14 @@ title: Changelog
 
 ---
 
+## [v2.2.0 - 2022-3-21](https://github.com/hrntsm/HoaryFox/releases/tag/v2.2.0)
+
+### 追加
+
+- RC 壁の壁開口に対応した。
+
+---
+
 ## [v2.1.1 - 2022-1-6](https://github.com/hrntsm/HoaryFox/releases/tag/v2.1.1)
 
 ### 追加

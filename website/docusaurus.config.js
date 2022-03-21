@@ -127,10 +127,11 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} hrntsm, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} hrntsm, HF Technologies. Built with Docusaurus.`,
     },
     algolia: {
-      apiKey: '28d1c171c6f64559d0a227407c166cee',
+      appId: '4T3ZT5E0SK',
+      apiKey: '574347720fea27b633bc711c59b8f289',
       indexName: 'hoaryfox',
     },
     prism: {
