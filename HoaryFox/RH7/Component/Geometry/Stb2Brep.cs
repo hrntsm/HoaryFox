@@ -76,7 +76,7 @@ namespace HoaryFox.Component.Geometry
             _brepList[3] = brepFromStb.Beam(member.StbBeams);
             _brepList[4] = brepFromStb.Brace(member.StbBraces);
             _brepList[5] = brepFromStb.Slab(member.StbSlabs);
-            _brepList[6] = brepFromStb.Wall(member.StbWalls);
+            _brepList[6] = brepFromStb.Wall(member.StbWalls, member.StbOpens);
         }
 
         private void BakeBrep()

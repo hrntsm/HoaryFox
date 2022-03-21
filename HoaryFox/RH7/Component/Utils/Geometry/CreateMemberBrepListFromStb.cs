@@ -274,12 +274,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 {
                     return NonPlanarBrep(depth, curveList);
                 }
-
-                if (capedBrep.SolidOrientation == BrepSolidOrientation.Inward)
-                {
-                    capedBrep.Flip();
-                }
-                capedBrep.Faces.SplitKinkyFaces();
+                CheckBrepOrientation(capedBrep);
 
                 return new GH_Brep(capedBrep);
             }
@@ -312,7 +307,7 @@ namespace HoaryFox.Component.Utils.Geometry
             return new GH_Brep(Brep.JoinBreps(nonPlanarBrep, _tolerance[0])[0] ?? topBrep);
         }
 
-        public GH_Structure<GH_Brep> Wall(IEnumerable<StbWall> walls)
+        public GH_Structure<GH_Brep> Wall(IEnumerable<StbWall> walls, IEnumerable<StbOpen> opens)
         {
             var brepList = new GH_Structure<GH_Brep>();
             if (walls == null)
@@ -326,7 +321,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 var curveList = new PolylineCurve[2];
                 double thickness = BrepMaker.Wall.GetThickness(_sections, wall);
                 string[] nodeIds = wall.StbNodeIdOrder.Split(' ');
-                var topPts = new List<Point3d>();
+                var wallPts = new List<Point3d>();
                 foreach (string nodeId in nodeIds)
                 {
                     var offsetVec = new Vector3d();
@@ -343,28 +338,83 @@ namespace HoaryFox.Component.Utils.Geometry
                     }
 
                     StbNode node = _nodes.First(n => n.id == nodeId);
-                    topPts.Add(new Point3d(node.X, node.Y, node.Z) + offsetVec);
+                    wallPts.Add(new Point3d(node.X, node.Y, node.Z) + offsetVec);
                 }
-
-                topPts.Add(topPts[0]);
-                var centerCurve = new PolylineCurve(topPts);
+                wallPts.Add(wallPts[0]);
+                var centerCurve = new PolylineCurve(wallPts);
                 Vector3d normal = Vector3d.CrossProduct(centerCurve.TangentAtEnd, centerCurve.TangentAtStart);
-                curveList[0] = new PolylineCurve(topPts.Select(pt => pt + normal * thickness / 2));
-                curveList[1] = new PolylineCurve(topPts.Select(pt => pt - normal * thickness / 2));
+                curveList[0] = new PolylineCurve(wallPts.Select(pt => pt + normal * thickness / 2));
+                curveList[1] = new PolylineCurve(wallPts.Select(pt => pt - normal * thickness / 2));
                 Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0].CapPlanarHoles(_tolerance[0]);
-                if (brep != null)
-                {
-                    if (brep.SolidOrientation == BrepSolidOrientation.Inward)
-                    {
-                        brep.Flip();
-                    }
-                    brep.Faces.SplitKinkyFaces();
-                }
+                CheckBrepOrientation(brep);
 
+                brep = ApplyWallOpen(opens, wall, wallPts, brep);
                 brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
             }
 
             return brepList;
+        }
+
+        private static void CheckBrepOrientation(Brep brep)
+        {
+            if (brep == null)
+            {
+                return;
+            }
+
+            if (brep.SolidOrientation == BrepSolidOrientation.Inward)
+            {
+                brep.Flip();
+            }
+            brep.Faces.SplitKinkyFaces();
+        }
+
+        private Brep ApplyWallOpen(IEnumerable<StbOpen> opens, StbWall wall, IReadOnlyList<Point3d> wallPts, Brep brep)
+        {
+            double thickness = BrepMaker.Wall.GetThickness(_sections, wall);
+            var centerCurve = new PolylineCurve(wallPts);
+            Vector3d normal = Vector3d.CrossProduct(centerCurve.TangentAtEnd, centerCurve.TangentAtStart);
+            var openIds = new List<string>();
+            if (wall.StbOpenIdList != null)
+            {
+                openIds.AddRange(wall.StbOpenIdList.Select(openId => openId.id));
+                foreach (string id in openIds)
+                {
+                    StbOpen open = opens.First(o => o.id == id);
+                    Point3d[] openCurvePts = GetOpenCurvePts(wallPts, open);
+                    PolylineCurve[] openCurve = GetOpenCurve(thickness, normal, openCurvePts);
+                    Brep openBrep = Brep.CreateFromLoft(openCurve, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0].CapPlanarHoles(_tolerance[0]);
+                    CheckBrepOrientation(openBrep);
+
+                    brep = Brep.CreateBooleanDifference(brep, openBrep, 1)[0];
+                }
+            }
+
+            return brep;
+        }
+
+        private static PolylineCurve[] GetOpenCurve(double thickness, Vector3d normal, Point3d[] openCurvePts)
+        {
+            var openCurve = new PolylineCurve[2];
+            openCurve[0] = new PolylineCurve(openCurvePts.Select(pt => pt + normal * thickness * 2));
+            openCurve[1] = new PolylineCurve(openCurvePts.Select(pt => pt - normal * thickness * 2));
+            return openCurve;
+        }
+
+        private static Point3d[] GetOpenCurvePts(IReadOnlyList<Point3d> wallPts, StbOpen open)
+        {
+            var openXVec = new Vector3d(wallPts[1] - wallPts[0]);
+            openXVec.Unitize();
+            Vector3d openYVec = Vector3d.ZAxis;
+
+            var openCurvePts = new Point3d[5];
+            openCurvePts[0] = wallPts[0] + openXVec * open.position_X + openYVec * open.position_Y;
+            openCurvePts[1] = openCurvePts[0] + openXVec * open.length_X;
+            openCurvePts[2] = openCurvePts[1] + openYVec * open.length_Y;
+            openCurvePts[3] = openCurvePts[0] + openYVec * open.length_Y;
+            openCurvePts[4] = openCurvePts[0];
+
+            return openCurvePts;
         }
     }
 }
