@@ -371,6 +371,11 @@ namespace HoaryFox.Component.Utils.Geometry
 
         private Brep ApplyWallOpen(IEnumerable<StbOpen> opens, StbWall wall, IReadOnlyList<Point3d> wallPts, Brep brep)
         {
+            if (brep == null)
+            {
+                return brep;
+            }
+
             double thickness = BrepMaker.Wall.GetThickness(_sections, wall);
             var centerCurve = new PolylineCurve(wallPts);
             Vector3d normal = Vector3d.CrossProduct(centerCurve.TangentAtEnd, centerCurve.TangentAtStart);
