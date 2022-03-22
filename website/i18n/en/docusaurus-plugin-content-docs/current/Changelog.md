@@ -5,6 +5,14 @@ title: Changelog
 
 ---
 
+## [v2.2.1 - 2022-3-22](https://github.com/hrntsm/HoaryFox/releases/tag/v2.2.1)
+
+### FIX
+
+- Fixed wall generation failure with v2.2.0 changes.
+
+---
+
 ## [v2.2.0 - 2022-3-21](https://github.com/hrntsm/HoaryFox/releases/tag/v2.2.0)
 
 ### ADD
