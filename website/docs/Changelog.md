@@ -5,6 +5,14 @@ title: Changelog
 
 ---
 
+## [v2.2.1 - 2022-3-22](https://github.com/hrntsm/HoaryFox/releases/tag/v2.2.1)
+
+### 修正
+
+- v2.2.0 の変更で壁生成に失敗することがあったため、修正
+
+---
+
 ## [v2.2.0 - 2022-3-21](https://github.com/hrntsm/HoaryFox/releases/tag/v2.2.0)
 
 ### 追加
