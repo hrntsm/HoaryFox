@@ -65,7 +65,9 @@ ST-Bridge の規格を作成している [building SMART Japan の構造設計�
 
 ## Donation
 
-[PixivFANBOX](https://hiron.fanbox.cc/) よりドネートしていただけると開発のモチベーションが上がります。
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
+
+上記、または [PixivFANBOX](https://hiron.fanbox.cc/) よりドネートしていただけると開発のモチベーションが上がります。
 
 ## License
 
