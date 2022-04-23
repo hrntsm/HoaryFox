@@ -6,7 +6,7 @@ The following is a set of guidelines for contributing to this component.
 These are mostly guidelines, not rules.
 Use your best judgment, and feel free to propose changes to this document in a pull request.
 
-## Note!
+## Note
 
 Writing code and suggesting fixes is not the only way to contribute!  
 Your comments, problems, and opinions posted in [Discussion](https://github.com/hrntsm/HoaryFox/discussions) or [Issues](https://github.com/hrntsm/HoaryFox/issues) are one aspect of contribution.
