@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Drawing;
+
 using Grasshopper.Kernel;
+
 using KarambaConnect.S2K;
+
 using KarambaConnectCommon.Properties;
 
 namespace KarambaConnect.Component.IO

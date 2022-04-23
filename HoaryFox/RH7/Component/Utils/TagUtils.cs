@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+
 using Rhino.Geometry;
+
 using STBDotNet.v202;
 
 

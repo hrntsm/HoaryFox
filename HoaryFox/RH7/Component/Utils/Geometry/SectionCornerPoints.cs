@@ -1,5 +1,7 @@
 ﻿using System;
+
 using Rhino.Geometry;
+
 using STBDotNet.v202;
 
 namespace HoaryFox.Component.Utils.Geometry

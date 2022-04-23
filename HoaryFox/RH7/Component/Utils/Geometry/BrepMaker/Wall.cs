@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+
 using STBDotNet.v202;
 
 namespace HoaryFox.Component.Utils.Geometry.BrepMaker
