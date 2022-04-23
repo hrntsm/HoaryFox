@@ -11,7 +11,7 @@ using HoaryFoxCommon.Properties;
 
 using STBDotNet.v202;
 
-namespace HoaryFox.Component.Check
+namespace HoaryFox.Component.Filter
 {
     public class Story : GH_Component
     {

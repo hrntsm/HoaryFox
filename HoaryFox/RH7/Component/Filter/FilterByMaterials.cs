@@ -8,7 +8,7 @@ using Grasshopper.Kernel.Types;
 
 using HoaryFoxCommon.Properties;
 
-namespace HoaryFox.Component.Check
+namespace HoaryFox.Component.Filter
 {
     public class FilterByMaterials : GH_Component
     {
