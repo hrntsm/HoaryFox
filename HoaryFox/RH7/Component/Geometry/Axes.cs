@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
 using HoaryFoxCommon.Properties;
 using Rhino.Geometry;
 using STBDotNet.v202;
@@ -14,18 +16,18 @@ namespace HoaryFox.Component.Geometry
         private ST_BRIDGE _stBridge;
         private int _size;
         private double _factor;
-        private readonly List<Line> _axisLines = new List<Line>();
-        private readonly List<Point3d> _axisPts = new List<Point3d>();
-        private readonly List<string> _axisStr = new List<string>();
-        private readonly List<Point3d> _storyPts = new List<Point3d>();
-        private readonly List<string> _storyStr = new List<string>();
+        private readonly GH_Structure<GH_Line> _axisLines = new GH_Structure<GH_Line>();
+        private readonly GH_Structure<GH_Point> _axisPts = new GH_Structure<GH_Point>();
+        private readonly GH_Structure<GH_String> _axisName = new GH_Structure<GH_String>();
+        private readonly GH_Structure<GH_Point> _storyPts = new GH_Structure<GH_Point>();
+        private readonly GH_Structure<GH_String> _storyName = new GH_Structure<GH_String>();
 
         public override bool IsPreviewCapable => true;
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
         public Axis()
           : base("Axis", "Axis",
-              "Description",
+              "Create Axis and Story lines",
               "HoaryFox", "Geometry")
         {
         }
@@ -35,9 +37,9 @@ namespace HoaryFox.Component.Geometry
             base.ClearData();
             _axisLines.Clear();
             _axisPts.Clear();
-            _axisStr.Clear();
+            _axisName.Clear();
             _storyPts.Clear();
-            _storyStr.Clear();
+            _storyName.Clear();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -49,7 +51,9 @@ namespace HoaryFox.Component.Geometry
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddLineParameter("Axis", "Ax", "output StbAxes to Line", GH_ParamAccess.list);
+            pManager.AddLineParameter("Axis", "Ax", "output StbAxes to Line", GH_ParamAccess.tree);
+            pManager.AddTextParameter("StoryName", "StName", "output StbAxes name", GH_ParamAccess.tree);
+            pManager.AddTextParameter("AxisName", "AxName", "output StbStroy name", GH_ParamAccess.tree);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
@@ -65,24 +69,24 @@ namespace HoaryFox.Component.Geometry
 
             StbParallelAxesToLine(_factor, parallels, stories, length);
 
-            dataAccess.SetDataList(0, _axisLines);
+            dataAccess.SetDataTree(0, _axisLines);
+            dataAccess.SetDataTree(1, _storyName);
+            dataAccess.SetDataTree(2, _axisName);
         }
 
         private void StbParallelAxesToLine(double factor, StbParallelAxes[] parallels, IEnumerable<StbStory> stories, double length)
         {
-            var isFirst = true;
-            foreach (StbStory story in stories)
+            foreach ((StbStory story, int i) in stories.Select((s, i) => (s, i)))
             {
+                var path = new GH_Path(0, i);
                 double height = story.height;
-                _storyStr.Add(story.name);
-                _storyPts.Add(new Point3d(0, 0, height));
-                CreateEachAxis(factor, parallels, length, isFirst, height);
-
-                isFirst = false;
+                _storyName.Append(new GH_String(story.name), path);
+                _storyPts.Append(new GH_Point(new Point3d(0, 0, height)), path);
+                CreateEachAxis(factor, parallels, length, height, path);
             }
         }
 
-        private void CreateEachAxis(double factor, StbParallelAxes[] parallels, double length, bool isFirst, double height)
+        private void CreateEachAxis(double factor, IEnumerable<StbParallelAxes> parallels, double length, double height, GH_Path path)
         {
             foreach (StbParallelAxes parallel in parallels)
             {
@@ -94,12 +98,12 @@ namespace HoaryFox.Component.Geometry
 
                 foreach (StbParallelAxis pAxis in parallel.StbParallelAxis)
                 {
-                    _axisLines.Add(new Line(
+                    _axisLines.Append(new GH_Line(new Line(
                         basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance),
                         basePt + (axisVec * factor) + (distanceVec * pAxis.distance)
-                    ));
-                    _axisPts.Add(basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance));
-                    _axisStr.Add(isFirst ? pAxis.name : string.Empty);
+                    )), path);
+                    _axisPts.Append(new GH_Point(basePt - (axisVec * (factor - 1)) + (distanceVec * pAxis.distance)), path);
+                    _axisName.Append(new GH_String(_storyName.get_Branch(path)[0] + " " + pAxis.name), path);
                 }
             }
         }
@@ -114,27 +118,14 @@ namespace HoaryFox.Component.Geometry
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
-            for (var i = 0; i < _axisLines.Count; i++)
-            {
-                args.Display.Draw2dText(_axisStr[i], Color.Black, _axisPts[i], true, _size);
-                args.Display.DrawPatternedLine(_axisLines[i], Color.Black, 0x0000AFAF, 1);
-            }
+            Line[] lines = _axisLines.FlattenData().Select(ln => ln.Value).ToArray();
+            string[] names = _axisName.FlattenData().Select(nm => nm.Value).ToArray();
+            Point3d[] pts = _axisPts.FlattenData().Select(pt => pt.Value).ToArray();
 
-            double xMin = _axisPts.Min(pt => pt.X);
-            double yMin = _axisPts.Min(pt => pt.Y);
-            var vec = new Vector3d(xMin, yMin, 0);
-            double length = _axisLines.Max(line => line.Length);
-
-            for (var i = 1; i < _storyPts.Count; i++)
+            for (var i = 0; i < lines.Length; i++)
             {
-                args.Display.DrawLine(new Line(_storyPts[i - 1] + vec, _storyPts[i] + vec), Color.Black);
-            }
-
-            for (var i = 0; i < _storyPts.Count; i++)
-            {
-                args.Display.Draw2dText(_storyStr[i], Color.Black, _storyPts[i] + vec, true, _size);
-                args.Display.DrawLine(new Line(_storyPts[i] + vec, _storyPts[i] + vec + length * Vector3d.XAxis), Color.Black);
-                args.Display.DrawLine(new Line(_storyPts[i] + vec, _storyPts[i] + vec + length * Vector3d.YAxis), Color.Black);
+                args.Display.Draw2dText(names[i], Color.Black, pts[i], true, _size);
+                args.Display.DrawPatternedLine(lines[i], Color.Black, 0x0000AFAF, 1);
             }
         }
 
