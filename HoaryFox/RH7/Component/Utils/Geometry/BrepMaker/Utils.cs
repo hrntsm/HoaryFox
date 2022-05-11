@@ -54,10 +54,14 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
         }
 
-        public static Brep CreateCapedBrepFromLoft(List<Curve> curveList, double tolerance)
+        public static Brep CreateCapedBrepFromLoft(IEnumerable<Curve> curveList, double tolerance)
         {
             Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                 .CapPlanarHoles(tolerance);
+            if (brep == null)
+            {
+                return null;
+            }
             if (brep.SolidOrientation == BrepSolidOrientation.Inward)
             {
                 brep.Flip();
