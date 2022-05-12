@@ -28,25 +28,32 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
         private List<Curve> CreateFromEachColumnKind(string idSection, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
         {
             List<Curve> curveList;
-            switch (kind)
+            try
             {
-                case StbColumnKind_structure.RC:
-                    StbSecColumn_RC rcSec = _sections.StbSecColumn_RC.First(sec => sec.id == idSection);
-                    curveList = SecRcColumnToCurves(rcSec.StbSecFigureColumn_RC.Item, sectionPoints);
-                    break;
-                case StbColumnKind_structure.S:
-                    StbSecColumn_S sSec = _sections.StbSecColumn_S.First(sec => sec.id == idSection);
-                    curveList = SecSteelColumnToCurves(sSec.StbSecSteelFigureColumn_S.Items, sectionPoints);
-                    break;
-                case StbColumnKind_structure.SRC:
-                    StbSecColumn_SRC srcSec = _sections.StbSecColumn_SRC.First(sec => sec.id == idSection);
-                    curveList = SecRcColumnToCurves(srcSec.StbSecFigureColumn_SRC.Item, sectionPoints);
-                    break;
-                case StbColumnKind_structure.CFT:
-                case StbColumnKind_structure.UNDEFINED:
-                    throw new ArgumentException("Unsupported StbColumnKind");
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (kind)
+                {
+                    case StbColumnKind_structure.RC:
+                        StbSecColumn_RC rcSec = _sections.StbSecColumn_RC.First(sec => sec.id == idSection);
+                        curveList = SecRcColumnToCurves(rcSec.StbSecFigureColumn_RC.Item, sectionPoints);
+                        break;
+                    case StbColumnKind_structure.S:
+                        StbSecColumn_S sSec = _sections.StbSecColumn_S.First(sec => sec.id == idSection);
+                        curveList = SecSteelColumnToCurves(sSec.StbSecSteelFigureColumn_S.Items, sectionPoints);
+                        break;
+                    case StbColumnKind_structure.SRC:
+                        StbSecColumn_SRC srcSec = _sections.StbSecColumn_SRC.First(sec => sec.id == idSection);
+                        curveList = SecRcColumnToCurves(srcSec.StbSecFigureColumn_SRC.Item, sectionPoints);
+                        break;
+                    case StbColumnKind_structure.CFT:
+                    case StbColumnKind_structure.UNDEFINED:
+                        throw new ArgumentException("Unsupported StbColumnKind");
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException("The cross-sectional shape of the column or post seems to be wrong. Please check.");
             }
 
             return curveList;
