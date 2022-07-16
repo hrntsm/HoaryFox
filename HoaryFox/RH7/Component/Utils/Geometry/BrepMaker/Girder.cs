@@ -29,27 +29,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             List<Curve> curveList;
             try
             {
-                switch (kind)
-                {
-                    case StbGirderKind_structure.RC:
-                        StbSecBeam_RC rcSec = _sections.StbSecBeam_RC.First(sec => sec.id == idSection);
-                        object[] rcFigure = rcSec.StbSecFigureBeam_RC.Items;
-                        curveList = SecRcBeamCurves(rcFigure, sectionPoints);
-                        break;
-                    case StbGirderKind_structure.S:
-                        StbSecBeam_S sSec = _sections.StbSecBeam_S.First(sec => sec.id == idSection);
-                        object[] sFigure = sSec.StbSecSteelFigureBeam_S.Items;
-                        curveList = SecSteelBeamToCurves(sFigure, sectionPoints);
-                        break;
-                    case StbGirderKind_structure.SRC:
-                        StbSecBeam_SRC srcSec = _sections.StbSecBeam_SRC.First(sec => sec.id == idSection);
-                        object[] srcFigure = srcSec.StbSecFigureBeam_SRC.Items;
-                        curveList = SecSrcBeamCurves(srcFigure, sectionPoints);
-                        break;
-                    case StbGirderKind_structure.UNDEFINED:
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                curveList = CreateCurveList(idSection, kind, sectionPoints);
             }
             catch (Exception)
             {
@@ -59,6 +39,33 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             return curveList;
         }
 
+        private List<Curve> CreateCurveList(string idSection, StbGirderKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
+        {
+            List<Curve> curveList;
+            switch (kind)
+            {
+                case StbGirderKind_structure.RC:
+                    StbSecBeam_RC rcSec = _sections.StbSecBeam_RC.First(sec => sec.id == idSection);
+                    object[] rcFigure = rcSec.StbSecFigureBeam_RC.Items;
+                    curveList = SecRcBeamCurves(rcFigure, sectionPoints);
+                    break;
+                case StbGirderKind_structure.S:
+                    StbSecBeam_S sSec = _sections.StbSecBeam_S.First(sec => sec.id == idSection);
+                    object[] sFigure = sSec.StbSecSteelFigureBeam_S.Items;
+                    curveList = SecSteelBeamToCurves(sFigure, sectionPoints);
+                    break;
+                case StbGirderKind_structure.SRC:
+                    StbSecBeam_SRC srcSec = _sections.StbSecBeam_SRC.First(sec => sec.id == idSection);
+                    object[] srcFigure = srcSec.StbSecFigureBeam_SRC.Items;
+                    curveList = SecSrcBeamCurves(srcFigure, sectionPoints);
+                    break;
+                case StbGirderKind_structure.UNDEFINED:
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return curveList;
+        }
 
         private static List<Curve> SecRcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
