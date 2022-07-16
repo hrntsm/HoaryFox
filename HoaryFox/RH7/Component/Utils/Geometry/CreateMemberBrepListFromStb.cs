@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+
 using Rhino.Geometry;
+
 using STBDotNet.v202;
 
 namespace HoaryFox.Component.Utils.Geometry

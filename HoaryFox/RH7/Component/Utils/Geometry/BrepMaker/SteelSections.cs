@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+
 using Rhino.Geometry;
+
 using STBDotNet.v202;
 
 namespace HoaryFox.Component.Utils.Geometry.BrepMaker
@@ -12,7 +15,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             // TODO: foreach なのに最初にマッチしたもので return しているのでが変なので直す。
             if (secSteel.StbSecBuildBOX != null)
             {
-                foreach (var box in secSteel.StbSecBuildBOX.Where(box => box.name == shape))
+                foreach (StbSecBuildBOX box in secSteel.StbSecBuildBOX.Where(box => box.name == shape))
                 {
                     return CurveFromStbSecBox(localAxis, point, type, box.A, box.B);
                 }
@@ -83,7 +86,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             throw new ArgumentException("There are no matching steel section");
         }
 
-        private static Curve CurveFromStbSecPipe(Vector3d[] localAxis, Point3d point, Utils.SectionType type, double diameter)
+        private static Curve CurveFromStbSecPipe(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, double diameter)
         {
             switch (type)
             {
@@ -97,7 +100,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
         }
 
-        private static Curve CurveFromStbSecL(Vector3d[] localAxis, Point3d point, Utils.SectionType type, StbSecRollL rollL)
+        private static Curve CurveFromStbSecL(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, StbSecRollL rollL)
         {
             switch (type)
             {
@@ -113,7 +116,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
         }
 
-        private static Curve CurveFromStbSecBox(Vector3d[] localAxis, Point3d point, Utils.SectionType type, double A, double B)
+        private static Curve CurveFromStbSecBox(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, double A, double B)
         {
             switch (type)
             {
@@ -129,7 +132,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
         }
 
-        private static Curve CurveFromStbSecH(Vector3d[] localAxis, Point3d point, Utils.SectionType type, double A, double B, double t1, double t2)
+        private static Curve CurveFromStbSecH(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, double A, double B, double t1, double t2)
         {
             switch (type)
             {

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Rhino.Geometry;
+
 using STBDotNet.v202;
 
 namespace HoaryFox.Component.Utils.Geometry.BrepMaker
@@ -24,6 +26,21 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
         }
 
         private List<Curve> CreateFromEachColumnKind(string idSection, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
+        {
+            List<Curve> curveList;
+            try
+            {
+                curveList = CreateCurveList(idSection, kind, sectionPoints);
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException("The cross-sectional shape of the column or post seems to be wrong. Please check.");
+            }
+
+            return curveList;
+        }
+
+        private List<Curve> CreateCurveList(string idSection, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
         {
             List<Curve> curveList;
             switch (kind)
