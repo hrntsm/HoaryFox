@@ -20,14 +20,14 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
         public Brep CreateColumnBrep(string idSection, double rotate, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
         {
-            List<Curve> curveList = CreateFromEachColumnKind(idSection, kind, sectionPoints);
+            SectionCurve[] curveList = CreateFromEachColumnKind(idSection, kind, sectionPoints);
             Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
             return Utils.CreateCapedBrepFromLoft(curveList, _tolerance[0]);
         }
 
-        private List<Curve> CreateFromEachColumnKind(string idSection, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
+        private SectionCurve[] CreateFromEachColumnKind(string idSection, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
         {
-            List<Curve> curveList;
+            SectionCurve[] curveList;
             try
             {
                 curveList = CreateCurveList(idSection, kind, sectionPoints);
@@ -40,9 +40,9 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             return curveList;
         }
 
-        private List<Curve> CreateCurveList(string idSection, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
+        private SectionCurve[] CreateCurveList(string idSection, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
         {
-            List<Curve> curveList;
+            SectionCurve[] curveList;
             switch (kind)
             {
                 case StbColumnKind_structure.RC:
@@ -67,43 +67,39 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             return curveList;
         }
 
-        private static List<Curve> SecRcColumnToCurves(object figure, IReadOnlyList<Point3d> sectionPoints)
+        private static SectionCurve[] SecRcColumnToCurves(object figure, IReadOnlyList<Point3d> sectionPoints)
         {
-            var curveList = new List<Curve>();
+            var curveList = new List<SectionCurve>();
             Vector3d[] localAxis = Utils.CreateLocalAxis(sectionPoints);
 
             switch (figure)
             {
                 case StbSecColumn_RC_Rect rect:
-                    curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.ColumnRect(sectionPoints[0], rect.width_X, rect.width_Y, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.ColumnRect(sectionPoints[3], rect.width_X, rect.width_Y, localAxis[1], localAxis[2])));
+                    curveList.Add(SectionCurve.CreateSolidColumnRect(sectionPoints[0], rect.width_X, rect.width_Y, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidColumnRect(sectionPoints[3], rect.width_X, rect.width_Y, localAxis));
                     break;
                 case StbSecColumn_SRC_Rect rect:
-                    curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.ColumnRect(sectionPoints[0], rect.width_X, rect.width_Y, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(
-                        SectionCornerPoints.ColumnRect(sectionPoints[3], rect.width_X, rect.width_Y, localAxis[1], localAxis[2])));
+                    curveList.Add(SectionCurve.CreateSolidColumnRect(sectionPoints[0], rect.width_X, rect.width_Y, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidColumnRect(sectionPoints[3], rect.width_X, rect.width_Y, localAxis));
                     break;
                 case StbSecColumn_RC_Circle circle:
-                    curveList.Add(SectionCornerPoints.ColumnPipe(sectionPoints[0], circle.D, localAxis[0]));
-                    curveList.Add(SectionCornerPoints.ColumnPipe(sectionPoints[3], circle.D, localAxis[0]));
+                    curveList.Add(SectionCurve.CreateSolidColumnCircle(sectionPoints[0], circle.D, localAxis[0]));
+                    curveList.Add(SectionCurve.CreateSolidColumnCircle(sectionPoints[3], circle.D, localAxis[0]));
                     break;
                 case StbSecColumn_SRC_Circle circle:
-                    curveList.Add(SectionCornerPoints.ColumnPipe(sectionPoints[0], circle.D, localAxis[0]));
-                    curveList.Add(SectionCornerPoints.ColumnPipe(sectionPoints[3], circle.D, localAxis[0]));
+                    curveList.Add(SectionCurve.CreateSolidColumnCircle(sectionPoints[0], circle.D, localAxis[0]));
+                    curveList.Add(SectionCurve.CreateSolidColumnCircle(sectionPoints[3], circle.D, localAxis[0]));
                     break;
                 default:
                     throw new Exception();
             }
 
-            return curveList;
+            return curveList.ToArray();
         }
 
-        private List<Curve> SecSteelColumnToCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
+        private SectionCurve[] SecSteelColumnToCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
-            var curveList = new List<Curve>();
+            var curveList = new List<SectionCurve>();
             Vector3d[] localAxis = Utils.CreateLocalAxis(sectionPoints);
 
             string bottom, center, top;
@@ -146,7 +142,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     throw new ArgumentException("Unmatched StbSecSteelColumn_S");
             }
 
-            return curveList;
+            return curveList.ToArray();
         }
     }
 }
