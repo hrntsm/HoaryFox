@@ -21,7 +21,7 @@ namespace HoaryFox.Component.Utils.Geometry
 
         public static SectionCurve CreateSolidColumnRect(Point3d sectionPoint, double widthX, double widthY, Vector3d[] localAxis)
         {
-            return new SectionCurve()
+            return new SectionCurve
             {
                 OuterCurve = new PolylineCurve(SectionCornerPoints.ColumnRect(sectionPoint, widthX, widthY, localAxis[1], localAxis[2])),
                 InnerCurve = null,
@@ -33,7 +33,7 @@ namespace HoaryFox.Component.Utils.Geometry
 
         public static SectionCurve CreateSolidColumnCircle(Point3d sectionPoint, double diameter, Vector3d xAxis)
         {
-            return new SectionCurve()
+            return new SectionCurve
             {
                 OuterCurve = SectionCornerPoints.ColumnPipe(sectionPoint, diameter, xAxis),
                 InnerCurve = null,

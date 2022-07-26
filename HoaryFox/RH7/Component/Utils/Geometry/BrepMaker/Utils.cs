@@ -77,12 +77,11 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     var center = VolumeMassProperties.Compute(innerBrep).Centroid;
                     var transform = Transform.Scale(new Plane(center, sectionCurve[0].XAxis), 1, 1, 5);
                     innerBrep.Transform(transform);
-                    var breps = Brep.CreateBooleanDifference(innerBrep, brep, tolerance);
-                    var aa = 1;
-                    brep = breps[0];
+                    brep = Brep.CreateBooleanDifference(innerBrep, brep, tolerance)[0];
                 }
-                catch
+                catch (Exception e)
                 {
+                    throw new ArgumentException(e.Message);
                 }
             }
             if (brep.SolidOrientation == BrepSolidOrientation.Inward)
