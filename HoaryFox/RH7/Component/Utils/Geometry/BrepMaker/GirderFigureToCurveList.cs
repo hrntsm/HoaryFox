@@ -17,7 +17,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             _sections = sections;
         }
 
-        public void SingleFigure(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        public void SingleFigure(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<SectionCurve> curveList, Vector3d[] localAxis)
         {
             var straight = figures[0] as StbSecSteelBeam_S_Straight;
             string center = straight.shape;
@@ -25,7 +25,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionType.Beam, localAxis));
         }
 
-        public void TwoFigure(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        public void TwoFigure(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<SectionCurve> curveList, Vector3d[] localAxis)
         {
             switch (figures[0])
             {
@@ -51,7 +51,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
         }
 
-        public void ThreeFigure(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        public void ThreeFigure(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<SectionCurve> curveList, Vector3d[] localAxis)
         {
             switch (figures[0])
             {
@@ -71,7 +71,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     }
             }
         }
-        private void TwoFigureTaper(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        private void TwoFigureTaper(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<SectionCurve> curveList, Vector3d[] localAxis)
         {
             var tapers = new[] { figures[0] as StbSecSteelBeam_S_Taper, figures[1] as StbSecSteelBeam_S_Taper };
             string start = tapers.First(sec => sec.pos == StbSecSteelBeam_S_TaperPos.START).shape;
@@ -82,7 +82,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Beam, localAxis));
         }
 
-        private void TwoFigureJoint(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        private void TwoFigureJoint(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<SectionCurve> curveList, Vector3d[] localAxis)
         {
             var joint = new[] { figures[0] as StbSecSteelBeam_S_Joint, figures[1] as StbSecSteelBeam_S_Joint };
             string center = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.CENTER).shape;
@@ -105,7 +105,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
         }
 
-        private void TwoFigureHaunch(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        private void TwoFigureHaunch(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<SectionCurve> curveList, Vector3d[] localAxis)
         {
             var joint = new[] { figures[0] as StbSecSteelBeam_S_Haunch, figures[1] as StbSecSteelBeam_S_Haunch };
             string center;
@@ -130,7 +130,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
         }
 
-        private void ThreeFigureHaunch(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        private void ThreeFigureHaunch(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<SectionCurve> curveList, Vector3d[] localAxis)
         {
             var haunch = new[] { figures[0] as StbSecSteelBeam_S_Haunch, figures[1] as StbSecSteelBeam_S_Haunch, figures[2] as StbSecSteelBeam_S_Haunch };
             string start = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.START).shape;
@@ -142,7 +142,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Beam, localAxis));
         }
 
-        private void ThreeFigureJoint(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<Curve> curveList, Vector3d[] localAxis)
+        private void ThreeFigureJoint(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<SectionCurve> curveList, Vector3d[] localAxis)
         {
             var joint = new[] { figures[0] as StbSecSteelBeam_S_Joint, figures[1] as StbSecSteelBeam_S_Joint, figures[2] as StbSecSteelBeam_S_Joint };
             string start = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.START).shape;

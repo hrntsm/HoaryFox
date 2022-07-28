@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Rhino.Geometry;
 
@@ -22,31 +23,31 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             return new Vector3d[] { xAxis, yAxis, zAxis };
         }
 
-        public static void RotateCurveList(Vector3d rotateAxis, IReadOnlyList<Curve> curveList, double stbRotateValue, IReadOnlyList<Point3d> sectionPoints)
+        public static void RotateCurveList(Vector3d rotateAxis, IReadOnlyList<SectionCurve> curveList, double stbRotateValue, IReadOnlyList<Point3d> sectionPoints)
         {
             double inPlaneAngle = stbRotateValue * Math.PI / 180;
             switch (curveList.Count)
             {
                 case 2:
-                    curveList[0].Rotate(inPlaneAngle, rotateAxis, sectionPoints[0]);
-                    curveList[1].Rotate(inPlaneAngle, rotateAxis, sectionPoints[3]);
+                    curveList[0].RotateSection(inPlaneAngle, rotateAxis, sectionPoints[0]);
+                    curveList[1].RotateSection(inPlaneAngle, rotateAxis, sectionPoints[3]);
                     break;
                 case 3:
-                    curveList[0].Rotate(inPlaneAngle, rotateAxis, sectionPoints[0]);
-                    curveList[2].Rotate(inPlaneAngle, rotateAxis, sectionPoints[3]);
+                    curveList[0].RotateSection(inPlaneAngle, rotateAxis, sectionPoints[0]);
+                    curveList[2].RotateSection(inPlaneAngle, rotateAxis, sectionPoints[3]);
                     if (sectionPoints[2] == sectionPoints[3])
                     {
-                        curveList[1].Rotate(inPlaneAngle, rotateAxis, sectionPoints[1]);
+                        curveList[1].RotateSection(inPlaneAngle, rotateAxis, sectionPoints[1]);
                     }
                     else
                     {
-                        curveList[1].Rotate(inPlaneAngle, rotateAxis, sectionPoints[2]);
+                        curveList[1].RotateSection(inPlaneAngle, rotateAxis, sectionPoints[2]);
                     }
                     break;
                 case 4:
                     for (var i = 0; i < 4; i++)
                     {
-                        curveList[i].Rotate(inPlaneAngle, rotateAxis, sectionPoints[i]);
+                        curveList[i].RotateSection(inPlaneAngle, rotateAxis, sectionPoints[i]);
                     }
                     break;
                 default:
@@ -54,13 +55,34 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
         }
 
-        public static Brep CreateCapedBrepFromLoft(IEnumerable<Curve> curveList, double tolerance)
+        public static Brep CreateCapedBrepFromLoft(SectionCurve[] sectionCurve, double tolerance)
         {
-            Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+
+            Brep brep = Brep.CreateFromLoft(sectionCurve.Select(c => c.OuterCurve), Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                 .CapPlanarHoles(tolerance);
             if (brep == null)
             {
                 return null;
+            }
+            if (sectionCurve[0].InnerCurve != null)
+            {
+                Brep innerBrep = Brep.CreateFromLoft(sectionCurve.Select(c => c.InnerCurve), Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
+                    .CapPlanarHoles(tolerance);
+                if (innerBrep == null)
+                {
+                    return null;
+                }
+                try
+                {
+                    var center = VolumeMassProperties.Compute(innerBrep).Centroid;
+                    var transform = Transform.Scale(new Plane(center, sectionCurve[0].XAxis), 1, 1, 5);
+                    innerBrep.Transform(transform);
+                    brep = Brep.CreateBooleanDifference(innerBrep, brep, tolerance)[0];
+                }
+                catch (Exception e)
+                {
+                    throw new ArgumentException(e.Message);
+                }
             }
             if (brep.SolidOrientation == BrepSolidOrientation.Inward)
             {
