@@ -5,6 +5,26 @@ title: Changelog
 
 ---
 
+## [v2.3.0 - 2022-10-15](https://github.com/hrntsm/HoaryFox/releases/tag/v2.3.0)
+
+### ADD
+
+- If the section setting (StbSection) does not have an appropriate value, an error is now output.
+
+### CHANGE
+
+- The output of the Axes component is now a tree.
+  - The output is now divided by floor.
+- When a stb2brep component has a hollow section, a hollow section brep is created.
+  - Previously, a rectangular solid cross section with the external shape was output.
+  - This change improves the accuracy of member volumes used in LCC linkage, etc.
+
+### FIX
+
+- Fixed an error when a part is null.
+
+---
+
 ## [v2.2.1 - 2022-3-22](https://github.com/hrntsm/HoaryFox/releases/tag/v2.2.1)
 
 ### FIX
