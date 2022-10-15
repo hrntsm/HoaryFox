@@ -10,7 +10,6 @@
 
 Grasshopper Component which read ST-Bridge file(.stb) and display its model information.  
 You can easily check frames and present structure frame!!  
-If you need stand-alone ST-Bridge file viewer, Please see [STEVIA](https://github.com/hrntsm/STEVIA-Stb2U/wiki)  
 As a experimental function, it creates an analytical model of Karamba from st-bridge data.
 
 ## Install
@@ -34,8 +33,8 @@ If you need more information, send direct message to my twitter account.
 
 Conversion of data into Karamba3D supports only beam elements.  
 Mesh elements such as floor and wall are not supported.  
-L-type and C-type cross-sections are replaced by rectangular cross-sections with equivalent axial cross-sections because Karamba3D does not support them.
-Output is STB2.0.
+L-type and C-type cross-sections are replaced by rectangular cross-sections with equivalent axial cross-sections because Karamba3D does not support them.  
+Output is only STB2.0 supported.
 
 ## What is ST-Bridge
 
