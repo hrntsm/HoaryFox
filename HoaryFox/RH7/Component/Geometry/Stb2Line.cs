@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+
 using HoaryFox.Component.Utils.Geometry;
+
 using HoaryFoxCommon.Properties;
+
 using Rhino;
 using Rhino.DocObjects;
 using Rhino.Geometry;
+
 using STBDotNet.v202;
 
 namespace HoaryFox.Component.Geometry

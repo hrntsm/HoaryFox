@@ -1,20 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+
 using Rhino.Geometry;
+
 using STBDotNet.v202;
 
 namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 {
     public static class SteelSections
     {
-        public static Curve GetCurve(StbSecSteel secSteel, string shape, Point3d point, Utils.SectionType type, Vector3d[] localAxis)
+        public static SectionCurve GetCurve(StbSecSteel secSteel, string shape, Point3d point, Utils.SectionType type, Vector3d[] localAxis)
         {
             // TODO: foreach なのに最初にマッチしたもので return しているのでが変なので直す。
             if (secSteel.StbSecBuildBOX != null)
             {
-                foreach (var box in secSteel.StbSecBuildBOX.Where(box => box.name == shape))
+                foreach (StbSecBuildBOX box in secSteel.StbSecBuildBOX.Where(box => box.name == shape))
                 {
-                    return CurveFromStbSecBox(localAxis, point, type, box.A, box.B);
+                    return CurveFromStbSecBox(localAxis, point, type, box.A, box.B, box.t1, box.t2);
                 }
             }
 
@@ -22,7 +25,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             {
                 foreach (StbSecRollBOX box in secSteel.StbSecRollBOX.Where(box => box.name == shape))
                 {
-                    return CurveFromStbSecBox(localAxis, point, type, box.A, box.B);
+                    return CurveFromStbSecBox(localAxis, point, type, box.A, box.B, box.t, box.t);
                 }
             }
 
@@ -30,7 +33,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             {
                 foreach (StbSecFlatBar flatBar in secSteel.StbSecFlatBar.Where(bar => bar.name == shape))
                 {
-                    return CurveFromStbSecBox(localAxis, point, type, flatBar.B, flatBar.t);
+                    return CurveFromStbSecBox(localAxis, point, type, flatBar.B, flatBar.t, -1, -1);
                 }
             }
 
@@ -62,7 +65,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             {
                 foreach (StbSecPipe pipe in secSteel.StbSecPipe.Where(pipe => pipe.name == shape))
                 {
-                    return CurveFromStbSecPipe(localAxis, point, type, pipe.D);
+                    return CurveFromStbSecPipe(localAxis, point, type, pipe.D, pipe.t);
                 }
             }
 
@@ -70,7 +73,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             {
                 foreach (StbSecRoundBar bar in secSteel.StbSecRoundBar.Where(pipe => pipe.name == shape))
                 {
-                    return CurveFromStbSecPipe(localAxis, point, type, bar.R);
+                    return CurveFromStbSecPipe(localAxis, point, type, bar.R, -1);
                 }
             }
 
@@ -83,66 +86,101 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             throw new ArgumentException("There are no matching steel section");
         }
 
-        private static Curve CurveFromStbSecPipe(Vector3d[] localAxis, Point3d point, Utils.SectionType type, double diameter)
+        private static SectionCurve CurveFromStbSecPipe(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, double diameter, double thickness)
         {
+            var radius = diameter / 2;
+            var sectionCurve = new SectionCurve
+            {
+                Shape = thickness > 0 ? SectionShape.Pipe : SectionShape.Circle,
+                Type = thickness > 0 ? SectionType.Hollow : SectionType.Solid,
+                XAxis = localAxis[0],
+            };
             switch (type)
             {
                 case Utils.SectionType.Column:
                 case Utils.SectionType.Brace:
-                    return SectionCornerPoints.ColumnPipe(point, diameter, localAxis[0]);
+                    sectionCurve.OuterCurve = SectionCornerPoints.ColumnPipe(point, radius, localAxis[0]);
+                    sectionCurve.InnerCurve = thickness > 0 ? SectionCornerPoints.ColumnPipe(point, radius - thickness, localAxis[0]) : null;
+                    break;
                 case Utils.SectionType.Beam:
-                    return SectionCornerPoints.BeamPipe(point, diameter, localAxis[0]);
+                    sectionCurve.OuterCurve = SectionCornerPoints.BeamPipe(point, radius, localAxis[0]);
+                    sectionCurve.InnerCurve = thickness > 0 ? SectionCornerPoints.BeamPipe(point, radius - thickness, localAxis[0]) : null;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+            return sectionCurve;
         }
 
-        private static Curve CurveFromStbSecL(Vector3d[] localAxis, Point3d point, Utils.SectionType type, StbSecRollL rollL)
+        private static SectionCurve CurveFromStbSecL(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, StbSecRollL rollL)
         {
+            var sectionCurve = new SectionCurve
+            {
+                Shape = SectionShape.L,
+                Type = SectionType.Solid,
+                XAxis = localAxis[0],
+            };
             switch (type)
             {
                 case Utils.SectionType.Column:
                 case Utils.SectionType.Brace:
-                    return new PolylineCurve(
-                        SectionCornerPoints.ColumnL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type, localAxis[1], localAxis[2]));
+                    sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.ColumnL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type, localAxis[1], localAxis[2]));
+                    break;
                 case Utils.SectionType.Beam:
-                    return new PolylineCurve(
-                        SectionCornerPoints.BeamL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type, localAxis[1], localAxis[2]));
+                    sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.BeamL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type, localAxis[1], localAxis[2]));
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+            return sectionCurve;
         }
 
-        private static Curve CurveFromStbSecBox(Vector3d[] localAxis, Point3d point, Utils.SectionType type, double A, double B)
+        private static SectionCurve CurveFromStbSecBox(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, double A, double B, double t1, double t2)
         {
+            var sectionCurve = new SectionCurve
+            {
+                Shape = t1 > 0 ? SectionShape.Box : SectionShape.Rectangle,
+                Type = t1 > 0 ? SectionType.Hollow : SectionType.Solid,
+                XAxis = localAxis[0],
+            };
             switch (type)
             {
                 case Utils.SectionType.Column:
                 case Utils.SectionType.Brace:
-                    return new PolylineCurve(
-                        SectionCornerPoints.ColumnRect(point, B, A, localAxis[1], localAxis[2]));
+                    sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.ColumnRect(point, B, A, localAxis[1], localAxis[2]));
+                    sectionCurve.InnerCurve = t1 > 0 ? new PolylineCurve(SectionCornerPoints.ColumnRect(point, B - 2 * t1, A - 2 * t2, localAxis[1], localAxis[2])) : null;
+                    break;
                 case Utils.SectionType.Beam:
-                    return new PolylineCurve(
-                        SectionCornerPoints.BeamRect(point, B, A, localAxis[1], localAxis[2]));
+                    sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.BeamRect(point, B, A, localAxis[1], localAxis[2]));
+                    sectionCurve.InnerCurve = t1 > 0 ? new PolylineCurve(SectionCornerPoints.BeamRect(point, B - 2 * t1, A - 2 * t2, localAxis[1], localAxis[2])) : null;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+            return sectionCurve;
         }
 
-        private static Curve CurveFromStbSecH(Vector3d[] localAxis, Point3d point, Utils.SectionType type, double A, double B, double t1, double t2)
+        private static SectionCurve CurveFromStbSecH(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, double A, double B, double t1, double t2)
         {
+            var sectionCurve = new SectionCurve
+            {
+                Shape = SectionShape.H,
+                Type = SectionType.Solid,
+                XAxis = localAxis[0],
+            };
             switch (type)
             {
                 case Utils.SectionType.Column:
                 case Utils.SectionType.Brace:
-                    return new PolylineCurve(
-                        SectionCornerPoints.ColumnH(point, A, B, t1, t2, localAxis[1], localAxis[2]));
+                    sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.ColumnH(point, A, B, t1, t2, localAxis[1], localAxis[2]));
+                    break;
                 case Utils.SectionType.Beam:
-                    return new PolylineCurve(
-                        SectionCornerPoints.BeamH(point, A, B, t1, t2, localAxis[1], localAxis[2]));
+                    sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.BeamH(point, A, B, t1, t2, localAxis[1], localAxis[2]));
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+            return sectionCurve;
         }
     }
 }

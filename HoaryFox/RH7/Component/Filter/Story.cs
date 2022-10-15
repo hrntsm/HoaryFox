@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+
 using HoaryFoxCommon.Properties;
+
 using STBDotNet.v202;
 
-namespace HoaryFox.Component.Check
+namespace HoaryFox.Component.Filter
 {
     public class Story : GH_Component
     {

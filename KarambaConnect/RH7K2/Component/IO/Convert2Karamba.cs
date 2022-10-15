@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+
 using Grasshopper.Kernel;
+
 using Karamba.CrossSections;
 using Karamba.Elements;
 using Karamba.GHopper.CrossSections;
 using Karamba.GHopper.Elements;
+
 using KarambaConnect.S2K;
+
 using KarambaConnectCommon.Properties;
+
 using STBDotNet.v202;
 
 namespace KarambaConnect.Component.IO

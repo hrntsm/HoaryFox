@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Rhino.Geometry;
+
 using STBDotNet.v202;
 
 namespace HoaryFox.Component.Utils.Geometry.BrepMaker
@@ -19,34 +21,37 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
         public Brep CreateBraceBrep(string idSection, double rotate, StbBraceKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
         {
-            List<Curve> curveList = CreateFromEachBraceKind(idSection, kind, sectionPoints);
+            SectionCurve[] curveList = CreateFromEachBraceKind(idSection, kind, sectionPoints);
             Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
             return Utils.CreateCapedBrepFromLoft(curveList, _tolerance[0]);
         }
 
-        private List<Curve> CreateFromEachBraceKind(string idSection, StbBraceKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
+        private SectionCurve[] CreateFromEachBraceKind(string idSection, StbBraceKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
         {
-            List<Curve> curveList;
-            switch (kind)
+            try
             {
-                case StbBraceKind_structure.S:
-                    StbSecBrace_S sSec = _sections.StbSecBrace_S.First(sec => sec.id == idSection);
-                    object[] figures = sSec.StbSecSteelFigureBrace_S.Items;
-                    curveList = SecSteelBraceToCurves(figures, sectionPoints);
-                    break;
-                case StbBraceKind_structure.RC:
-                case StbBraceKind_structure.SRC:
-                    throw new ArgumentException("Unsupported brace structure type");
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (kind)
+                {
+                    case StbBraceKind_structure.S:
+                        StbSecBrace_S sSec = _sections.StbSecBrace_S.First(sec => sec.id == idSection);
+                        object[] figures = sSec.StbSecSteelFigureBrace_S.Items;
+                        return SecSteelBraceToCurves(figures, sectionPoints);
+                    case StbBraceKind_structure.RC:
+                    case StbBraceKind_structure.SRC:
+                        throw new ArgumentException("Unsupported brace structure type");
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
-
-            return curveList;
+            catch (Exception)
+            {
+                throw new ArgumentException("The cross-sectional shape of the brace seems to be wrong. Please check.");
+            }
         }
 
-        private List<Curve> SecSteelBraceToCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
+        private SectionCurve[] SecSteelBraceToCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
-            var curveList = new List<Curve>();
+            var curveList = new List<SectionCurve>();
             string start, center, end;
             Vector3d[] localAxis = Utils.CreateLocalAxis(sectionPoints);
 
@@ -85,7 +90,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     throw new ArgumentException("Unmatched StbSecSteelBrace_S");
             }
 
-            return curveList;
+            return curveList.ToArray();
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Rhino.Geometry;
+
 using STBDotNet.v202;
 
 namespace HoaryFox.Component.Utils.Geometry.BrepMaker
@@ -17,14 +19,29 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
         }
         public Brep CreateGirderBrep(string idSection, double rotate, StbGirderKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
         {
-            List<Curve> curveList = CreateFromEachGirderKind(idSection, kind, sectionPoints);
+            SectionCurve[] curveList = CreateFromEachGirderKind(idSection, kind, sectionPoints);
             Utils.RotateCurveList(memberAxis, curveList, rotate, sectionPoints);
             return Utils.CreateCapedBrepFromLoft(curveList, _tolerance[0]);
         }
 
-        private List<Curve> CreateFromEachGirderKind(string idSection, StbGirderKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
+        private SectionCurve[] CreateFromEachGirderKind(string idSection, StbGirderKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
         {
-            List<Curve> curveList;
+            SectionCurve[] curveList;
+            try
+            {
+                curveList = CreateCurveList(idSection, kind, sectionPoints);
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException("The cross-sectional shape of the girder or beam seems to be wrong. Please check.");
+            }
+
+            return curveList;
+        }
+
+        private SectionCurve[] CreateCurveList(string idSection, StbGirderKind_structure kind, IReadOnlyList<Point3d> sectionPoints)
+        {
+            SectionCurve[] curveList;
             switch (kind)
             {
                 case StbGirderKind_structure.RC:
@@ -50,82 +67,81 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             return curveList;
         }
 
-
-        private static List<Curve> SecRcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
+        private static SectionCurve[] SecRcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
-            var curveList = new List<Curve>();
+            var curveList = new List<SectionCurve>();
             Vector3d[] localAxis = Utils.CreateLocalAxis(sectionPoints);
 
             switch (figures.Count)
             {
                 case 1:
                     var straight = figures[0] as StbSecBeam_RC_Straight;
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], straight.depth, straight.width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], straight.depth, straight.width, localAxis[1], localAxis[2])));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], straight.depth, straight.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], straight.depth, straight.width, localAxis));
                     break;
                 case 2:
                     var taper = new[] { figures[0] as StbSecBeam_RC_Taper, figures[1] as StbSecBeam_RC_Taper };
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], taper[0].depth, taper[0].width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], taper[0].depth, taper[0].width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], taper[1].depth, taper[1].width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width, localAxis[1], localAxis[2])));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], taper[0].depth, taper[0].width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[1], taper[0].depth, taper[0].width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[2], taper[1].depth, taper[1].width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], taper[1].depth, taper[1].width, localAxis));
                     break;
                 case 3:
                     var haunch = new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch };
                     StbSecBeam_RC_Haunch start = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.START);
                     StbSecBeam_RC_Haunch center = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.CENTER);
                     StbSecBeam_RC_Haunch end = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.END);
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], start.depth, start.width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], center.depth, center.width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], center.depth, center.width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], end.depth, end.width, localAxis[1], localAxis[2])));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], start.depth, start.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[1], center.depth, center.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[2], center.depth, center.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], end.depth, end.width, localAxis));
                     break;
                 default:
                     throw new Exception();
             }
 
-            return curveList;
+            return curveList.ToArray();
         }
 
-        private static List<Curve> SecSrcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
+        private static SectionCurve[] SecSrcBeamCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
-            var curveList = new List<Curve>();
+            var curveList = new List<SectionCurve>();
             Vector3d[] localAxis = Utils.CreateLocalAxis(sectionPoints);
 
             switch (figures.Count)
             {
                 case 1:
                     var straight = figures[0] as StbSecBeam_SRC_Straight;
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], straight.depth, straight.width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], straight.depth, straight.width, localAxis[1], localAxis[2])));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], straight.depth, straight.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], straight.depth, straight.width, localAxis));
                     break;
                 case 2:
                     var taper = new[] { figures[0] as StbSecBeam_SRC_Taper, figures[1] as StbSecBeam_SRC_Taper };
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], taper[0].depth, taper[0].width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], taper[0].depth, taper[0].width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], taper[1].depth, taper[1].width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], taper[1].depth, taper[1].width, localAxis[1], localAxis[2])));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], taper[0].depth, taper[0].width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[1], taper[0].depth, taper[0].width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[2], taper[1].depth, taper[1].width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], taper[1].depth, taper[1].width, localAxis));
                     break;
                 case 3:
                     var haunch = new[] { figures[0] as StbSecBeam_SRC_Haunch, figures[1] as StbSecBeam_SRC_Haunch, figures[2] as StbSecBeam_SRC_Haunch };
                     StbSecBeam_SRC_Haunch start = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.START);
                     StbSecBeam_SRC_Haunch center = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.CENTER);
                     StbSecBeam_SRC_Haunch end = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.END);
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[0], start.depth, start.width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[1], center.depth, center.width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[2], center.depth, center.width, localAxis[1], localAxis[2])));
-                    curveList.Add(new PolylineCurve(SectionCornerPoints.BeamRect(sectionPoints[3], end.depth, end.width, localAxis[1], localAxis[2])));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], start.depth, start.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[1], center.depth, center.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[2], center.depth, center.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], end.depth, end.width, localAxis));
                     break;
                 default:
                     throw new Exception();
             }
 
-            return curveList;
+            return curveList.ToArray();
         }
 
-        private List<Curve> SecSteelBeamToCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
+        private SectionCurve[] SecSteelBeamToCurves(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints)
         {
-            var curveList = new List<Curve>();
+            var curveList = new List<SectionCurve>();
             Vector3d[] localAxis = Utils.CreateLocalAxis(sectionPoints);
             var toCurveList = new GirderFigureToCurveList(_sections);
 
@@ -146,7 +162,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     throw new ArgumentException("Unmatched StbSecSteelBeam_S");
             }
 
-            return curveList;
+            return curveList.ToArray();
         }
     }
 }

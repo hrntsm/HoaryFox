@@ -60,7 +60,9 @@ Quote from [building SMART Japan Structural Design Subcommittee](https://en.buil
 This software is being updated with your support.
 If you like this software, please donation.
 
-- [pixivFANBOX](https://hiron.fanbox.cc/)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
+
+Or [pixivFANBOX](https://hiron.fanbox.cc/)
 
 ## License
 

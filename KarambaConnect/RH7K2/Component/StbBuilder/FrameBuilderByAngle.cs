@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+
 using Grasshopper.Kernel;
+
 using Karamba.GHopper.Models;
+
 using KarambaConnectCommon.Properties;
+
 using Rhino.Geometry;
+
 using STBDotNet.v202;
+
 using Model = Karamba.Models.Model;
 
 namespace KarambaConnect.Component.StbBuilder

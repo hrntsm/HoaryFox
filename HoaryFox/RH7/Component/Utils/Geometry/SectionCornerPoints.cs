@@ -1,5 +1,7 @@
 ﻿using System;
+
 using Rhino.Geometry;
+
 using STBDotNet.v202;
 
 namespace HoaryFox.Component.Utils.Geometry
@@ -95,10 +97,10 @@ namespace HoaryFox.Component.Utils.Geometry
             throw new NotImplementedException();
         }
 
-        internal static Curve ColumnPipe(Point3d pt, double d, Vector3d zAxis)
+        internal static Curve ColumnPipe(Point3d pt, double radius, Vector3d zAxis)
         {
             Plane plane = new Plane(pt, zAxis);
-            return new ArcCurve(new Circle(plane, d / 2));
+            return new ArcCurve(new Circle(plane, radius));
         }
 
         //  Z        3 o 2
@@ -194,11 +196,11 @@ namespace HoaryFox.Component.Utils.Geometry
         }
 
 
-        internal static Curve BeamPipe(Point3d pt, double d, Vector3d xAxis)
+        internal static Curve BeamPipe(Point3d pt, double radius, Vector3d xAxis)
         {
-            var centerPt = new Point3d(pt.X, pt.Y, pt.Z - d / 2);
+            var centerPt = new Point3d(pt.X, pt.Y, pt.Z - radius);
             var plane = new Plane(centerPt, xAxis);
-            return new ArcCurve(new Circle(plane, d / 2));
+            return new ArcCurve(new Circle(plane, radius));
         }
     }
 }

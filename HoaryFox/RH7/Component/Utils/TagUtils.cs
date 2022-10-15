@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+
 using Rhino.Geometry;
+
 using STBDotNet.v202;
 
 
@@ -305,7 +308,10 @@ namespace HoaryFox.Component.Utils
         private static Dictionary<string, string>[] StbMembersToDictArray(IReadOnlyList<object> members, StbSections sections)
         {
             var propertiesArray = new Dictionary<string, string>[members.Count];
-
+            if (members.Count == 0)
+            {
+                return propertiesArray;
+            }
             object item = members[0];
             Type t = item.GetType();
 
