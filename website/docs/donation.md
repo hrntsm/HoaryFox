@@ -11,20 +11,7 @@ HoaryFox をダウンロード頂きありがとうございます。
 
 支援先一覧：
 
-pixivFANBOX
-https://hiron.fanbox.cc/
+- [ko-fi](https://ko-fi.com/hrntsm)
+- [pixivFANBOX](https://hiron.fanbox.cc/)
 
 お読みくださりありがとうございました。
-
-----
-
-Please make a donation
-
-Thank you for downloading HoaryFox.
-This software is being updated with your support.
-If you like this software, please donation.
-
-pixivFANBOX
-https://hiron.fanbox.cc/
-
-Thank you for reading.
