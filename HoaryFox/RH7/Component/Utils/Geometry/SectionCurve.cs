@@ -9,14 +9,12 @@ namespace HoaryFox.Component.Utils.Geometry
         public SectionShape Shape { get; set; }
         public SectionType Type { get; set; }
         public Vector3d XAxis { get; set; }
+        public bool IsCft { get; set; }
 
         public void RotateSection(double inPlaneAngle, Vector3d rotateAxis, Point3d sectionPoint)
         {
             OuterCurve.Rotate(inPlaneAngle, rotateAxis, sectionPoint);
-            if (InnerCurve != null)
-            {
-                InnerCurve.Rotate(inPlaneAngle, rotateAxis, sectionPoint);
-            }
+            InnerCurve?.Rotate(inPlaneAngle, rotateAxis, sectionPoint);
         }
 
         public static SectionCurve CreateSolidColumnRect(Point3d sectionPoint, double widthX, double widthY, Vector3d[] localAxis)

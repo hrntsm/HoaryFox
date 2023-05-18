@@ -114,7 +114,10 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                 default:
                     throw new ArgumentException("Unmatched StbSecSteelColumn_CFT");
             }
-
+            foreach (var curve in curveList)
+            {
+                curve.IsCft = true;
+            }
             return curveList.ToArray();
         }
 
