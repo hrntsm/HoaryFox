@@ -294,10 +294,10 @@ namespace HoaryFox.Component.Utils
 
         public static Dictionary<string, string>[][] GetAllSectionInfoArray(StbMembers members, StbSections sections)
         {
-            var allTagList = new Dictionary<string, string>[7][];
+            var allTagList = new Dictionary<string, string>[8][];
 
-            var memberArray = new object[][] { members.StbColumns, members.StbGirders, members.StbPosts, members.StbBeams, members.StbBraces, members.StbSlabs, members.StbWalls };
-            for (var i = 0; i < 7; i++)
+            var memberArray = new object[][] { members.StbColumns, members.StbGirders, members.StbPosts, members.StbBeams, members.StbBraces, members.StbSlabs, members.StbWalls, members.StbPiles };
+            for (var i = 0; i < 8; i++)
             {
                 allTagList[i] = memberArray[i] != null ? StbMembersToDictArray(memberArray[i], sections) : Array.Empty<Dictionary<string, string>>();
             }
