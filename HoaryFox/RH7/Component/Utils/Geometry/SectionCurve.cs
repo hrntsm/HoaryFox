@@ -33,7 +33,7 @@ namespace HoaryFox.Component.Utils.Geometry
         {
             return new SectionCurve
             {
-                OuterCurve = SectionCornerPoints.ColumnPipe(sectionPoint, diameter, xAxis),
+                OuterCurve = SectionCornerPoints.ColumnPipe(sectionPoint, diameter / 2, xAxis),
                 InnerCurve = null,
                 Shape = SectionShape.Circle,
                 Type = SectionType.Solid,
