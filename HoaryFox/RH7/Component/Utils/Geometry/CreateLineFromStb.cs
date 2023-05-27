@@ -260,8 +260,8 @@ namespace HoaryFox.Component.Utils.Geometry
                 {
                     nodeTop = new StbNode
                     {
-                        X = node.X,
-                        Y = node.Y,
+                        X = node.X + member.offset_X,
+                        Y = node.Y + member.offset_Y,
                         Z = node.Z + member.level_top
                     };
                     nodeBottom = new StbNode
