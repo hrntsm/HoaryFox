@@ -472,5 +472,42 @@ namespace HoaryFox.Component.Utils.Geometry
 
             return brepList;
         }
+
+        public GH_Structure<GH_Brep> Footing(IEnumerable<StbFooting> footings)
+        {
+            var brepList = new GH_Structure<GH_Brep>();
+            if (footings == null)
+            {
+                return brepList;
+            }
+
+            foreach ((StbFooting footing, int i) in footings.Select((f, index) => (f, index)))
+            {
+                StbNode node = _nodes.First(n => n.id == footing.id_node);
+                Point3d[] endNodes =
+                {
+                    new Point3d(node.X, node.Y, node.Z),
+                    new Point3d(node.X, node.Y, node.Z + footing.level_bottom)
+                };
+                Point3d[] offset =
+                {
+                    new Point3d(footing.offset_X, footing.offset_Y, 0),
+                    new Point3d(footing.offset_X, footing.offset_Y, 0),
+                };
+                Point3d[] sectionPoints =
+                {
+                    endNodes[0] + offset[0],
+                    new Point3d(),
+                    new Point3d(),
+                    endNodes[1] + offset[1]
+                };
+                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
+
+                var brepMaker = new BrepMaker.Footing(_sections, _tolerance);
+                brepList.Append(new GH_Brep(brepMaker.CreateFootingBrep(footing.id_section, footing.rotate, sectionPoints, memberAxis / memberAxis.Length)), new GH_Path(0, i));
+            }
+
+            return brepList;
+        }
     }
 }

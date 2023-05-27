@@ -22,7 +22,7 @@ namespace HoaryFox.Component.Geometry
     public class Stb2Brep : GH_Component
     {
         private ST_BRIDGE _stBridge;
-        private readonly GH_Structure<GH_Brep>[] _brepList = new GH_Structure<GH_Brep>[8];
+        private readonly GH_Structure<GH_Brep>[] _brepList = new GH_Structure<GH_Brep>[9];
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
@@ -49,6 +49,7 @@ namespace HoaryFox.Component.Geometry
             pManager.AddBrepParameter("Slabs", "Slb", "output StbSlabs to Brep", GH_ParamAccess.tree);
             pManager.AddBrepParameter("Walls", "Wl", "output StbWalls to Brep", GH_ParamAccess.tree);
             pManager.AddBrepParameter("Piles", "Pil", "output StbPiles to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Footings", "Ftg", "output StbFootings to Brep", GH_ParamAccess.tree);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
@@ -63,7 +64,7 @@ namespace HoaryFox.Component.Geometry
                 BakeBrep();
             }
 
-            for (var i = 0; i < 8; i++)
+            for (var i = 0; i < 9; i++)
             {
                 dataAccess.SetDataTree(i, _brepList[i]);
             }
@@ -84,13 +85,14 @@ namespace HoaryFox.Component.Geometry
             _brepList[5] = brepFromStb.Slab(member.StbSlabs);
             _brepList[6] = brepFromStb.Wall(member.StbWalls, member.StbOpens);
             _brepList[7] = brepFromStb.Pile(member.StbPiles);
+            _brepList[8] = brepFromStb.Footing(member.StbFootings);
         }
 
         private void BakeBrep()
         {
             RhinoDoc activeDoc = RhinoDoc.ActiveDoc;
-            var parentLayerNames = new[] { "Column", "Girder", "Post", "Beam", "Brace", "Slab", "Wall", "Pile" };
-            Color[] layerColors = { Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple, Color.DarkGray, Color.CornflowerBlue, Color.DarkOrange };
+            var parentLayerNames = new[] { "Column", "Girder", "Post", "Beam", "Brace", "Slab", "Wall", "Pile", "Footing" };
+            Color[] layerColors = new[] { Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple, Color.DarkGray, Color.CornflowerBlue, Color.DarkOrange, Color.DarkKhaki };
             GeometryBaker.MakeParentLayers(activeDoc, parentLayerNames, layerColors);
 
             Dictionary<string, string>[][] infoArray = Utils.TagUtils.GetAllSectionInfoArray(_stBridge.StbModel.StbMembers, _stBridge.StbModel.StbSections);
