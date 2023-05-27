@@ -49,7 +49,7 @@ namespace HoaryFox.Component.Geometry
             pManager.AddLineParameter("Posts", "Pst", "output StbPosts to Line", GH_ParamAccess.tree);
             pManager.AddLineParameter("Beams", "Beam", "output StbBeams to Line", GH_ParamAccess.tree);
             pManager.AddLineParameter("Braces", "Brc", "output StbBraces to Line", GH_ParamAccess.tree);
-            pManager.AddLineParameter("Piles", "Pile", "output StbPiles to Line", GH_ParamAccess.tree);
+            pManager.AddLineParameter("Piles", "Pil", "output StbPiles to Line", GH_ParamAccess.tree);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)

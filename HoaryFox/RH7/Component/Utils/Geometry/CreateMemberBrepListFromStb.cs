@@ -424,5 +424,45 @@ namespace HoaryFox.Component.Utils.Geometry
 
             return openCurvePts;
         }
+
+        public GH_Structure<GH_Brep> Pile(IEnumerable<StbPile> piles)
+        {
+            var brepList = new GH_Structure<GH_Brep>();
+            if (piles == null)
+            {
+                return brepList;
+            }
+
+            foreach ((StbPile pile, int i) in piles.Select((pile, index) => (pile, index)))
+            {
+                StbPileKind_structure kind = pile.kind_structure;
+
+                StbNode node = _nodes.First(n => n.id == pile.id_node);
+                Point3d[] endNodes =
+                {
+                    new Point3d(node.X, node.Y, node.Z),
+                    new Point3d(node.X, node.Y, node.Z - pile.length_all)
+                };
+                Point3d[] offset =
+                {
+                    new Point3d(pile.offset_X, pile.offset_Y, pile.level_top),
+                    new Point3d(pile.offset_X, pile.offset_Y, pile.level_top),
+                };
+                Point3d[] sectionPoints =
+                {
+                    endNodes[0] + offset[0],
+                    new Point3d(),
+                    new Point3d(),
+                    endNodes[1] + offset[1]
+                };
+                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
+                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * pile.length_head;
+
+                var brepMaker = new BrepMaker.Pile(_sections, _tolerance);
+                brepList.Append(new GH_Brep(brepMaker.CreatePileBrep(pile.id_section, kind, sectionPoints, memberAxis / memberAxis.Length)), new GH_Path(0, i));
+            }
+
+            return brepList;
+        }
     }
 }
