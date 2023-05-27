@@ -77,14 +77,14 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                 case 1:
                     var straight = figures[0] as StbSecBeam_RC_Straight;
                     curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], straight.depth, straight.width, localAxis));
-                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], straight.depth, straight.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[5], straight.depth, straight.width, localAxis));
                     break;
                 case 2:
                     var taper = new[] { figures[0] as StbSecBeam_RC_Taper, figures[1] as StbSecBeam_RC_Taper };
                     curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], taper[0].depth, taper[0].width, localAxis));
                     curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[1], taper[0].depth, taper[0].width, localAxis));
-                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[2], taper[1].depth, taper[1].width, localAxis));
-                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], taper[1].depth, taper[1].width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[4], taper[1].depth, taper[1].width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[5], taper[1].depth, taper[1].width, localAxis));
                     break;
                 case 3:
                     var haunch = new[] { figures[0] as StbSecBeam_RC_Haunch, figures[1] as StbSecBeam_RC_Haunch, figures[2] as StbSecBeam_RC_Haunch };
@@ -93,8 +93,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     StbSecBeam_RC_Haunch end = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.END);
                     curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], start.depth, start.width, localAxis));
                     curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[1], center.depth, center.width, localAxis));
-                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[2], center.depth, center.width, localAxis));
-                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], end.depth, end.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[4], center.depth, center.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[5], end.depth, end.width, localAxis));
                     break;
                 default:
                     throw new Exception();
@@ -113,14 +113,14 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                 case 1:
                     var straight = figures[0] as StbSecBeam_SRC_Straight;
                     curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], straight.depth, straight.width, localAxis));
-                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], straight.depth, straight.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[5], straight.depth, straight.width, localAxis));
                     break;
                 case 2:
                     var taper = new[] { figures[0] as StbSecBeam_SRC_Taper, figures[1] as StbSecBeam_SRC_Taper };
                     curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], taper[0].depth, taper[0].width, localAxis));
                     curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[1], taper[0].depth, taper[0].width, localAxis));
-                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[2], taper[1].depth, taper[1].width, localAxis));
-                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], taper[1].depth, taper[1].width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[4], taper[1].depth, taper[1].width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[5], taper[1].depth, taper[1].width, localAxis));
                     break;
                 case 3:
                     var haunch = new[] { figures[0] as StbSecBeam_SRC_Haunch, figures[1] as StbSecBeam_SRC_Haunch, figures[2] as StbSecBeam_SRC_Haunch };
@@ -129,8 +129,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     StbSecBeam_SRC_Haunch end = haunch.First(fig => fig.pos == StbSecBeam_RC_HaunchPos.END);
                     curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[0], start.depth, start.width, localAxis));
                     curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[1], center.depth, center.width, localAxis));
-                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[2], center.depth, center.width, localAxis));
-                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[3], end.depth, end.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[4], center.depth, center.width, localAxis));
+                    curveList.Add(SectionCurve.CreateSolidBeamRect(sectionPoints[5], end.depth, end.width, localAxis));
                     break;
                 default:
                     throw new Exception();

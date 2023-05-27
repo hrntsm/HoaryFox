@@ -128,13 +128,17 @@ namespace HoaryFox.Component.Utils.Geometry
                 Point3d[] sectionPoints =
                 {
                     new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
-                    Point3d.Origin,
-                    Point3d.Origin,
+                    Point3d.Origin, // haunch_s
+                    Point3d.Origin, // joint_s
+                    Point3d.Origin, // joint_e 
+                    Point3d.Origin, // haunch_e
                     new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
                 };
-                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
-                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * girder.joint_start;
-                sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * girder.joint_end;
+                Vector3d memberAxis = sectionPoints[5] - sectionPoints[0];
+                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * girder.haunch_start;
+                sectionPoints[2] = sectionPoints[0] + memberAxis / memberAxis.Length * girder.joint_start;
+                sectionPoints[3] = sectionPoints[5] - memberAxis / memberAxis.Length * girder.joint_end;
+                sectionPoints[4] = sectionPoints[5] - memberAxis / memberAxis.Length * girder.haunch_end;
 
                 var brepMaker = new BrepMaker.Girder(_sections, _tolerance);
                 brepList.Append(new GH_Brep(brepMaker.CreateGirderBrep(girder.id_section, girder.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
@@ -168,13 +172,17 @@ namespace HoaryFox.Component.Utils.Geometry
                 Point3d[] sectionPoints =
                 {
                     new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
-                    Point3d.Origin,
-                    Point3d.Origin,
+                    Point3d.Origin, // haunch_s
+                    Point3d.Origin, // joint_s
+                    Point3d.Origin, // joint_e 
+                    Point3d.Origin, // haunch_e
                     new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
                 };
-                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
-                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * beam.joint_start;
-                sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * beam.joint_end;
+                Vector3d memberAxis = sectionPoints[5] - sectionPoints[0];
+                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * beam.haunch_start;
+                sectionPoints[2] = sectionPoints[0] + memberAxis / memberAxis.Length * beam.joint_start;
+                sectionPoints[3] = sectionPoints[5] - memberAxis / memberAxis.Length * beam.joint_end;
+                sectionPoints[4] = sectionPoints[5] - memberAxis / memberAxis.Length * beam.haunch_end;
 
                 var brepMaker = new BrepMaker.Girder(_sections, _tolerance);
                 brepList.Append(new GH_Brep(brepMaker.CreateGirderBrep(beam.id_section, beam.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
