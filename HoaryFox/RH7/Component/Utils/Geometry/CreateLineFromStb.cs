@@ -13,12 +13,14 @@ namespace HoaryFox.Component.Utils.Geometry
     public class CreateLineFromStb
     {
         private readonly StbMembers _members;
+        private readonly StbSections _sections;
         private readonly StbNode[] _nodes;
         private readonly bool _isOffset;
 
         public CreateLineFromStb(ST_BRIDGE stBridge, bool isOffset)
         {
             _members = stBridge.StbModel.StbMembers;
+            _sections = stBridge.StbModel.StbSections;
             _nodes = stBridge.StbModel.StbNodes;
             _isOffset = isOffset;
         }
@@ -252,45 +254,148 @@ namespace HoaryFox.Component.Utils.Geometry
 
             foreach ((StbPile member, int i) in _members.StbPiles.Select((member, index) => (member, index)))
             {
-                var nodeBottom = new StbNode();
-                var nodeTop = new StbNode();
-
-                StbNode node = _nodes.First(n => n.id == member.id_node);
-                if (_isOffset)
+                switch (member.kind_structure)
                 {
-                    nodeTop = new StbNode
-                    {
-                        X = node.X + member.offset_X,
-                        Y = node.Y + member.offset_Y,
-                        Z = node.Z + member.level_top
-                    };
-                    nodeBottom = new StbNode
-                    {
-                        X = nodeTop.X,
-                        Y = nodeTop.Y,
-                        Z = nodeTop.Z - member.length_all
-                    };
-
+                    case StbPileKind_structure.RC:
+                        GetRcPileLines(lines, member, i);
+                        break;
+                    case StbPileKind_structure.S:
+                        break;
+                    case StbPileKind_structure.PC:
+                        GetPcPileLines(lines, member, i);
+                        break;
                 }
-                else
-                {
-                    nodeTop = new StbNode
-                    {
-                        X = node.X,
-                        Y = node.Y,
-                        Z = node.Z
-                    };
-                    nodeBottom = new StbNode
-                    {
-                        X = nodeTop.X,
-                        Y = nodeTop.Y,
-                        Z = nodeTop.Z - member.length_all + member.level_top
-                    };
-                }
-                lines.Append(GH_LineFromStbNode(nodeBottom, nodeTop), new GH_Path(0, i));
             }
 
             return lines;
+        }
+
+        private void GetPcPileLines(GH_Structure<GH_Line> lines, StbPile member, int i)
+        {
+            var figures = GetFigureList(member);
+
+            var nodes = new List<StbNode>();
+            StbNode node = _nodes.First(n => n.id == member.id_node);
+            if (_isOffset)
+            {
+                nodes.Add(new StbNode
+                {
+                    X = node.X + member.offset_X,
+                    Y = node.Y + member.offset_Y,
+                    Z = node.Z + member.level_top
+                });
+            }
+            else
+            {
+                nodes.Add(new StbNode
+                {
+                    X = node.X,
+                    Y = node.Y,
+                    Z = node.Z
+                });
+            }
+
+            foreach ((PCPileFigure figure, int index) in figures.Select((figure, index) => (figure, index)))
+            {
+                nodes.Add(new StbNode
+                {
+                    X = nodes[index].X,
+                    Y = nodes[index].Y,
+                    Z = nodes[index].Z - figure.Length
+                });
+                lines.Append(GH_LineFromStbNode(nodes[index], nodes[index + 1]), new GH_Path(0, i));
+            }
+        }
+
+        private IEnumerable<PCPileFigure> GetFigureList(StbPile member)
+        {
+            var figures = new List<PCPileFigure>();
+            var idSection = member.id_section;
+
+            StbSecPileProduct secPileProduct = _sections.StbSecPileProduct.First(sec => sec.id == idSection);
+            var secNodularCPRC = secPileProduct.StbSecFigurePileProduct.StbSecPileProductNodular_CPRC;
+            if (secNodularCPRC != null)
+            {
+                figures.AddRange(secNodularCPRC.Select(figure => new PCPileFigure(figure)));
+            }
+            var secNodularPHC = secPileProduct.StbSecFigurePileProduct.StbSecPileProductNodular_PHC;
+            if (secNodularPHC != null)
+            {
+                figures.AddRange(secNodularPHC.Select(figure => new PCPileFigure(figure)));
+            }
+            var secNodularPRC = secPileProduct.StbSecFigurePileProduct.StbSecPileProductNodular_PRC;
+            if (secNodularPRC != null)
+            {
+                figures.AddRange(secNodularPRC.Select(figure => new PCPileFigure(figure)));
+            }
+            var secCPRC = secPileProduct.StbSecFigurePileProduct.StbSecPileProduct_CPRC;
+            if (secCPRC != null)
+            {
+                figures.AddRange(secCPRC.Select(figure => new PCPileFigure(figure)));
+            }
+            var secPHC = secPileProduct.StbSecFigurePileProduct.StbSecPileProduct_PHC;
+            if (secPHC != null)
+            {
+                figures.AddRange(secPHC.Select(figure => new PCPileFigure(figure)));
+            }
+            var secPRC = secPileProduct.StbSecFigurePileProduct.StbSecPileProduct_PRC;
+            if (secPRC != null)
+            {
+                figures.AddRange(secPRC.Select(figure => new PCPileFigure(figure)));
+            }
+            var secSC = secPileProduct.StbSecFigurePileProduct.StbSecPileProduct_SC;
+            if (secSC != null)
+            {
+                figures.AddRange(secSC.Select(figure => new PCPileFigure(figure)));
+            }
+            var secST = secPileProduct.StbSecFigurePileProduct.StbSecPileProduct_ST;
+            if (secST != null)
+            {
+                figures.AddRange(secST.Select(figure => new PCPileFigure(figure)));
+            }
+
+            figures.Sort();
+            return figures;
+        }
+
+        private void GetRcPileLines(GH_Structure<GH_Line> lines, StbPile member, int i)
+        {
+            var nodeBottom = new StbNode();
+            var nodeTop = new StbNode();
+
+            StbNode node = _nodes.First(n => n.id == member.id_node);
+            if (_isOffset)
+            {
+                nodeTop = new StbNode
+                {
+                    X = node.X + member.offset_X,
+                    Y = node.Y + member.offset_Y,
+                    Z = node.Z + member.level_top
+                };
+                nodeBottom = new StbNode
+                {
+                    X = nodeTop.X,
+                    Y = nodeTop.Y,
+                    Z = nodeTop.Z - member.length_all
+                };
+
+            }
+            else
+            {
+                nodeTop = new StbNode
+                {
+                    X = node.X,
+                    Y = node.Y,
+                    Z = node.Z
+                };
+                nodeBottom = new StbNode
+                {
+                    X = nodeTop.X,
+                    Y = nodeTop.Y,
+                    Z = nodeTop.Z - member.length_all
+                };
+            }
+            lines.Append(GH_LineFromStbNode(nodeBottom, nodeTop), new GH_Path(0, i));
         }
 
         private static GH_Line GH_LineFromStbNode(StbNode from, StbNode to)
