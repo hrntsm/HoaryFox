@@ -12,10 +12,13 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
     {
         private readonly IReadOnlyList<double> _tolerance;
         private readonly StbSections _sections;
-        public Footing(StbSections sections, IReadOnlyList<double> tolerance)
+        private readonly string _guid;
+
+        public Footing(StbSections sections, IReadOnlyList<double> tolerance, string guid)
         {
             _tolerance = tolerance;
             _sections = sections;
+            _guid = guid;
         }
 
         public Brep CreateFootingBrep(string idSection, double rotate, IReadOnlyList<Point3d> sectionPoints, Vector3d axis)
@@ -28,8 +31,15 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
         private SectionCurve[] CreateCurveList(string idSection, IReadOnlyList<Point3d> sectionPoints, Vector3d axis)
         {
             SectionCurve[] curveList;
-            StbSecFoundation_RC rcSec = _sections.StbSecFoundation_RC.First(sec => sec.id == idSection);
-            curveList = SecRcFootingToCurves(rcSec.StbSecFigureFoundation_RC.Item, sectionPoints, axis);
+            try
+            {
+                StbSecFoundation_RC rcSec = _sections.StbSecFoundation_RC.First(sec => sec.id == idSection);
+                curveList = SecRcFootingToCurves(rcSec.StbSecFigureFoundation_RC.Item, sectionPoints, axis);
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException($"Error converting guid: {_guid}\nThe cross-sectional shape of the footing seems to be wrong. Please check.");
+            }
 
             return curveList;
         }

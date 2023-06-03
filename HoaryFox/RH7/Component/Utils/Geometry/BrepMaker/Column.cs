@@ -12,6 +12,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
     {
         private readonly IReadOnlyList<double> _tolerance;
         private readonly StbSections _sections;
+        private readonly string _guid;
+
         public Column(StbSections sections, IReadOnlyList<double> tolerance)
         {
             _tolerance = tolerance;
@@ -34,7 +36,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
             catch (Exception)
             {
-                throw new ArgumentException("The cross-sectional shape of the column or post seems to be wrong. Please check.");
+                throw new ArgumentException($"Error converting guid: {_guid}\nThe cross-sectional shape of the column or post seems to be wrong. Please check.");
             }
 
             return curveList;
