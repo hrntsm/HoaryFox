@@ -14,10 +14,11 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
         private readonly StbSections _sections;
         private readonly string _guid;
 
-        public Column(StbSections sections, IReadOnlyList<double> tolerance)
+        public Column(StbSections sections, IReadOnlyList<double> tolerance, string guid)
         {
             _tolerance = tolerance;
             _sections = sections;
+            _guid = guid;
         }
 
         public Brep CreateColumnBrep(string idSection, double rotate, StbColumnKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)

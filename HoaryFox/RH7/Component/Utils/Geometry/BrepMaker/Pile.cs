@@ -12,10 +12,13 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
     {
         private readonly IReadOnlyList<double> _tolerance;
         private readonly StbSections _sections;
-        public Pile(StbSections sections, IReadOnlyList<double> tolerance)
+        private readonly string _guid;
+
+        public Pile(StbSections sections, IReadOnlyList<double> tolerance, string guid)
         {
             _tolerance = tolerance;
             _sections = sections;
+            _guid = guid;
         }
 
         public Brep CreatePileBrep(string idSection, StbPileKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d axis)
@@ -33,7 +36,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
             catch (Exception)
             {
-                throw new ArgumentException("The cross-sectional shape of the pile seems to be wrong. Please check.");
+                throw new ArgumentException($"Error converting guid: {_guid}\nThe cross-sectional shape of the pile seems to be wrong. Please check.");
             }
 
             return curveList;
@@ -48,13 +51,36 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     StbSecPile_RC rcSec = _sections.StbSecPile_RC.First(sec => sec.id == idSection);
                     curveList = SecRcPileToCurves(rcSec.StbSecFigurePile_RC.Item, sectionPoints, axis);
                     break;
-                case StbPileKind_structure.S:
                 case StbPileKind_structure.PC:
+                    StbSecPileProduct productSec = _sections.StbSecPileProduct.First(sec => sec.id == idSection);
+                    curveList = SecProductPileToCurves(productSec, sectionPoints, axis);
+                    break;
+                case StbPileKind_structure.S:
                 default:
                     throw new ArgumentException("Unsupported StbPileKind");
             }
 
             return curveList;
+        }
+
+        private SectionCurve[] SecProductPileToCurves(StbSecPileProduct stbSecPileProduct, IReadOnlyList<Point3d> sectionPoints, Vector3d axis)
+        {
+            var curveList = new List<SectionCurve>();
+            Vector3d[] localAxis = Utils.CreateLocalAxis(sectionPoints);
+            var figures = PCPileFigure.GetFigureList(stbSecPileProduct);
+            foreach ((PCPileFigure fig, int index) in figures.Select((fig, index) => (fig, index)))
+            {
+                curveList.Add(SectionCurve.CreateSolidColumnPipe(
+                    sectionPoints[index], fig.Diameter, fig.Diameter - 2 * fig.Thickness, localAxis[0])
+                );
+                curveList.Add(SectionCurve.CreateSolidColumnPipe(
+                    sectionPoints[index + 1] + 10 * Vector3d.ZAxis, fig.Diameter, fig.Diameter - 2 * fig.Thickness, localAxis[0])
+                );
+            }
+            curveList.Add(SectionCurve.CreateSolidColumnPipe(
+                sectionPoints.Last(), figures.Last().Diameter, figures.Last().Diameter - 2 * figures.Last().Thickness, localAxis[0])
+            );
+            return curveList.ToArray();
         }
 
         private static SectionCurve[] SecRcPileToCurves(object figure, IReadOnlyList<Point3d> sectionPoints, Vector3d axis)

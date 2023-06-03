@@ -41,6 +41,18 @@ namespace HoaryFox.Component.Utils.Geometry
             };
         }
 
+        public static SectionCurve CreateSolidColumnPipe(Point3d sectionPoint, double outerDiameter, double innerDiameter, Vector3d xAxis)
+        {
+            return new SectionCurve
+            {
+                OuterCurve = SectionCornerPoints.ColumnPipe(sectionPoint, outerDiameter / 2, xAxis),
+                InnerCurve = SectionCornerPoints.ColumnPipe(sectionPoint, innerDiameter / 2, xAxis),
+                Shape = SectionShape.Circle,
+                Type = SectionType.Solid,
+                XAxis = xAxis,
+            };
+        }
+
         public static SectionCurve CreateSolidBeamRect(Point3d sectionPoint, double depth, double width, Vector3d[] localAxis)
         {
             return new SectionCurve()

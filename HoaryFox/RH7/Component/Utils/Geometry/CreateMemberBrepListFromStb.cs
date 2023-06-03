@@ -56,7 +56,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * column.joint_bottom;
                 sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * column.joint_top;
 
-                var brepMaker = new BrepMaker.Column(_sections, _tolerance);
+                var brepMaker = new BrepMaker.Column(_sections, _tolerance, column.guid);
                 brepList.Append(new GH_Brep(brepMaker.CreateColumnBrep(column.id_section, column.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
             }
 
@@ -96,7 +96,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * post.joint_bottom;
                 sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * post.joint_top;
 
-                var brepMaker = new BrepMaker.Column(_sections, _tolerance);
+                var brepMaker = new BrepMaker.Column(_sections, _tolerance, post.guid);
                 brepList.Append(new GH_Brep(brepMaker.CreateColumnBrep(post.id_section, post.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
             }
 
@@ -140,7 +140,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 sectionPoints[3] = sectionPoints[5] - memberAxis / memberAxis.Length * girder.joint_end;
                 sectionPoints[4] = sectionPoints[5] - memberAxis / memberAxis.Length * girder.haunch_end;
 
-                var brepMaker = new BrepMaker.Girder(_sections, _tolerance);
+                var brepMaker = new BrepMaker.Girder(_sections, _tolerance, girder.guid);
                 brepList.Append(new GH_Brep(brepMaker.CreateGirderBrep(girder.id_section, girder.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
             }
 
@@ -184,7 +184,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 sectionPoints[3] = sectionPoints[5] - memberAxis / memberAxis.Length * beam.joint_end;
                 sectionPoints[4] = sectionPoints[5] - memberAxis / memberAxis.Length * beam.haunch_end;
 
-                var brepMaker = new BrepMaker.Girder(_sections, _tolerance);
+                var brepMaker = new BrepMaker.Girder(_sections, _tolerance, beam.guid);
                 brepList.Append(new GH_Brep(brepMaker.CreateGirderBrep(beam.id_section, beam.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
             }
 
@@ -224,7 +224,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * brace.joint_start;
                 sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * brace.joint_end;
 
-                var brepMaker = new BrepMaker.Brace(_sections, _tolerance);
+                var brepMaker = new BrepMaker.Brace(_sections, _tolerance, brace.guid);
                 brepList.Append(new GH_Brep(brepMaker.CreateBraceBrep(brace.id_section, brace.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
             }
 
@@ -444,30 +444,53 @@ namespace HoaryFox.Component.Utils.Geometry
             foreach ((StbPile pile, int i) in piles.Select((pile, index) => (pile, index)))
             {
                 StbPileKind_structure kind = pile.kind_structure;
-
                 StbNode node = _nodes.First(n => n.id == pile.id_node);
-                Point3d[] endNodes =
-                {
-                    new Point3d(node.X, node.Y, node.Z),
-                    new Point3d(node.X, node.Y, node.Z - pile.length_all)
-                };
-                Point3d[] offset =
-                {
-                    new Point3d(pile.offset_X, pile.offset_Y, pile.level_top),
-                    new Point3d(pile.offset_X, pile.offset_Y, pile.level_top),
-                };
-                Point3d[] sectionPoints =
-                {
-                    endNodes[0] + offset[0],
-                    new Point3d(),
-                    new Point3d(),
-                    endNodes[1] + offset[1]
-                };
-                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
-                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * pile.length_head;
+                var sectionPoints = new List<Point3d>();
 
-                var brepMaker = new BrepMaker.Pile(_sections, _tolerance);
-                brepList.Append(new GH_Brep(brepMaker.CreatePileBrep(pile.id_section, kind, sectionPoints, memberAxis / memberAxis.Length)), new GH_Path(0, i));
+                switch (kind)
+                {
+                    case StbPileKind_structure.RC:
+                        Point3d[] endNodes =
+                        {
+                            new Point3d(node.X, node.Y, node.Z),
+                            new Point3d(node.X, node.Y, node.Z - pile.length_all)
+                        };
+                        Point3d[] offset =
+                        {
+                            new Point3d(pile.offset_X, pile.offset_Y, pile.level_top),
+                            new Point3d(pile.offset_X, pile.offset_Y, pile.level_top),
+                        };
+                        sectionPoints = new List<Point3d>
+                        {
+                            endNodes[0] + offset[0],
+                            new Point3d(),
+                            new Point3d(),
+                            endNodes[1] + offset[1]
+                        };
+                        sectionPoints[1] = sectionPoints[0] - Vector3d.ZAxis * pile.length_head;
+                        break;
+                    case StbPileKind_structure.PC:
+                        var figures = PCPileFigure.GetFigureList(_sections, pile);
+                        sectionPoints.Add(new Point3d
+                        {
+                            X = node.X + pile.offset_X,
+                            Y = node.Y + pile.offset_Y,
+                            Z = node.Z + pile.level_top
+                        });
+                        foreach ((PCPileFigure figure, int index) in figures.Select((figure, index) => (figure, index)))
+                        {
+                            sectionPoints.Add(new Point3d
+                            {
+                                X = sectionPoints[index].X,
+                                Y = sectionPoints[index].Y,
+                                Z = sectionPoints[index].Z - figure.Length
+                            });
+                        }
+                        break;
+                }
+
+                var brepMaker = new BrepMaker.Pile(_sections, _tolerance, pile.guid);
+                brepList.Append(new GH_Brep(brepMaker.CreatePileBrep(pile.id_section, kind, sectionPoints, -Vector3d.ZAxis)), new GH_Path(0, i));
             }
 
             return brepList;
@@ -503,7 +526,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 };
                 Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
 
-                var brepMaker = new BrepMaker.Footing(_sections, _tolerance);
+                var brepMaker = new BrepMaker.Footing(_sections, _tolerance, footing.guid);
                 brepList.Append(new GH_Brep(brepMaker.CreateFootingBrep(footing.id_section, footing.rotate, sectionPoints, memberAxis / memberAxis.Length)), new GH_Path(0, i));
             }
 

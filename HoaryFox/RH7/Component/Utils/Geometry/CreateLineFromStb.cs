@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Grasshopper.Kernel.Data;
@@ -259,11 +260,11 @@ namespace HoaryFox.Component.Utils.Geometry
                     case StbPileKind_structure.RC:
                         GetRcPileLines(lines, member, i);
                         break;
-                    case StbPileKind_structure.S:
-                        break;
                     case StbPileKind_structure.PC:
                         GetPcPileLines(lines, member, i);
                         break;
+                    case StbPileKind_structure.S:
+                        throw new NotImplementedException();
                 }
             }
 
@@ -272,7 +273,7 @@ namespace HoaryFox.Component.Utils.Geometry
 
         private void GetPcPileLines(GH_Structure<GH_Line> lines, StbPile member, int i)
         {
-            var figures = GetFigureList(member);
+            var figures = PCPileFigure.GetFigureList(_sections, member);
 
             var nodes = new List<StbNode>();
             StbNode node = _nodes.First(n => n.id == member.id_node);
@@ -305,57 +306,6 @@ namespace HoaryFox.Component.Utils.Geometry
                 });
                 lines.Append(GH_LineFromStbNode(nodes[index], nodes[index + 1]), new GH_Path(0, i));
             }
-        }
-
-        private IEnumerable<PCPileFigure> GetFigureList(StbPile member)
-        {
-            var figures = new List<PCPileFigure>();
-            var idSection = member.id_section;
-
-            StbSecPileProduct secPileProduct = _sections.StbSecPileProduct.First(sec => sec.id == idSection);
-            var secNodularCPRC = secPileProduct.StbSecFigurePileProduct.StbSecPileProductNodular_CPRC;
-            if (secNodularCPRC != null)
-            {
-                figures.AddRange(secNodularCPRC.Select(figure => new PCPileFigure(figure)));
-            }
-            var secNodularPHC = secPileProduct.StbSecFigurePileProduct.StbSecPileProductNodular_PHC;
-            if (secNodularPHC != null)
-            {
-                figures.AddRange(secNodularPHC.Select(figure => new PCPileFigure(figure)));
-            }
-            var secNodularPRC = secPileProduct.StbSecFigurePileProduct.StbSecPileProductNodular_PRC;
-            if (secNodularPRC != null)
-            {
-                figures.AddRange(secNodularPRC.Select(figure => new PCPileFigure(figure)));
-            }
-            var secCPRC = secPileProduct.StbSecFigurePileProduct.StbSecPileProduct_CPRC;
-            if (secCPRC != null)
-            {
-                figures.AddRange(secCPRC.Select(figure => new PCPileFigure(figure)));
-            }
-            var secPHC = secPileProduct.StbSecFigurePileProduct.StbSecPileProduct_PHC;
-            if (secPHC != null)
-            {
-                figures.AddRange(secPHC.Select(figure => new PCPileFigure(figure)));
-            }
-            var secPRC = secPileProduct.StbSecFigurePileProduct.StbSecPileProduct_PRC;
-            if (secPRC != null)
-            {
-                figures.AddRange(secPRC.Select(figure => new PCPileFigure(figure)));
-            }
-            var secSC = secPileProduct.StbSecFigurePileProduct.StbSecPileProduct_SC;
-            if (secSC != null)
-            {
-                figures.AddRange(secSC.Select(figure => new PCPileFigure(figure)));
-            }
-            var secST = secPileProduct.StbSecFigurePileProduct.StbSecPileProduct_ST;
-            if (secST != null)
-            {
-                figures.AddRange(secST.Select(figure => new PCPileFigure(figure)));
-            }
-
-            figures.Sort();
-            return figures;
         }
 
         private void GetRcPileLines(GH_Structure<GH_Line> lines, StbPile member, int i)
