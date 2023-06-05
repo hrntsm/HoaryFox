@@ -12,11 +12,13 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
     {
         private readonly IReadOnlyList<double> _tolerance;
         private readonly StbSections _sections;
+        private readonly string _guid;
 
-        public Brace(StbSections sections, IReadOnlyList<double> tolerance)
+        public Brace(StbSections sections, IReadOnlyList<double> tolerance, string guid)
         {
             _tolerance = tolerance;
             _sections = sections;
+            _guid = guid;
         }
 
         public Brep CreateBraceBrep(string idSection, double rotate, StbBraceKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
@@ -45,7 +47,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
             catch (Exception)
             {
-                throw new ArgumentException("The cross-sectional shape of the brace seems to be wrong. Please check.");
+                throw new ArgumentException($"Error converting guid: {_guid}\nThe cross-sectional shape of the brace seems to be wrong. Please check.");
             }
         }
 

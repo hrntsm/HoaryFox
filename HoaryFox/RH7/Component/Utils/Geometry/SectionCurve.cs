@@ -33,8 +33,22 @@ namespace HoaryFox.Component.Utils.Geometry
         {
             return new SectionCurve
             {
-                OuterCurve = SectionCornerPoints.ColumnPipe(sectionPoint, diameter, xAxis),
+                OuterCurve = SectionCornerPoints.ColumnPipe(sectionPoint, diameter / 2, xAxis),
                 InnerCurve = null,
+                Shape = SectionShape.Circle,
+                Type = SectionType.Solid,
+                XAxis = xAxis,
+            };
+        }
+
+        public static SectionCurve CreateSolidColumnPipe(Point3d sectionPoint, double outerDiameter, double innerDiameter, Vector3d xAxis)
+        {
+            return new SectionCurve
+            {
+                OuterCurve = SectionCornerPoints.ColumnPipe(sectionPoint, outerDiameter / 2, xAxis),
+                InnerCurve = outerDiameter != innerDiameter
+                    ? SectionCornerPoints.ColumnPipe(sectionPoint, innerDiameter / 2, xAxis)
+                    : null,
                 Shape = SectionShape.Circle,
                 Type = SectionType.Solid,
                 XAxis = xAxis,
