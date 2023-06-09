@@ -12,10 +12,10 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
     {
         public static SectionCurve GetCurve(StbSecSteel secSteel, string shape, Point3d point, Utils.SectionPositionType type, Vector3d[] localAxis)
         {
-            // TODO: foreach なのに最初にマッチしたもので return しているのでが変なので直す。
             if (secSteel.StbSecBuildBOX != null)
             {
-                foreach (StbSecBuildBOX box in secSteel.StbSecBuildBOX.Where(box => box.name == shape))
+                StbSecBuildBOX box = secSteel.StbSecBuildBOX.FirstOrDefault(b => b.name == shape);
+                if (box != null)
                 {
                     return CurveFromStbSecBox(localAxis, point, type, box.A, box.B, box.t1, box.t2);
                 }
@@ -23,7 +23,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
             if (secSteel.StbSecRollBOX != null)
             {
-                foreach (StbSecRollBOX box in secSteel.StbSecRollBOX.Where(box => box.name == shape))
+                StbSecRollBOX box = secSteel.StbSecRollBOX.FirstOrDefault(b => b.name == shape);
+                if (box != null)
                 {
                     return CurveFromStbSecBox(localAxis, point, type, box.A, box.B, box.t, box.t);
                 }
@@ -31,7 +32,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
             if (secSteel.StbSecFlatBar != null)
             {
-                foreach (StbSecFlatBar flatBar in secSteel.StbSecFlatBar.Where(bar => bar.name == shape))
+                StbSecFlatBar flatBar = secSteel.StbSecFlatBar.FirstOrDefault(bar => bar.name == shape);
+                if (flatBar != null)
                 {
                     return CurveFromStbSecBox(localAxis, point, type, flatBar.B, flatBar.t, -1, -1);
                 }
@@ -39,7 +41,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
             if (secSteel.StbSecBuildH != null)
             {
-                foreach (StbSecBuildH buildH in secSteel.StbSecBuildH.Where(buildH => buildH.name == shape))
+                StbSecBuildH buildH = secSteel.StbSecBuildH.FirstOrDefault(bH => bH.name == shape);
+                if (buildH != null)
                 {
                     return CurveFromStbSecH(localAxis, point, type, buildH.A, buildH.B, buildH.t1, buildH.t2);
                 }
@@ -47,7 +50,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
             if (secSteel.StbSecRollH != null)
             {
-                foreach (StbSecRollH rollH in secSteel.StbSecRollH.Where(rollH => rollH.name == shape))
+                StbSecRollH rollH = secSteel.StbSecRollH.FirstOrDefault(rH => rH.name == shape);
+                if (rollH != null)
                 {
                     return CurveFromStbSecH(localAxis, point, type, rollH.A, rollH.B, rollH.t1, rollH.t2);
                 }
@@ -55,7 +59,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
             if (secSteel.StbSecRollL != null)
             {
-                foreach (StbSecRollL rollL in secSteel.StbSecRollL.Where(rollL => rollL.name == shape))
+                StbSecRollL rollL = secSteel.StbSecRollL.FirstOrDefault(rL => rL.name == shape);
+                if (rollL != null)
                 {
                     return CurveFromStbSecL(localAxis, point, type, rollL);
                 }
@@ -63,7 +68,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
             if (secSteel.StbSecPipe != null)
             {
-                foreach (StbSecPipe pipe in secSteel.StbSecPipe.Where(pipe => pipe.name == shape))
+                StbSecPipe pipe = secSteel.StbSecPipe.FirstOrDefault(p => p.name == shape);
+                if (pipe != null)
                 {
                     return CurveFromStbSecPipe(localAxis, point, type, pipe.D, pipe.t);
                 }
@@ -71,16 +77,17 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
             if (secSteel.StbSecRoundBar != null)
             {
-                foreach (StbSecRoundBar bar in secSteel.StbSecRoundBar.Where(pipe => pipe.name == shape))
+                StbSecRoundBar bar = secSteel.StbSecRoundBar.FirstOrDefault(b => b.name == shape);
+                if (bar != null)
                 {
                     return CurveFromStbSecPipe(localAxis, point, type, bar.R, -1);
                 }
             }
 
-            // TODO: C 断面を実装する
             if (secSteel.StbSecRollC != null)
             {
-                foreach (StbSecRollC rollC in secSteel.StbSecRollC.Where(rollC => rollC.name == shape))
+                StbSecRollC rollC = secSteel.StbSecRollC.FirstOrDefault(rC => rC.name == shape);
+                if (rollC != null)
                 {
                     return CurveFromStbSecRollC(localAxis, point, type, rollC);
                 }
@@ -88,7 +95,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
             if (secSteel.StbSecLipC != null)
             {
-                foreach (StbSecLipC lipC in secSteel.StbSecLipC.Where(lipC => lipC.name == shape))
+                StbSecLipC lipC = secSteel.StbSecLipC.FirstOrDefault(lC => lC.name == shape);
+                if (lipC != null)
                 {
                     return CurveFromStbSecLipC(localAxis, point, type, lipC);
                 }
