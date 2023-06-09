@@ -342,7 +342,7 @@ namespace HoaryFox.Component.Utils.Geometry
                 {
                     X = nodeTop.X,
                     Y = nodeTop.Y,
-                    Z = nodeTop.Z - member.length_all
+                    Z = nodeTop.Z - member.length_all + member.level_top
                 };
             }
             lines.Append(GH_LineFromStbNode(nodeBottom, nodeTop), new GH_Path(0, i));
