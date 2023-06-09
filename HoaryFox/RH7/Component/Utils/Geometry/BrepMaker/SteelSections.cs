@@ -57,6 +57,15 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                 }
             }
 
+            if (secSteel.StbSecRollT != null)
+            {
+                StbSecRollT rollT = secSteel.StbSecRollT.FirstOrDefault(rT => rT.name == shape);
+                if (rollT != null)
+                {
+                    return CurveFromStbSecT(localAxis, point, type, rollT.A, rollT.B, rollT.t1, rollT.t2);
+                }
+            }
+
             if (secSteel.StbSecRollL != null)
             {
                 StbSecRollL rollL = secSteel.StbSecRollL.FirstOrDefault(rL => rL.name == shape);
@@ -259,6 +268,29 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                     break;
                 case Utils.SectionPositionType.Beam:
                     sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.BeamH(point, A, B, t1, t2, localAxis[1], localAxis[2]));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+            return sectionCurve;
+        }
+
+        private static SectionCurve CurveFromStbSecT(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionPositionType type, double A, double B, double t1, double t2)
+        {
+            var sectionCurve = new SectionCurve
+            {
+                Shape = SectionShape.T,
+                Type = SectionType.Solid,
+                XAxis = localAxis[0],
+            };
+            switch (type)
+            {
+                case Utils.SectionPositionType.Column:
+                case Utils.SectionPositionType.Brace:
+                    sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.ColumnT(point, A, B, t1, t2, localAxis[1], localAxis[2]));
+                    break;
+                case Utils.SectionPositionType.Beam:
+                    sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.BeamT(point, A, B, t1, t2, localAxis[1], localAxis[2]));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
