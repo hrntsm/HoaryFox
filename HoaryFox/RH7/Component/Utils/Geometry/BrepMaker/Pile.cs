@@ -66,19 +66,18 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
         private SectionCurve[] SecProductPileToCurves(StbSecPileProduct stbSecPileProduct, IReadOnlyList<Point3d> sectionPoints, Vector3d axis)
         {
             var curveList = new List<SectionCurve>();
-            Vector3d[] localAxis = Utils.CreateLocalAxis(sectionPoints);
             var figures = PCPileFigure.GetFigureList(stbSecPileProduct);
             foreach ((PCPileFigure fig, int index) in figures.Select((fig, index) => (fig, index)))
             {
                 curveList.Add(SectionCurve.CreateSolidColumnPipe(
-                    sectionPoints[index], fig.Diameter, fig.Diameter - 2 * fig.Thickness, localAxis[0])
+                    sectionPoints[index], fig.Diameter, fig.Diameter - 2 * fig.Thickness, -Vector3d.ZAxis)
                 );
                 curveList.Add(SectionCurve.CreateSolidColumnPipe(
-                    sectionPoints[index + 1] + 10 * Vector3d.ZAxis, fig.Diameter, fig.Diameter - 2 * fig.Thickness, localAxis[0])
+                    sectionPoints[index + 1] + 10 * Vector3d.ZAxis, fig.Diameter, fig.Diameter - 2 * fig.Thickness, -Vector3d.ZAxis)
                 );
             }
             curveList.Add(SectionCurve.CreateSolidColumnPipe(
-                sectionPoints.Last(), figures.Last().Diameter, figures.Last().Diameter - 2 * figures.Last().Thickness, localAxis[0])
+                sectionPoints.Last(), figures.Last().Diameter, figures.Last().Diameter - 2 * figures.Last().Thickness, -Vector3d.ZAxis)
             );
             return curveList.ToArray();
         }

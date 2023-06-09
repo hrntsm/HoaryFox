@@ -10,7 +10,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 {
     public static class SteelSections
     {
-        public static SectionCurve GetCurve(StbSecSteel secSteel, string shape, Point3d point, Utils.SectionType type, Vector3d[] localAxis)
+        public static SectionCurve GetCurve(StbSecSteel secSteel, string shape, Point3d point, Utils.SectionPositionType type, Vector3d[] localAxis)
         {
             // TODO: foreach なのに最初にマッチしたもので return しているのでが変なので直す。
             if (secSteel.StbSecBuildBOX != null)
@@ -78,15 +78,90 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
 
             // TODO: C 断面を実装する
-            if (secSteel.StbSecRollC != null || secSteel.StbSecLipC != null)
+            if (secSteel.StbSecRollC != null)
             {
-                throw new ArgumentException("StbSecRollC & StbSecLipC is not supported");
+                foreach (StbSecRollC rollC in secSteel.StbSecRollC.Where(rollC => rollC.name == shape))
+                {
+                    return CurveFromStbSecRollC(localAxis, point, type, rollC);
+                }
+            }
+
+            if (secSteel.StbSecLipC != null)
+            {
+                foreach (StbSecLipC lipC in secSteel.StbSecLipC.Where(lipC => lipC.name == shape))
+                {
+                    return CurveFromStbSecLipC(localAxis, point, type, lipC);
+                }
             }
 
             throw new ArgumentException("There are no matching steel section");
         }
 
-        private static SectionCurve CurveFromStbSecPipe(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, double diameter, double thickness)
+        private static SectionCurve CurveFromStbSecLipC(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionPositionType type, StbSecLipC lipC)
+        {
+            StbSecRollCType shapeType;
+            switch (lipC.type)
+            {
+                case StbSecLipCType.SINGLE:
+                    shapeType = StbSecRollCType.SINGLE;
+                    break;
+                case StbSecLipCType.BACKTOBACK:
+                    shapeType = StbSecRollCType.BACKTOBACK;
+                    break;
+                case StbSecLipCType.FACETOFACE:
+                    shapeType = StbSecRollCType.FACETOFACE;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return CurveFromSecC(localAxis, point, type, lipC.A, lipC.H, lipC.t, lipC.t, shapeType);
+        }
+
+        private static SectionCurve CurveFromStbSecRollC(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionPositionType type, StbSecRollC rollC)
+        {
+            return CurveFromSecC(localAxis, point, type, rollC.B, rollC.A, rollC.t1, rollC.t2, rollC.type);
+        }
+
+        private static SectionCurve CurveFromSecC(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionPositionType type, double width, double height, double tw, double tf, StbSecRollCType shapeType)
+        {
+            var sectionCurve = new SectionCurve
+            {
+                Shape = SectionShape.C,
+                Type = shapeType == StbSecRollCType.FACETOFACE ? SectionType.Hollow : SectionType.Solid,
+                XAxis = localAxis[0],
+            };
+            switch (type)
+            {
+                case Utils.SectionPositionType.Column:
+                case Utils.SectionPositionType.Brace:
+                    if (shapeType == StbSecRollCType.FACETOFACE)
+                    {
+                        sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.ColumnRect(point, 2 * width, height, localAxis[1], localAxis[2]));
+                        sectionCurve.InnerCurve = new PolylineCurve(SectionCornerPoints.ColumnRect(point, 2 * width - tw * 2, height - tf * 2, localAxis[1], localAxis[2]));
+                    }
+                    else
+                    {
+                        sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.ColumnC(point, height, width, tw, tf, shapeType, localAxis[1], localAxis[2]));
+                    }
+                    break;
+                case Utils.SectionPositionType.Beam:
+                    if (shapeType == StbSecRollCType.FACETOFACE)
+                    {
+                        sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.BeamRect(point, height, width, localAxis[1], localAxis[2]));
+                        sectionCurve.InnerCurve = new PolylineCurve(SectionCornerPoints.BeamRect(point, height - tf * 2, width - tw * 2, localAxis[1], localAxis[2]));
+                    }
+                    else
+                    {
+                        sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.BeamC(point, height, width, tw, tf, shapeType, localAxis[1], localAxis[2]));
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+            return sectionCurve;
+        }
+
+        private static SectionCurve CurveFromStbSecPipe(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionPositionType type, double diameter, double thickness)
         {
             var radius = diameter / 2;
             var sectionCurve = new SectionCurve
@@ -97,12 +172,12 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             };
             switch (type)
             {
-                case Utils.SectionType.Column:
-                case Utils.SectionType.Brace:
+                case Utils.SectionPositionType.Column:
+                case Utils.SectionPositionType.Brace:
                     sectionCurve.OuterCurve = SectionCornerPoints.ColumnPipe(point, radius, localAxis[0]);
                     sectionCurve.InnerCurve = thickness > 0 ? SectionCornerPoints.ColumnPipe(point, radius - thickness, localAxis[0]) : null;
                     break;
-                case Utils.SectionType.Beam:
+                case Utils.SectionPositionType.Beam:
                     sectionCurve.OuterCurve = SectionCornerPoints.BeamPipe(point, radius, localAxis[0]);
                     sectionCurve.InnerCurve = thickness > 0 ? SectionCornerPoints.BeamPipe(point, radius - thickness, localAxis[0]) : null;
                     break;
@@ -112,7 +187,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             return sectionCurve;
         }
 
-        private static SectionCurve CurveFromStbSecL(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, StbSecRollL rollL)
+        private static SectionCurve CurveFromStbSecL(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionPositionType type, StbSecRollL rollL)
         {
             var sectionCurve = new SectionCurve
             {
@@ -122,11 +197,11 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             };
             switch (type)
             {
-                case Utils.SectionType.Column:
-                case Utils.SectionType.Brace:
+                case Utils.SectionPositionType.Column:
+                case Utils.SectionPositionType.Brace:
                     sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.ColumnL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type, localAxis[1], localAxis[2]));
                     break;
-                case Utils.SectionType.Beam:
+                case Utils.SectionPositionType.Beam:
                     sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.BeamL(point, rollL.A, rollL.B, rollL.t1, rollL.t2, rollL.type, localAxis[1], localAxis[2]));
                     break;
                 default:
@@ -135,7 +210,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             return sectionCurve;
         }
 
-        private static SectionCurve CurveFromStbSecBox(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, double A, double B, double t1, double t2)
+        private static SectionCurve CurveFromStbSecBox(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionPositionType type, double A, double B, double t1, double t2)
         {
             var sectionCurve = new SectionCurve
             {
@@ -145,12 +220,12 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             };
             switch (type)
             {
-                case Utils.SectionType.Column:
-                case Utils.SectionType.Brace:
+                case Utils.SectionPositionType.Column:
+                case Utils.SectionPositionType.Brace:
                     sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.ColumnRect(point, B, A, localAxis[1], localAxis[2]));
                     sectionCurve.InnerCurve = t1 > 0 ? new PolylineCurve(SectionCornerPoints.ColumnRect(point, B - 2 * t1, A - 2 * t2, localAxis[1], localAxis[2])) : null;
                     break;
-                case Utils.SectionType.Beam:
+                case Utils.SectionPositionType.Beam:
                     sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.BeamRect(point, B, A, localAxis[1], localAxis[2]));
                     sectionCurve.InnerCurve = t1 > 0 ? new PolylineCurve(SectionCornerPoints.BeamRect(point, B - 2 * t1, A - 2 * t2, localAxis[1], localAxis[2])) : null;
                     break;
@@ -160,7 +235,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             return sectionCurve;
         }
 
-        private static SectionCurve CurveFromStbSecH(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionType type, double A, double B, double t1, double t2)
+        private static SectionCurve CurveFromStbSecH(IReadOnlyList<Vector3d> localAxis, Point3d point, Utils.SectionPositionType type, double A, double B, double t1, double t2)
         {
             var sectionCurve = new SectionCurve
             {
@@ -170,11 +245,11 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             };
             switch (type)
             {
-                case Utils.SectionType.Column:
-                case Utils.SectionType.Brace:
+                case Utils.SectionPositionType.Column:
+                case Utils.SectionPositionType.Brace:
                     sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.ColumnH(point, A, B, t1, t2, localAxis[1], localAxis[2]));
                     break;
-                case Utils.SectionType.Beam:
+                case Utils.SectionPositionType.Beam:
                     sectionCurve.OuterCurve = new PolylineCurve(SectionCornerPoints.BeamH(point, A, B, t1, t2, localAxis[1], localAxis[2]));
                     break;
                 default:

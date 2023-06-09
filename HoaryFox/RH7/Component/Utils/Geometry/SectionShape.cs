@@ -8,6 +8,8 @@
         L,
         Rectangle,
         Circle,
+        C,
+        LipC,
         Other,
     }
 }
