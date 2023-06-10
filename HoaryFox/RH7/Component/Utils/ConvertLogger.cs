@@ -1,0 +1,93 @@
+﻿using System;
+using System.IO;
+using System.Text;
+
+namespace HoaryFox.Component.Utils
+{
+    public class ConvertLogger
+    {
+        private readonly StringBuilder _logger = new StringBuilder();
+        private readonly string _path;
+
+        public ConvertLogger(string path)
+        {
+            _path = path;
+            _logger.AppendLine(@"--------------------------------------");
+            _logger.AppendLine(@" ____  ____                                       ________");
+            _logger.AppendLine(@"|_   ||   _|                                     |_   __  |");
+            _logger.AppendLine(@"  | |__| |     .--.    ,--.    _ .--.    _   __    | |_ \_|   .--.    _   __");
+            _logger.AppendLine(@"  |  __  |   / .'`\ \ `'_\ :  [ `/'`\]  [ \ [  ]   |  _|    / .'`\ \ [ \ [  ]");
+            _logger.AppendLine(@" _| |  | |_  | \__. | // | |,  | |       \ '/ /   _| |_     | \__. |  > '  <");
+            _logger.AppendLine(@"|____||____|  '.__.'  \'-;__/ [___]    [\_:  /   |_____|     '.__.'  [__]`\_]");
+            _logger.AppendLine(@"                                        \__.'");
+            _logger.AppendLine(@" ST-Bridge to Brep Convert Log");
+            _logger.AppendLine(@"--------------------------------------");
+            _logger.AppendLine($"::INFO   :: 変換開始 | {DateTime.Now}");
+        }
+
+        public void Clear()
+        {
+            _logger.Clear();
+        }
+
+        public void AppendInfoMessage(string message)
+        {
+            _logger.AppendLine($"::INFO   :: {message}");
+        }
+
+        public void AppendInfoConvertStartMessage(string message)
+        {
+            _logger.AppendLine("--------------------------------------");
+            _logger.AppendLine($"::INFO   :: {message}の変換を開始しました。 | {DateTime.Now}");
+        }
+
+        public void AppendInfoConvertEndMessage(string message)
+        {
+            _logger.AppendLine($"::INFO   :: {message}の変換を終了しました。 | {DateTime.Now}");
+            _logger.AppendLine("--------------------------------------");
+        }
+
+        public void AppendInfoDataNotFoundMessage(string message)
+        {
+            _logger.AppendLine($"::INFO   :: {message}のデータはありませんでした。 | {DateTime.Now}");
+            _logger.AppendLine("--------------------------------------");
+        }
+
+        public void AppendInfo(string guid, string message)
+        {
+            _logger.AppendLine($"::INFO   :: [{guid}] | {message}");
+        }
+
+        public void AppendConvertSuccess(string guid)
+        {
+            _logger.AppendLine($"::INFO   :: [{guid}] | 変換完了");
+        }
+
+        public void AppendWarning(string guid, string message)
+        {
+            _logger.AppendLine($"::WARNING:: [{guid}] | {message}");
+        }
+
+        public void AppendError(string guid, string message)
+        {
+            _logger.AppendLine($"::ERROR  :: [{guid}] | {message}");
+        }
+
+        public void AppendConvertFailed(string guid, Exception e)
+        {
+            _logger.AppendLine($"::ERROR  :: [{guid}] | 変換失敗 | {e.Message}");
+        }
+
+        public void AppendSummary(int successCont, int errorCount)
+        {
+            _logger.AppendLine($"::INFO   :: [SUMMARY] | {successCont} 件の変換に成功しました。");
+            _logger.AppendLine($"::INFO   :: [SUMMARY] | {errorCount} 件の変換に失敗しました。");
+        }
+
+        public void Serialize()
+        {
+            AppendInfoConvertEndMessage("ST-BridgeデータのBrepへ");
+            File.WriteAllText(_path + "/S2B_convert.log", _logger.ToString());
+        }
+    }
+}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 
 using Grasshopper.Kernel;
@@ -75,8 +76,9 @@ namespace HoaryFox.Component.Geometry
 
         private void CreateBrep()
         {
+            var path = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(this).Location);
             StbMembers member = _stBridge.StbModel.StbMembers;
-            var brepFromStb = new CreateMemberBrepListFromStb(_stBridge.StbModel.StbSections, _stBridge.StbModel.StbNodes, new[] { DocumentTolerance(), DocumentAngleTolerance() });
+            var brepFromStb = new CreateMemberBrepListFromStb(_stBridge.StbModel.StbSections, _stBridge.StbModel.StbNodes, new[] { DocumentTolerance(), DocumentAngleTolerance() }, path);
             _brepList[0] = brepFromStb.Column(member.StbColumns);
             _brepList[1] = brepFromStb.Girder(member.StbGirders);
             _brepList[2] = brepFromStb.Post(member.StbPosts);
@@ -86,6 +88,7 @@ namespace HoaryFox.Component.Geometry
             _brepList[6] = brepFromStb.Wall(member.StbWalls, member.StbOpens);
             _brepList[7] = brepFromStb.Pile(member.StbPiles);
             _brepList[8] = brepFromStb.Footing(member.StbFootings);
+            brepFromStb.SerializeLog();
         }
 
         private void BakeBrep()

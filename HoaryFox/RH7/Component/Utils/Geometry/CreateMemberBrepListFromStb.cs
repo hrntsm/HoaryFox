@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Grasshopper.Kernel.Data;
@@ -15,260 +16,353 @@ namespace HoaryFox.Component.Utils.Geometry
         private readonly IEnumerable<StbNode> _nodes;
         private readonly IReadOnlyList<double> _tolerance;
         private readonly StbSections _sections;
+        private readonly ConvertLogger _logger;
 
-        public CreateMemberBrepListFromStb(StbSections sections, IEnumerable<StbNode> nodes, IReadOnlyList<double> tolerance)
+        public CreateMemberBrepListFromStb(StbSections sections, IEnumerable<StbNode> nodes, IReadOnlyList<double> tolerance, string logPath)
         {
             _nodes = nodes;
             _tolerance = tolerance;
             _sections = sections;
+            _logger = new ConvertLogger(logPath);
+
+        }
+
+        public void SerializeLog()
+        {
+            _logger.Serialize();
         }
 
         public GH_Structure<GH_Brep> Column(IEnumerable<StbColumn> columns)
         {
+            _logger.AppendInfoConvertStartMessage("柱");
+            var convertCount = new int[] { 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (columns == null)
             {
+                _logger.AppendInfoDataNotFoundMessage("柱");
                 return brepList;
             }
 
             foreach ((StbColumn column, int i) in columns.Select((column, index) => (column, index)))
             {
-                StbColumnKind_structure kind = column.kind_structure;
+                try
+                {
+                    StbColumnKind_structure kind = column.kind_structure;
+                    StbNode[] endNodes =
+                    {
+                        _nodes.First(node => node.id == column.id_node_bottom),
+                        _nodes.First(node => node.id == column.id_node_top)
+                    };
+                    Point3d[] offset =
+                    {
+                        new Point3d(column.offset_bottom_X, column.offset_bottom_Y, column.offset_bottom_Z),
+                        new Point3d(column.offset_top_X, column.offset_top_Y, column.offset_top_Z)
+                    };
+                    Point3d[] sectionPoints =
+                    {
+                        new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
+                        new Point3d(),
+                        new Point3d(),
+                        new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
+                    };
+                    Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
+                    sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * column.joint_bottom;
+                    sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * column.joint_top;
 
-                StbNode[] endNodes =
+                    var brepMaker = new BrepMaker.Column(_sections, _tolerance, column.guid);
+                    brepList.Append(new GH_Brep(brepMaker.CreateColumnBrep(column.id_section, column.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
+                    convertCount[0]++;
+                    _logger.AppendConvertSuccess(column.guid);
+                }
+                catch (Exception e)
                 {
-                    _nodes.First(node => node.id == column.id_node_bottom),
-                    _nodes.First(node => node.id == column.id_node_top)
-                };
-                Point3d[] offset =
-                {
-                    new Point3d(column.offset_bottom_X, column.offset_bottom_Y, column.offset_bottom_Z),
-                    new Point3d(column.offset_top_X, column.offset_top_Y, column.offset_top_Z)
-                };
-                Point3d[] sectionPoints =
-                {
-                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
-                    new Point3d(),
-                    new Point3d(),
-                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
-                };
-                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
-                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * column.joint_bottom;
-                sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * column.joint_top;
-
-                var brepMaker = new BrepMaker.Column(_sections, _tolerance, column.guid);
-                brepList.Append(new GH_Brep(brepMaker.CreateColumnBrep(column.id_section, column.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
+                    convertCount[1]++;
+                    ConvertFailed(column.guid, e);
+                }
             }
 
+            _logger.AppendSummary(convertCount[0], convertCount[1]);
+            _logger.AppendInfoConvertEndMessage("柱");
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Post(IEnumerable<StbPost> posts)
         {
+            _logger.AppendInfoConvertStartMessage("間柱");
+            var convertCount = new int[] { 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (posts == null)
             {
+                _logger.AppendInfoDataNotFoundMessage("間柱");
                 return brepList;
             }
 
             foreach ((StbPost post, int i) in posts.Select((post, index) => (post, index)))
             {
-                StbColumnKind_structure kind = post.kind_structure;
+                try
+                {
+                    StbColumnKind_structure kind = post.kind_structure;
+                    StbNode[] endNodes =
+                    {
+                        _nodes.First(node => node.id == post.id_node_bottom),
+                        _nodes.First(node => node.id == post.id_node_top)
+                    };
+                    Point3d[] offset =
+                    {
+                        new Point3d(post.offset_bottom_X, post.offset_bottom_Y, post.offset_bottom_Z),
+                        new Point3d(post.offset_top_X, post.offset_top_Y, post.offset_top_Z)
+                    };
+                    Point3d[] sectionPoints =
+                    {
+                        new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
+                        new Point3d(),
+                        new Point3d(),
+                        new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
+                    };
+                    Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
+                    sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * post.joint_bottom;
+                    sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * post.joint_top;
 
-                StbNode[] endNodes =
+                    var brepMaker = new BrepMaker.Column(_sections, _tolerance, post.guid);
+                    brepList.Append(new GH_Brep(brepMaker.CreateColumnBrep(post.id_section, post.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
+                    convertCount[0]++;
+                    _logger.AppendConvertSuccess(post.guid);
+                }
+                catch (Exception e)
                 {
-                    _nodes.First(node => node.id == post.id_node_bottom),
-                    _nodes.First(node => node.id == post.id_node_top)
-                };
-                Point3d[] offset =
-                {
-                    new Point3d(post.offset_bottom_X, post.offset_bottom_Y, post.offset_bottom_Z),
-                    new Point3d(post.offset_top_X, post.offset_top_Y, post.offset_top_Z)
-                };
-                Point3d[] sectionPoints =
-                {
-                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
-                    new Point3d(),
-                    new Point3d(),
-                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
-                };
-                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
-                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * post.joint_bottom;
-                sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * post.joint_top;
-
-                var brepMaker = new BrepMaker.Column(_sections, _tolerance, post.guid);
-                brepList.Append(new GH_Brep(brepMaker.CreateColumnBrep(post.id_section, post.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
+                    convertCount[1]++;
+                    ConvertFailed(post.guid, e);
+                }
             }
 
+            _logger.AppendSummary(convertCount[0], convertCount[1]);
+            _logger.AppendInfoConvertEndMessage("間柱");
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Girder(IEnumerable<StbGirder> girders)
         {
+            _logger.AppendInfoConvertStartMessage("大梁");
+            var convertCount = new int[] { 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (girders == null)
             {
+                _logger.AppendInfoDataNotFoundMessage("大梁");
                 return brepList;
             }
 
             foreach ((StbGirder girder, int i) in girders.Select((girder, index) => (girder, index)))
             {
-                StbGirderKind_structure kind = girder.kind_structure;
+                try
+                {
+                    StbGirderKind_structure kind = girder.kind_structure;
+                    StbNode[] endNodes =
+                    {
+                        _nodes.First(node => node.id == girder.id_node_start),
+                        _nodes.First(node => node.id == girder.id_node_end)
+                    };
+                    Point3d[] offset =
+                    {
+                        new Point3d(girder.offset_start_X, girder.offset_start_Y, girder.offset_start_Z),
+                        new Point3d(girder.offset_end_X, girder.offset_end_Y, girder.offset_end_Z)
+                    };
+                    Point3d[] sectionPoints =
+                    {
+                        new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
+                        Point3d.Origin, // haunch_s
+                        Point3d.Origin, // joint_s
+                        Point3d.Origin, // joint_e
+                        Point3d.Origin, // haunch_e
+                        new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
+                    };
+                    Vector3d memberAxis = sectionPoints[5] - sectionPoints[0];
+                    sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * girder.haunch_start;
+                    sectionPoints[2] = sectionPoints[0] + memberAxis / memberAxis.Length * girder.joint_start;
+                    sectionPoints[3] = sectionPoints[5] - memberAxis / memberAxis.Length * girder.joint_end;
+                    sectionPoints[4] = sectionPoints[5] - memberAxis / memberAxis.Length * girder.haunch_end;
 
-                StbNode[] endNodes =
+                    var brepMaker = new BrepMaker.Girder(_sections, _tolerance, girder.guid);
+                    brepList.Append(new GH_Brep(brepMaker.CreateGirderBrep(girder.id_section, girder.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
+                    convertCount[0]++;
+                    _logger.AppendConvertSuccess(girder.guid);
+                }
+                catch (Exception e)
                 {
-                    _nodes.First(node => node.id == girder.id_node_start),
-                    _nodes.First(node => node.id == girder.id_node_end)
-                };
-                Point3d[] offset =
-                {
-                    new Point3d(girder.offset_start_X, girder.offset_start_Y, girder.offset_start_Z),
-                    new Point3d(girder.offset_end_X, girder.offset_end_Y, girder.offset_end_Z)
-                };
-                Point3d[] sectionPoints =
-                {
-                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
-                    Point3d.Origin, // haunch_s
-                    Point3d.Origin, // joint_s
-                    Point3d.Origin, // joint_e 
-                    Point3d.Origin, // haunch_e
-                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
-                };
-                Vector3d memberAxis = sectionPoints[5] - sectionPoints[0];
-                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * girder.haunch_start;
-                sectionPoints[2] = sectionPoints[0] + memberAxis / memberAxis.Length * girder.joint_start;
-                sectionPoints[3] = sectionPoints[5] - memberAxis / memberAxis.Length * girder.joint_end;
-                sectionPoints[4] = sectionPoints[5] - memberAxis / memberAxis.Length * girder.haunch_end;
-
-                var brepMaker = new BrepMaker.Girder(_sections, _tolerance, girder.guid);
-                brepList.Append(new GH_Brep(brepMaker.CreateGirderBrep(girder.id_section, girder.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
+                    convertCount[1]++;
+                    ConvertFailed(girder.guid, e);
+                }
             }
 
+            _logger.AppendSummary(convertCount[0], convertCount[1]);
+            _logger.AppendInfoConvertEndMessage("大梁");
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Beam(IEnumerable<StbBeam> beams)
         {
+            _logger.AppendInfoConvertStartMessage("小梁");
+            var convertCount = new int[] { 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (beams == null)
             {
+                _logger.AppendInfoDataNotFoundMessage("小梁");
                 return brepList;
             }
 
             foreach ((StbBeam beam, int i) in beams.Select((beam, index) => (beam, index)))
             {
-                StbGirderKind_structure kind = beam.kind_structure;
+                try
+                {
+                    StbGirderKind_structure kind = beam.kind_structure;
+                    StbNode[] endNodes =
+                    {
+                        _nodes.First(node => node.id == beam.id_node_start),
+                        _nodes.First(node => node.id == beam.id_node_end)
+                    };
+                    Point3d[] offset =
+                    {
+                        new Point3d(beam.offset_start_X, beam.offset_start_Y, beam.offset_start_Z),
+                        new Point3d(beam.offset_end_X, beam.offset_end_Y, beam.offset_end_Z)
+                    };
+                    Point3d[] sectionPoints =
+                    {
+                        new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
+                        Point3d.Origin, // haunch_s
+                        Point3d.Origin, // joint_s
+                        Point3d.Origin, // joint_e
+                        Point3d.Origin, // haunch_e
+                        new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
+                    };
+                    Vector3d memberAxis = sectionPoints[5] - sectionPoints[0];
+                    sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * beam.haunch_start;
+                    sectionPoints[2] = sectionPoints[0] + memberAxis / memberAxis.Length * beam.joint_start;
+                    sectionPoints[3] = sectionPoints[5] - memberAxis / memberAxis.Length * beam.joint_end;
+                    sectionPoints[4] = sectionPoints[5] - memberAxis / memberAxis.Length * beam.haunch_end;
 
-                StbNode[] endNodes =
+                    var brepMaker = new BrepMaker.Girder(_sections, _tolerance, beam.guid);
+                    brepList.Append(new GH_Brep(brepMaker.CreateGirderBrep(beam.id_section, beam.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
+                    convertCount[0]++;
+                    _logger.AppendConvertSuccess(beam.guid);
+                }
+                catch (Exception e)
                 {
-                    _nodes.First(node => node.id == beam.id_node_start),
-                    _nodes.First(node => node.id == beam.id_node_end)
-                };
-                Point3d[] offset =
-                {
-                    new Point3d(beam.offset_start_X, beam.offset_start_Y, beam.offset_start_Z),
-                    new Point3d(beam.offset_end_X, beam.offset_end_Y, beam.offset_end_Z)
-                };
-                Point3d[] sectionPoints =
-                {
-                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
-                    Point3d.Origin, // haunch_s
-                    Point3d.Origin, // joint_s
-                    Point3d.Origin, // joint_e 
-                    Point3d.Origin, // haunch_e
-                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
-                };
-                Vector3d memberAxis = sectionPoints[5] - sectionPoints[0];
-                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * beam.haunch_start;
-                sectionPoints[2] = sectionPoints[0] + memberAxis / memberAxis.Length * beam.joint_start;
-                sectionPoints[3] = sectionPoints[5] - memberAxis / memberAxis.Length * beam.joint_end;
-                sectionPoints[4] = sectionPoints[5] - memberAxis / memberAxis.Length * beam.haunch_end;
-
-                var brepMaker = new BrepMaker.Girder(_sections, _tolerance, beam.guid);
-                brepList.Append(new GH_Brep(brepMaker.CreateGirderBrep(beam.id_section, beam.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
+                    convertCount[1]++;
+                    ConvertFailed(beam.guid, e);
+                }
             }
 
+            _logger.AppendSummary(convertCount[0], convertCount[1]);
+            _logger.AppendInfoConvertEndMessage("小梁");
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Brace(IEnumerable<StbBrace> braces)
         {
+            _logger.AppendInfoConvertStartMessage("ブレース");
+            var convertCount = new int[] { 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (braces == null)
             {
+                _logger.AppendInfoDataNotFoundMessage("ブレース");
                 return brepList;
             }
 
             foreach ((StbBrace brace, int i) in braces.Select((brace, index) => (brace, index)))
             {
-                StbBraceKind_structure kind = brace.kind_structure;
+                try
+                {
+                    StbBraceKind_structure kind = brace.kind_structure;
+                    StbNode[] endNodes =
+                    {
+                        _nodes.First(node => node.id == brace.id_node_start),
+                        _nodes.First(node => node.id == brace.id_node_end)
+                    };
+                    Point3d[] offset =
+                    {
+                        new Point3d(brace.offset_start_X, brace.offset_start_Y, brace.offset_start_Z),
+                        new Point3d(brace.offset_end_X, brace.offset_end_Y, brace.offset_end_Z)
+                    };
+                    Point3d[] sectionPoints =
+                    {
+                        new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
+                        Point3d.Origin,
+                        Point3d.Origin,
+                        new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
+                    };
+                    Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
+                    sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * brace.joint_start;
+                    sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * brace.joint_end;
 
-                StbNode[] endNodes =
+                    var brepMaker = new BrepMaker.Brace(_sections, _tolerance, brace.guid);
+                    brepList.Append(new GH_Brep(brepMaker.CreateBraceBrep(brace.id_section, brace.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
+                    convertCount[0]++;
+                    _logger.AppendConvertSuccess(brace.guid);
+                }
+                catch (Exception e)
                 {
-                    _nodes.First(node => node.id == brace.id_node_start),
-                    _nodes.First(node => node.id == brace.id_node_end)
-                };
-                Point3d[] offset =
-                {
-                    new Point3d(brace.offset_start_X, brace.offset_start_Y, brace.offset_start_Z),
-                    new Point3d(brace.offset_end_X, brace.offset_end_Y, brace.offset_end_Z)
-                };
-                Point3d[] sectionPoints =
-                {
-                    new Point3d(endNodes[0].X, endNodes[0].Y, endNodes[0].Z) + offset[0],
-                    Point3d.Origin,
-                    Point3d.Origin,
-                    new Point3d(endNodes[1].X, endNodes[1].Y, endNodes[1].Z) + offset[1]
-                };
-                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
-                sectionPoints[1] = sectionPoints[0] + memberAxis / memberAxis.Length * brace.joint_start;
-                sectionPoints[2] = sectionPoints[3] - memberAxis / memberAxis.Length * brace.joint_end;
-
-                var brepMaker = new BrepMaker.Brace(_sections, _tolerance, brace.guid);
-                brepList.Append(new GH_Brep(brepMaker.CreateBraceBrep(brace.id_section, brace.rotate, kind, sectionPoints, memberAxis)), new GH_Path(0, i));
+                    convertCount[1]++;
+                    ConvertFailed(brace.guid, e);
+                }
             }
 
+            _logger.AppendSummary(convertCount[0], convertCount[1]);
+            _logger.AppendInfoConvertEndMessage("ブレース");
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Slab(IEnumerable<StbSlab> slabs)
         {
+            _logger.AppendInfoConvertStartMessage("スラブ");
+            var convertCount = new int[] { 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (slabs == null)
             {
+                _logger.AppendInfoDataNotFoundMessage("スラブ");
                 return brepList;
             }
 
             foreach ((StbSlab slab, int i) in slabs.Select((slab, index) => (slab, index)))
             {
-                StbSlabOffset[] offsets = slab.StbSlabOffsetList;
-                var curveList = new PolylineCurve[2];
-                double depth = BrepMaker.Slab.GetDepth(_sections, slab);
-                string[] nodeIds = slab.StbNodeIdOrder.Split(' ');
-                var topPts = new List<Point3d>();
-                foreach (string nodeId in nodeIds)
+                try
                 {
-                    var offsetVec = new Vector3d();
-                    if (offsets != null)
+                    StbSlabOffset[] offsets = slab.StbSlabOffsetList;
+                    var curveList = new PolylineCurve[2];
+                    double depth = BrepMaker.Slab.GetDepth(_sections, slab);
+                    string[] nodeIds = slab.StbNodeIdOrder.Split(' ');
+                    var topPts = new List<Point3d>();
+                    foreach (string nodeId in nodeIds)
                     {
-                        foreach (StbSlabOffset offset in offsets)
+                        var offsetVec = new Vector3d();
+                        if (offsets != null)
                         {
-                            if (nodeId == offset.id_node)
+                            foreach (StbSlabOffset offset in offsets)
                             {
-                                offsetVec = new Vector3d(offset.offset_X, offset.offset_Y, offset.offset_Z);
+                                if (nodeId == offset.id_node)
+                                {
+                                    offsetVec = new Vector3d(offset.offset_X, offset.offset_Y, offset.offset_Z);
+                                }
                             }
                         }
+
+                        StbNode node = _nodes.First(n => n.id == nodeId);
+                        topPts.Add(new Point3d(node.X, node.Y, node.Z) + offsetVec);
                     }
 
-                    StbNode node = _nodes.First(n => n.id == nodeId);
-                    topPts.Add(new Point3d(node.X, node.Y, node.Z) + offsetVec);
+                    topPts.Add(topPts[0]);
+                    curveList[0] = new PolylineCurve(topPts);
+                    brepList.Append(CreateSlabBrep(depth, curveList, topPts), new GH_Path(0, i));
+                    convertCount[0]++;
+                    _logger.AppendConvertSuccess(slab.guid);
                 }
-
-                topPts.Add(topPts[0]);
-                curveList[0] = new PolylineCurve(topPts);
-                brepList.Append(CreateSlabBrep(depth, curveList, topPts), new GH_Path(0, i));
+                catch (Exception e)
+                {
+                    convertCount[1]++;
+                    ConvertFailed(slab.guid, e);
+                }
             }
 
+            _logger.AppendSummary(convertCount[0], convertCount[1]);
+            _logger.AppendInfoConvertEndMessage("スラブ");
             return brepList;
         }
 
@@ -320,49 +414,63 @@ namespace HoaryFox.Component.Utils.Geometry
 
         public GH_Structure<GH_Brep> Wall(IEnumerable<StbWall> walls, IEnumerable<StbOpen> opens)
         {
+            _logger.AppendInfoConvertStartMessage("壁");
+            var convertCount = new int[] { 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (walls == null)
             {
+                _logger.AppendInfoDataNotFoundMessage("壁");
                 return brepList;
             }
 
             foreach ((StbWall wall, int i) in walls.Select((wall, index) => (wall, index)))
             {
-                StbWallOffset[] offsets = wall.StbWallOffsetList;
-                var curveList = new PolylineCurve[2];
-                double thickness = BrepMaker.Wall.GetThickness(_sections, wall);
-                string[] nodeIds = wall.StbNodeIdOrder.Split(' ');
-                var wallPts = new List<Point3d>();
-                foreach (string nodeId in nodeIds)
+                try
                 {
-                    var offsetVec = new Vector3d();
-                    if (offsets != null)
+                    StbWallOffset[] offsets = wall.StbWallOffsetList;
+                    var curveList = new PolylineCurve[2];
+                    double thickness = BrepMaker.Wall.GetThickness(_sections, wall);
+                    string[] nodeIds = wall.StbNodeIdOrder.Split(' ');
+                    var wallPts = new List<Point3d>();
+                    foreach (string nodeId in nodeIds)
                     {
-                        foreach (StbWallOffset offset in offsets)
+                        var offsetVec = new Vector3d();
+                        if (offsets != null)
                         {
-                            if (nodeId == offset.id_node)
+                            foreach (StbWallOffset offset in offsets)
                             {
-                                offsetVec = new Vector3d(offset.offset_X, offset.offset_Y, offset.offset_Z);
-                                break;
+                                if (nodeId == offset.id_node)
+                                {
+                                    offsetVec = new Vector3d(offset.offset_X, offset.offset_Y, offset.offset_Z);
+                                    break;
+                                }
                             }
                         }
+
+                        StbNode node = _nodes.First(n => n.id == nodeId);
+                        wallPts.Add(new Point3d(node.X, node.Y, node.Z) + offsetVec);
                     }
+                    wallPts.Add(wallPts[0]);
+                    var centerCurve = new PolylineCurve(wallPts);
+                    Vector3d normal = Vector3d.CrossProduct(centerCurve.TangentAtEnd, centerCurve.TangentAtStart);
+                    curveList[0] = new PolylineCurve(wallPts.Select(pt => pt + normal * thickness / 2));
+                    curveList[1] = new PolylineCurve(wallPts.Select(pt => pt - normal * thickness / 2));
+                    Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0].CapPlanarHoles(_tolerance[0]);
+                    CheckBrepOrientation(brep);
 
-                    StbNode node = _nodes.First(n => n.id == nodeId);
-                    wallPts.Add(new Point3d(node.X, node.Y, node.Z) + offsetVec);
+                    brep = ApplyWallOpen(opens, wall, wallPts, brep);
+                    brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
+                    convertCount[0]++;
+                    _logger.AppendConvertSuccess(wall.guid);
                 }
-                wallPts.Add(wallPts[0]);
-                var centerCurve = new PolylineCurve(wallPts);
-                Vector3d normal = Vector3d.CrossProduct(centerCurve.TangentAtEnd, centerCurve.TangentAtStart);
-                curveList[0] = new PolylineCurve(wallPts.Select(pt => pt + normal * thickness / 2));
-                curveList[1] = new PolylineCurve(wallPts.Select(pt => pt - normal * thickness / 2));
-                Brep brep = Brep.CreateFromLoft(curveList, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0].CapPlanarHoles(_tolerance[0]);
-                CheckBrepOrientation(brep);
-
-                brep = ApplyWallOpen(opens, wall, wallPts, brep);
-                brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
+                catch (Exception e)
+                {
+                    ConvertFailed(wall.guid, e);
+                }
             }
 
+            _logger.AppendSummary(convertCount[0], convertCount[1]);
+            _logger.AppendInfoConvertEndMessage("壁");
             return brepList;
         }
 
@@ -438,102 +546,142 @@ namespace HoaryFox.Component.Utils.Geometry
 
         public GH_Structure<GH_Brep> Pile(IEnumerable<StbPile> piles)
         {
+            _logger.AppendInfoConvertStartMessage("杭");
+            var convertCount = new[] { 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (piles == null)
             {
+                _logger.AppendInfoDataNotFoundMessage("杭");
                 return brepList;
             }
 
             foreach ((StbPile pile, int i) in piles.Select((pile, index) => (pile, index)))
             {
-                StbPileKind_structure kind = pile.kind_structure;
-                StbNode node = _nodes.First(n => n.id == pile.id_node);
-                var sectionPoints = new List<Point3d>();
-
-                switch (kind)
+                try
                 {
-                    case StbPileKind_structure.RC:
-                        Point3d[] endNodes =
-                        {
-                            new Point3d(node.X, node.Y, node.Z),
-                            new Point3d(node.X, node.Y, node.Z - pile.length_all)
-                        };
-                        Point3d[] offset =
-                        {
-                            new Point3d(pile.offset_X, pile.offset_Y, pile.level_top),
-                            new Point3d(pile.offset_X, pile.offset_Y, pile.level_top),
-                        };
-                        sectionPoints = new List<Point3d>
-                        {
-                            endNodes[0] + offset[0],
-                            new Point3d(),
-                            new Point3d(),
-                            endNodes[1] + offset[1]
-                        };
-                        sectionPoints[1] = sectionPoints[0] - Vector3d.ZAxis * pile.length_head;
-                        break;
-                    case StbPileKind_structure.PC:
-                        var figures = PCPileFigure.GetFigureList(_sections, pile);
-                        sectionPoints.Add(new Point3d
-                        {
-                            X = node.X + pile.offset_X,
-                            Y = node.Y + pile.offset_Y,
-                            Z = node.Z + pile.level_top
-                        });
-                        foreach ((PCPileFigure figure, int index) in figures.Select((figure, index) => (figure, index)))
-                        {
+                    StbPileKind_structure kind = pile.kind_structure;
+                    StbNode node = _nodes.First(n => n.id == pile.id_node);
+                    var sectionPoints = new List<Point3d>();
+
+                    switch (kind)
+                    {
+                        case StbPileKind_structure.RC:
+                            Point3d[] endNodes =
+                            {
+                                new Point3d(node.X, node.Y, node.Z),
+                                new Point3d(node.X, node.Y, node.Z - pile.length_all)
+                            };
+                            Point3d[] offset =
+                            {
+                                new Point3d(pile.offset_X, pile.offset_Y, pile.level_top),
+                                new Point3d(pile.offset_X, pile.offset_Y, pile.level_top),
+                            };
+                            sectionPoints = new List<Point3d>
+                            {
+                                endNodes[0] + offset[0],
+                                new Point3d(),
+                                new Point3d(),
+                                endNodes[1] + offset[1]
+                            };
+                            sectionPoints[1] = sectionPoints[0] - Vector3d.ZAxis * pile.length_head;
+                            break;
+                        case StbPileKind_structure.PC:
+                            var figures = PCPileFigure.GetFigureList(_sections, pile);
                             sectionPoints.Add(new Point3d
                             {
-                                X = sectionPoints[index].X,
-                                Y = sectionPoints[index].Y,
-                                Z = sectionPoints[index].Z - figure.Length
+                                X = node.X + pile.offset_X,
+                                Y = node.Y + pile.offset_Y,
+                                Z = node.Z + pile.level_top
                             });
-                        }
-                        break;
-                }
+                            foreach ((PCPileFigure figure, int index) in figures.Select((figure, index) => (figure, index)))
+                            {
+                                sectionPoints.Add(new Point3d
+                                {
+                                    X = sectionPoints[index].X,
+                                    Y = sectionPoints[index].Y,
+                                    Z = sectionPoints[index].Z - figure.Length
+                                });
+                            }
+                            break;
+                    }
 
-                var brepMaker = new BrepMaker.Pile(_sections, _tolerance, pile.guid);
-                brepList.Append(new GH_Brep(brepMaker.CreatePileBrep(pile.id_section, kind, sectionPoints, -Vector3d.ZAxis)), new GH_Path(0, i));
+                    var brepMaker = new BrepMaker.Pile(_sections, _tolerance, pile.guid);
+                    brepList.Append(new GH_Brep(brepMaker.CreatePileBrep(pile.id_section, kind, sectionPoints, -Vector3d.ZAxis)), new GH_Path(0, i));
+                    convertCount[0]++;
+                    _logger.AppendConvertSuccess(pile.guid);
+                }
+                catch (Exception e)
+                {
+                    convertCount[1]++;
+                    ConvertFailed(pile.guid, e);
+                }
             }
 
+            _logger.AppendSummary(convertCount[0], convertCount[1]);
+            _logger.AppendInfoConvertEndMessage("杭");
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Footing(IEnumerable<StbFooting> footings)
         {
+            _logger.AppendInfoConvertStartMessage("フーチング");
+            var convertCount = new[] { 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (footings == null)
             {
+                _logger.AppendInfoDataNotFoundMessage("フーチング");
                 return brepList;
             }
 
             foreach ((StbFooting footing, int i) in footings.Select((f, index) => (f, index)))
             {
-                StbNode node = _nodes.First(n => n.id == footing.id_node);
-                Point3d[] endNodes =
+                try
                 {
-                    new Point3d(node.X, node.Y, node.Z),
-                    new Point3d(node.X, node.Y, node.Z + footing.level_bottom)
-                };
-                Point3d[] offset =
-                {
-                    new Point3d(footing.offset_X, footing.offset_Y, 0),
-                    new Point3d(footing.offset_X, footing.offset_Y, 0),
-                };
-                Point3d[] sectionPoints =
-                {
-                    endNodes[0] + offset[0],
-                    new Point3d(),
-                    new Point3d(),
-                    endNodes[1] + offset[1]
-                };
-                Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
+                    StbNode node = _nodes.First(n => n.id == footing.id_node);
+                    Point3d[] endNodes =
+                    {
+                        new Point3d(node.X, node.Y, node.Z),
+                        new Point3d(node.X, node.Y, node.Z + footing.level_bottom)
+                    };
+                    Point3d[] offset =
+                    {
+                        new Point3d(footing.offset_X, footing.offset_Y, 0),
+                        new Point3d(footing.offset_X, footing.offset_Y, 0),
+                    };
+                    Point3d[] sectionPoints =
+                    {
+                        endNodes[0] + offset[0],
+                        new Point3d(),
+                        new Point3d(),
+                        endNodes[1] + offset[1]
+                    };
+                    Vector3d memberAxis = sectionPoints[3] - sectionPoints[0];
 
-                var brepMaker = new BrepMaker.Footing(_sections, _tolerance, footing.guid);
-                brepList.Append(new GH_Brep(brepMaker.CreateFootingBrep(footing.id_section, footing.rotate, sectionPoints, memberAxis / memberAxis.Length)), new GH_Path(0, i));
+                    var brepMaker = new BrepMaker.Footing(_sections, _tolerance, footing.guid);
+                    brepList.Append(new GH_Brep(brepMaker.CreateFootingBrep(footing.id_section, footing.rotate, sectionPoints, memberAxis / memberAxis.Length)), new GH_Path(0, i));
+
+                    convertCount[0]++;
+                    _logger.AppendConvertSuccess(footing.guid);
+                }
+                catch (Exception e)
+                {
+                    convertCount[1]++;
+                    ConvertFailed(footing.guid, e);
+                }
             }
 
+            _logger.AppendSummary(convertCount[0], convertCount[1]);
+            _logger.AppendInfoConvertEndMessage("フーチング");
             return brepList;
         }
+
+        private void ConvertFailed(string guid, Exception e)
+        {
+            _logger.AppendConvertFailed(guid, e);
+#if DEBUG
+            throw e;
+#endif
+        }
+
     }
 }
