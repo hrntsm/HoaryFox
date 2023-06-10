@@ -84,35 +84,35 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                 case 1:
                     var same = figures[0] as StbSecSteelColumn_CFT_Same;
                     center = same.shape;
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionType.Column, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionPositionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionPositionType.Column, localAxis));
                     break;
                 case 2:
                     var notSames = new[] { figures[0] as StbSecSteelColumn_CFT_NotSame, figures[1] as StbSecSteelColumn_CFT_NotSame };
                     bottom = notSames.First(item => item.pos == StbSecSteelColumn_CFT_NotSamePos.BOTTOM).shape;
                     top = notSames.First(item => item.pos == StbSecSteelColumn_CFT_NotSamePos.TOP).shape;
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[0], Utils.SectionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[0], Utils.SectionPositionType.Column, localAxis));
                     if (sectionPoints[1].Z > sectionPoints[0].Z)
                     {
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[1], Utils.SectionType.Column, localAxis));
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[1], Utils.SectionType.Column, localAxis));
+                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[1], Utils.SectionPositionType.Column, localAxis));
+                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[1], Utils.SectionPositionType.Column, localAxis));
                     }
                     else
                     {
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[2], Utils.SectionType.Column, localAxis));
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[2], Utils.SectionType.Column, localAxis));
+                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[2], Utils.SectionPositionType.Column, localAxis));
+                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[2], Utils.SectionPositionType.Column, localAxis));
                     }
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[3], Utils.SectionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[3], Utils.SectionPositionType.Column, localAxis));
                     break;
                 case 3:
                     var three = new[] { figures[0] as StbSecSteelColumn_CFT_ThreeTypes, figures[1] as StbSecSteelColumn_CFT_ThreeTypes, figures[2] as StbSecSteelColumn_CFT_ThreeTypes };
                     bottom = three.First(item => item.pos == StbSecSteelColumn_CFT_ThreeTypesPos.BOTTOM).shape;
                     center = three.First(item => item.pos == StbSecSteelColumn_CFT_ThreeTypesPos.CENTER).shape;
                     top = three.First(item => item.pos == StbSecSteelColumn_CFT_ThreeTypesPos.TOP).shape;
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[0], Utils.SectionType.Column, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionType.Column, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionType.Column, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[3], Utils.SectionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[0], Utils.SectionPositionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionPositionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionPositionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[3], Utils.SectionPositionType.Column, localAxis));
                     break;
                 default:
                     throw new ArgumentException("Unmatched StbSecSteelColumn_CFT");
@@ -165,35 +165,35 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                 case 1:
                     var same = figures[0] as StbSecSteelColumn_S_Same;
                     center = same.shape;
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionType.Column, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionPositionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionPositionType.Column, localAxis));
                     break;
                 case 2:
                     var notSames = new[] { figures[0] as StbSecSteelColumn_S_NotSame, figures[1] as StbSecSteelColumn_S_NotSame };
                     bottom = notSames.First(item => item.pos == StbSecSteelColumn_S_NotSamePos.BOTTOM).shape;
                     top = notSames.First(item => item.pos == StbSecSteelColumn_S_NotSamePos.TOP).shape;
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[0], Utils.SectionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[0], Utils.SectionPositionType.Column, localAxis));
                     if (sectionPoints[1].Z > sectionPoints[0].Z)
                     {
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[1], Utils.SectionType.Column, localAxis));
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[1], Utils.SectionType.Column, localAxis));
+                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[1], Utils.SectionPositionType.Column, localAxis));
+                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[1], Utils.SectionPositionType.Column, localAxis));
                     }
                     else
                     {
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[2], Utils.SectionType.Column, localAxis));
-                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[2], Utils.SectionType.Column, localAxis));
+                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[2], Utils.SectionPositionType.Column, localAxis));
+                        curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[2], Utils.SectionPositionType.Column, localAxis));
                     }
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[3], Utils.SectionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[3], Utils.SectionPositionType.Column, localAxis));
                     break;
                 case 3:
                     var three = new[] { figures[0] as StbSecSteelColumn_S_ThreeTypes, figures[1] as StbSecSteelColumn_S_ThreeTypes, figures[2] as StbSecSteelColumn_S_ThreeTypes };
                     bottom = three.First(item => item.pos == StbSecSteelColumn_S_ThreeTypesPos.BOTTOM).shape;
                     center = three.First(item => item.pos == StbSecSteelColumn_S_ThreeTypesPos.CENTER).shape;
                     top = three.First(item => item.pos == StbSecSteelColumn_S_ThreeTypesPos.TOP).shape;
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[0], Utils.SectionType.Column, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionType.Column, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionType.Column, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[3], Utils.SectionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, bottom, sectionPoints[0], Utils.SectionPositionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionPositionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionPositionType.Column, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, top, sectionPoints[3], Utils.SectionPositionType.Column, localAxis));
                     break;
                 default:
                     throw new ArgumentException("Unmatched StbSecSteelColumn_S");

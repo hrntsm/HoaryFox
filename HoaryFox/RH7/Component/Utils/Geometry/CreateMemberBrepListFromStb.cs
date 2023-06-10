@@ -402,7 +402,10 @@ namespace HoaryFox.Component.Utils.Geometry
                     Brep openBrep = Brep.CreateFromLoft(openCurve, Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0].CapPlanarHoles(_tolerance[0]);
                     CheckBrepOrientation(openBrep);
 
-                    brep = Brep.CreateBooleanDifference(brep, openBrep, 1)[0];
+                    if (openBrep != null)
+                    {
+                        brep = Brep.CreateBooleanDifference(brep, openBrep, 1)[0];
+                    }
                 }
             }
 

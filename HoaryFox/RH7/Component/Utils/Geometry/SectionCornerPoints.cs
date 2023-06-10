@@ -48,16 +48,51 @@ namespace HoaryFox.Component.Utils.Geometry
             };
         }
 
-        public static Point3d[] ColumnL(Point3d pt, double height, double width, double tw, double tf, StbSecRollLType type, Vector3d xAxis, Vector3d yAxis)
+        //        5 - - - - - 4
+        //  Y     6 - 7   2 - 3
+        //  ^         | o |
+        //  o > X     0 - 1
+        public static Point3d[] ColumnT(Point3d pt, double height, double width, double tw, double tf, Vector3d xAxis, Vector3d yAxis)
+        {
+            return new[]
+            {
+                pt - xAxis * tw              - yAxis *  height / 2,
+                pt + xAxis * tw              - yAxis *  height / 2,
+                pt + xAxis * tw              + yAxis * (height / 2 - tf),
+                pt + xAxis * width           + yAxis * (height / 2 - tf),
+                pt + xAxis * width           + yAxis *  height / 2,
+                pt - xAxis * width           + yAxis *  height / 2,
+                pt - xAxis * width           + yAxis * (height / 2 - tf),
+                pt - xAxis * tw              + yAxis * (height / 2 - tf),
+            };
+        }
+
+        // TODO: 重心位置をちゃんと計算する
+        // 今は バウンディングボックスの図心 = STBの節点位置 になっている。
+        //           7 - - 6
+        //           | 4 - 5
+        //  Y        | | o
+        //  ^        | 3 - 2
+        //  o > X    0 - - 1
+        public static Point3d[] ColumnC(Point3d pt, double height, double width, double tw, double tf, StbSecRollCType type, Vector3d xAxis, Vector3d yAxis)
         {
             switch (type)
             {
-                case StbSecRollLType.SINGLE:
-                    return ColumnLSingle(pt, height, width, tw, tf, xAxis, yAxis);
-                case StbSecRollLType.BACKTOBACK:
-                    return ColumnLBackToBack(pt, height, width, tw, tf, xAxis, yAxis);
-                case StbSecRollLType.FACETOFACE:
-                    return ColumnLFaceToFace(pt, height, width, tw, tf, xAxis, yAxis);
+                case StbSecRollCType.SINGLE:
+                    return new[]
+                    {
+                        pt - xAxis *  width / 2       - yAxis *  height / 2,
+                        pt + xAxis *  width / 2       - yAxis *  height / 2,
+                        pt + xAxis *  width / 2       - yAxis * (height / 2 - tf),
+                        pt - xAxis * (width / 2 - tw) - yAxis * (height / 2 - tf),
+                        pt - xAxis * (width / 2 - tw) + yAxis * (height / 2 - tf),
+                        pt + xAxis *  width / 2       + yAxis * (height / 2 - tf),
+                        pt + xAxis *  width / 2       + yAxis *  height / 2,
+                        pt - xAxis *  width / 2       + yAxis *  height / 2,
+                    };
+                case StbSecRollCType.BACKTOBACK:
+                    return ColumnH(pt, height, width, 2 * tw, tf, xAxis, yAxis);
+                case StbSecRollCType.FACETOFACE:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -69,32 +104,28 @@ namespace HoaryFox.Component.Utils.Geometry
         //  Y        | 2 - 3
         //  ^        | | o
         //  o > X    0 1
-        private static Point3d[] ColumnLSingle(Point3d pt, double height, double width, double tw, double tf, Vector3d xAxis, Vector3d yAxis)
+        public static Point3d[] ColumnL(Point3d pt, double height, double width, double tw, double tf, StbSecRollLType type, Vector3d xAxis, Vector3d yAxis)
         {
-            return new[]
+            switch (type)
             {
-                pt - xAxis *  width / 2       - yAxis *  height / 2,
-                pt - xAxis * (width / 2 - tw) - yAxis *  height / 2,
-                pt - xAxis * (width / 2 - tw) + yAxis * (height / 2 - tf),
-                pt + xAxis *  width / 2       + yAxis * (height / 2 - tf),
-                pt + xAxis *  width / 2       + yAxis *  height / 2,
-                pt - xAxis *  width / 2       + yAxis *  height / 2,
-                pt - xAxis *  width / 2       - yAxis *  height / 2,
-            };
-        }
-
-        //        5 - - - - - 4
-        //  Y     6 - 7   2 - 3
-        //  ^         | o |
-        //  o > X     0 - 1
-        private static Point3d[] ColumnLBackToBack(Point3d pt, double height, double width, double tw, double tf, Vector3d xAxis, Vector3d yAxis)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static Point3d[] ColumnLFaceToFace(Point3d pt, double height, double width, double tw, double tf, Vector3d xAxis, Vector3d yAxis)
-        {
-            throw new NotImplementedException();
+                case StbSecRollLType.SINGLE:
+                    return new[]
+                    {
+                        pt - xAxis *  width / 2       - yAxis *  height / 2,
+                        pt - xAxis * (width / 2 - tw) - yAxis *  height / 2,
+                        pt - xAxis * (width / 2 - tw) + yAxis * (height / 2 - tf),
+                        pt + xAxis *  width / 2       + yAxis * (height / 2 - tf),
+                        pt + xAxis *  width / 2       + yAxis *  height / 2,
+                        pt - xAxis *  width / 2       + yAxis *  height / 2,
+                        pt - xAxis *  width / 2       - yAxis *  height / 2,
+                    };
+                case StbSecRollLType.BACKTOBACK:
+                    return ColumnT(pt, height, 2 * width, 2 * tw, tf, xAxis, yAxis);
+                case StbSecRollLType.FACETOFACE:
+                    return ColumnC(pt, 2 * width, height, tf, tw, StbSecRollCType.SINGLE, -yAxis, xAxis);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
 
         internal static Curve ColumnPipe(Point3d pt, double radius, Vector3d zAxis)
@@ -143,16 +174,50 @@ namespace HoaryFox.Component.Utils.Geometry
             };
         }
 
-        public static Point3d[] BeamL(Point3d pt, double height, double width, double tw, double tf, StbSecRollLType type, Vector3d yAxis, Vector3d zAxis)
+        //        5 - - o - - 4
+        //  Y     6 - 7   2 - 3
+        //  ^         |   |
+        //  o > X     0 - 1
+        public static Point3d[] BeamT(Point3d pt, double height, double width, double tw, double tf, Vector3d xAxis, Vector3d yAxis)
+        {
+            return new[]
+            {
+                pt - xAxis * tw              - yAxis *  height,
+                pt + xAxis * tw              - yAxis *  height,
+                pt + xAxis * tw              + yAxis * (height - tf),
+                pt + xAxis * width           + yAxis * (height - tf),
+                pt + xAxis * width           + yAxis *  height,
+                pt - xAxis * width           + yAxis *  height,
+                pt - xAxis * width           + yAxis * (height - tf),
+                pt - xAxis * tw              + yAxis * (height - tf),
+            };
+        }
+
+        // TODO: 原点はここでよい？
+        //           7 - o - 6
+        //           | 4 - - 5
+        //  Z        | |
+        //  ^        | 3 - - 2
+        //  o > Y    0 - - - 1
+        public static Point3d[] BeamC(Point3d pt, double height, double width, double tw, double tf, StbSecRollCType type, Vector3d yAxis, Vector3d zAxis)
         {
             switch (type)
             {
-                case StbSecRollLType.SINGLE:
-                    return BeamLSingle(pt, height, width, tw, tf, yAxis, zAxis);
-                case StbSecRollLType.BACKTOBACK:
-                    return BeamLBackToBack(pt, height, width, tw, tf, yAxis, zAxis);
-                case StbSecRollLType.FACETOFACE:
-                    return BeamLFaceToFace(pt, height, width, tw, tf, yAxis, zAxis);
+                case StbSecRollCType.SINGLE:
+                    return new[]
+                    {
+                        pt - yAxis *  width / 2       - zAxis *  height,
+                        pt + yAxis *  width / 2       - zAxis *  height,
+                        pt + yAxis *  width / 2       - zAxis * (height - tf),
+                        pt - yAxis * (width / 2 - tw) - zAxis * (height - tf),
+                        pt - yAxis * (width / 2 - tw) + zAxis * (height - tf),
+                        pt + yAxis *  width / 2       + zAxis * (height - tf),
+                        pt + yAxis *  width / 2,
+                        pt - yAxis *  width / 2,
+                    };
+                case StbSecRollCType.BACKTOBACK:
+                    return BeamH(pt, height, width, 2 * tw, tf, yAxis, yAxis);
+                case StbSecRollCType.FACETOFACE:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -163,38 +228,29 @@ namespace HoaryFox.Component.Utils.Geometry
         //  Z        | 2 - - 3
         //  ^        | |
         //  o > Y    0 1
-        private static Point3d[] BeamLSingle(Point3d pt, double height, double width, double tw, double tf, Vector3d yAxis, Vector3d zAxis)
+        public static Point3d[] BeamL(Point3d pt, double height, double width, double tw, double tf, StbSecRollLType type, Vector3d yAxis, Vector3d zAxis)
         {
-            return new[]
+            switch (type)
             {
-                pt - yAxis *  width / 2       - zAxis * height,
-                pt - yAxis * (width / 2 - tw) - zAxis * height,
-                pt - yAxis * (width / 2 - tw) - zAxis * tf,
-                pt + yAxis *  width / 2       - zAxis * tf,
-                pt + yAxis *  width / 2,
-                pt - yAxis *  width / 2,
-                pt - yAxis *  width / 2       - zAxis * height
-            };
+                case StbSecRollLType.SINGLE:
+                    return new[]
+                    {
+                        pt - yAxis *  width / 2       - zAxis * height,
+                        pt - yAxis * (width / 2 - tw) - zAxis * height,
+                        pt - yAxis * (width / 2 - tw) - zAxis * tf,
+                        pt + yAxis *  width / 2       - zAxis * tf,
+                        pt + yAxis *  width / 2,
+                        pt - yAxis *  width / 2,
+                        pt - yAxis *  width / 2       - zAxis * height
+                    };
+                case StbSecRollLType.BACKTOBACK:
+                    return BeamT(pt, height, width, tw, tf, yAxis, zAxis);
+                case StbSecRollLType.FACETOFACE:
+                    return BeamC(pt, 2 * width, height, tf, tw, StbSecRollCType.SINGLE, -zAxis, yAxis);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
-
-        //        5 - - o - - 4
-        //  Z     6 - 7   2 - 3
-        //  ^         |   |
-        //  o > Y     0 - 1
-        private static Point3d[] BeamLBackToBack(Point3d pt, double height, double width, double tw, double tf, Vector3d yAxis, Vector3d zAxis)
-        {
-            throw new NotImplementedException();
-        }
-
-        //            7 - - o - - 6 
-        //  Z         |   2 - 3   |
-        //  ^         |   |   |   |
-        //  o > Y     0 - 1   4 - 5
-        private static Point3d[] BeamLFaceToFace(Point3d pt, double height, double width, double tw, double tf, Vector3d yAxis, Vector3d zAxis)
-        {
-            throw new NotImplementedException();
-        }
-
 
         internal static Curve BeamPipe(Point3d pt, double radius, Vector3d xAxis)
         {

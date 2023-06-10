@@ -91,7 +91,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             return brep;
         }
 
-        public enum SectionType
+        public enum SectionPositionType
         {
             Column,
             Beam,
