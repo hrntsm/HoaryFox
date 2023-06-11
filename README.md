@@ -4,7 +4,6 @@
 [![Release](https://img.shields.io/github/v/release/hrntsm/HoaryFox)](https://github.com/hrntsm/HoaryFox/releases)
 [![download](https://img.shields.io/github/downloads/hrntsm/HoaryFox/total)](https://github.com/hrntsm/HoaryFox/releases)
 
-![Build](https://img.shields.io/github/workflow/status/hrntsm/HoaryFox/Build%20Grasshopper%20Plugin)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c0a462728dce4983802d447ed67d3e7c)](https://www.codacy.com/gh/hrntsm/HoaryFox/dashboard?utm_source=github.com&utm_medium=referral&utm_content=hrntsm/HoaryFox&utm_campaign=Badge_Grade)
 [![Maintainability](https://api.codeclimate.com/v1/badges/bc78a575fcf5e9448929/maintainability)](https://codeclimate.com/github/hrntsm/HoaryFox/maintainability)
 
@@ -61,9 +60,7 @@ If you like this software, please donation.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
 
-Or [pixivFANBOX](https://hiron.fanbox.cc/)
-
 ## License
 
 HoaryFox is licensed under the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  
-Copyright© 2019-2021, hrntsm
+Copyright© 2019-2023, hrntsm

@@ -66,9 +66,9 @@ ST-Bridge の規格を作成している [building SMART Japan の構造設計�
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
 
-上記、または [PixivFANBOX](https://hiron.fanbox.cc/) よりドネートしていただけると開発のモチベーションが上がります。
+上記よりドネートしていただけると開発のモチベーションが上がります。
 
 ## License
 
 HoaryFox is licensed under the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  
-Copyright© 2019-2021, hrntsm
+Copyright© 2019-2023, hrntsm
