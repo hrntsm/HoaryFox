@@ -57,14 +57,13 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
 
         public static Brep CreateCapedBrepFromLoft(SectionCurve[] sectionCurve, double tolerance)
         {
-
             Brep brep = Brep.CreateFromLoft(sectionCurve.Select(c => c.OuterCurve), Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                 .CapPlanarHoles(tolerance);
             if (brep == null)
             {
                 return null;
             }
-            if (sectionCurve[0].InnerCurve != null)
+            if (sectionCurve[0].InnerCurve != null && !sectionCurve[0].IsCft)
             {
                 Brep innerBrep = Brep.CreateFromLoft(sectionCurve.Select(c => c.InnerCurve), Point3d.Unset, Point3d.Unset, LoftType.Straight, false)[0]
                     .CapPlanarHoles(tolerance);
@@ -92,7 +91,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             return brep;
         }
 
-        public enum SectionType
+        public enum SectionPositionType
         {
             Column,
             Beam,

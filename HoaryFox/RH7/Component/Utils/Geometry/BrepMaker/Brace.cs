@@ -12,11 +12,13 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
     {
         private readonly IReadOnlyList<double> _tolerance;
         private readonly StbSections _sections;
+        private readonly string _guid;
 
-        public Brace(StbSections sections, IReadOnlyList<double> tolerance)
+        public Brace(StbSections sections, IReadOnlyList<double> tolerance, string guid)
         {
             _tolerance = tolerance;
             _sections = sections;
+            _guid = guid;
         }
 
         public Brep CreateBraceBrep(string idSection, double rotate, StbBraceKind_structure kind, IReadOnlyList<Point3d> sectionPoints, Vector3d memberAxis)
@@ -45,7 +47,7 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             }
             catch (Exception)
             {
-                throw new ArgumentException("The cross-sectional shape of the brace seems to be wrong. Please check.");
+                throw new ArgumentException($"Error converting guid: {_guid}\nThe cross-sectional shape of the brace seems to be wrong. Please check.");
             }
         }
 
@@ -60,31 +62,31 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
                 case 1:
                     var same = figures[0] as StbSecSteelBrace_S_Same;
                     center = same.shape;
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionType.Brace, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionType.Brace, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionPositionType.Brace, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionPositionType.Brace, localAxis));
                     break;
                 case 2:
                     var notSames = new[] { figures[0] as StbSecSteelBrace_S_NotSame, figures[1] as StbSecSteelBrace_S_NotSame };
                     start = notSames.First(sec => sec.pos == StbSecSteelBrace_S_NotSamePos.BOTTOM).shape;
                     end = notSames.First(sec => sec.pos == StbSecSteelBrace_S_NotSamePos.TOP).shape;
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionType.Brace, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionPositionType.Brace, localAxis));
                     curveList.Add(sectionPoints[0] == sectionPoints[1]
-                        ? SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[2], Utils.SectionType.Brace, localAxis)
-                        : SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[1], Utils.SectionType.Brace, localAxis));
+                        ? SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[2], Utils.SectionPositionType.Brace, localAxis)
+                        : SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[1], Utils.SectionPositionType.Brace, localAxis));
                     curveList.Add(sectionPoints[0] == sectionPoints[1]
-                        ? SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[2], Utils.SectionType.Brace, localAxis)
-                        : SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[1], Utils.SectionType.Brace, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Brace, localAxis));
+                        ? SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[2], Utils.SectionPositionType.Brace, localAxis)
+                        : SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[1], Utils.SectionPositionType.Brace, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionPositionType.Brace, localAxis));
                     break;
                 case 3:
                     var three = new[] { figures[0] as StbSecSteelBrace_S_ThreeTypes, figures[1] as StbSecSteelBrace_S_ThreeTypes, figures[2] as StbSecSteelBrace_S_ThreeTypes };
                     start = three.First(sec => sec.pos == StbSecSteelBrace_S_ThreeTypesPos.BOTTOM).shape;
                     center = three.First(sec => sec.pos == StbSecSteelBrace_S_ThreeTypesPos.CENTER).shape;
                     end = three.First(sec => sec.pos == StbSecSteelBrace_S_ThreeTypesPos.TOP).shape;
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionType.Brace, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionType.Brace, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionType.Brace, localAxis));
-                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Brace, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionPositionType.Brace, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionPositionType.Brace, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionPositionType.Brace, localAxis));
+                    curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionPositionType.Brace, localAxis));
                     break;
                 default:
                     throw new ArgumentException("Unmatched StbSecSteelBrace_S");

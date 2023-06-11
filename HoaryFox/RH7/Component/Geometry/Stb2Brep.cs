@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 
 using Grasshopper.Kernel;
@@ -22,7 +23,7 @@ namespace HoaryFox.Component.Geometry
     public class Stb2Brep : GH_Component
     {
         private ST_BRIDGE _stBridge;
-        private readonly GH_Structure<GH_Brep>[] _brepList = new GH_Structure<GH_Brep>[7];
+        private readonly GH_Structure<GH_Brep>[] _brepList = new GH_Structure<GH_Brep>[9];
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
@@ -41,6 +42,7 @@ namespace HoaryFox.Component.Geometry
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
+            pManager.AddTextParameter("Log", "Log", "Log", GH_ParamAccess.item);
             pManager.AddBrepParameter("Columns", "Col", "output StbColumns to Brep", GH_ParamAccess.tree);
             pManager.AddBrepParameter("Girders", "Gird", "output StbGirders to Brep", GH_ParamAccess.tree);
             pManager.AddBrepParameter("Posts", "Pst", "output StbPosts to Brep", GH_ParamAccess.tree);
@@ -48,6 +50,8 @@ namespace HoaryFox.Component.Geometry
             pManager.AddBrepParameter("Braces", "Brc", "output StbBraces to Brep", GH_ParamAccess.tree);
             pManager.AddBrepParameter("Slabs", "Slb", "output StbSlabs to Brep", GH_ParamAccess.tree);
             pManager.AddBrepParameter("Walls", "Wl", "output StbWalls to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Piles", "Pil", "output StbPiles to Brep", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("Footings", "Ftg", "output StbFootings to Brep", GH_ParamAccess.tree);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
@@ -56,25 +60,27 @@ namespace HoaryFox.Component.Geometry
             if (!dataAccess.GetData("Data", ref _stBridge)) { return; }
             if (!dataAccess.GetData("Bake", ref isBake)) { return; }
 
-            CreateBrep();
+            var log = CreateBrep();
             if (isBake)
             {
                 BakeBrep();
             }
 
-            for (var i = 0; i < 7; i++)
+            dataAccess.SetData(0, log);
+            for (var i = 1; i < 10; i++)
             {
-                dataAccess.SetDataTree(i, _brepList[i]);
+                dataAccess.SetDataTree(i, _brepList[i - 1]);
             }
         }
 
         protected override Bitmap Icon => Resource.Brep;
         public override Guid ComponentGuid => new Guid("B2D5EA7F-E75F-406B-8D22-C267B43C5E72");
 
-        private void CreateBrep()
+        private string CreateBrep()
         {
+            var path = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(this).Location);
             StbMembers member = _stBridge.StbModel.StbMembers;
-            var brepFromStb = new CreateMemberBrepListFromStb(_stBridge.StbModel.StbSections, _stBridge.StbModel.StbNodes, new[] { DocumentTolerance(), DocumentAngleTolerance() });
+            var brepFromStb = new CreateMemberBrepListFromStb(_stBridge.StbModel.StbSections, _stBridge.StbModel.StbNodes, new[] { DocumentTolerance(), DocumentAngleTolerance() }, path);
             _brepList[0] = brepFromStb.Column(member.StbColumns);
             _brepList[1] = brepFromStb.Girder(member.StbGirders);
             _brepList[2] = brepFromStb.Post(member.StbPosts);
@@ -82,13 +88,17 @@ namespace HoaryFox.Component.Geometry
             _brepList[4] = brepFromStb.Brace(member.StbBraces);
             _brepList[5] = brepFromStb.Slab(member.StbSlabs);
             _brepList[6] = brepFromStb.Wall(member.StbWalls, member.StbOpens);
+            _brepList[7] = brepFromStb.Pile(member.StbPiles);
+            _brepList[8] = brepFromStb.Footing(member.StbFootings);
+            brepFromStb.SerializeLog();
+            return brepFromStb.Logger.ToString();
         }
 
         private void BakeBrep()
         {
             RhinoDoc activeDoc = RhinoDoc.ActiveDoc;
-            var parentLayerNames = new[] { "Column", "Girder", "Post", "Beam", "Brace", "Slab", "Wall" };
-            Color[] layerColors = { Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple, Color.DarkGray, Color.CornflowerBlue };
+            var parentLayerNames = new[] { "Column", "Girder", "Post", "Beam", "Brace", "Slab", "Wall", "Pile", "Footing" };
+            Color[] layerColors = new[] { Color.Red, Color.Green, Color.Aquamarine, Color.LightCoral, Color.MediumPurple, Color.DarkGray, Color.CornflowerBlue, Color.DarkOrange, Color.DarkKhaki };
             GeometryBaker.MakeParentLayers(activeDoc, parentLayerNames, layerColors);
 
             Dictionary<string, string>[][] infoArray = Utils.TagUtils.GetAllSectionInfoArray(_stBridge.StbModel.StbMembers, _stBridge.StbModel.StbSections);

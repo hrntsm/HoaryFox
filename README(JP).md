@@ -10,7 +10,6 @@
 HoaryFox は 建築構造架構の可視化ツールです。  
 ST-Bridge file(.stb) を読み込んで、表示をします。  
 対応するデータの形式を一貫構造計算ソフトから出力されてる stb データとすることで、使用しているソフトに限らずモデルの生成ができ、かつ可視化用に別途モデリングする必要がないことが特徴です。  
-Rhino を使わないスタンドアロンのビューアが必要な場合は [STEVIA](https://github.com/hrntsm/STEVIA-Stb2U/wiki) を使ってみてください。  
 モデルを Karamba3D へ変換する機能、および Karamba3D のモデルを ST-Bridge データとして出力する機能を追加しました。
 
 ## Install
@@ -67,9 +66,9 @@ ST-Bridge の規格を作成している [building SMART Japan の構造設計�
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
 
-上記、または [PixivFANBOX](https://hiron.fanbox.cc/) よりドネートしていただけると開発のモチベーションが上がります。
+上記よりドネートしていただけると開発のモチベーションが上がります。
 
 ## License
 
 HoaryFox is licensed under the [MIT](https://github.com/hrntsm/HoaryFox/blob/master/LICENSE) license.  
-Copyright© 2019-2021, hrntsm
+Copyright© 2019-2023, hrntsm

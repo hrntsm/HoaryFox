@@ -21,8 +21,8 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
         {
             var straight = figures[0] as StbSecSteelBeam_S_Straight;
             string center = straight.shape;
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionType.Beam, localAxis));
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionPositionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[5], Utils.SectionPositionType.Beam, localAxis));
         }
 
         public void TwoFigure(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<SectionCurve> curveList, Vector3d[] localAxis)
@@ -76,10 +76,10 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             var tapers = new[] { figures[0] as StbSecSteelBeam_S_Taper, figures[1] as StbSecSteelBeam_S_Taper };
             string start = tapers.First(sec => sec.pos == StbSecSteelBeam_S_TaperPos.START).shape;
             string end = tapers.First(sec => sec.pos == StbSecSteelBeam_S_TaperPos.END).shape;
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionType.Beam, localAxis));
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[1], Utils.SectionType.Beam, localAxis));
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[2], Utils.SectionType.Beam, localAxis));
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionPositionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[1], Utils.SectionPositionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[4], Utils.SectionPositionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[5], Utils.SectionPositionType.Beam, localAxis));
         }
 
         private void TwoFigureJoint(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<SectionCurve> curveList, Vector3d[] localAxis)
@@ -90,18 +90,18 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             if (joint.FirstOrDefault(sec => sec.pos == StbSecSteelBeam_S_JointPos.START) != null)
             {
                 string start = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.START).shape;
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[5], Utils.SectionPositionType.Beam, localAxis));
             }
             else
             {
                 string end = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.END).shape;
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[5], Utils.SectionPositionType.Beam, localAxis));
             }
         }
 
@@ -114,19 +114,19 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             {
                 string start = joint.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.START).shape;
                 center = joint.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.CENTER).shape;
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[4], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[5], Utils.SectionPositionType.Beam, localAxis));
             }
             else
             {
                 center = joint.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.CENTER).shape;
                 string end = joint.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.END).shape;
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionType.Beam, localAxis));
-                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[0], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[4], Utils.SectionPositionType.Beam, localAxis));
+                curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[5], Utils.SectionPositionType.Beam, localAxis));
             }
         }
 
@@ -136,10 +136,10 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             string start = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.START).shape;
             string center = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.CENTER).shape;
             string end = haunch.First(sec => sec.pos == StbSecSteelBeam_S_HaunchPos.END).shape;
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionType.Beam, localAxis));
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionType.Beam, localAxis));
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionType.Beam, localAxis));
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionPositionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionPositionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[4], Utils.SectionPositionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[5], Utils.SectionPositionType.Beam, localAxis));
         }
 
         private void ThreeFigureJoint(IReadOnlyList<object> figures, IReadOnlyList<Point3d> sectionPoints, ICollection<SectionCurve> curveList, Vector3d[] localAxis)
@@ -148,10 +148,10 @@ namespace HoaryFox.Component.Utils.Geometry.BrepMaker
             string start = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.START).shape;
             string center = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.CENTER).shape;
             string end = joint.First(sec => sec.pos == StbSecSteelBeam_S_JointPos.END).shape;
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionType.Beam, localAxis));
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[1], Utils.SectionType.Beam, localAxis));
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionType.Beam, localAxis));
-            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[3], Utils.SectionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, start, sectionPoints[0], Utils.SectionPositionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[2], Utils.SectionPositionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, center, sectionPoints[3], Utils.SectionPositionType.Beam, localAxis));
+            curveList.Add(SteelSections.GetCurve(_sections.StbSecSteel, end, sectionPoints[5], Utils.SectionPositionType.Beam, localAxis));
         }
     }
 }

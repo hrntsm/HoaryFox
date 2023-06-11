@@ -5,21 +5,26 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": ".NET Core Launch (console)",
+      "name": "Run Rhino8 WIP",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "C:/Program Files/Rhino 6/System/Rhino.exe",
-      "args": [],
+      "program": "C:/Program Files/Rhino 8 WIP/System/Rhino.exe",
+      "args": ["/nosplash"],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",
       "stopAtEntry": true
     },
     {
-      "name": ".NET Core Attach",
+      "name": "Run Rhino7",
       "type": "coreclr",
-      "request": "attach",
-      "processId": "${command:pickProcess}"
-    }
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "C:/Program Files/Rhino 7/System/Rhino.exe",
+      "args": ["/nosplash"],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": true
+    },
   ]
 }

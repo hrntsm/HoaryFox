@@ -9,14 +9,12 @@ namespace HoaryFox.Component.Utils.Geometry
         public SectionShape Shape { get; set; }
         public SectionType Type { get; set; }
         public Vector3d XAxis { get; set; }
+        public bool IsCft { get; set; }
 
         public void RotateSection(double inPlaneAngle, Vector3d rotateAxis, Point3d sectionPoint)
         {
             OuterCurve.Rotate(inPlaneAngle, rotateAxis, sectionPoint);
-            if (InnerCurve != null)
-            {
-                InnerCurve.Rotate(inPlaneAngle, rotateAxis, sectionPoint);
-            }
+            InnerCurve?.Rotate(inPlaneAngle, rotateAxis, sectionPoint);
         }
 
         public static SectionCurve CreateSolidColumnRect(Point3d sectionPoint, double widthX, double widthY, Vector3d[] localAxis)
@@ -35,8 +33,22 @@ namespace HoaryFox.Component.Utils.Geometry
         {
             return new SectionCurve
             {
-                OuterCurve = SectionCornerPoints.ColumnPipe(sectionPoint, diameter, xAxis),
+                OuterCurve = SectionCornerPoints.ColumnPipe(sectionPoint, diameter / 2, xAxis),
                 InnerCurve = null,
+                Shape = SectionShape.Circle,
+                Type = SectionType.Solid,
+                XAxis = xAxis,
+            };
+        }
+
+        public static SectionCurve CreateSolidColumnPipe(Point3d sectionPoint, double outerDiameter, double innerDiameter, Vector3d xAxis)
+        {
+            return new SectionCurve
+            {
+                OuterCurve = SectionCornerPoints.ColumnPipe(sectionPoint, outerDiameter / 2, xAxis),
+                InnerCurve = outerDiameter != innerDiameter
+                    ? SectionCornerPoints.ColumnPipe(sectionPoint, innerDiameter / 2, xAxis)
+                    : null,
                 Shape = SectionShape.Circle,
                 Type = SectionType.Solid,
                 XAxis = xAxis,
