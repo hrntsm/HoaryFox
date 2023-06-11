@@ -1,7 +1,7 @@
-﻿using System.Reflection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
@@ -17,7 +17,7 @@ namespace HoaryFox.Component.Utils.Geometry
         private readonly IEnumerable<StbNode> _nodes;
         private readonly IReadOnlyList<double> _tolerance;
         private readonly StbSections _sections;
-        private readonly ConvertLogger _logger;
+        public ConvertLogger Logger { get; private set; }
 
         public CreateMemberBrepListFromStb(StbSections sections, IEnumerable<StbNode> nodes, IReadOnlyList<double> tolerance, string logPath)
         {
@@ -25,23 +25,23 @@ namespace HoaryFox.Component.Utils.Geometry
             _tolerance = tolerance;
             _sections = sections;
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
-            _logger = new ConvertLogger(logPath, version);
+            Logger = new ConvertLogger(logPath, version);
         }
 
         public void SerializeLog()
         {
-            _logger.Serialize();
+            Logger.Serialize();
         }
 
         public GH_Structure<GH_Brep> Column(IEnumerable<StbColumn> columns)
         {
             var typeStr = "柱";
-            _logger.AppendInfoConvertStartMessage(typeStr);
+            Logger.AppendInfoConvertStartMessage(typeStr);
             var resultCount = new int[] { 0, 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (columns == null)
             {
-                _logger.AppendInfoDataNotFoundMessage(typeStr);
+                Logger.AppendInfoDataNotFoundMessage(typeStr);
                 return brepList;
             }
 
@@ -75,28 +75,28 @@ namespace HoaryFox.Component.Utils.Geometry
                     var brep = brepMaker.CreateColumnBrep(column.id_section, column.rotate, kind, sectionPoints, memberAxis);
                     brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
 
-                    ConvertResultCheck(resultCount, column.guid, brep);
+                    ConvertResultCheck(resultCount, column.guid, column.name, brep);
                 }
                 catch (Exception e)
                 {
-                    ConvertFailed(resultCount, column.guid, e);
+                    ConvertFailed(resultCount, column.guid, column.name, e);
                 }
             }
 
-            _logger.AppendSummary(resultCount);
-            _logger.AppendInfoConvertEndMessage(typeStr);
+            Logger.AppendSummary(resultCount);
+            Logger.AppendInfoConvertEndMessage(typeStr);
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Post(IEnumerable<StbPost> posts)
         {
             var typeStr = "間柱";
-            _logger.AppendInfoConvertStartMessage(typeStr);
-            var resultCount = new int[] { 0, 0 , 0};
+            Logger.AppendInfoConvertStartMessage(typeStr);
+            var resultCount = new int[] { 0, 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (posts == null)
             {
-                _logger.AppendInfoDataNotFoundMessage(typeStr);
+                Logger.AppendInfoDataNotFoundMessage(typeStr);
                 return brepList;
             }
 
@@ -130,28 +130,28 @@ namespace HoaryFox.Component.Utils.Geometry
                     var brep = brepMaker.CreateColumnBrep(post.id_section, post.rotate, kind, sectionPoints, memberAxis);
                     brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
 
-                    ConvertResultCheck(resultCount, post.guid, brep);
+                    ConvertResultCheck(resultCount, post.guid, post.name, brep);
                 }
                 catch (Exception e)
                 {
-                    ConvertFailed(resultCount, post.guid, e);
+                    ConvertFailed(resultCount, post.guid, post.name, e);
                 }
             }
 
-            _logger.AppendSummary(resultCount);
-            _logger.AppendInfoConvertEndMessage(typeStr);
+            Logger.AppendSummary(resultCount);
+            Logger.AppendInfoConvertEndMessage(typeStr);
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Girder(IEnumerable<StbGirder> girders)
         {
             var typeStr = "大梁";
-            _logger.AppendInfoConvertStartMessage(typeStr);
+            Logger.AppendInfoConvertStartMessage(typeStr);
             var resultCount = new int[] { 0, 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (girders == null)
             {
-                _logger.AppendInfoDataNotFoundMessage(typeStr);
+                Logger.AppendInfoDataNotFoundMessage(typeStr);
                 return brepList;
             }
 
@@ -189,28 +189,28 @@ namespace HoaryFox.Component.Utils.Geometry
                     var brep = brepMaker.CreateGirderBrep(girder.id_section, girder.rotate, kind, sectionPoints, memberAxis);
                     brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
 
-                    ConvertResultCheck(resultCount, girder.guid, brep);
+                    ConvertResultCheck(resultCount, girder.guid, girder.name, brep);
                 }
                 catch (Exception e)
                 {
-                    ConvertFailed(resultCount, girder.guid, e);
+                    ConvertFailed(resultCount, girder.guid, girder.name, e);
                 }
             }
 
-            _logger.AppendSummary(resultCount);
-            _logger.AppendInfoConvertEndMessage(typeStr);
+            Logger.AppendSummary(resultCount);
+            Logger.AppendInfoConvertEndMessage(typeStr);
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Beam(IEnumerable<StbBeam> beams)
         {
             var typeStr = "小梁";
-            _logger.AppendInfoConvertStartMessage(typeStr);
-            var resultCount = new int[] { 0, 0,0 };
+            Logger.AppendInfoConvertStartMessage(typeStr);
+            var resultCount = new int[] { 0, 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (beams == null)
             {
-                _logger.AppendInfoDataNotFoundMessage(typeStr);
+                Logger.AppendInfoDataNotFoundMessage(typeStr);
                 return brepList;
             }
 
@@ -248,28 +248,28 @@ namespace HoaryFox.Component.Utils.Geometry
                     var brep = brepMaker.CreateGirderBrep(beam.id_section, beam.rotate, kind, sectionPoints, memberAxis);
                     brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
 
-                    ConvertResultCheck(resultCount, beam.guid, brep);
+                    ConvertResultCheck(resultCount, beam.guid, beam.name, brep);
                 }
                 catch (Exception e)
                 {
-                    ConvertFailed(resultCount, beam.guid, e);
+                    ConvertFailed(resultCount, beam.guid, beam.name, e);
                 }
             }
 
-            _logger.AppendSummary(resultCount);
-            _logger.AppendInfoConvertEndMessage(typeStr);
+            Logger.AppendSummary(resultCount);
+            Logger.AppendInfoConvertEndMessage(typeStr);
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Brace(IEnumerable<StbBrace> braces)
         {
             var typeStr = "ブレース";
-            _logger.AppendInfoConvertStartMessage(typeStr);
+            Logger.AppendInfoConvertStartMessage(typeStr);
             var resultCount = new int[] { 0, 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (braces == null)
             {
-                _logger.AppendInfoDataNotFoundMessage(typeStr);
+                Logger.AppendInfoDataNotFoundMessage(typeStr);
                 return brepList;
             }
 
@@ -303,28 +303,28 @@ namespace HoaryFox.Component.Utils.Geometry
                     var brep = brepMaker.CreateBraceBrep(brace.id_section, brace.rotate, kind, sectionPoints, memberAxis);
                     brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
 
-                    ConvertResultCheck(resultCount, brace.guid, brep);
+                    ConvertResultCheck(resultCount, brace.guid, brace.name, brep);
                 }
                 catch (Exception e)
                 {
-                    ConvertFailed(resultCount, brace.guid, e);
+                    ConvertFailed(resultCount, brace.guid, brace.name, e);
                 }
             }
 
-            _logger.AppendSummary(resultCount);
-            _logger.AppendInfoConvertEndMessage(typeStr);
+            Logger.AppendSummary(resultCount);
+            Logger.AppendInfoConvertEndMessage(typeStr);
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Slab(IEnumerable<StbSlab> slabs)
         {
             var typeStr = "スラブ";
-            _logger.AppendInfoConvertStartMessage(typeStr);
+            Logger.AppendInfoConvertStartMessage(typeStr);
             var resultCount = new int[] { 0, 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (slabs == null)
             {
-                _logger.AppendInfoDataNotFoundMessage(typeStr);
+                Logger.AppendInfoDataNotFoundMessage(typeStr);
                 return brepList;
             }
 
@@ -360,16 +360,16 @@ namespace HoaryFox.Component.Utils.Geometry
                     var brep = CreateSlabBrep(slab.guid, depth, curveList, topPts);
                     brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
 
-                    ConvertResultCheck(resultCount, slab.guid, brep);
+                    ConvertResultCheck(resultCount, slab.guid, slab.name, brep);
                 }
                 catch (Exception e)
                 {
-                    ConvertFailed(resultCount, slab.guid, e);
+                    ConvertFailed(resultCount, slab.guid, slab.name, e);
                 }
             }
 
-            _logger.AppendSummary(resultCount);
-            _logger.AppendInfoConvertEndMessage(typeStr);
+            Logger.AppendSummary(resultCount);
+            Logger.AppendInfoConvertEndMessage(typeStr);
             return brepList;
         }
 
@@ -384,7 +384,7 @@ namespace HoaryFox.Component.Utils.Geometry
 
                 if (capedBrep == null)
                 {
-                    _logger.AppendInfo(guid, "スラブがplanerではないため、NetSurfaceで曲面のスラブ生成します。");
+                    Logger.AppendInfo(guid, "スラブがplanerではないため、NetSurfaceで曲面のスラブ生成します。");
                     return NonPlanarBrep(depth, curveList);
                 }
                 CheckBrepOrientation(capedBrep);
@@ -423,12 +423,12 @@ namespace HoaryFox.Component.Utils.Geometry
         public GH_Structure<GH_Brep> Wall(IEnumerable<StbWall> walls, IEnumerable<StbOpen> opens)
         {
             var typeStr = "壁";
-            _logger.AppendInfoConvertStartMessage(typeStr);
+            Logger.AppendInfoConvertStartMessage(typeStr);
             var resultCount = new int[] { 0, 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (walls == null)
             {
-                _logger.AppendInfoDataNotFoundMessage(typeStr);
+                Logger.AppendInfoDataNotFoundMessage(typeStr);
                 return brepList;
             }
 
@@ -470,16 +470,16 @@ namespace HoaryFox.Component.Utils.Geometry
                     brep = ApplyWallOpen(wall.guid, opens, wall, wallPts, brep);
                     brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
 
-                    ConvertResultCheck(resultCount, wall.guid, brep);
+                    ConvertResultCheck(resultCount, wall.guid, wall.name, brep);
                 }
                 catch (Exception e)
                 {
-                    ConvertFailed(resultCount, wall.guid, e);
+                    ConvertFailed(resultCount, wall.guid, wall.name, e);
                 }
             }
 
-            _logger.AppendSummary(resultCount);
-            _logger.AppendInfoConvertEndMessage(typeStr);
+            Logger.AppendSummary(resultCount);
+            Logger.AppendInfoConvertEndMessage(typeStr);
             return brepList;
         }
 
@@ -526,7 +526,7 @@ namespace HoaryFox.Component.Utils.Geometry
                     }
                     else
                     {
-                        _logger.AppendWarning(guid, $"開口id:{id}の作成に失敗しました。");
+                        Logger.AppendWarning(guid, $"開口id:{id}の作成に失敗しました。");
                     }
                 }
             }
@@ -561,12 +561,12 @@ namespace HoaryFox.Component.Utils.Geometry
         public GH_Structure<GH_Brep> Pile(IEnumerable<StbPile> piles)
         {
             var typeString = "杭";
-            _logger.AppendInfoConvertStartMessage(typeString);
+            Logger.AppendInfoConvertStartMessage(typeString);
             var resultCount = new[] { 0, 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (piles == null)
             {
-                _logger.AppendInfoDataNotFoundMessage(typeString);
+                Logger.AppendInfoDataNotFoundMessage(typeString);
                 return brepList;
             }
 
@@ -624,28 +624,28 @@ namespace HoaryFox.Component.Utils.Geometry
                     var brep = brepMaker.CreatePileBrep(pile.id_section, kind, sectionPoints, -Vector3d.ZAxis);
                     brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
 
-                    ConvertResultCheck(resultCount, pile.guid, brep);
+                    ConvertResultCheck(resultCount, pile.guid, pile.name, brep);
                 }
                 catch (Exception e)
                 {
-                    ConvertFailed(resultCount, pile.guid, e);
+                    ConvertFailed(resultCount, pile.guid, pile.name, e);
                 }
             }
 
-            _logger.AppendSummary(resultCount);
-            _logger.AppendInfoConvertEndMessage(typeString);
+            Logger.AppendSummary(resultCount);
+            Logger.AppendInfoConvertEndMessage(typeString);
             return brepList;
         }
 
         public GH_Structure<GH_Brep> Footing(IEnumerable<StbFooting> footings)
         {
             var typeStr = "フーチング";
-            _logger.AppendInfoConvertStartMessage(typeStr);
+            Logger.AppendInfoConvertStartMessage(typeStr);
             var convertCount = new[] { 0, 0, 0 };
             var brepList = new GH_Structure<GH_Brep>();
             if (footings == null)
             {
-                _logger.AppendInfoDataNotFoundMessage(typeStr);
+                Logger.AppendInfoDataNotFoundMessage(typeStr);
                 return brepList;
             }
 
@@ -677,48 +677,47 @@ namespace HoaryFox.Component.Utils.Geometry
                     var brep = brepMaker.CreateFootingBrep(footing.id_section, footing.rotate, sectionPoints, memberAxis / memberAxis.Length);
                     brepList.Append(new GH_Brep(brep), new GH_Path(0, i));
 
-                    ConvertResultCheck(convertCount, footing.guid, brep);
+                    ConvertResultCheck(convertCount, footing.guid, footing.name, brep);
                 }
                 catch (Exception e)
                 {
-                    ConvertFailed(convertCount, footing.guid, e);
+                    ConvertFailed(convertCount, footing.guid, footing.name, e);
                 }
             }
 
-            _logger.AppendSummary(convertCount);
-            _logger.AppendInfoConvertEndMessage(typeStr);
+            Logger.AppendSummary(convertCount);
+            Logger.AppendInfoConvertEndMessage(typeStr);
             return brepList;
         }
 
-        private void ConvertResultCheck(int[] resultCount, string guid, Brep brep)
+        private void ConvertResultCheck(int[] resultCount, string guid, string tag, Brep brep)
         {
             if (brep == null)
             {
                 resultCount[2]++;
-                _logger.AppendConvertFailed(guid, "Brepへの変換結果がnullです。");
+                Logger.AppendConvertFailed(guid, tag, "Brepへの変換結果がnullです。");
                 return;
             }
             else if (!brep.IsValid)
             {
                 resultCount[1]++;
-                _logger.AppendConvertWarning(guid, "BrepがInvalidです。Bakeに失敗する可能性があります。");
+                Logger.AppendConvertWarning(guid, tag, "BrepがInvalidです。Bakeに失敗する可能性があります。");
                 return;
             }
             else
             {
                 resultCount[0]++;
-                _logger.AppendConvertSuccess(guid);
+                Logger.AppendConvertSuccess(guid, tag);
             }
         }
 
-        private void ConvertFailed(int[] resultCount, string guid, Exception e)
+        private void ConvertFailed(int[] resultCount, string guid, string tag, Exception e)
         {
             resultCount[2]++;
-            _logger.AppendConvertFailed(guid, e.Message);
+            Logger.AppendConvertFailed(guid, tag, e.Message);
 #if DEBUG
             throw e;
 #endif
         }
-
     }
 }

@@ -59,9 +59,9 @@ namespace HoaryFox.Component.Utils
             _logger.AppendLine($"::INFO   :: [{guid}] | {message}");
         }
 
-        public void AppendConvertSuccess(string guid)
+        public void AppendConvertSuccess(string guid, string tag)
         {
-            _logger.AppendLine($"::INFO   :: [{guid}] | 変換完了");
+            _logger.AppendLine($"::INFO   :: [{guid}] | {tag} | 変換完了");
         }
 
         public void AppendWarning(string guid, string message)
@@ -69,9 +69,9 @@ namespace HoaryFox.Component.Utils
             _logger.AppendLine($"::WARNING:: [{guid}] | {message}");
         }
 
-        public void AppendConvertWarning(string guid, string message)
+        public void AppendConvertWarning(string guid, string tag, string message)
         {
-            _logger.AppendLine($"::WARNING:: [{guid}] | 変換結果 要確認 | {message}");
+            _logger.AppendLine($"::WARNING:: [{guid}] | {tag} | 変換結果 要確認 | {message}");
         }
 
         public void AppendError(string guid, string message)
@@ -79,9 +79,9 @@ namespace HoaryFox.Component.Utils
             _logger.AppendLine($"::ERROR  :: [{guid}] | {message}");
         }
 
-        public void AppendConvertFailed(string guid, string message)
+        public void AppendConvertFailed(string guid, string tag, string message)
         {
-            _logger.AppendLine($"::ERROR  :: [{guid}] | 変換失敗 | {message}");
+            _logger.AppendLine($"::ERROR  :: [{guid}] | {tag} | 変換失敗 | {message}");
         }
 
         public void AppendSummary(int[] resultCount)
@@ -95,6 +95,11 @@ namespace HoaryFox.Component.Utils
         {
             AppendInfoConvertEndMessage("ST-BridgeデータのBrepへ");
             File.WriteAllText(_path + "/S2B_convert.log", _logger.ToString());
+        }
+
+        public override string ToString()
+        {
+            return _logger.ToString();
         }
     }
 }
