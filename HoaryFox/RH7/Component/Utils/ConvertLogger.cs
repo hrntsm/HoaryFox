@@ -9,7 +9,7 @@ namespace HoaryFox.Component.Utils
         private readonly StringBuilder _logger = new StringBuilder();
         private readonly string _path;
 
-        public ConvertLogger(string path)
+        public ConvertLogger(string path, string version)
         {
             _path = path;
             _logger.AppendLine(@"--------------------------------------");
@@ -20,7 +20,8 @@ namespace HoaryFox.Component.Utils
             _logger.AppendLine(@" _| |  | |_  | \__. | // | |,  | |       \ '/ /   _| |_     | \__. |  > '  <");
             _logger.AppendLine(@"|____||____|  '.__.'  \'-;__/ [___]    [\_:  /   |_____|     '.__.'  [__]`\_]");
             _logger.AppendLine(@"                                        \__.'");
-            _logger.AppendLine(@" ST-Bridge to Brep Convert Log");
+            _logger.AppendLine($"                                                            version:{version}");
+            _logger.AppendLine(@"  ST-Bridge to Brep Convert Log");
             _logger.AppendLine(@"--------------------------------------");
             _logger.AppendLine($"::INFO   :: 変換開始 | {DateTime.Now}");
         }
@@ -68,20 +69,26 @@ namespace HoaryFox.Component.Utils
             _logger.AppendLine($"::WARNING:: [{guid}] | {message}");
         }
 
+        public void AppendConvertWarning(string guid, string message)
+        {
+            _logger.AppendLine($"::WARNING:: [{guid}] | 変換結果 要確認 | {message}");
+        }
+
         public void AppendError(string guid, string message)
         {
             _logger.AppendLine($"::ERROR  :: [{guid}] | {message}");
         }
 
-        public void AppendConvertFailed(string guid, Exception e)
+        public void AppendConvertFailed(string guid, string message)
         {
-            _logger.AppendLine($"::ERROR  :: [{guid}] | 変換失敗 | {e.Message}");
+            _logger.AppendLine($"::ERROR  :: [{guid}] | 変換失敗 | {message}");
         }
 
-        public void AppendSummary(int successCont, int errorCount)
+        public void AppendSummary(int[] resultCount)
         {
-            _logger.AppendLine($"::INFO   :: [SUMMARY] | {successCont} 件の変換に成功しました。");
-            _logger.AppendLine($"::INFO   :: [SUMMARY] | {errorCount} 件の変換に失敗しました。");
+            _logger.AppendLine($"::INFO   :: [SUMMARY] | {resultCount[0]} 件の変換に成功しました。");
+            _logger.AppendLine($"::INFO   :: [SUMMARY] | {resultCount[1]} 件が変換出来ましたが、結果の確認が必要です。");
+            _logger.AppendLine($"::INFO   :: [SUMMARY] | {resultCount[2]} 件の変換に失敗しました。");
         }
 
         public void Serialize()
