@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 
 using Grasshopper.Kernel;
@@ -41,6 +42,7 @@ namespace HoaryFox.Component.Geometry
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
+            pManager.AddTextParameter("Log", "Log", "Log", GH_ParamAccess.item);
             pManager.AddBrepParameter("Columns", "Col", "output StbColumns to Brep", GH_ParamAccess.tree);
             pManager.AddBrepParameter("Girders", "Gird", "output StbGirders to Brep", GH_ParamAccess.tree);
             pManager.AddBrepParameter("Posts", "Pst", "output StbPosts to Brep", GH_ParamAccess.tree);
@@ -58,25 +60,27 @@ namespace HoaryFox.Component.Geometry
             if (!dataAccess.GetData("Data", ref _stBridge)) { return; }
             if (!dataAccess.GetData("Bake", ref isBake)) { return; }
 
-            CreateBrep();
+            var log = CreateBrep();
             if (isBake)
             {
                 BakeBrep();
             }
 
-            for (var i = 0; i < 9; i++)
+            dataAccess.SetData(0, log);
+            for (var i = 1; i < 10; i++)
             {
-                dataAccess.SetDataTree(i, _brepList[i]);
+                dataAccess.SetDataTree(i, _brepList[i - 1]);
             }
         }
 
         protected override Bitmap Icon => Resource.Brep;
         public override Guid ComponentGuid => new Guid("B2D5EA7F-E75F-406B-8D22-C267B43C5E72");
 
-        private void CreateBrep()
+        private string CreateBrep()
         {
+            var path = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(this).Location);
             StbMembers member = _stBridge.StbModel.StbMembers;
-            var brepFromStb = new CreateMemberBrepListFromStb(_stBridge.StbModel.StbSections, _stBridge.StbModel.StbNodes, new[] { DocumentTolerance(), DocumentAngleTolerance() });
+            var brepFromStb = new CreateMemberBrepListFromStb(_stBridge.StbModel.StbSections, _stBridge.StbModel.StbNodes, new[] { DocumentTolerance(), DocumentAngleTolerance() }, path);
             _brepList[0] = brepFromStb.Column(member.StbColumns);
             _brepList[1] = brepFromStb.Girder(member.StbGirders);
             _brepList[2] = brepFromStb.Post(member.StbPosts);
@@ -86,6 +90,8 @@ namespace HoaryFox.Component.Geometry
             _brepList[6] = brepFromStb.Wall(member.StbWalls, member.StbOpens);
             _brepList[7] = brepFromStb.Pile(member.StbPiles);
             _brepList[8] = brepFromStb.Footing(member.StbFootings);
+            brepFromStb.SerializeLog();
+            return brepFromStb.Logger.ToString();
         }
 
         private void BakeBrep()
