@@ -12,6 +12,5 @@ HoaryFox をダウンロード頂きありがとうございます。
 支援先一覧：
 
 - [ko-fi](https://ko-fi.com/hrntsm)
-- [pixivFANBOX](https://hiron.fanbox.cc/)
 
 お読みくださりありがとうございました。
