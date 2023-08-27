@@ -51,6 +51,10 @@ namespace HoaryFox.Component.Filter
 
             foreach ((Dictionary<string, string>[] infoDict, int index) in infoArray.Select((dict, index) => (dict, index)))
             {
+                if (index > 6)
+                {
+                    break;
+                }
                 var decisionNode = new List<string>();
                 var result = new GH_Structure<GH_Integer>();
                 GetFloorDecisionNode(infoDict, decisionNode);

@@ -35,6 +35,7 @@ namespace HoaryFox.Component.Filter
             pManager.AddBrepParameter("S", "S", "output S geometry", GH_ParamAccess.tree);
             pManager.AddBrepParameter("SRC", "SRC", "output SRC geometry", GH_ParamAccess.tree);
             pManager.AddBrepParameter("CFT", "CFT", "output CFT geometry", GH_ParamAccess.tree);
+            pManager.AddBrepParameter("PC", "PC", "output PC geometry", GH_ParamAccess.tree);
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
@@ -49,15 +50,15 @@ namespace HoaryFox.Component.Filter
                 return;
             }
 
-            var filteredBreps = new GH_Structure<GH_Brep>[4];
-            for (var i = 0; i < 4; i++)
+            var filteredBreps = new GH_Structure<GH_Brep>[5];
+            for (var i = 0; i < 5; i++)
             {
                 filteredBreps[i] = new GH_Structure<GH_Brep>();
             }
 
             FilterValue(breps, stories, materials, filteredBreps);
 
-            for (var i = 0; i < 4; i++)
+            for (var i = 0; i < 5; i++)
             {
                 dataAccess.SetDataTree(i, filteredBreps[i]);
             }
@@ -92,6 +93,9 @@ namespace HoaryFox.Component.Filter
                         break;
                     case "CFT":
                         results[3].Append(brep.DuplicateBrep(), path);
+                        break;
+                    case "PC":
+                        results[4].Append(brep.DuplicateBrep(), path);
                         break;
                     default:
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Unknown material type");
