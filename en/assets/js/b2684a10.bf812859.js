@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkhoaryfox_website=self.webpackChunkhoaryfox_website||[]).push([[5503],{7028:e=>{e.exports=JSON.parse('{"allTagsPath":"/HoaryFox/en/blog/tags","slug":"/HoaryFox/en/blog/tags/user-report","name":"UserReport","count":1,"permalink":"/HoaryFox/en/blog/tags/user-report"}')}}]);
