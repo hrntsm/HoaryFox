@@ -337,9 +337,11 @@ namespace HoaryFox.Component.Utils
                 {
                     instanceProps.Add(prop.Name, prop.GetValue(member).ToString());
                 }
-                catch
+                catch (Exception)
                 {
-                    // ignored
+#if DEBUG
+                    throw;
+#endif
                 }
             }
             AppendSectionInfos(instanceProps, sections);
@@ -350,109 +352,117 @@ namespace HoaryFox.Component.Utils
         private static void AppendSectionInfos(IDictionary<string, string> pDict, StbSections sections)
         {
             var sectionInfo = new List<GH_String>();
-            switch (pDict["stb_element_type"])
+            try
             {
-                case "StbColumn":
-                case "StbPost":
-                    switch (pDict["kind_structure"])
-                    {
-                        case "RC":
-                            StbSecColumn_RC columnRc = sections.StbSecColumn_RC.First(sec => sec.id == pDict["id_section"]);
-                            sectionInfo = GetColumnRcSection(columnRc.StbSecFigureColumn_RC.Item, columnRc.strength_concrete).ToList();
-                            break;
-                        case "SRC":
-                            StbSecColumn_SRC columnSrc = sections.StbSecColumn_SRC.First(sec => sec.id == pDict["id_section"]);
-                            sectionInfo = GetColumnRcSection(columnSrc.StbSecFigureColumn_SRC.Item, columnSrc.strength_concrete).ToList();
-                            foreach (object item in columnSrc.StbSecSteelFigureColumn_SRC.Items)
-                            {
-                                sectionInfo.AddRange(GetColumnSSection(item).ToList());
-                            }
-                            break;
-                        case "S":
-                            StbSecSteelFigureColumn_S sFigure = sections.StbSecColumn_S.First(sec => sec.id == pDict["id_section"]).StbSecSteelFigureColumn_S;
-                            foreach (object item in sFigure.Items)
-                            {
-                                sectionInfo.AddRange(GetColumnSSection(item).ToList());
-                            }
-                            break;
-                    }
-                    break;
-                case "StbGirder":
-                case "StbBeam":
-                    switch (pDict["kind_structure"])
-                    {
-                        case "RC":
-                            StbSecBeam_RC beamRc = sections.StbSecBeam_RC.First(sec => sec.id == pDict["id_section"]);
-                            foreach (object item in beamRc.StbSecFigureBeam_RC.Items)
-                            {
-                                sectionInfo.AddRange(GetBeamRcSection(item, beamRc.strength_concrete));
-                            }
-                            break;
-                        case "SRC":
-                            StbSecBeam_SRC beamSrc = sections.StbSecBeam_SRC.First(sec => sec.id == pDict["id_section"]);
-                            foreach (object item in beamSrc.StbSecFigureBeam_SRC.Items)
-                            {
-                                sectionInfo.AddRange(GetBeamRcSection(item, beamSrc.strength_concrete));
-                            }
+                switch (pDict["stb_element_type"])
+                {
+                    case "StbColumn":
+                    case "StbPost":
+                        switch (pDict["kind_structure"])
+                        {
+                            case "RC":
+                                StbSecColumn_RC columnRc = sections.StbSecColumn_RC.First(sec => sec.id == pDict["id_section"]);
+                                sectionInfo = GetColumnRcSection(columnRc.StbSecFigureColumn_RC.Item, columnRc.strength_concrete).ToList();
+                                break;
+                            case "SRC":
+                                StbSecColumn_SRC columnSrc = sections.StbSecColumn_SRC.First(sec => sec.id == pDict["id_section"]);
+                                sectionInfo = GetColumnRcSection(columnSrc.StbSecFigureColumn_SRC.Item, columnSrc.strength_concrete).ToList();
+                                foreach (object item in columnSrc.StbSecSteelFigureColumn_SRC.Items)
+                                {
+                                    sectionInfo.AddRange(GetColumnSSection(item).ToList());
+                                }
+                                break;
+                            case "S":
+                                StbSecSteelFigureColumn_S sFigure = sections.StbSecColumn_S.First(sec => sec.id == pDict["id_section"]).StbSecSteelFigureColumn_S;
+                                foreach (object item in sFigure.Items)
+                                {
+                                    sectionInfo.AddRange(GetColumnSSection(item).ToList());
+                                }
+                                break;
+                        }
+                        break;
+                    case "StbGirder":
+                    case "StbBeam":
+                        switch (pDict["kind_structure"])
+                        {
+                            case "RC":
+                                StbSecBeam_RC beamRc = sections.StbSecBeam_RC.First(sec => sec.id == pDict["id_section"]);
+                                foreach (object item in beamRc.StbSecFigureBeam_RC.Items)
+                                {
+                                    sectionInfo.AddRange(GetBeamRcSection(item, beamRc.strength_concrete));
+                                }
+                                break;
+                            case "SRC":
+                                StbSecBeam_SRC beamSrc = sections.StbSecBeam_SRC.First(sec => sec.id == pDict["id_section"]);
+                                foreach (object item in beamSrc.StbSecFigureBeam_SRC.Items)
+                                {
+                                    sectionInfo.AddRange(GetBeamRcSection(item, beamSrc.strength_concrete));
+                                }
 
-                            foreach (object item in beamSrc.StbSecSteelFigureBeam_SRC.Items)
-                            {
-                                sectionInfo.AddRange(GetBeamSSection(item).ToList());
-                            }
-                            break;
-                        case "S":
-                            StbSecSteelFigureBeam_S sFigure = sections.StbSecBeam_S.First(sec => sec.id == pDict["id_section"]).StbSecSteelFigureBeam_S;
-                            foreach (object item in sFigure.Items)
-                            {
-                                sectionInfo.AddRange(GetBeamSSection(item).ToList());
-                            }
-                            break;
-                    }
-                    break;
-                case "StbBrace":
-                    switch (pDict["kind_structure"])
-                    {
-                        case "S":
-                            StbSecSteelFigureBrace_S sFigure = sections.StbSecBrace_S.First(sec => sec.id == pDict["id_section"]).StbSecSteelFigureBrace_S;
-                            foreach (object item in sFigure.Items)
-                            {
-                                sectionInfo.AddRange(GetBraceSSection(item).ToList());
-                            }
-                            break;
-                    }
-                    break;
-                case "StbSlab":
-                    switch (pDict["kind_structure"])
-                    {
-                        case "RC":
-                            StbSecSlab_RC slabRc = sections.StbSecSlab_RC.First(sec => sec.id == pDict["id_section"]);
-                            foreach (object item in slabRc.StbSecFigureSlab_RC.Items)
-                            {
-                                sectionInfo.AddRange(GetSlabRcSection(item, slabRc.strength_concrete).ToList());
-                            }
-                            break;
-                        case "DECK":
-                            StbSecSlabDeck slabDeck = sections.StbSecSlabDeck.First(sec => sec.id == pDict["id_section"]);
-                            var deckFigure = slabDeck.StbSecFigureSlabDeck.StbSecSlabDeckStraight;
-                            sectionInfo.AddRange(GetSlabDeckSection(deckFigure, slabDeck.strength_concrete).ToList());
-                            break;
-                        case "PRECAST":
-                            StbSecSlabPrecast slabPrecast = sections.StbSecSlabPrecast.First(sec => sec.id == pDict["id_section"]);
-                            sectionInfo.AddRange(GetSlabPrecastSection(slabPrecast.precast_type, slabPrecast.StbSecProductSlabPrecast, slabPrecast.strength_concrete).ToList());
-                            break;
-                    }
-                    break;
-                case "StbWall": // RC しかない
-                    StbSecWall_RC wallRc = sections.StbSecWall_RC.First(sec => sec.id == pDict["id_section"]);
-                    sectionInfo = GetWallRcSection(wallRc.StbSecFigureWall_RC.StbSecWall_RC_Straight, wallRc.strength_concrete).ToList();
-                    break;
+                                foreach (object item in beamSrc.StbSecSteelFigureBeam_SRC.Items)
+                                {
+                                    sectionInfo.AddRange(GetBeamSSection(item).ToList());
+                                }
+                                break;
+                            case "S":
+                                StbSecSteelFigureBeam_S sFigure = sections.StbSecBeam_S.First(sec => sec.id == pDict["id_section"]).StbSecSteelFigureBeam_S;
+                                foreach (object item in sFigure.Items)
+                                {
+                                    sectionInfo.AddRange(GetBeamSSection(item).ToList());
+                                }
+                                break;
+                        }
+                        break;
+                    case "StbBrace":
+                        switch (pDict["kind_structure"])
+                        {
+                            case "S":
+                                StbSecSteelFigureBrace_S sFigure = sections.StbSecBrace_S.First(sec => sec.id == pDict["id_section"]).StbSecSteelFigureBrace_S;
+                                foreach (object item in sFigure.Items)
+                                {
+                                    sectionInfo.AddRange(GetBraceSSection(item).ToList());
+                                }
+                                break;
+                        }
+                        break;
+                    case "StbSlab":
+                        switch (pDict["kind_structure"])
+                        {
+                            case "RC":
+                                StbSecSlab_RC slabRc = sections.StbSecSlab_RC.First(sec => sec.id == pDict["id_section"]);
+                                foreach (object item in slabRc.StbSecFigureSlab_RC.Items)
+                                {
+                                    sectionInfo.AddRange(GetSlabRcSection(item, slabRc.strength_concrete).ToList());
+                                }
+                                break;
+                            case "DECK":
+                                StbSecSlabDeck slabDeck = sections.StbSecSlabDeck.First(sec => sec.id == pDict["id_section"]);
+                                var deckFigure = slabDeck.StbSecFigureSlabDeck.StbSecSlabDeckStraight;
+                                sectionInfo.AddRange(GetSlabDeckSection(deckFigure, slabDeck.strength_concrete).ToList());
+                                break;
+                            case "PRECAST":
+                                StbSecSlabPrecast slabPrecast = sections.StbSecSlabPrecast.First(sec => sec.id == pDict["id_section"]);
+                                sectionInfo.AddRange(GetSlabPrecastSection(slabPrecast.precast_type, slabPrecast.StbSecProductSlabPrecast, slabPrecast.strength_concrete).ToList());
+                                break;
+                        }
+                        break;
+                    case "StbWall": // RC しかない
+                        StbSecWall_RC wallRc = sections.StbSecWall_RC.First(sec => sec.id == pDict["id_section"]);
+                        sectionInfo = GetWallRcSection(wallRc.StbSecFigureWall_RC.StbSecWall_RC_Straight, wallRc.strength_concrete).ToList();
+                        break;
+                }
+
+                foreach ((string str, int i) in sectionInfo.Select((str, i) => (str.ToString(), i)))
+                {
+                    pDict.Add($"Figure{i}", str);
+                }
             }
-
-            foreach ((string str, int i) in sectionInfo.Select((str, i) => (str.ToString(), i)))
+            catch (Exception)
             {
-                pDict.Add($"Figure{i}", str);
+#if DEBUG
+                throw;
+#endif
             }
         }
-
     }
 }
